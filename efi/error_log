@@ -1,0 +1,989 @@
+[16-May-2025 13:51:48 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedsaas/efi/index.php on line 205
+[16-May-2025 13:51:48 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedsaas/efi/index.php on line 205
+[19-May-2025 12:48:36 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedsaas/efi/index.php on line 205
+[19-May-2025 12:48:36 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedsaas/efi/index.php on line 205
+[26-May-2025 16:30:26 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedsaas/efi/index.php on line 240
+[26-May-2025 16:30:26 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedsaas/efi/index.php on line 240
+[26-May-2025 16:31:00 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedsaas/efi/index.php on line 240
+[26-May-2025 16:31:00 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedsaas/efi/index.php on line 240
+[26-May-2025 16:31:01 America/Porto_Velho] PHP Warning:  Undefined variable $qrResponse in /home2/sested59/sestedsaas/efi/index.php on line 734
+[26-May-2025 16:42:42 America/Porto_Velho] PHP Warning:  Undefined variable $qrResponse in /home2/sested59/sestedsaas/efi/index.php on line 734
+[26-May-2025 17:12:07 America/Porto_Velho] PHP Warning:  Undefined variable $qrResponse in /home2/sested59/sestedsaas/efi/index.php on line 734
+[28-May-2025 12:07:02 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedsaas/efi/index.php on line 240
+[28-May-2025 12:07:02 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedsaas/efi/index.php on line 240
+[28-May-2025 12:07:04 America/Porto_Velho] PHP Warning:  Undefined variable $qrResponse in /home2/sested59/sestedsaas/efi/index.php on line 734
+[28-May-2025 12:07:42 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedsaas/efi/index.php on line 240
+[28-May-2025 12:07:42 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedsaas/efi/index.php on line 240
+[28-May-2025 12:07:42 America/Porto_Velho] PHP Warning:  Undefined variable $qrResponse in /home2/sested59/sestedsaas/efi/index.php on line 734
+[29-May-2025 22:03:19 America/Porto_Velho] PHP Warning:  Cannot modify header information - headers already sent by (output started at /home2/sested59/sestedsaas/efi/index.php:213) in /home2/sested59/sestedsaas/efi/index.php on line 279
+[30-May-2025 14:34:19 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedsaas/efi/index.php on line 195
+[30-May-2025 14:34:19 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedsaas/efi/index.php on line 195
+[26-Jun-2025 14:53:08 America/Porto_Velho] PHP Warning:  Undefined variable $id_usuario_professor in /home2/sested59/sestedcursos.com/efi/index.php on line 101
+[26-Jun-2025 14:53:08 America/Porto_Velho] PHP Warning:  Undefined variable $nivel_responsavel_pelo_cadastro_do_aluno in /home2/sested59/sestedcursos.com/efi/index.php on line 153
+[26-Jun-2025 14:53:08 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 157
+[26-Jun-2025 14:53:08 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 157
+[26-Jun-2025 14:53:08 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 160
+[26-Jun-2025 14:53:08 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 160
+[26-Jun-2025 14:53:08 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 195
+[26-Jun-2025 14:53:08 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 195
+[26-Jun-2025 14:53:08 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 197
+[26-Jun-2025 14:53:08 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 197
+[26-Jun-2025 14:53:08 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 198
+[26-Jun-2025 14:53:08 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 198
+[26-Jun-2025 14:53:08 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 202
+[26-Jun-2025 14:53:08 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 202
+[26-Jun-2025 14:53:08 America/Porto_Velho] PHP Warning:  Undefined variable $id_usuario_professor in /home2/sested59/sestedcursos.com/efi/index.php on line 101
+[26-Jun-2025 14:53:08 America/Porto_Velho] PHP Warning:  Undefined variable $nivel_responsavel_pelo_cadastro_do_aluno in /home2/sested59/sestedcursos.com/efi/index.php on line 153
+[26-Jun-2025 14:53:08 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 157
+[26-Jun-2025 14:53:08 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 157
+[26-Jun-2025 14:53:08 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 160
+[26-Jun-2025 14:53:08 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 160
+[26-Jun-2025 14:53:08 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 195
+[26-Jun-2025 14:53:08 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 195
+[26-Jun-2025 14:53:08 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 197
+[26-Jun-2025 14:53:08 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 197
+[26-Jun-2025 14:53:08 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 198
+[26-Jun-2025 14:53:08 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 198
+[26-Jun-2025 14:53:08 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 202
+[26-Jun-2025 14:53:08 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 202
+[29-Jun-2025 15:08:21 America/Porto_Velho] PHP Warning:  Undefined variable $id_usuario_professor in /home2/sested59/sestedcursos.com/efi/index.php on line 101
+[29-Jun-2025 15:08:21 America/Porto_Velho] PHP Warning:  Undefined variable $nivel_responsavel_pelo_cadastro_do_aluno in /home2/sested59/sestedcursos.com/efi/index.php on line 153
+[29-Jun-2025 15:08:21 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 157
+[29-Jun-2025 15:08:21 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 157
+[29-Jun-2025 15:08:21 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 160
+[29-Jun-2025 15:08:21 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 160
+[29-Jun-2025 15:08:21 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 195
+[29-Jun-2025 15:08:21 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 195
+[29-Jun-2025 15:08:21 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 197
+[29-Jun-2025 15:08:21 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 197
+[29-Jun-2025 15:08:21 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 198
+[29-Jun-2025 15:08:21 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 198
+[29-Jun-2025 15:08:21 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 202
+[29-Jun-2025 15:08:21 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 202
+[29-Jun-2025 15:08:21 America/Porto_Velho] PHP Warning:  Undefined variable $id_usuario_professor in /home2/sested59/sestedcursos.com/efi/index.php on line 101
+[29-Jun-2025 15:08:21 America/Porto_Velho] PHP Warning:  Undefined variable $nivel_responsavel_pelo_cadastro_do_aluno in /home2/sested59/sestedcursos.com/efi/index.php on line 153
+[29-Jun-2025 15:08:21 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 157
+[29-Jun-2025 15:08:21 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 157
+[29-Jun-2025 15:08:21 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 160
+[29-Jun-2025 15:08:21 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 160
+[29-Jun-2025 15:08:21 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 195
+[29-Jun-2025 15:08:21 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 195
+[29-Jun-2025 15:08:21 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 197
+[29-Jun-2025 15:08:21 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 197
+[29-Jun-2025 15:08:21 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 198
+[29-Jun-2025 15:08:21 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 198
+[29-Jun-2025 15:08:21 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 202
+[29-Jun-2025 15:08:21 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 202
+[30-Jun-2025 14:53:11 America/Porto_Velho] PHP Warning:  Undefined variable $id_usuario_professor in /home2/sested59/sestedcursos.com/efi/index.php on line 101
+[30-Jun-2025 14:53:11 America/Porto_Velho] PHP Warning:  Undefined variable $nivel_responsavel_pelo_cadastro_do_aluno in /home2/sested59/sestedcursos.com/efi/index.php on line 153
+[30-Jun-2025 14:53:11 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 157
+[30-Jun-2025 14:53:11 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 157
+[30-Jun-2025 14:53:11 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 160
+[30-Jun-2025 14:53:11 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 160
+[30-Jun-2025 14:53:11 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 195
+[30-Jun-2025 14:53:11 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 195
+[30-Jun-2025 14:53:11 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 197
+[30-Jun-2025 14:53:11 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 197
+[30-Jun-2025 14:53:11 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 198
+[30-Jun-2025 14:53:11 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 198
+[30-Jun-2025 14:53:11 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 202
+[30-Jun-2025 14:53:11 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 202
+[30-Jun-2025 14:53:11 America/Porto_Velho] PHP Warning:  Undefined variable $id_usuario_professor in /home2/sested59/sestedcursos.com/efi/index.php on line 101
+[30-Jun-2025 14:53:11 America/Porto_Velho] PHP Warning:  Undefined variable $nivel_responsavel_pelo_cadastro_do_aluno in /home2/sested59/sestedcursos.com/efi/index.php on line 153
+[30-Jun-2025 14:53:11 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 157
+[30-Jun-2025 14:53:11 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 157
+[30-Jun-2025 14:53:11 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 160
+[30-Jun-2025 14:53:11 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 160
+[30-Jun-2025 14:53:11 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 195
+[30-Jun-2025 14:53:11 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 195
+[30-Jun-2025 14:53:11 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 197
+[30-Jun-2025 14:53:11 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 197
+[30-Jun-2025 14:53:11 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 198
+[30-Jun-2025 14:53:11 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 198
+[30-Jun-2025 14:53:11 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 202
+[30-Jun-2025 14:53:11 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 202
+[01-Jul-2025 14:49:39 America/Porto_Velho] PHP Warning:  Undefined variable $id_usuario_professor in /home2/sested59/sestedcursos.com/efi/index.php on line 101
+[01-Jul-2025 14:49:39 America/Porto_Velho] PHP Warning:  Undefined variable $nivel_responsavel_pelo_cadastro_do_aluno in /home2/sested59/sestedcursos.com/efi/index.php on line 153
+[01-Jul-2025 14:49:39 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 157
+[01-Jul-2025 14:49:39 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 157
+[01-Jul-2025 14:49:39 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 160
+[01-Jul-2025 14:49:39 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 160
+[01-Jul-2025 14:49:39 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 195
+[01-Jul-2025 14:49:39 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 195
+[01-Jul-2025 14:49:39 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 197
+[01-Jul-2025 14:49:39 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 197
+[01-Jul-2025 14:49:39 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 198
+[01-Jul-2025 14:49:39 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 198
+[01-Jul-2025 14:49:39 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 202
+[01-Jul-2025 14:49:39 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 202
+[01-Jul-2025 14:49:39 America/Porto_Velho] PHP Warning:  Undefined variable $id_usuario_professor in /home2/sested59/sestedcursos.com/efi/index.php on line 101
+[01-Jul-2025 14:49:39 America/Porto_Velho] PHP Warning:  Undefined variable $nivel_responsavel_pelo_cadastro_do_aluno in /home2/sested59/sestedcursos.com/efi/index.php on line 153
+[01-Jul-2025 14:49:39 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 157
+[01-Jul-2025 14:49:39 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 157
+[01-Jul-2025 14:49:39 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 160
+[01-Jul-2025 14:49:39 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 160
+[01-Jul-2025 14:49:39 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 195
+[01-Jul-2025 14:49:39 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 195
+[01-Jul-2025 14:49:39 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 197
+[01-Jul-2025 14:49:39 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 197
+[01-Jul-2025 14:49:39 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 198
+[01-Jul-2025 14:49:39 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 198
+[01-Jul-2025 14:49:39 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 202
+[01-Jul-2025 14:49:39 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 202
+[02-Jul-2025 14:48:34 America/Porto_Velho] PHP Warning:  Undefined variable $id_usuario_professor in /home2/sested59/sestedcursos.com/efi/index.php on line 101
+[02-Jul-2025 14:48:34 America/Porto_Velho] PHP Warning:  Undefined variable $nivel_responsavel_pelo_cadastro_do_aluno in /home2/sested59/sestedcursos.com/efi/index.php on line 153
+[02-Jul-2025 14:48:34 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 157
+[02-Jul-2025 14:48:34 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 157
+[02-Jul-2025 14:48:34 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 160
+[02-Jul-2025 14:48:34 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 160
+[02-Jul-2025 14:48:34 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 195
+[02-Jul-2025 14:48:34 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 195
+[02-Jul-2025 14:48:34 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 197
+[02-Jul-2025 14:48:34 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 197
+[02-Jul-2025 14:48:34 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 198
+[02-Jul-2025 14:48:34 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 198
+[02-Jul-2025 14:48:34 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 202
+[02-Jul-2025 14:48:34 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 202
+[02-Jul-2025 14:48:34 America/Porto_Velho] PHP Warning:  Undefined variable $id_usuario_professor in /home2/sested59/sestedcursos.com/efi/index.php on line 101
+[02-Jul-2025 14:48:34 America/Porto_Velho] PHP Warning:  Undefined variable $nivel_responsavel_pelo_cadastro_do_aluno in /home2/sested59/sestedcursos.com/efi/index.php on line 153
+[02-Jul-2025 14:48:34 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 157
+[02-Jul-2025 14:48:34 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 157
+[02-Jul-2025 14:48:34 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 160
+[02-Jul-2025 14:48:34 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 160
+[02-Jul-2025 14:48:34 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 195
+[02-Jul-2025 14:48:34 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 195
+[02-Jul-2025 14:48:34 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 197
+[02-Jul-2025 14:48:34 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 197
+[02-Jul-2025 14:48:34 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 198
+[02-Jul-2025 14:48:34 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 198
+[02-Jul-2025 14:48:34 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 202
+[02-Jul-2025 14:48:34 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 202
+[05-Jul-2025 10:48:39 America/Porto_Velho] PHP Warning:  Undefined variable $id_usuario_professor in /home2/sested59/sestedcursos.com/efi/index.php on line 101
+[05-Jul-2025 10:48:39 America/Porto_Velho] PHP Warning:  Undefined variable $nivel_responsavel_pelo_cadastro_do_aluno in /home2/sested59/sestedcursos.com/efi/index.php on line 153
+[05-Jul-2025 10:48:39 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 157
+[05-Jul-2025 10:48:39 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 157
+[05-Jul-2025 10:48:39 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 160
+[05-Jul-2025 10:48:39 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 160
+[05-Jul-2025 10:48:39 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 195
+[05-Jul-2025 10:48:39 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 195
+[05-Jul-2025 10:48:39 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 197
+[05-Jul-2025 10:48:39 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 197
+[05-Jul-2025 10:48:39 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 198
+[05-Jul-2025 10:48:39 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 198
+[05-Jul-2025 10:48:39 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 202
+[05-Jul-2025 10:48:39 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 202
+[05-Jul-2025 10:48:39 America/Porto_Velho] PHP Warning:  Undefined variable $id_usuario_professor in /home2/sested59/sestedcursos.com/efi/index.php on line 101
+[05-Jul-2025 10:48:39 America/Porto_Velho] PHP Warning:  Undefined variable $nivel_responsavel_pelo_cadastro_do_aluno in /home2/sested59/sestedcursos.com/efi/index.php on line 153
+[05-Jul-2025 10:48:39 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 157
+[05-Jul-2025 10:48:39 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 157
+[05-Jul-2025 10:48:39 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 160
+[05-Jul-2025 10:48:39 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 160
+[05-Jul-2025 10:48:39 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 195
+[05-Jul-2025 10:48:39 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 195
+[05-Jul-2025 10:48:39 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 197
+[05-Jul-2025 10:48:39 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 197
+[05-Jul-2025 10:48:39 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 198
+[05-Jul-2025 10:48:39 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 198
+[05-Jul-2025 10:48:39 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 202
+[05-Jul-2025 10:48:39 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 202
+[08-Jul-2025 15:36:24 America/Porto_Velho] PHP Warning:  Undefined variable $id_usuario_professor in /home2/sested59/sestedcursos.com/efi/index.php on line 101
+[08-Jul-2025 15:36:24 America/Porto_Velho] PHP Warning:  Undefined variable $nivel_responsavel_pelo_cadastro_do_aluno in /home2/sested59/sestedcursos.com/efi/index.php on line 153
+[08-Jul-2025 15:36:24 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 157
+[08-Jul-2025 15:36:24 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 157
+[08-Jul-2025 15:36:24 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 160
+[08-Jul-2025 15:36:24 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 160
+[08-Jul-2025 15:36:24 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 195
+[08-Jul-2025 15:36:24 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 195
+[08-Jul-2025 15:36:24 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 197
+[08-Jul-2025 15:36:24 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 197
+[08-Jul-2025 15:36:24 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 198
+[08-Jul-2025 15:36:24 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 198
+[08-Jul-2025 15:36:24 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 202
+[08-Jul-2025 15:36:24 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 202
+[08-Jul-2025 15:36:24 America/Porto_Velho] PHP Warning:  Undefined variable $id_usuario_professor in /home2/sested59/sestedcursos.com/efi/index.php on line 101
+[08-Jul-2025 15:36:24 America/Porto_Velho] PHP Warning:  Undefined variable $nivel_responsavel_pelo_cadastro_do_aluno in /home2/sested59/sestedcursos.com/efi/index.php on line 153
+[08-Jul-2025 15:36:24 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 157
+[08-Jul-2025 15:36:24 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 157
+[08-Jul-2025 15:36:24 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 160
+[08-Jul-2025 15:36:24 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 160
+[08-Jul-2025 15:36:24 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 195
+[08-Jul-2025 15:36:24 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 195
+[08-Jul-2025 15:36:24 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 197
+[08-Jul-2025 15:36:24 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 197
+[08-Jul-2025 15:36:24 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 198
+[08-Jul-2025 15:36:24 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 198
+[08-Jul-2025 15:36:24 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 202
+[08-Jul-2025 15:36:24 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 202
+[09-Jul-2025 15:33:17 America/Porto_Velho] PHP Warning:  Undefined variable $id_usuario_professor in /home2/sested59/sestedcursos.com/efi/index.php on line 101
+[09-Jul-2025 15:33:17 America/Porto_Velho] PHP Warning:  Undefined variable $nivel_responsavel_pelo_cadastro_do_aluno in /home2/sested59/sestedcursos.com/efi/index.php on line 153
+[09-Jul-2025 15:33:17 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 157
+[09-Jul-2025 15:33:17 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 157
+[09-Jul-2025 15:33:17 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 160
+[09-Jul-2025 15:33:17 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 160
+[09-Jul-2025 15:33:17 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 195
+[09-Jul-2025 15:33:17 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 195
+[09-Jul-2025 15:33:17 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 197
+[09-Jul-2025 15:33:17 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 197
+[09-Jul-2025 15:33:17 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 198
+[09-Jul-2025 15:33:17 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 198
+[09-Jul-2025 15:33:17 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 202
+[09-Jul-2025 15:33:17 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 202
+[09-Jul-2025 15:33:17 America/Porto_Velho] PHP Warning:  Undefined variable $id_usuario_professor in /home2/sested59/sestedcursos.com/efi/index.php on line 101
+[09-Jul-2025 15:33:17 America/Porto_Velho] PHP Warning:  Undefined variable $nivel_responsavel_pelo_cadastro_do_aluno in /home2/sested59/sestedcursos.com/efi/index.php on line 153
+[09-Jul-2025 15:33:17 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 157
+[09-Jul-2025 15:33:17 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 157
+[09-Jul-2025 15:33:17 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 160
+[09-Jul-2025 15:33:17 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 160
+[09-Jul-2025 15:33:17 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 195
+[09-Jul-2025 15:33:17 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 195
+[09-Jul-2025 15:33:17 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 197
+[09-Jul-2025 15:33:17 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 197
+[09-Jul-2025 15:33:17 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 198
+[09-Jul-2025 15:33:17 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 198
+[09-Jul-2025 15:33:17 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 202
+[09-Jul-2025 15:33:17 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 202
+[09-Jul-2025 15:33:19 America/Porto_Velho] PHP Warning:  Undefined variable $id_usuario_professor in /home2/sested59/sestedcursos.com/efi/index.php on line 101
+[09-Jul-2025 15:33:19 America/Porto_Velho] PHP Warning:  Undefined variable $nivel_responsavel_pelo_cadastro_do_aluno in /home2/sested59/sestedcursos.com/efi/index.php on line 153
+[09-Jul-2025 15:33:19 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 157
+[09-Jul-2025 15:33:19 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 157
+[09-Jul-2025 15:33:19 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 160
+[09-Jul-2025 15:33:19 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 160
+[09-Jul-2025 15:33:19 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 195
+[09-Jul-2025 15:33:19 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 195
+[09-Jul-2025 15:33:19 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 197
+[09-Jul-2025 15:33:19 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 197
+[09-Jul-2025 15:33:19 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 198
+[09-Jul-2025 15:33:19 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 198
+[09-Jul-2025 15:33:19 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 202
+[09-Jul-2025 15:33:19 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 202
+[09-Jul-2025 15:33:19 America/Porto_Velho] PHP Warning:  Undefined variable $id_usuario_professor in /home2/sested59/sestedcursos.com/efi/index.php on line 101
+[09-Jul-2025 15:33:19 America/Porto_Velho] PHP Warning:  Undefined variable $nivel_responsavel_pelo_cadastro_do_aluno in /home2/sested59/sestedcursos.com/efi/index.php on line 153
+[09-Jul-2025 15:33:19 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 157
+[09-Jul-2025 15:33:19 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 157
+[09-Jul-2025 15:33:19 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 160
+[09-Jul-2025 15:33:19 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 160
+[09-Jul-2025 15:33:19 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 195
+[09-Jul-2025 15:33:19 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 195
+[09-Jul-2025 15:33:19 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 197
+[09-Jul-2025 15:33:19 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 197
+[09-Jul-2025 15:33:19 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 198
+[09-Jul-2025 15:33:19 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 198
+[09-Jul-2025 15:33:19 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 202
+[09-Jul-2025 15:33:19 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 202
+[13-Jul-2025 13:52:03 America/Porto_Velho] PHP Warning:  Undefined variable $id_usuario_professor in /home2/sested59/sestedcursos.com/efi/index.php on line 101
+[13-Jul-2025 13:52:03 America/Porto_Velho] PHP Warning:  Undefined variable $nivel_responsavel_pelo_cadastro_do_aluno in /home2/sested59/sestedcursos.com/efi/index.php on line 153
+[13-Jul-2025 13:52:03 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 157
+[13-Jul-2025 13:52:03 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 157
+[13-Jul-2025 13:52:03 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 160
+[13-Jul-2025 13:52:03 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 160
+[13-Jul-2025 13:52:03 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 195
+[13-Jul-2025 13:52:03 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 195
+[13-Jul-2025 13:52:03 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 197
+[13-Jul-2025 13:52:03 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 197
+[13-Jul-2025 13:52:03 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 198
+[13-Jul-2025 13:52:03 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 198
+[13-Jul-2025 13:52:03 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 202
+[13-Jul-2025 13:52:03 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 202
+[13-Jul-2025 13:52:03 America/Porto_Velho] PHP Warning:  Undefined variable $id_usuario_professor in /home2/sested59/sestedcursos.com/efi/index.php on line 101
+[13-Jul-2025 13:52:03 America/Porto_Velho] PHP Warning:  Undefined variable $nivel_responsavel_pelo_cadastro_do_aluno in /home2/sested59/sestedcursos.com/efi/index.php on line 153
+[13-Jul-2025 13:52:03 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 157
+[13-Jul-2025 13:52:03 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 157
+[13-Jul-2025 13:52:03 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 160
+[13-Jul-2025 13:52:03 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 160
+[13-Jul-2025 13:52:03 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 195
+[13-Jul-2025 13:52:03 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 195
+[13-Jul-2025 13:52:03 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 197
+[13-Jul-2025 13:52:03 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 197
+[13-Jul-2025 13:52:03 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 198
+[13-Jul-2025 13:52:03 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 198
+[13-Jul-2025 13:52:03 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 202
+[13-Jul-2025 13:52:03 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 202
+[14-Jul-2025 15:08:56 America/Porto_Velho] PHP Warning:  Undefined variable $id_usuario_professor in /home2/sested59/sestedcursos.com/efi/index.php on line 101
+[14-Jul-2025 15:08:56 America/Porto_Velho] PHP Warning:  Undefined variable $nivel_responsavel_pelo_cadastro_do_aluno in /home2/sested59/sestedcursos.com/efi/index.php on line 153
+[14-Jul-2025 15:08:56 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 157
+[14-Jul-2025 15:08:56 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 157
+[14-Jul-2025 15:08:56 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 160
+[14-Jul-2025 15:08:56 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 160
+[14-Jul-2025 15:08:56 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 195
+[14-Jul-2025 15:08:56 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 195
+[14-Jul-2025 15:08:56 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 197
+[14-Jul-2025 15:08:56 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 197
+[14-Jul-2025 15:08:56 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 198
+[14-Jul-2025 15:08:56 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 198
+[14-Jul-2025 15:08:56 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 202
+[14-Jul-2025 15:08:56 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 202
+[14-Jul-2025 15:08:56 America/Porto_Velho] PHP Warning:  Undefined variable $id_usuario_professor in /home2/sested59/sestedcursos.com/efi/index.php on line 101
+[14-Jul-2025 15:08:56 America/Porto_Velho] PHP Warning:  Undefined variable $nivel_responsavel_pelo_cadastro_do_aluno in /home2/sested59/sestedcursos.com/efi/index.php on line 153
+[14-Jul-2025 15:08:56 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 157
+[14-Jul-2025 15:08:56 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 157
+[14-Jul-2025 15:08:56 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 160
+[14-Jul-2025 15:08:56 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 160
+[14-Jul-2025 15:08:56 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 195
+[14-Jul-2025 15:08:56 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 195
+[14-Jul-2025 15:08:56 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 197
+[14-Jul-2025 15:08:56 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 197
+[14-Jul-2025 15:08:56 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 198
+[14-Jul-2025 15:08:56 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 198
+[14-Jul-2025 15:08:56 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 202
+[14-Jul-2025 15:08:56 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 202
+[19-Jul-2025 09:26:49 America/Porto_Velho] PHP Warning:  Undefined variable $id_usuario_professor in /home2/sested59/sestedcursos.com/efi/index.php on line 101
+[19-Jul-2025 09:26:49 America/Porto_Velho] PHP Warning:  Undefined variable $nivel_responsavel_pelo_cadastro_do_aluno in /home2/sested59/sestedcursos.com/efi/index.php on line 153
+[19-Jul-2025 09:26:49 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 157
+[19-Jul-2025 09:26:49 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 157
+[19-Jul-2025 09:26:49 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 160
+[19-Jul-2025 09:26:49 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 160
+[19-Jul-2025 09:26:49 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 195
+[19-Jul-2025 09:26:49 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 195
+[19-Jul-2025 09:26:49 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 197
+[19-Jul-2025 09:26:49 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 197
+[19-Jul-2025 09:26:49 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 198
+[19-Jul-2025 09:26:49 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 198
+[19-Jul-2025 09:26:49 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 202
+[19-Jul-2025 09:26:49 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 202
+[19-Jul-2025 09:26:49 America/Porto_Velho] PHP Warning:  Undefined variable $id_usuario_professor in /home2/sested59/sestedcursos.com/efi/index.php on line 101
+[19-Jul-2025 09:26:49 America/Porto_Velho] PHP Warning:  Undefined variable $nivel_responsavel_pelo_cadastro_do_aluno in /home2/sested59/sestedcursos.com/efi/index.php on line 153
+[19-Jul-2025 09:26:49 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 157
+[19-Jul-2025 09:26:49 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 157
+[19-Jul-2025 09:26:49 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 160
+[19-Jul-2025 09:26:49 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 160
+[19-Jul-2025 09:26:49 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 195
+[19-Jul-2025 09:26:49 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 195
+[19-Jul-2025 09:26:49 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 197
+[19-Jul-2025 09:26:49 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 197
+[19-Jul-2025 09:26:49 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 198
+[19-Jul-2025 09:26:49 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 198
+[19-Jul-2025 09:26:49 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 202
+[19-Jul-2025 09:26:49 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 202
+[16-Aug-2025 19:58:21 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 197
+[16-Aug-2025 19:58:21 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 197
+[16-Aug-2025 19:58:21 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 198
+[16-Aug-2025 19:58:21 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 198
+[16-Aug-2025 19:58:21 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 202
+[16-Aug-2025 19:58:21 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 202
+[16-Aug-2025 20:03:43 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 197
+[16-Aug-2025 20:03:43 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 197
+[16-Aug-2025 20:03:43 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 198
+[16-Aug-2025 20:03:43 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 198
+[16-Aug-2025 20:03:43 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 202
+[16-Aug-2025 20:03:43 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 202
+[16-Aug-2025 22:41:30 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 197
+[16-Aug-2025 22:41:30 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 197
+[16-Aug-2025 22:41:30 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 198
+[16-Aug-2025 22:41:30 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 198
+[16-Aug-2025 22:41:30 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 202
+[16-Aug-2025 22:41:30 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 202
+[16-Aug-2025 22:41:55 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 197
+[16-Aug-2025 22:41:55 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 197
+[16-Aug-2025 22:41:55 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 198
+[16-Aug-2025 22:41:55 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 198
+[16-Aug-2025 22:41:55 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 202
+[16-Aug-2025 22:41:55 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 202
+[16-Aug-2025 22:43:00 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 197
+[16-Aug-2025 22:43:00 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 197
+[16-Aug-2025 22:43:00 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 198
+[16-Aug-2025 22:43:00 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 198
+[16-Aug-2025 22:43:00 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 202
+[16-Aug-2025 22:43:00 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 202
+[18-Aug-2025 11:19:07 America/Porto_Velho] PHP Warning:  Undefined variable $id_usuario_professor in /home2/sested59/sestedcursos.com/efi/index.php on line 101
+[18-Aug-2025 11:19:07 America/Porto_Velho] PHP Warning:  Undefined variable $nivel_responsavel_pelo_cadastro_do_aluno in /home2/sested59/sestedcursos.com/efi/index.php on line 153
+[18-Aug-2025 11:19:07 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 157
+[18-Aug-2025 11:19:07 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 157
+[18-Aug-2025 11:19:07 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 160
+[18-Aug-2025 11:19:07 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 160
+[18-Aug-2025 11:19:07 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 195
+[18-Aug-2025 11:19:07 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 195
+[18-Aug-2025 11:19:07 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 197
+[18-Aug-2025 11:19:07 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 197
+[18-Aug-2025 11:19:07 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 198
+[18-Aug-2025 11:19:07 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 198
+[18-Aug-2025 11:19:07 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 202
+[18-Aug-2025 11:19:07 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 202
+[18-Aug-2025 11:19:07 America/Porto_Velho] PHP Warning:  Undefined variable $id_usuario_professor in /home2/sested59/sestedcursos.com/efi/index.php on line 101
+[18-Aug-2025 11:19:07 America/Porto_Velho] PHP Warning:  Undefined variable $nivel_responsavel_pelo_cadastro_do_aluno in /home2/sested59/sestedcursos.com/efi/index.php on line 153
+[18-Aug-2025 11:19:07 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 157
+[18-Aug-2025 11:19:07 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 157
+[18-Aug-2025 11:19:07 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 160
+[18-Aug-2025 11:19:07 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 160
+[18-Aug-2025 11:19:07 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 195
+[18-Aug-2025 11:19:07 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 195
+[18-Aug-2025 11:19:07 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 197
+[18-Aug-2025 11:19:07 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 197
+[18-Aug-2025 11:19:07 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 198
+[18-Aug-2025 11:19:07 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 198
+[18-Aug-2025 11:19:07 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 202
+[18-Aug-2025 11:19:07 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 202
+[29-Aug-2025 11:17:52 America/Porto_Velho] PHP Warning:  Undefined variable $id_usuario_professor in /home2/sested59/sestedcursos.com/efi/index.php on line 101
+[29-Aug-2025 11:17:52 America/Porto_Velho] PHP Warning:  Undefined variable $nivel_responsavel_pelo_cadastro_do_aluno in /home2/sested59/sestedcursos.com/efi/index.php on line 153
+[29-Aug-2025 11:17:52 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 157
+[29-Aug-2025 11:17:52 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 157
+[29-Aug-2025 11:17:52 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 160
+[29-Aug-2025 11:17:52 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 160
+[29-Aug-2025 11:17:52 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 195
+[29-Aug-2025 11:17:52 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 195
+[29-Aug-2025 11:17:52 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 197
+[29-Aug-2025 11:17:52 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 197
+[29-Aug-2025 11:17:52 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 198
+[29-Aug-2025 11:17:52 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 198
+[29-Aug-2025 11:17:52 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 202
+[29-Aug-2025 11:17:52 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 202
+[29-Aug-2025 11:17:52 America/Porto_Velho] PHP Warning:  Undefined variable $id_usuario_professor in /home2/sested59/sestedcursos.com/efi/index.php on line 101
+[29-Aug-2025 11:17:52 America/Porto_Velho] PHP Warning:  Undefined variable $nivel_responsavel_pelo_cadastro_do_aluno in /home2/sested59/sestedcursos.com/efi/index.php on line 153
+[29-Aug-2025 11:17:52 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 157
+[29-Aug-2025 11:17:52 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 157
+[29-Aug-2025 11:17:52 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 160
+[29-Aug-2025 11:17:52 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 160
+[29-Aug-2025 11:17:52 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 195
+[29-Aug-2025 11:17:52 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 195
+[29-Aug-2025 11:17:52 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 197
+[29-Aug-2025 11:17:52 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 197
+[29-Aug-2025 11:17:52 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 198
+[29-Aug-2025 11:17:52 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 198
+[29-Aug-2025 11:17:52 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 202
+[29-Aug-2025 11:17:52 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 202
+[06-Sep-2025 11:18:52 America/Porto_Velho] PHP Warning:  Undefined variable $id_usuario_professor in /home2/sested59/sestedcursos.com/efi/index.php on line 101
+[06-Sep-2025 11:18:52 America/Porto_Velho] PHP Warning:  Undefined variable $nivel_responsavel_pelo_cadastro_do_aluno in /home2/sested59/sestedcursos.com/efi/index.php on line 153
+[06-Sep-2025 11:18:52 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 157
+[06-Sep-2025 11:18:52 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 157
+[06-Sep-2025 11:18:52 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 160
+[06-Sep-2025 11:18:52 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 160
+[06-Sep-2025 11:18:52 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 195
+[06-Sep-2025 11:18:52 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 195
+[06-Sep-2025 11:18:52 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 197
+[06-Sep-2025 11:18:52 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 197
+[06-Sep-2025 11:18:52 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 198
+[06-Sep-2025 11:18:52 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 198
+[06-Sep-2025 11:18:52 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 202
+[06-Sep-2025 11:18:52 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 202
+[06-Sep-2025 11:18:52 America/Porto_Velho] PHP Warning:  Undefined variable $id_usuario_professor in /home2/sested59/sestedcursos.com/efi/index.php on line 101
+[06-Sep-2025 11:18:52 America/Porto_Velho] PHP Warning:  Undefined variable $nivel_responsavel_pelo_cadastro_do_aluno in /home2/sested59/sestedcursos.com/efi/index.php on line 153
+[06-Sep-2025 11:18:52 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 157
+[06-Sep-2025 11:18:52 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 157
+[06-Sep-2025 11:18:52 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 160
+[06-Sep-2025 11:18:52 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 160
+[06-Sep-2025 11:18:52 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 195
+[06-Sep-2025 11:18:52 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 195
+[06-Sep-2025 11:18:52 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 197
+[06-Sep-2025 11:18:52 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 197
+[06-Sep-2025 11:18:52 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 198
+[06-Sep-2025 11:18:52 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 198
+[06-Sep-2025 11:18:52 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 202
+[06-Sep-2025 11:18:52 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 202
+[12-Sep-2025 11:20:32 America/Porto_Velho] PHP Warning:  Undefined variable $id_usuario_professor in /home2/sested59/sestedcursos.com/efi/index.php on line 101
+[12-Sep-2025 11:20:32 America/Porto_Velho] PHP Warning:  Undefined variable $nivel_responsavel_pelo_cadastro_do_aluno in /home2/sested59/sestedcursos.com/efi/index.php on line 153
+[12-Sep-2025 11:20:32 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 157
+[12-Sep-2025 11:20:32 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 157
+[12-Sep-2025 11:20:32 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 160
+[12-Sep-2025 11:20:32 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 160
+[12-Sep-2025 11:20:32 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 195
+[12-Sep-2025 11:20:32 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 195
+[12-Sep-2025 11:20:32 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 197
+[12-Sep-2025 11:20:32 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 197
+[12-Sep-2025 11:20:32 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 198
+[12-Sep-2025 11:20:32 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 198
+[12-Sep-2025 11:20:32 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 202
+[12-Sep-2025 11:20:32 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 202
+[12-Sep-2025 11:20:32 America/Porto_Velho] PHP Warning:  Undefined variable $id_usuario_professor in /home2/sested59/sestedcursos.com/efi/index.php on line 101
+[12-Sep-2025 11:20:32 America/Porto_Velho] PHP Warning:  Undefined variable $nivel_responsavel_pelo_cadastro_do_aluno in /home2/sested59/sestedcursos.com/efi/index.php on line 153
+[12-Sep-2025 11:20:32 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 157
+[12-Sep-2025 11:20:32 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 157
+[12-Sep-2025 11:20:32 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 160
+[12-Sep-2025 11:20:32 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 160
+[12-Sep-2025 11:20:32 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 195
+[12-Sep-2025 11:20:32 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 195
+[12-Sep-2025 11:20:32 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 197
+[12-Sep-2025 11:20:32 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 197
+[12-Sep-2025 11:20:32 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 198
+[12-Sep-2025 11:20:32 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 198
+[12-Sep-2025 11:20:32 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 202
+[12-Sep-2025 11:20:32 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 202
+[16-Sep-2025 09:49:06 America/Porto_Velho] PHP Warning:  Undefined variable $id_usuario_professor in /home2/sested59/sestedcursos.com/efi/index.php on line 101
+[16-Sep-2025 09:49:06 America/Porto_Velho] PHP Warning:  Undefined variable $nivel_responsavel_pelo_cadastro_do_aluno in /home2/sested59/sestedcursos.com/efi/index.php on line 153
+[16-Sep-2025 09:49:06 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 157
+[16-Sep-2025 09:49:06 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 157
+[16-Sep-2025 09:49:06 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 160
+[16-Sep-2025 09:49:06 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 160
+[16-Sep-2025 09:49:06 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 195
+[16-Sep-2025 09:49:06 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 195
+[16-Sep-2025 09:49:06 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 197
+[16-Sep-2025 09:49:06 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 197
+[16-Sep-2025 09:49:06 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 198
+[16-Sep-2025 09:49:06 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 198
+[16-Sep-2025 09:49:06 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 202
+[16-Sep-2025 09:49:06 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 202
+[16-Sep-2025 09:49:06 America/Porto_Velho] PHP Warning:  Undefined variable $id_usuario_professor in /home2/sested59/sestedcursos.com/efi/index.php on line 101
+[16-Sep-2025 09:49:06 America/Porto_Velho] PHP Warning:  Undefined variable $nivel_responsavel_pelo_cadastro_do_aluno in /home2/sested59/sestedcursos.com/efi/index.php on line 153
+[16-Sep-2025 09:49:06 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 157
+[16-Sep-2025 09:49:06 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 157
+[16-Sep-2025 09:49:06 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 160
+[16-Sep-2025 09:49:06 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 160
+[16-Sep-2025 09:49:06 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 195
+[16-Sep-2025 09:49:06 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 195
+[16-Sep-2025 09:49:06 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 197
+[16-Sep-2025 09:49:06 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 197
+[16-Sep-2025 09:49:06 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 198
+[16-Sep-2025 09:49:06 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 198
+[16-Sep-2025 09:49:06 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 202
+[16-Sep-2025 09:49:06 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 202
+[16-Sep-2025 09:49:06 America/Porto_Velho] PHP Warning:  Undefined variable $id_usuario_professor in /home2/sested59/sestedcursos.com/efi/index.php on line 101
+[16-Sep-2025 09:49:06 America/Porto_Velho] PHP Warning:  Undefined variable $nivel_responsavel_pelo_cadastro_do_aluno in /home2/sested59/sestedcursos.com/efi/index.php on line 153
+[16-Sep-2025 09:49:06 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 157
+[16-Sep-2025 09:49:06 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 157
+[16-Sep-2025 09:49:06 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 160
+[16-Sep-2025 09:49:06 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 160
+[16-Sep-2025 09:49:06 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 195
+[16-Sep-2025 09:49:06 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 195
+[16-Sep-2025 09:49:06 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 197
+[16-Sep-2025 09:49:06 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 197
+[16-Sep-2025 09:49:06 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 198
+[16-Sep-2025 09:49:06 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 198
+[16-Sep-2025 09:49:06 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 202
+[16-Sep-2025 09:49:06 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 202
+[16-Sep-2025 09:49:06 America/Porto_Velho] PHP Warning:  Undefined variable $id_usuario_professor in /home2/sested59/sestedcursos.com/efi/index.php on line 101
+[16-Sep-2025 09:49:06 America/Porto_Velho] PHP Warning:  Undefined variable $nivel_responsavel_pelo_cadastro_do_aluno in /home2/sested59/sestedcursos.com/efi/index.php on line 153
+[16-Sep-2025 09:49:06 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 157
+[16-Sep-2025 09:49:06 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 157
+[16-Sep-2025 09:49:06 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 160
+[16-Sep-2025 09:49:06 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 160
+[16-Sep-2025 09:49:06 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 195
+[16-Sep-2025 09:49:06 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 195
+[16-Sep-2025 09:49:06 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 197
+[16-Sep-2025 09:49:06 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 197
+[16-Sep-2025 09:49:06 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 198
+[16-Sep-2025 09:49:06 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 198
+[16-Sep-2025 09:49:06 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 202
+[16-Sep-2025 09:49:06 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 202
+[17-Sep-2025 10:14:10 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 197
+[17-Sep-2025 10:14:10 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 197
+[17-Sep-2025 10:14:10 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 198
+[17-Sep-2025 10:14:10 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 198
+[17-Sep-2025 10:14:10 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 202
+[17-Sep-2025 10:14:10 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 202
+[19-Sep-2025 11:20:43 America/Porto_Velho] PHP Warning:  Undefined variable $id_usuario_professor in /home2/sested59/sestedcursos.com/efi/index.php on line 101
+[19-Sep-2025 11:20:43 America/Porto_Velho] PHP Warning:  Undefined variable $nivel_responsavel_pelo_cadastro_do_aluno in /home2/sested59/sestedcursos.com/efi/index.php on line 153
+[19-Sep-2025 11:20:43 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 157
+[19-Sep-2025 11:20:43 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 157
+[19-Sep-2025 11:20:43 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 160
+[19-Sep-2025 11:20:43 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 160
+[19-Sep-2025 11:20:43 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 195
+[19-Sep-2025 11:20:43 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 195
+[19-Sep-2025 11:20:43 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 197
+[19-Sep-2025 11:20:43 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 197
+[19-Sep-2025 11:20:43 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 198
+[19-Sep-2025 11:20:43 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 198
+[19-Sep-2025 11:20:43 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 202
+[19-Sep-2025 11:20:43 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 202
+[19-Sep-2025 11:20:43 America/Porto_Velho] PHP Warning:  Undefined variable $id_usuario_professor in /home2/sested59/sestedcursos.com/efi/index.php on line 101
+[19-Sep-2025 11:20:43 America/Porto_Velho] PHP Warning:  Undefined variable $nivel_responsavel_pelo_cadastro_do_aluno in /home2/sested59/sestedcursos.com/efi/index.php on line 153
+[19-Sep-2025 11:20:43 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 157
+[19-Sep-2025 11:20:43 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 157
+[19-Sep-2025 11:20:43 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 160
+[19-Sep-2025 11:20:43 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 160
+[19-Sep-2025 11:20:43 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 195
+[19-Sep-2025 11:20:43 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 195
+[19-Sep-2025 11:20:43 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 197
+[19-Sep-2025 11:20:43 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 197
+[19-Sep-2025 11:20:43 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 198
+[19-Sep-2025 11:20:43 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 198
+[19-Sep-2025 11:20:43 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 202
+[19-Sep-2025 11:20:43 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 202
+[19-Sep-2025 12:17:36 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/card_payment.php on line 17
+[19-Sep-2025 12:17:36 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/card_payment.php on line 23
+[19-Sep-2025 12:17:36 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/card_payment.php on line 24
+[19-Sep-2025 12:17:36 America/Porto_Velho] PHP Warning:  Undefined variable $id_usuario_professor in /home2/sested59/sestedcursos.com/efi/card_payment.php on line 96
+[19-Sep-2025 12:17:36 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/card_payment.php on line 192
+[19-Sep-2025 12:17:36 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/card_payment.php on line 192
+[19-Sep-2025 12:17:36 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/card_payment.php on line 193
+[19-Sep-2025 12:17:36 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/card_payment.php on line 193
+[19-Sep-2025 12:17:36 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/card_payment.php on line 197
+[19-Sep-2025 12:17:36 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/card_payment.php on line 197
+[19-Sep-2025 12:17:36 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/card_payment.php on line 264
+[19-Sep-2025 12:20:50 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 197
+[19-Sep-2025 12:20:50 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 197
+[19-Sep-2025 12:20:50 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 198
+[19-Sep-2025 12:20:50 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 198
+[19-Sep-2025 12:20:50 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 202
+[19-Sep-2025 12:20:50 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 202
+[19-Sep-2025 12:27:34 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 197
+[19-Sep-2025 12:27:34 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 197
+[19-Sep-2025 12:27:34 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 198
+[19-Sep-2025 12:27:34 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 198
+[19-Sep-2025 12:27:34 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 202
+[19-Sep-2025 12:27:34 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 202
+[19-Sep-2025 12:28:17 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 197
+[19-Sep-2025 12:28:17 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 197
+[19-Sep-2025 12:28:17 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 198
+[19-Sep-2025 12:28:17 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 198
+[19-Sep-2025 12:28:17 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 202
+[19-Sep-2025 12:28:17 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 202
+[19-Sep-2025 12:48:02 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 197
+[19-Sep-2025 12:48:02 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 197
+[19-Sep-2025 12:48:02 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 198
+[19-Sep-2025 12:48:02 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 198
+[19-Sep-2025 12:48:02 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 202
+[19-Sep-2025 12:48:02 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 202
+[19-Sep-2025 12:56:05 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/card_payment.php on line 192
+[19-Sep-2025 12:56:05 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/card_payment.php on line 192
+[19-Sep-2025 12:56:05 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/card_payment.php on line 193
+[19-Sep-2025 12:56:05 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/card_payment.php on line 193
+[19-Sep-2025 12:56:05 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/card_payment.php on line 197
+[19-Sep-2025 12:56:05 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/card_payment.php on line 197
+[19-Sep-2025 12:58:34 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/card_payment.php on line 192
+[19-Sep-2025 12:58:34 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/card_payment.php on line 192
+[19-Sep-2025 12:58:34 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/card_payment.php on line 193
+[19-Sep-2025 12:58:34 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/card_payment.php on line 193
+[19-Sep-2025 12:58:34 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/card_payment.php on line 197
+[19-Sep-2025 12:58:34 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/card_payment.php on line 197
+[21-Sep-2025 19:57:35 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 197
+[21-Sep-2025 19:57:35 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 197
+[21-Sep-2025 19:57:35 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 198
+[21-Sep-2025 19:57:35 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 198
+[21-Sep-2025 19:57:35 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 202
+[21-Sep-2025 19:57:35 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 202
+[21-Sep-2025 19:57:39 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 197
+[21-Sep-2025 19:57:39 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 197
+[21-Sep-2025 19:57:39 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 198
+[21-Sep-2025 19:57:39 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 198
+[21-Sep-2025 19:57:39 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 202
+[21-Sep-2025 19:57:39 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 202
+[21-Sep-2025 19:58:35 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 194
+[21-Sep-2025 19:58:35 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 194
+[21-Sep-2025 19:58:35 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 195
+[21-Sep-2025 19:58:35 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 195
+[21-Sep-2025 19:58:35 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 199
+[21-Sep-2025 19:58:35 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 199
+[21-Sep-2025 19:59:04 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 194
+[21-Sep-2025 19:59:04 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 194
+[21-Sep-2025 19:59:04 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 195
+[21-Sep-2025 19:59:04 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 195
+[21-Sep-2025 19:59:04 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 199
+[21-Sep-2025 19:59:04 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 199
+[21-Sep-2025 19:59:31 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 194
+[21-Sep-2025 19:59:31 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 194
+[21-Sep-2025 19:59:31 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 195
+[21-Sep-2025 19:59:31 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 195
+[21-Sep-2025 19:59:31 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 199
+[21-Sep-2025 19:59:31 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 199
+[21-Sep-2025 19:59:32 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 194
+[21-Sep-2025 19:59:32 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 194
+[21-Sep-2025 19:59:32 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 195
+[21-Sep-2025 19:59:32 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 195
+[21-Sep-2025 19:59:32 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 199
+[21-Sep-2025 19:59:32 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 199
+[21-Sep-2025 19:59:33 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 194
+[21-Sep-2025 19:59:33 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 194
+[21-Sep-2025 19:59:33 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 195
+[21-Sep-2025 19:59:33 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 195
+[21-Sep-2025 19:59:33 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 199
+[21-Sep-2025 19:59:33 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 199
+[21-Sep-2025 19:59:40 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 194
+[21-Sep-2025 19:59:40 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 194
+[21-Sep-2025 19:59:40 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 195
+[21-Sep-2025 19:59:40 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 195
+[21-Sep-2025 19:59:40 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 199
+[21-Sep-2025 19:59:40 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 199
+[21-Sep-2025 20:00:33 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 194
+[21-Sep-2025 20:00:33 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 194
+[21-Sep-2025 20:00:33 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 195
+[21-Sep-2025 20:00:33 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 195
+[21-Sep-2025 20:00:33 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 199
+[21-Sep-2025 20:00:33 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 199
+[21-Sep-2025 20:01:23 America/Porto_Velho] PHP Warning:  Undefined variable $id_usuario_professor in /home2/sested59/sestedcursos.com/efi/index.php on line 98
+[21-Sep-2025 20:01:23 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 194
+[21-Sep-2025 20:01:23 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 194
+[21-Sep-2025 20:01:23 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 195
+[21-Sep-2025 20:01:23 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 195
+[21-Sep-2025 20:01:23 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 199
+[21-Sep-2025 20:01:23 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 199
+[21-Sep-2025 20:01:23 America/Porto_Velho] PHP Warning:  Undefined variable $valorF in /home2/sested59/sestedcursos.com/efi/index.php on line 827
+[21-Sep-2025 20:04:52 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 194
+[21-Sep-2025 20:04:52 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 194
+[21-Sep-2025 20:04:52 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 195
+[21-Sep-2025 20:04:52 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 195
+[21-Sep-2025 20:04:52 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 199
+[21-Sep-2025 20:04:52 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 199
+[21-Sep-2025 20:09:09 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 194
+[21-Sep-2025 20:09:09 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 194
+[21-Sep-2025 20:09:09 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 195
+[21-Sep-2025 20:09:09 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 195
+[21-Sep-2025 20:09:09 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 199
+[21-Sep-2025 20:09:09 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 199
+[21-Sep-2025 20:10:10 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 194
+[21-Sep-2025 20:10:10 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 194
+[21-Sep-2025 20:10:10 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 195
+[21-Sep-2025 20:10:10 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 195
+[21-Sep-2025 20:10:10 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 199
+[21-Sep-2025 20:10:10 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 199
+[21-Sep-2025 20:22:07 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 194
+[21-Sep-2025 20:22:07 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 194
+[21-Sep-2025 20:22:07 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 195
+[21-Sep-2025 20:22:07 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 195
+[21-Sep-2025 20:22:07 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 199
+[21-Sep-2025 20:22:07 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 199
+[21-Sep-2025 20:22:13 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 194
+[21-Sep-2025 20:22:13 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 194
+[21-Sep-2025 20:22:13 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 195
+[21-Sep-2025 20:22:13 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 195
+[21-Sep-2025 20:22:13 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 199
+[21-Sep-2025 20:22:13 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 199
+[21-Sep-2025 20:22:22 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 194
+[21-Sep-2025 20:22:22 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 194
+[21-Sep-2025 20:22:22 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 195
+[21-Sep-2025 20:22:22 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 195
+[21-Sep-2025 20:22:22 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 199
+[21-Sep-2025 20:22:22 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 199
+[21-Sep-2025 20:42:37 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 194
+[21-Sep-2025 20:42:37 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 194
+[21-Sep-2025 20:42:37 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 195
+[21-Sep-2025 20:42:37 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 195
+[21-Sep-2025 20:42:37 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 199
+[21-Sep-2025 20:42:37 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 199
+[21-Sep-2025 21:08:52 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 194
+[21-Sep-2025 21:08:52 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 194
+[21-Sep-2025 21:08:52 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 195
+[21-Sep-2025 21:08:52 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 195
+[21-Sep-2025 21:08:52 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 199
+[21-Sep-2025 21:08:52 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 199
+[21-Sep-2025 21:09:07 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 194
+[21-Sep-2025 21:09:07 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 194
+[21-Sep-2025 21:09:07 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 195
+[21-Sep-2025 21:09:07 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 195
+[21-Sep-2025 21:09:07 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 199
+[21-Sep-2025 21:09:07 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 199
+[21-Sep-2025 21:09:20 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 194
+[21-Sep-2025 21:09:20 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 194
+[21-Sep-2025 21:09:20 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 195
+[21-Sep-2025 21:09:20 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 195
+[21-Sep-2025 21:09:20 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 199
+[21-Sep-2025 21:09:20 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 199
+[21-Sep-2025 21:09:48 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 194
+[21-Sep-2025 21:09:48 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 194
+[21-Sep-2025 21:09:48 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 195
+[21-Sep-2025 21:09:48 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 195
+[21-Sep-2025 21:09:48 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 199
+[21-Sep-2025 21:09:48 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 199
+[21-Sep-2025 21:11:01 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 194
+[21-Sep-2025 21:11:01 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 194
+[21-Sep-2025 21:11:01 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 195
+[21-Sep-2025 21:11:01 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 195
+[21-Sep-2025 21:11:01 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 199
+[21-Sep-2025 21:11:01 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 199
+[21-Sep-2025 21:11:27 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 194
+[21-Sep-2025 21:11:27 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 194
+[21-Sep-2025 21:11:27 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 195
+[21-Sep-2025 21:11:27 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 195
+[21-Sep-2025 21:11:27 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 199
+[21-Sep-2025 21:11:27 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 199
+[21-Sep-2025 21:13:15 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 194
+[21-Sep-2025 21:13:15 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 194
+[21-Sep-2025 21:13:15 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 195
+[21-Sep-2025 21:13:15 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 195
+[21-Sep-2025 21:13:15 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 199
+[21-Sep-2025 21:13:15 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 199
+[21-Sep-2025 21:15:04 America/Porto_Velho] PHP Warning:  Undefined variable $id_usuario_professor in /home2/sested59/sestedcursos.com/efi/index.php on line 98
+[21-Sep-2025 21:15:04 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 194
+[21-Sep-2025 21:15:04 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 194
+[21-Sep-2025 21:15:04 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 195
+[21-Sep-2025 21:15:04 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 195
+[21-Sep-2025 21:15:04 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 199
+[21-Sep-2025 21:15:04 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 199
+[21-Sep-2025 21:15:04 America/Porto_Velho] PHP Warning:  Undefined variable $valorF in /home2/sested59/sestedcursos.com/efi/index.php on line 827
+[21-Sep-2025 21:15:22 America/Porto_Velho] PHP Warning:  Undefined variable $id_usuario_professor in /home2/sested59/sestedcursos.com/efi/index.php on line 98
+[21-Sep-2025 21:15:22 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 194
+[21-Sep-2025 21:15:22 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 194
+[21-Sep-2025 21:15:22 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 195
+[21-Sep-2025 21:15:22 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 195
+[21-Sep-2025 21:15:22 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 199
+[21-Sep-2025 21:15:22 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 199
+[21-Sep-2025 21:15:22 America/Porto_Velho] PHP Warning:  Undefined variable $valorF in /home2/sested59/sestedcursos.com/efi/index.php on line 827
+[21-Sep-2025 21:15:32 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 194
+[21-Sep-2025 21:15:32 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 194
+[21-Sep-2025 21:15:32 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 195
+[21-Sep-2025 21:15:32 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 195
+[21-Sep-2025 21:15:32 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 199
+[21-Sep-2025 21:15:32 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 199
+[21-Sep-2025 21:16:33 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 194
+[21-Sep-2025 21:16:33 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 194
+[21-Sep-2025 21:16:33 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 195
+[21-Sep-2025 21:16:33 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 195
+[21-Sep-2025 21:16:33 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 199
+[21-Sep-2025 21:16:33 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 199
+[21-Sep-2025 21:18:16 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 194
+[21-Sep-2025 21:18:16 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 194
+[21-Sep-2025 21:18:16 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 195
+[21-Sep-2025 21:18:16 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 195
+[21-Sep-2025 21:18:16 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 199
+[21-Sep-2025 21:18:16 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 199
+[21-Sep-2025 21:38:49 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 194
+[21-Sep-2025 21:38:49 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 194
+[21-Sep-2025 21:38:49 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 195
+[21-Sep-2025 21:38:49 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 195
+[21-Sep-2025 21:38:49 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 199
+[21-Sep-2025 21:38:49 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 199
+[21-Sep-2025 21:53:08 America/Porto_Velho] PHP Warning:  Undefined variable $id_usuario_professor in /home2/sested59/sestedcursos.com/efi/index.php on line 98
+[21-Sep-2025 21:53:08 America/Porto_Velho] PHP Warning:  Undefined variable $nivel_responsavel_pelo_cadastro_do_aluno in /home2/sested59/sestedcursos.com/efi/index.php on line 150
+[21-Sep-2025 21:53:08 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 154
+[21-Sep-2025 21:53:08 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 154
+[21-Sep-2025 21:53:08 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 157
+[21-Sep-2025 21:53:08 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 157
+[21-Sep-2025 21:53:08 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 192
+[21-Sep-2025 21:53:08 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 192
+[21-Sep-2025 21:53:08 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 194
+[21-Sep-2025 21:53:08 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 194
+[21-Sep-2025 21:53:08 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 195
+[21-Sep-2025 21:53:08 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 195
+[21-Sep-2025 21:53:08 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 199
+[21-Sep-2025 21:53:08 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 199
+[21-Sep-2025 21:53:08 America/Porto_Velho] PHP Warning:  Undefined variable $valorF in /home2/sested59/sestedcursos.com/efi/index.php on line 827
+[21-Sep-2025 22:06:11 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 194
+[21-Sep-2025 22:06:11 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 194
+[21-Sep-2025 22:06:11 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 195
+[21-Sep-2025 22:06:11 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 195
+[21-Sep-2025 22:06:11 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 199
+[21-Sep-2025 22:06:11 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 199
+[21-Sep-2025 22:40:08 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 194
+[21-Sep-2025 22:40:08 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 194
+[21-Sep-2025 22:40:08 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 195
+[21-Sep-2025 22:40:08 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 195
+[21-Sep-2025 22:40:08 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 199
+[21-Sep-2025 22:40:08 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 199
+[21-Sep-2025 22:40:32 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 194
+[21-Sep-2025 22:40:32 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 194
+[21-Sep-2025 22:40:32 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 195
+[21-Sep-2025 22:40:32 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 195
+[21-Sep-2025 22:40:32 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 199
+[21-Sep-2025 22:40:32 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 199
+[21-Sep-2025 22:43:51 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 194
+[21-Sep-2025 22:43:51 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 194
+[21-Sep-2025 22:43:51 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 195
+[21-Sep-2025 22:43:51 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 195
+[21-Sep-2025 22:43:51 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 199
+[21-Sep-2025 22:43:51 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 199
+[21-Sep-2025 23:07:48 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 194
+[21-Sep-2025 23:07:48 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 194
+[21-Sep-2025 23:07:48 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 195
+[21-Sep-2025 23:07:48 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 195
+[21-Sep-2025 23:07:48 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 199
+[21-Sep-2025 23:07:48 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 199
+[22-Sep-2025 12:03:13 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 194
+[22-Sep-2025 12:03:13 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 194
+[22-Sep-2025 12:03:13 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 195
+[22-Sep-2025 12:03:13 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 195
+[22-Sep-2025 12:03:13 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 199
+[22-Sep-2025 12:03:13 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 199
+[22-Sep-2025 12:05:05 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/card_payment.php on line 192
+[22-Sep-2025 12:05:05 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/card_payment.php on line 192
+[22-Sep-2025 12:05:05 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/card_payment.php on line 193
+[22-Sep-2025 12:05:05 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/card_payment.php on line 193
+[22-Sep-2025 12:05:05 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/card_payment.php on line 197
+[22-Sep-2025 12:05:05 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/card_payment.php on line 197
+[22-Sep-2025 12:25:12 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 194
+[22-Sep-2025 12:25:12 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 194
+[22-Sep-2025 12:25:12 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 195
+[22-Sep-2025 12:25:12 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 195
+[22-Sep-2025 12:25:12 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 199
+[22-Sep-2025 12:25:12 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 199
+[22-Sep-2025 13:56:44 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 194
+[22-Sep-2025 13:56:44 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 194
+[22-Sep-2025 13:56:44 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 195
+[22-Sep-2025 13:56:44 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 195
+[22-Sep-2025 13:56:44 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 199
+[22-Sep-2025 13:56:44 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 199
+[23-Sep-2025 20:54:22 America/Porto_Velho] PHP Warning:  Undefined variable $id_usuario_professor in /home2/sested59/sestedcursos.com/efi/index.php on line 98
+[23-Sep-2025 20:54:22 America/Porto_Velho] PHP Warning:  Undefined variable $nivel_responsavel_pelo_cadastro_do_aluno in /home2/sested59/sestedcursos.com/efi/index.php on line 150
+[23-Sep-2025 20:54:22 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 154
+[23-Sep-2025 20:54:22 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 154
+[23-Sep-2025 20:54:22 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 157
+[23-Sep-2025 20:54:22 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 157
+[23-Sep-2025 20:54:22 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 192
+[23-Sep-2025 20:54:22 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 192
+[23-Sep-2025 20:54:22 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 194
+[23-Sep-2025 20:54:22 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 194
+[23-Sep-2025 20:54:22 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 195
+[23-Sep-2025 20:54:22 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 195
+[23-Sep-2025 20:54:22 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 199
+[23-Sep-2025 20:54:22 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 199
+[23-Sep-2025 20:54:22 America/Porto_Velho] PHP Warning:  Undefined variable $valorF in /home2/sested59/sestedcursos.com/efi/index.php on line 827
+[24-Sep-2025 21:21:20 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 194
+[24-Sep-2025 21:21:20 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 194
+[24-Sep-2025 21:21:20 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 195
+[24-Sep-2025 21:21:20 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 195
+[24-Sep-2025 21:21:20 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sestedcursos.com/efi/index.php on line 199
+[24-Sep-2025 21:21:20 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sestedcursos.com/efi/index.php on line 199
+[17-Nov-2025 13:29:39 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/public_html/efi/index.php on line 200
+[17-Nov-2025 13:29:39 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/public_html/efi/index.php on line 200
+[17-Nov-2025 13:29:39 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/public_html/efi/index.php on line 201
+[17-Nov-2025 13:29:39 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/public_html/efi/index.php on line 201
+[17-Nov-2025 13:29:39 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/public_html/efi/index.php on line 205
+[17-Nov-2025 13:29:39 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/public_html/efi/index.php on line 205
+[17-Nov-2025 13:31:31 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/public_html/efi/index.php on line 200
+[17-Nov-2025 13:31:31 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/public_html/efi/index.php on line 200
+[17-Nov-2025 13:31:31 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/public_html/efi/index.php on line 201
+[17-Nov-2025 13:31:31 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/public_html/efi/index.php on line 201
+[17-Nov-2025 13:31:31 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/public_html/efi/index.php on line 205
+[17-Nov-2025 13:31:31 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/public_html/efi/index.php on line 205
+[04-Dec-2025 20:29:28 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/public_html/efi/index.php on line 200
+[04-Dec-2025 20:29:28 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/public_html/efi/index.php on line 200
+[04-Dec-2025 20:29:28 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/public_html/efi/index.php on line 201
+[04-Dec-2025 20:29:28 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/public_html/efi/index.php on line 201
+[04-Dec-2025 20:29:28 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/public_html/efi/index.php on line 205
+[04-Dec-2025 20:29:28 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/public_html/efi/index.php on line 205
+[11-Dec-2025 16:37:28 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/public_html/efi/index.php on line 200
+[11-Dec-2025 16:37:28 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/public_html/efi/index.php on line 200
+[11-Dec-2025 16:37:28 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/public_html/efi/index.php on line 201
+[11-Dec-2025 16:37:28 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/public_html/efi/index.php on line 201
+[11-Dec-2025 16:37:28 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/public_html/efi/index.php on line 205
+[11-Dec-2025 16:37:28 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/public_html/efi/index.php on line 205
+[19-Dec-2025 12:04:31 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/public_html/efi/index.php on line 160
+[19-Dec-2025 12:04:31 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/public_html/efi/index.php on line 160
+[19-Dec-2025 12:04:31 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/public_html/efi/index.php on line 163
+[19-Dec-2025 12:04:31 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/public_html/efi/index.php on line 163
+[19-Dec-2025 12:04:31 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/public_html/efi/index.php on line 198
+[19-Dec-2025 12:04:31 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/public_html/efi/index.php on line 198
+[19-Dec-2025 12:04:31 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/public_html/efi/index.php on line 200
+[19-Dec-2025 12:04:31 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/public_html/efi/index.php on line 200
+[19-Dec-2025 12:04:31 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/public_html/efi/index.php on line 201
+[19-Dec-2025 12:04:31 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/public_html/efi/index.php on line 201
+[19-Dec-2025 12:04:31 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/public_html/efi/index.php on line 205
+[19-Dec-2025 12:04:31 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/public_html/efi/index.php on line 205
+[19-Dec-2025 12:07:21 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/public_html/efi/index.php on line 160
+[19-Dec-2025 12:07:21 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/public_html/efi/index.php on line 160
+[19-Dec-2025 12:07:21 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/public_html/efi/index.php on line 163
+[19-Dec-2025 12:07:21 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/public_html/efi/index.php on line 163
+[19-Dec-2025 12:07:21 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/public_html/efi/index.php on line 198
+[19-Dec-2025 12:07:21 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/public_html/efi/index.php on line 198
+[19-Dec-2025 12:07:21 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/public_html/efi/index.php on line 200
+[19-Dec-2025 12:07:21 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/public_html/efi/index.php on line 200
+[19-Dec-2025 12:07:21 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/public_html/efi/index.php on line 201
+[19-Dec-2025 12:07:21 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/public_html/efi/index.php on line 201
+[19-Dec-2025 12:07:21 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/public_html/efi/index.php on line 205
+[19-Dec-2025 12:07:21 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/public_html/efi/index.php on line 205
+[19-Dec-2025 13:52:49 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/public_html/efi/index.php on line 160
+[19-Dec-2025 13:52:49 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/public_html/efi/index.php on line 160
+[19-Dec-2025 13:52:49 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/public_html/efi/index.php on line 163
+[19-Dec-2025 13:52:49 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/public_html/efi/index.php on line 163
+[19-Dec-2025 13:52:49 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/public_html/efi/index.php on line 198
+[19-Dec-2025 13:52:49 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/public_html/efi/index.php on line 198
+[19-Dec-2025 13:52:49 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/public_html/efi/index.php on line 200
+[19-Dec-2025 13:52:49 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/public_html/efi/index.php on line 200
+[19-Dec-2025 13:52:49 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/public_html/efi/index.php on line 201
+[19-Dec-2025 13:52:49 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/public_html/efi/index.php on line 201
+[19-Dec-2025 13:52:49 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/public_html/efi/index.php on line 205
+[19-Dec-2025 13:52:49 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/public_html/efi/index.php on line 205
+[19-Dec-2025 15:00:18 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/public_html/efi/index.php on line 200
+[19-Dec-2025 15:00:18 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/public_html/efi/index.php on line 200
+[19-Dec-2025 15:00:18 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/public_html/efi/index.php on line 201
+[19-Dec-2025 15:00:18 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/public_html/efi/index.php on line 201
+[19-Dec-2025 15:00:18 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/public_html/efi/index.php on line 205
+[19-Dec-2025 15:00:18 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/public_html/efi/index.php on line 205
+[19-Dec-2025 15:03:27 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/public_html/efi/index.php on line 200
+[19-Dec-2025 15:03:27 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/public_html/efi/index.php on line 200
+[19-Dec-2025 15:03:27 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/public_html/efi/index.php on line 201
+[19-Dec-2025 15:03:27 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/public_html/efi/index.php on line 201
+[19-Dec-2025 15:03:27 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/public_html/efi/index.php on line 205
+[19-Dec-2025 15:03:27 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/public_html/efi/index.php on line 205
+[19-Dec-2025 15:13:03 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/public_html/efi/index.php on line 200
+[19-Dec-2025 15:13:03 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/public_html/efi/index.php on line 200
+[19-Dec-2025 15:13:03 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/public_html/efi/index.php on line 201
+[19-Dec-2025 15:13:03 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/public_html/efi/index.php on line 201
+[19-Dec-2025 15:13:03 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/public_html/efi/index.php on line 205
+[19-Dec-2025 15:13:03 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/public_html/efi/index.php on line 205

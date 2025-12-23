@@ -1,0 +1,22 @@
+Par de credenciais de Produção
+Chave Client ID
+
+Client_Id_8f66c1f44187bb12496d06ee933bb9e2ddf88c61
+
+
+Chave Secret
+
+Client_Secret_3ae7ef85cb77f5c7d6d433fb37d445afb6f10073
+
+
+Par de credenciais de Homologação
+Chave Client ID
+
+Client_Id_51409cf7a64977c559ff287baa259877442401e9
+
+
+Chave Secret
+
+Client_Secret_73f1cf20aa5c6264c55e6b7dc9723fa2df3b4b1c
+
+

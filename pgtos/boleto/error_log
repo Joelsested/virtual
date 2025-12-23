@@ -1,0 +1,225 @@
+[18-Jun-2025 15:24:33 America/Porto_Velho] PHP Warning:  Undefined array key "id" in /home2/sested59/sested-eja.com/pgtos/boleto/index.php on line 4
+[18-Jun-2025 15:24:33 America/Porto_Velho] PHP Warning:  Undefined array key "cpf" in /home2/sested59/sested-eja.com/pgtos/boleto/index.php on line 5
+[18-Jun-2025 15:24:33 America/Porto_Velho] PHP Warning:  Undefined variable $id_mat in /home2/sested59/sested-eja.com/pgtos/boleto/index.php on line 59
+[18-Jun-2025 15:24:33 America/Porto_Velho] PHP Warning:  Undefined variable $valor_pix in /home2/sested59/sested-eja.com/pgtos/boleto/index.php on line 60
+[18-Jun-2025 15:24:33 America/Porto_Velho] PHP Warning:  Undefined variable $nome_curso_titulo in /home2/sested59/sested-eja.com/pgtos/boleto/index.php on line 61
+[18-Jun-2025 15:24:33 America/Porto_Velho] PHP Warning:  Undefined property: stdClass::$id in /home2/sested59/sested-eja.com/pgtos/boleto/index.php on line 102
+[18-Jun-2025 15:24:33 America/Porto_Velho] PHP Warning:  Undefined variable $id_mat in /home2/sested59/sested-eja.com/pgtos/boleto/index.php on line 102
+[18-Jun-2025 15:24:33 America/Porto_Velho] PHP Warning:  Undefined property: stdClass::$transaction_details in /home2/sested59/sested-eja.com/pgtos/boleto/index.php on line 104
+[18-Jun-2025 15:24:33 America/Porto_Velho] PHP Warning:  Attempt to read property "external_resource_url" on null in /home2/sested59/sested-eja.com/pgtos/boleto/index.php on line 104
+[21-Jun-2025 15:27:25 America/Porto_Velho] PHP Warning:  Undefined array key "id" in /home2/sested59/sested-eja.com/pgtos/boleto/index.php on line 4
+[21-Jun-2025 15:27:25 America/Porto_Velho] PHP Warning:  Undefined array key "cpf" in /home2/sested59/sested-eja.com/pgtos/boleto/index.php on line 5
+[21-Jun-2025 15:27:25 America/Porto_Velho] PHP Warning:  Undefined variable $id_mat in /home2/sested59/sested-eja.com/pgtos/boleto/index.php on line 59
+[21-Jun-2025 15:27:25 America/Porto_Velho] PHP Warning:  Undefined variable $valor_pix in /home2/sested59/sested-eja.com/pgtos/boleto/index.php on line 60
+[21-Jun-2025 15:27:25 America/Porto_Velho] PHP Warning:  Undefined variable $nome_curso_titulo in /home2/sested59/sested-eja.com/pgtos/boleto/index.php on line 61
+[21-Jun-2025 15:27:25 America/Porto_Velho] PHP Warning:  Undefined property: stdClass::$id in /home2/sested59/sested-eja.com/pgtos/boleto/index.php on line 102
+[21-Jun-2025 15:27:25 America/Porto_Velho] PHP Warning:  Undefined variable $id_mat in /home2/sested59/sested-eja.com/pgtos/boleto/index.php on line 102
+[21-Jun-2025 15:27:25 America/Porto_Velho] PHP Warning:  Undefined property: stdClass::$transaction_details in /home2/sested59/sested-eja.com/pgtos/boleto/index.php on line 104
+[21-Jun-2025 15:27:25 America/Porto_Velho] PHP Warning:  Attempt to read property "external_resource_url" on null in /home2/sested59/sested-eja.com/pgtos/boleto/index.php on line 104
+[21-Jun-2025 15:27:40 America/Porto_Velho] PHP Warning:  Undefined array key "id" in /home2/sested59/sested-eja.com/pgtos/boleto/index.php on line 4
+[21-Jun-2025 15:27:40 America/Porto_Velho] PHP Warning:  Undefined array key "cpf" in /home2/sested59/sested-eja.com/pgtos/boleto/index.php on line 5
+[21-Jun-2025 15:27:40 America/Porto_Velho] PHP Warning:  Undefined variable $id_mat in /home2/sested59/sested-eja.com/pgtos/boleto/index.php on line 59
+[21-Jun-2025 15:27:40 America/Porto_Velho] PHP Warning:  Undefined variable $valor_pix in /home2/sested59/sested-eja.com/pgtos/boleto/index.php on line 60
+[21-Jun-2025 15:27:40 America/Porto_Velho] PHP Warning:  Undefined variable $nome_curso_titulo in /home2/sested59/sested-eja.com/pgtos/boleto/index.php on line 61
+[21-Jun-2025 15:27:40 America/Porto_Velho] PHP Warning:  Undefined property: stdClass::$id in /home2/sested59/sested-eja.com/pgtos/boleto/index.php on line 102
+[21-Jun-2025 15:27:40 America/Porto_Velho] PHP Warning:  Undefined variable $id_mat in /home2/sested59/sested-eja.com/pgtos/boleto/index.php on line 102
+[21-Jun-2025 15:27:40 America/Porto_Velho] PHP Warning:  Undefined property: stdClass::$transaction_details in /home2/sested59/sested-eja.com/pgtos/boleto/index.php on line 104
+[21-Jun-2025 15:27:40 America/Porto_Velho] PHP Warning:  Attempt to read property "external_resource_url" on null in /home2/sested59/sested-eja.com/pgtos/boleto/index.php on line 104
+[21-Jun-2025 15:27:41 America/Porto_Velho] PHP Warning:  Undefined array key "id" in /home2/sested59/sested-eja.com/pgtos/boleto/index.php on line 4
+[21-Jun-2025 15:27:41 America/Porto_Velho] PHP Warning:  Undefined array key "cpf" in /home2/sested59/sested-eja.com/pgtos/boleto/index.php on line 5
+[21-Jun-2025 15:27:41 America/Porto_Velho] PHP Warning:  Undefined variable $id_mat in /home2/sested59/sested-eja.com/pgtos/boleto/index.php on line 59
+[21-Jun-2025 15:27:41 America/Porto_Velho] PHP Warning:  Undefined variable $valor_pix in /home2/sested59/sested-eja.com/pgtos/boleto/index.php on line 60
+[21-Jun-2025 15:27:41 America/Porto_Velho] PHP Warning:  Undefined variable $nome_curso_titulo in /home2/sested59/sested-eja.com/pgtos/boleto/index.php on line 61
+[21-Jun-2025 15:27:41 America/Porto_Velho] PHP Warning:  Undefined property: stdClass::$id in /home2/sested59/sested-eja.com/pgtos/boleto/index.php on line 102
+[21-Jun-2025 15:27:41 America/Porto_Velho] PHP Warning:  Undefined variable $id_mat in /home2/sested59/sested-eja.com/pgtos/boleto/index.php on line 102
+[21-Jun-2025 15:27:41 America/Porto_Velho] PHP Warning:  Undefined property: stdClass::$transaction_details in /home2/sested59/sested-eja.com/pgtos/boleto/index.php on line 104
+[21-Jun-2025 15:27:41 America/Porto_Velho] PHP Warning:  Attempt to read property "external_resource_url" on null in /home2/sested59/sested-eja.com/pgtos/boleto/index.php on line 104
+[21-Jun-2025 15:27:44 America/Porto_Velho] PHP Warning:  Undefined array key "id" in /home2/sested59/sested-eja.com/pgtos/boleto/index.php on line 4
+[21-Jun-2025 15:27:44 America/Porto_Velho] PHP Warning:  Undefined array key "cpf" in /home2/sested59/sested-eja.com/pgtos/boleto/index.php on line 5
+[21-Jun-2025 15:27:44 America/Porto_Velho] PHP Warning:  Undefined variable $id_mat in /home2/sested59/sested-eja.com/pgtos/boleto/index.php on line 59
+[21-Jun-2025 15:27:44 America/Porto_Velho] PHP Warning:  Undefined variable $valor_pix in /home2/sested59/sested-eja.com/pgtos/boleto/index.php on line 60
+[21-Jun-2025 15:27:44 America/Porto_Velho] PHP Warning:  Undefined variable $nome_curso_titulo in /home2/sested59/sested-eja.com/pgtos/boleto/index.php on line 61
+[21-Jun-2025 15:27:44 America/Porto_Velho] PHP Warning:  Undefined property: stdClass::$id in /home2/sested59/sested-eja.com/pgtos/boleto/index.php on line 102
+[21-Jun-2025 15:27:44 America/Porto_Velho] PHP Warning:  Undefined variable $id_mat in /home2/sested59/sested-eja.com/pgtos/boleto/index.php on line 102
+[21-Jun-2025 15:27:44 America/Porto_Velho] PHP Warning:  Undefined property: stdClass::$transaction_details in /home2/sested59/sested-eja.com/pgtos/boleto/index.php on line 104
+[21-Jun-2025 15:27:44 America/Porto_Velho] PHP Warning:  Attempt to read property "external_resource_url" on null in /home2/sested59/sested-eja.com/pgtos/boleto/index.php on line 104
+[21-Jun-2025 15:27:44 America/Porto_Velho] PHP Warning:  Undefined array key "id" in /home2/sested59/sested-eja.com/pgtos/boleto/index.php on line 4
+[21-Jun-2025 15:27:44 America/Porto_Velho] PHP Warning:  Undefined array key "cpf" in /home2/sested59/sested-eja.com/pgtos/boleto/index.php on line 5
+[21-Jun-2025 15:27:44 America/Porto_Velho] PHP Warning:  Undefined variable $id_mat in /home2/sested59/sested-eja.com/pgtos/boleto/index.php on line 59
+[21-Jun-2025 15:27:44 America/Porto_Velho] PHP Warning:  Undefined variable $valor_pix in /home2/sested59/sested-eja.com/pgtos/boleto/index.php on line 60
+[21-Jun-2025 15:27:44 America/Porto_Velho] PHP Warning:  Undefined variable $nome_curso_titulo in /home2/sested59/sested-eja.com/pgtos/boleto/index.php on line 61
+[21-Jun-2025 15:27:44 America/Porto_Velho] PHP Warning:  Undefined property: stdClass::$id in /home2/sested59/sested-eja.com/pgtos/boleto/index.php on line 102
+[21-Jun-2025 15:27:44 America/Porto_Velho] PHP Warning:  Undefined variable $id_mat in /home2/sested59/sested-eja.com/pgtos/boleto/index.php on line 102
+[21-Jun-2025 15:27:44 America/Porto_Velho] PHP Warning:  Undefined property: stdClass::$transaction_details in /home2/sested59/sested-eja.com/pgtos/boleto/index.php on line 104
+[21-Jun-2025 15:27:44 America/Porto_Velho] PHP Warning:  Attempt to read property "external_resource_url" on null in /home2/sested59/sested-eja.com/pgtos/boleto/index.php on line 104
+[21-Jun-2025 15:27:44 America/Porto_Velho] PHP Warning:  Undefined array key "id" in /home2/sested59/sested-eja.com/pgtos/boleto/index.php on line 4
+[21-Jun-2025 15:27:44 America/Porto_Velho] PHP Warning:  Undefined array key "cpf" in /home2/sested59/sested-eja.com/pgtos/boleto/index.php on line 5
+[21-Jun-2025 15:27:44 America/Porto_Velho] PHP Warning:  Undefined variable $id_mat in /home2/sested59/sested-eja.com/pgtos/boleto/index.php on line 59
+[21-Jun-2025 15:27:44 America/Porto_Velho] PHP Warning:  Undefined variable $valor_pix in /home2/sested59/sested-eja.com/pgtos/boleto/index.php on line 60
+[21-Jun-2025 15:27:44 America/Porto_Velho] PHP Warning:  Undefined variable $nome_curso_titulo in /home2/sested59/sested-eja.com/pgtos/boleto/index.php on line 61
+[21-Jun-2025 15:27:44 America/Porto_Velho] PHP Warning:  Undefined property: stdClass::$id in /home2/sested59/sested-eja.com/pgtos/boleto/index.php on line 102
+[21-Jun-2025 15:27:44 America/Porto_Velho] PHP Warning:  Undefined variable $id_mat in /home2/sested59/sested-eja.com/pgtos/boleto/index.php on line 102
+[21-Jun-2025 15:27:44 America/Porto_Velho] PHP Warning:  Undefined property: stdClass::$transaction_details in /home2/sested59/sested-eja.com/pgtos/boleto/index.php on line 104
+[21-Jun-2025 15:27:44 America/Porto_Velho] PHP Warning:  Attempt to read property "external_resource_url" on null in /home2/sested59/sested-eja.com/pgtos/boleto/index.php on line 104
+[21-Jun-2025 15:27:44 America/Porto_Velho] PHP Warning:  Undefined array key "id" in /home2/sested59/sested-eja.com/pgtos/boleto/index.php on line 4
+[21-Jun-2025 15:27:44 America/Porto_Velho] PHP Warning:  Undefined array key "cpf" in /home2/sested59/sested-eja.com/pgtos/boleto/index.php on line 5
+[21-Jun-2025 15:27:44 America/Porto_Velho] PHP Warning:  Undefined variable $id_mat in /home2/sested59/sested-eja.com/pgtos/boleto/index.php on line 59
+[21-Jun-2025 15:27:44 America/Porto_Velho] PHP Warning:  Undefined variable $valor_pix in /home2/sested59/sested-eja.com/pgtos/boleto/index.php on line 60
+[21-Jun-2025 15:27:44 America/Porto_Velho] PHP Warning:  Undefined variable $nome_curso_titulo in /home2/sested59/sested-eja.com/pgtos/boleto/index.php on line 61
+[21-Jun-2025 15:27:44 America/Porto_Velho] PHP Warning:  Undefined property: stdClass::$id in /home2/sested59/sested-eja.com/pgtos/boleto/index.php on line 102
+[21-Jun-2025 15:27:44 America/Porto_Velho] PHP Warning:  Undefined variable $id_mat in /home2/sested59/sested-eja.com/pgtos/boleto/index.php on line 102
+[21-Jun-2025 15:27:44 America/Porto_Velho] PHP Warning:  Undefined property: stdClass::$transaction_details in /home2/sested59/sested-eja.com/pgtos/boleto/index.php on line 104
+[21-Jun-2025 15:27:44 America/Porto_Velho] PHP Warning:  Attempt to read property "external_resource_url" on null in /home2/sested59/sested-eja.com/pgtos/boleto/index.php on line 104
+[22-Jun-2025 15:37:55 America/Porto_Velho] PHP Warning:  Undefined array key "id" in /home2/sested59/sested-eja.com/pgtos/boleto/index.php on line 4
+[22-Jun-2025 15:37:55 America/Porto_Velho] PHP Warning:  Undefined array key "cpf" in /home2/sested59/sested-eja.com/pgtos/boleto/index.php on line 5
+[22-Jun-2025 15:37:55 America/Porto_Velho] PHP Warning:  Undefined variable $id_mat in /home2/sested59/sested-eja.com/pgtos/boleto/index.php on line 59
+[22-Jun-2025 15:37:55 America/Porto_Velho] PHP Warning:  Undefined variable $valor_pix in /home2/sested59/sested-eja.com/pgtos/boleto/index.php on line 60
+[22-Jun-2025 15:37:55 America/Porto_Velho] PHP Warning:  Undefined variable $nome_curso_titulo in /home2/sested59/sested-eja.com/pgtos/boleto/index.php on line 61
+[22-Jun-2025 15:37:55 America/Porto_Velho] PHP Warning:  Undefined property: stdClass::$id in /home2/sested59/sested-eja.com/pgtos/boleto/index.php on line 102
+[22-Jun-2025 15:37:55 America/Porto_Velho] PHP Warning:  Undefined variable $id_mat in /home2/sested59/sested-eja.com/pgtos/boleto/index.php on line 102
+[22-Jun-2025 15:37:55 America/Porto_Velho] PHP Warning:  Undefined property: stdClass::$transaction_details in /home2/sested59/sested-eja.com/pgtos/boleto/index.php on line 104
+[22-Jun-2025 15:37:55 America/Porto_Velho] PHP Warning:  Attempt to read property "external_resource_url" on null in /home2/sested59/sested-eja.com/pgtos/boleto/index.php on line 104
+[23-Jun-2025 15:10:40 America/Porto_Velho] PHP Warning:  Undefined array key "id" in /home2/sested59/sested-eja.com/pgtos/boleto/index.php on line 4
+[23-Jun-2025 15:10:40 America/Porto_Velho] PHP Warning:  Undefined array key "cpf" in /home2/sested59/sested-eja.com/pgtos/boleto/index.php on line 5
+[23-Jun-2025 15:10:40 America/Porto_Velho] PHP Warning:  Undefined variable $id_mat in /home2/sested59/sested-eja.com/pgtos/boleto/index.php on line 59
+[23-Jun-2025 15:10:40 America/Porto_Velho] PHP Warning:  Undefined variable $valor_pix in /home2/sested59/sested-eja.com/pgtos/boleto/index.php on line 60
+[23-Jun-2025 15:10:40 America/Porto_Velho] PHP Warning:  Undefined variable $nome_curso_titulo in /home2/sested59/sested-eja.com/pgtos/boleto/index.php on line 61
+[23-Jun-2025 15:10:40 America/Porto_Velho] PHP Warning:  Undefined property: stdClass::$id in /home2/sested59/sested-eja.com/pgtos/boleto/index.php on line 102
+[23-Jun-2025 15:10:40 America/Porto_Velho] PHP Warning:  Undefined variable $id_mat in /home2/sested59/sested-eja.com/pgtos/boleto/index.php on line 102
+[23-Jun-2025 15:10:40 America/Porto_Velho] PHP Warning:  Undefined property: stdClass::$transaction_details in /home2/sested59/sested-eja.com/pgtos/boleto/index.php on line 104
+[23-Jun-2025 15:10:40 America/Porto_Velho] PHP Warning:  Attempt to read property "external_resource_url" on null in /home2/sested59/sested-eja.com/pgtos/boleto/index.php on line 104
+[25-Jun-2025 06:04:27 America/Porto_Velho] PHP Warning:  Undefined array key "id" in /home2/sested59/sested-eja.com/pgtos/boleto/index.php on line 4
+[25-Jun-2025 06:04:27 America/Porto_Velho] PHP Warning:  Undefined array key "cpf" in /home2/sested59/sested-eja.com/pgtos/boleto/index.php on line 5
+[25-Jun-2025 06:04:27 America/Porto_Velho] PHP Warning:  Undefined variable $id_mat in /home2/sested59/sested-eja.com/pgtos/boleto/index.php on line 59
+[25-Jun-2025 06:04:27 America/Porto_Velho] PHP Warning:  Undefined variable $valor_pix in /home2/sested59/sested-eja.com/pgtos/boleto/index.php on line 60
+[25-Jun-2025 06:04:27 America/Porto_Velho] PHP Warning:  Undefined variable $nome_curso_titulo in /home2/sested59/sested-eja.com/pgtos/boleto/index.php on line 61
+[25-Jun-2025 06:04:27 America/Porto_Velho] PHP Warning:  Undefined property: stdClass::$id in /home2/sested59/sested-eja.com/pgtos/boleto/index.php on line 102
+[25-Jun-2025 06:04:27 America/Porto_Velho] PHP Warning:  Undefined variable $id_mat in /home2/sested59/sested-eja.com/pgtos/boleto/index.php on line 102
+[25-Jun-2025 06:04:27 America/Porto_Velho] PHP Warning:  Undefined property: stdClass::$transaction_details in /home2/sested59/sested-eja.com/pgtos/boleto/index.php on line 104
+[25-Jun-2025 06:04:27 America/Porto_Velho] PHP Warning:  Attempt to read property "external_resource_url" on null in /home2/sested59/sested-eja.com/pgtos/boleto/index.php on line 104
+[27-Jun-2025 15:09:59 America/Porto_Velho] PHP Warning:  Undefined array key "id" in /home2/sested59/sested-eja.com/pgtos/boleto/index.php on line 4
+[27-Jun-2025 15:09:59 America/Porto_Velho] PHP Warning:  Undefined array key "cpf" in /home2/sested59/sested-eja.com/pgtos/boleto/index.php on line 5
+[27-Jun-2025 15:09:59 America/Porto_Velho] PHP Warning:  Undefined variable $id_mat in /home2/sested59/sested-eja.com/pgtos/boleto/index.php on line 59
+[27-Jun-2025 15:09:59 America/Porto_Velho] PHP Warning:  Undefined variable $valor_pix in /home2/sested59/sested-eja.com/pgtos/boleto/index.php on line 60
+[27-Jun-2025 15:09:59 America/Porto_Velho] PHP Warning:  Undefined variable $nome_curso_titulo in /home2/sested59/sested-eja.com/pgtos/boleto/index.php on line 61
+[27-Jun-2025 15:10:00 America/Porto_Velho] PHP Warning:  Undefined property: stdClass::$id in /home2/sested59/sested-eja.com/pgtos/boleto/index.php on line 102
+[27-Jun-2025 15:10:00 America/Porto_Velho] PHP Warning:  Undefined variable $id_mat in /home2/sested59/sested-eja.com/pgtos/boleto/index.php on line 102
+[27-Jun-2025 15:10:00 America/Porto_Velho] PHP Warning:  Undefined property: stdClass::$transaction_details in /home2/sested59/sested-eja.com/pgtos/boleto/index.php on line 104
+[27-Jun-2025 15:10:00 America/Porto_Velho] PHP Warning:  Attempt to read property "external_resource_url" on null in /home2/sested59/sested-eja.com/pgtos/boleto/index.php on line 104
+[27-Jun-2025 15:10:01 America/Porto_Velho] PHP Warning:  Undefined array key "id" in /home2/sested59/sested-eja.com/pgtos/boleto/index.php on line 4
+[27-Jun-2025 15:10:01 America/Porto_Velho] PHP Warning:  Undefined array key "cpf" in /home2/sested59/sested-eja.com/pgtos/boleto/index.php on line 5
+[27-Jun-2025 15:10:01 America/Porto_Velho] PHP Warning:  Undefined variable $id_mat in /home2/sested59/sested-eja.com/pgtos/boleto/index.php on line 59
+[27-Jun-2025 15:10:01 America/Porto_Velho] PHP Warning:  Undefined variable $valor_pix in /home2/sested59/sested-eja.com/pgtos/boleto/index.php on line 60
+[27-Jun-2025 15:10:01 America/Porto_Velho] PHP Warning:  Undefined variable $nome_curso_titulo in /home2/sested59/sested-eja.com/pgtos/boleto/index.php on line 61
+[27-Jun-2025 15:10:01 America/Porto_Velho] PHP Warning:  Undefined property: stdClass::$id in /home2/sested59/sested-eja.com/pgtos/boleto/index.php on line 102
+[27-Jun-2025 15:10:01 America/Porto_Velho] PHP Warning:  Undefined variable $id_mat in /home2/sested59/sested-eja.com/pgtos/boleto/index.php on line 102
+[27-Jun-2025 15:10:01 America/Porto_Velho] PHP Warning:  Undefined property: stdClass::$transaction_details in /home2/sested59/sested-eja.com/pgtos/boleto/index.php on line 104
+[27-Jun-2025 15:10:01 America/Porto_Velho] PHP Warning:  Attempt to read property "external_resource_url" on null in /home2/sested59/sested-eja.com/pgtos/boleto/index.php on line 104
+[28-Jun-2025 15:39:30 America/Porto_Velho] PHP Warning:  Undefined array key "id" in /home2/sested59/sested-eja.com/pgtos/boleto/index.php on line 4
+[28-Jun-2025 15:39:30 America/Porto_Velho] PHP Warning:  Undefined array key "cpf" in /home2/sested59/sested-eja.com/pgtos/boleto/index.php on line 5
+[28-Jun-2025 15:39:30 America/Porto_Velho] PHP Warning:  Undefined variable $id_mat in /home2/sested59/sested-eja.com/pgtos/boleto/index.php on line 59
+[28-Jun-2025 15:39:30 America/Porto_Velho] PHP Warning:  Undefined variable $valor_pix in /home2/sested59/sested-eja.com/pgtos/boleto/index.php on line 60
+[28-Jun-2025 15:39:30 America/Porto_Velho] PHP Warning:  Undefined variable $nome_curso_titulo in /home2/sested59/sested-eja.com/pgtos/boleto/index.php on line 61
+[28-Jun-2025 15:39:30 America/Porto_Velho] PHP Warning:  Undefined property: stdClass::$id in /home2/sested59/sested-eja.com/pgtos/boleto/index.php on line 102
+[28-Jun-2025 15:39:30 America/Porto_Velho] PHP Warning:  Undefined variable $id_mat in /home2/sested59/sested-eja.com/pgtos/boleto/index.php on line 102
+[28-Jun-2025 15:39:30 America/Porto_Velho] PHP Warning:  Undefined property: stdClass::$transaction_details in /home2/sested59/sested-eja.com/pgtos/boleto/index.php on line 104
+[28-Jun-2025 15:39:30 America/Porto_Velho] PHP Warning:  Attempt to read property "external_resource_url" on null in /home2/sested59/sested-eja.com/pgtos/boleto/index.php on line 104
+[02-Jul-2025 15:22:54 America/Porto_Velho] PHP Warning:  Undefined array key "id" in /home2/sested59/sested-eja.com/pgtos/boleto/index.php on line 4
+[02-Jul-2025 15:22:54 America/Porto_Velho] PHP Warning:  Undefined array key "cpf" in /home2/sested59/sested-eja.com/pgtos/boleto/index.php on line 5
+[02-Jul-2025 15:22:54 America/Porto_Velho] PHP Warning:  Undefined variable $id_mat in /home2/sested59/sested-eja.com/pgtos/boleto/index.php on line 59
+[02-Jul-2025 15:22:54 America/Porto_Velho] PHP Warning:  Undefined variable $valor_pix in /home2/sested59/sested-eja.com/pgtos/boleto/index.php on line 60
+[02-Jul-2025 15:22:54 America/Porto_Velho] PHP Warning:  Undefined variable $nome_curso_titulo in /home2/sested59/sested-eja.com/pgtos/boleto/index.php on line 61
+[02-Jul-2025 15:22:54 America/Porto_Velho] PHP Warning:  Undefined property: stdClass::$id in /home2/sested59/sested-eja.com/pgtos/boleto/index.php on line 102
+[02-Jul-2025 15:22:54 America/Porto_Velho] PHP Warning:  Undefined variable $id_mat in /home2/sested59/sested-eja.com/pgtos/boleto/index.php on line 102
+[02-Jul-2025 15:22:54 America/Porto_Velho] PHP Warning:  Undefined property: stdClass::$transaction_details in /home2/sested59/sested-eja.com/pgtos/boleto/index.php on line 104
+[02-Jul-2025 15:22:54 America/Porto_Velho] PHP Warning:  Attempt to read property "external_resource_url" on null in /home2/sested59/sested-eja.com/pgtos/boleto/index.php on line 104
+[02-Jul-2025 15:22:57 America/Porto_Velho] PHP Warning:  Undefined array key "id" in /home2/sested59/sested-eja.com/pgtos/boleto/index.php on line 4
+[02-Jul-2025 15:22:57 America/Porto_Velho] PHP Warning:  Undefined array key "cpf" in /home2/sested59/sested-eja.com/pgtos/boleto/index.php on line 5
+[02-Jul-2025 15:22:57 America/Porto_Velho] PHP Warning:  Undefined variable $id_mat in /home2/sested59/sested-eja.com/pgtos/boleto/index.php on line 59
+[02-Jul-2025 15:22:57 America/Porto_Velho] PHP Warning:  Undefined variable $valor_pix in /home2/sested59/sested-eja.com/pgtos/boleto/index.php on line 60
+[02-Jul-2025 15:22:57 America/Porto_Velho] PHP Warning:  Undefined variable $nome_curso_titulo in /home2/sested59/sested-eja.com/pgtos/boleto/index.php on line 61
+[02-Jul-2025 15:22:57 America/Porto_Velho] PHP Warning:  Undefined property: stdClass::$id in /home2/sested59/sested-eja.com/pgtos/boleto/index.php on line 102
+[02-Jul-2025 15:22:57 America/Porto_Velho] PHP Warning:  Undefined variable $id_mat in /home2/sested59/sested-eja.com/pgtos/boleto/index.php on line 102
+[02-Jul-2025 15:22:57 America/Porto_Velho] PHP Warning:  Undefined property: stdClass::$transaction_details in /home2/sested59/sested-eja.com/pgtos/boleto/index.php on line 104
+[02-Jul-2025 15:22:57 America/Porto_Velho] PHP Warning:  Attempt to read property "external_resource_url" on null in /home2/sested59/sested-eja.com/pgtos/boleto/index.php on line 104
+[04-Jul-2025 12:04:49 America/Porto_Velho] PHP Warning:  Undefined array key "id" in /home2/sested59/sested-eja.com/pgtos/boleto/index.php on line 4
+[04-Jul-2025 12:04:49 America/Porto_Velho] PHP Warning:  Undefined array key "cpf" in /home2/sested59/sested-eja.com/pgtos/boleto/index.php on line 5
+[04-Jul-2025 12:04:49 America/Porto_Velho] PHP Warning:  Undefined variable $id_mat in /home2/sested59/sested-eja.com/pgtos/boleto/index.php on line 59
+[04-Jul-2025 12:04:49 America/Porto_Velho] PHP Warning:  Undefined variable $valor_pix in /home2/sested59/sested-eja.com/pgtos/boleto/index.php on line 60
+[04-Jul-2025 12:04:49 America/Porto_Velho] PHP Warning:  Undefined variable $nome_curso_titulo in /home2/sested59/sested-eja.com/pgtos/boleto/index.php on line 61
+[04-Jul-2025 12:04:49 America/Porto_Velho] PHP Warning:  Undefined property: stdClass::$id in /home2/sested59/sested-eja.com/pgtos/boleto/index.php on line 102
+[04-Jul-2025 12:04:49 America/Porto_Velho] PHP Warning:  Undefined variable $id_mat in /home2/sested59/sested-eja.com/pgtos/boleto/index.php on line 102
+[04-Jul-2025 12:04:49 America/Porto_Velho] PHP Warning:  Undefined property: stdClass::$transaction_details in /home2/sested59/sested-eja.com/pgtos/boleto/index.php on line 104
+[04-Jul-2025 12:04:49 America/Porto_Velho] PHP Warning:  Attempt to read property "external_resource_url" on null in /home2/sested59/sested-eja.com/pgtos/boleto/index.php on line 104
+[04-Jul-2025 12:04:50 America/Porto_Velho] PHP Warning:  Undefined array key "id" in /home2/sested59/sested-eja.com/pgtos/boleto/index.php on line 4
+[04-Jul-2025 12:04:50 America/Porto_Velho] PHP Warning:  Undefined array key "cpf" in /home2/sested59/sested-eja.com/pgtos/boleto/index.php on line 5
+[04-Jul-2025 12:04:50 America/Porto_Velho] PHP Warning:  Undefined variable $id_mat in /home2/sested59/sested-eja.com/pgtos/boleto/index.php on line 59
+[04-Jul-2025 12:04:50 America/Porto_Velho] PHP Warning:  Undefined variable $valor_pix in /home2/sested59/sested-eja.com/pgtos/boleto/index.php on line 60
+[04-Jul-2025 12:04:50 America/Porto_Velho] PHP Warning:  Undefined variable $nome_curso_titulo in /home2/sested59/sested-eja.com/pgtos/boleto/index.php on line 61
+[04-Jul-2025 12:04:50 America/Porto_Velho] PHP Warning:  Undefined property: stdClass::$id in /home2/sested59/sested-eja.com/pgtos/boleto/index.php on line 102
+[04-Jul-2025 12:04:50 America/Porto_Velho] PHP Warning:  Undefined variable $id_mat in /home2/sested59/sested-eja.com/pgtos/boleto/index.php on line 102
+[04-Jul-2025 12:04:50 America/Porto_Velho] PHP Warning:  Undefined property: stdClass::$transaction_details in /home2/sested59/sested-eja.com/pgtos/boleto/index.php on line 104
+[04-Jul-2025 12:04:50 America/Porto_Velho] PHP Warning:  Attempt to read property "external_resource_url" on null in /home2/sested59/sested-eja.com/pgtos/boleto/index.php on line 104
+[09-Jul-2025 12:56:41 America/Porto_Velho] PHP Warning:  Undefined array key "id" in /home2/sested59/sested-eja.com/pgtos/boleto/index.php on line 4
+[09-Jul-2025 12:56:41 America/Porto_Velho] PHP Warning:  Undefined array key "cpf" in /home2/sested59/sested-eja.com/pgtos/boleto/index.php on line 5
+[09-Jul-2025 12:56:41 America/Porto_Velho] PHP Warning:  Undefined variable $id_mat in /home2/sested59/sested-eja.com/pgtos/boleto/index.php on line 59
+[09-Jul-2025 12:56:41 America/Porto_Velho] PHP Warning:  Undefined variable $valor_pix in /home2/sested59/sested-eja.com/pgtos/boleto/index.php on line 60
+[09-Jul-2025 12:56:41 America/Porto_Velho] PHP Warning:  Undefined variable $nome_curso_titulo in /home2/sested59/sested-eja.com/pgtos/boleto/index.php on line 61
+[09-Jul-2025 12:56:41 America/Porto_Velho] PHP Warning:  Undefined property: stdClass::$id in /home2/sested59/sested-eja.com/pgtos/boleto/index.php on line 102
+[09-Jul-2025 12:56:41 America/Porto_Velho] PHP Warning:  Undefined variable $id_mat in /home2/sested59/sested-eja.com/pgtos/boleto/index.php on line 102
+[09-Jul-2025 12:56:41 America/Porto_Velho] PHP Warning:  Undefined property: stdClass::$transaction_details in /home2/sested59/sested-eja.com/pgtos/boleto/index.php on line 104
+[09-Jul-2025 12:56:41 America/Porto_Velho] PHP Warning:  Attempt to read property "external_resource_url" on null in /home2/sested59/sested-eja.com/pgtos/boleto/index.php on line 104
+[11-Jul-2025 12:19:01 America/Porto_Velho] PHP Warning:  Undefined array key "id" in /home2/sested59/sested-eja.com/pgtos/boleto/index.php on line 4
+[11-Jul-2025 12:19:01 America/Porto_Velho] PHP Warning:  Undefined array key "cpf" in /home2/sested59/sested-eja.com/pgtos/boleto/index.php on line 5
+[11-Jul-2025 12:19:01 America/Porto_Velho] PHP Warning:  Undefined variable $id_mat in /home2/sested59/sested-eja.com/pgtos/boleto/index.php on line 59
+[11-Jul-2025 12:19:01 America/Porto_Velho] PHP Warning:  Undefined variable $valor_pix in /home2/sested59/sested-eja.com/pgtos/boleto/index.php on line 60
+[11-Jul-2025 12:19:01 America/Porto_Velho] PHP Warning:  Undefined variable $nome_curso_titulo in /home2/sested59/sested-eja.com/pgtos/boleto/index.php on line 61
+[11-Jul-2025 12:19:01 America/Porto_Velho] PHP Warning:  Undefined property: stdClass::$id in /home2/sested59/sested-eja.com/pgtos/boleto/index.php on line 102
+[11-Jul-2025 12:19:01 America/Porto_Velho] PHP Warning:  Undefined variable $id_mat in /home2/sested59/sested-eja.com/pgtos/boleto/index.php on line 102
+[11-Jul-2025 12:19:01 America/Porto_Velho] PHP Warning:  Undefined property: stdClass::$transaction_details in /home2/sested59/sested-eja.com/pgtos/boleto/index.php on line 104
+[11-Jul-2025 12:19:01 America/Porto_Velho] PHP Warning:  Attempt to read property "external_resource_url" on null in /home2/sested59/sested-eja.com/pgtos/boleto/index.php on line 104
+[12-Jul-2025 12:08:05 America/Porto_Velho] PHP Warning:  Undefined array key "id" in /home2/sested59/sested-eja.com/pgtos/boleto/index.php on line 4
+[12-Jul-2025 12:08:05 America/Porto_Velho] PHP Warning:  Undefined array key "cpf" in /home2/sested59/sested-eja.com/pgtos/boleto/index.php on line 5
+[12-Jul-2025 12:08:05 America/Porto_Velho] PHP Warning:  Undefined variable $id_mat in /home2/sested59/sested-eja.com/pgtos/boleto/index.php on line 59
+[12-Jul-2025 12:08:05 America/Porto_Velho] PHP Warning:  Undefined variable $valor_pix in /home2/sested59/sested-eja.com/pgtos/boleto/index.php on line 60
+[12-Jul-2025 12:08:05 America/Porto_Velho] PHP Warning:  Undefined variable $nome_curso_titulo in /home2/sested59/sested-eja.com/pgtos/boleto/index.php on line 61
+[12-Jul-2025 12:08:05 America/Porto_Velho] PHP Warning:  Undefined property: stdClass::$id in /home2/sested59/sested-eja.com/pgtos/boleto/index.php on line 102
+[12-Jul-2025 12:08:05 America/Porto_Velho] PHP Warning:  Undefined variable $id_mat in /home2/sested59/sested-eja.com/pgtos/boleto/index.php on line 102
+[12-Jul-2025 12:08:05 America/Porto_Velho] PHP Warning:  Undefined property: stdClass::$transaction_details in /home2/sested59/sested-eja.com/pgtos/boleto/index.php on line 104
+[12-Jul-2025 12:08:05 America/Porto_Velho] PHP Warning:  Attempt to read property "external_resource_url" on null in /home2/sested59/sested-eja.com/pgtos/boleto/index.php on line 104
+[24-Jul-2025 13:05:06 America/Porto_Velho] PHP Warning:  Undefined array key "id" in /home2/sested59/motivadosabrilhar.com/pgtos/boleto/index.php on line 4
+[24-Jul-2025 13:05:06 America/Porto_Velho] PHP Warning:  Undefined array key "cpf" in /home2/sested59/motivadosabrilhar.com/pgtos/boleto/index.php on line 5
+[24-Jul-2025 13:05:06 America/Porto_Velho] PHP Warning:  Undefined variable $id_mat in /home2/sested59/motivadosabrilhar.com/pgtos/boleto/index.php on line 59
+[24-Jul-2025 13:05:06 America/Porto_Velho] PHP Warning:  Undefined variable $valor_pix in /home2/sested59/motivadosabrilhar.com/pgtos/boleto/index.php on line 60
+[24-Jul-2025 13:05:06 America/Porto_Velho] PHP Warning:  Undefined variable $nome_curso_titulo in /home2/sested59/motivadosabrilhar.com/pgtos/boleto/index.php on line 61
+[24-Jul-2025 13:05:06 America/Porto_Velho] PHP Warning:  Undefined property: stdClass::$id in /home2/sested59/motivadosabrilhar.com/pgtos/boleto/index.php on line 102
+[24-Jul-2025 13:05:06 America/Porto_Velho] PHP Warning:  Undefined variable $id_mat in /home2/sested59/motivadosabrilhar.com/pgtos/boleto/index.php on line 102
+[24-Jul-2025 13:05:06 America/Porto_Velho] PHP Warning:  Undefined property: stdClass::$transaction_details in /home2/sested59/motivadosabrilhar.com/pgtos/boleto/index.php on line 104
+[24-Jul-2025 13:05:06 America/Porto_Velho] PHP Warning:  Attempt to read property "external_resource_url" on null in /home2/sested59/motivadosabrilhar.com/pgtos/boleto/index.php on line 104
+[22-Oct-2025 00:46:35 America/Porto_Velho] PHP Warning:  Undefined array key "id" in /home2/sested59/public_html/pgtos/boleto/index.php on line 4
+[22-Oct-2025 00:46:35 America/Porto_Velho] PHP Warning:  Undefined array key "cpf" in /home2/sested59/public_html/pgtos/boleto/index.php on line 5
+[22-Oct-2025 00:46:35 America/Porto_Velho] PHP Warning:  Undefined variable $id_mat in /home2/sested59/public_html/pgtos/boleto/index.php on line 59
+[22-Oct-2025 00:46:35 America/Porto_Velho] PHP Warning:  Undefined variable $valor_pix in /home2/sested59/public_html/pgtos/boleto/index.php on line 60
+[22-Oct-2025 00:46:35 America/Porto_Velho] PHP Warning:  Undefined variable $nome_curso_titulo in /home2/sested59/public_html/pgtos/boleto/index.php on line 61
+[22-Oct-2025 00:46:35 America/Porto_Velho] PHP Warning:  Undefined property: stdClass::$id in /home2/sested59/public_html/pgtos/boleto/index.php on line 102
+[22-Oct-2025 00:46:35 America/Porto_Velho] PHP Warning:  Undefined variable $id_mat in /home2/sested59/public_html/pgtos/boleto/index.php on line 102
+[22-Oct-2025 00:46:35 America/Porto_Velho] PHP Warning:  Undefined property: stdClass::$transaction_details in /home2/sested59/public_html/pgtos/boleto/index.php on line 104
+[22-Oct-2025 00:46:35 America/Porto_Velho] PHP Warning:  Attempt to read property "external_resource_url" on null in /home2/sested59/public_html/pgtos/boleto/index.php on line 104
+[06-Nov-2025 20:34:05 America/Porto_Velho] PHP Warning:  Undefined array key "id" in /home2/sested59/public_html/pgtos/boleto/index.php on line 4
+[06-Nov-2025 20:34:05 America/Porto_Velho] PHP Warning:  Undefined array key "cpf" in /home2/sested59/public_html/pgtos/boleto/index.php on line 5
+[06-Nov-2025 20:34:05 America/Porto_Velho] PHP Warning:  Undefined variable $id_mat in /home2/sested59/public_html/pgtos/boleto/index.php on line 59
+[06-Nov-2025 20:34:05 America/Porto_Velho] PHP Warning:  Undefined variable $valor_pix in /home2/sested59/public_html/pgtos/boleto/index.php on line 60
+[06-Nov-2025 20:34:05 America/Porto_Velho] PHP Warning:  Undefined variable $nome_curso_titulo in /home2/sested59/public_html/pgtos/boleto/index.php on line 61
+[06-Nov-2025 20:34:06 America/Porto_Velho] PHP Warning:  Undefined property: stdClass::$id in /home2/sested59/public_html/pgtos/boleto/index.php on line 102
+[06-Nov-2025 20:34:06 America/Porto_Velho] PHP Warning:  Undefined variable $id_mat in /home2/sested59/public_html/pgtos/boleto/index.php on line 102
+[06-Nov-2025 20:34:06 America/Porto_Velho] PHP Warning:  Undefined property: stdClass::$transaction_details in /home2/sested59/public_html/pgtos/boleto/index.php on line 104
+[06-Nov-2025 20:34:06 America/Porto_Velho] PHP Warning:  Attempt to read property "external_resource_url" on null in /home2/sested59/public_html/pgtos/boleto/index.php on line 104
+[08-Nov-2025 01:08:52 America/Porto_Velho] PHP Warning:  Undefined array key "id" in /home2/sested59/public_html/pgtos/boleto/index.php on line 4
+[08-Nov-2025 01:08:52 America/Porto_Velho] PHP Warning:  Undefined array key "cpf" in /home2/sested59/public_html/pgtos/boleto/index.php on line 5
+[08-Nov-2025 01:08:52 America/Porto_Velho] PHP Warning:  Undefined variable $id_mat in /home2/sested59/public_html/pgtos/boleto/index.php on line 59
+[08-Nov-2025 01:08:52 America/Porto_Velho] PHP Warning:  Undefined variable $valor_pix in /home2/sested59/public_html/pgtos/boleto/index.php on line 60
+[08-Nov-2025 01:08:52 America/Porto_Velho] PHP Warning:  Undefined variable $nome_curso_titulo in /home2/sested59/public_html/pgtos/boleto/index.php on line 61
+[08-Nov-2025 01:08:52 America/Porto_Velho] PHP Warning:  Undefined property: stdClass::$id in /home2/sested59/public_html/pgtos/boleto/index.php on line 102
+[08-Nov-2025 01:08:52 America/Porto_Velho] PHP Warning:  Undefined variable $id_mat in /home2/sested59/public_html/pgtos/boleto/index.php on line 102
+[08-Nov-2025 01:08:52 America/Porto_Velho] PHP Warning:  Undefined property: stdClass::$transaction_details in /home2/sested59/public_html/pgtos/boleto/index.php on line 104
+[08-Nov-2025 01:08:52 America/Porto_Velho] PHP Warning:  Attempt to read property "external_resource_url" on null in /home2/sested59/public_html/pgtos/boleto/index.php on line 104

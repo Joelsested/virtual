@@ -1,0 +1,265 @@
+[26-Aug-2024 17:44:52 America/Fortaleza] PHP Warning:  Undefined array key "gerar_boleto" in /home2/sested59/public_html/sistema/painel-aluno/paginas/gerar_boleto.php on line 2
+[26-Aug-2024 17:45:15 America/Fortaleza] PHP Warning:  Undefined array key "gerar_boleto" in /home2/sested59/public_html/sistema/painel-aluno/paginas/gerar_boleto.php on line 2
+[26-Aug-2024 17:45:19 America/Fortaleza] PHP Warning:  Undefined array key "gerar_boleto" in /home2/sested59/public_html/sistema/painel-aluno/paginas/gerar_boleto.php on line 2
+[26-Aug-2024 18:09:09 America/Fortaleza] PHP Warning:  require_once(../vendor/autoload.php): Failed to open stream: No such file or directory in /home2/sested59/public_html/sistema/painel-aluno/paginas/gerar_boleto.php on line 2
+[26-Aug-2024 18:09:09 America/Fortaleza] PHP Fatal error:  Uncaught Error: Failed opening required '../vendor/autoload.php' (include_path='.:/opt/cpanel/ea-php82/root/usr/share/pear') in /home2/sested59/public_html/sistema/painel-aluno/paginas/gerar_boleto.php:2
+Stack trace:
+#0 {main}
+  thrown in /home2/sested59/public_html/sistema/painel-aluno/paginas/gerar_boleto.php on line 2
+[26-Aug-2024 18:10:59 America/Fortaleza] PHP Warning:  require_once(../vendor/autoload.php): Failed to open stream: No such file or directory in /home2/sested59/public_html/sistema/painel-aluno/paginas/gerar_boleto.php on line 2
+[26-Aug-2024 18:10:59 America/Fortaleza] PHP Fatal error:  Uncaught Error: Failed opening required '../vendor/autoload.php' (include_path='.:/opt/cpanel/ea-php82/root/usr/share/pear') in /home2/sested59/public_html/sistema/painel-aluno/paginas/gerar_boleto.php:2
+Stack trace:
+#0 {main}
+  thrown in /home2/sested59/public_html/sistema/painel-aluno/paginas/gerar_boleto.php on line 2
+[26-Aug-2024 18:11:24 America/Fortaleza] PHP Warning:  require_once(../vendor/autoload.php): Failed to open stream: No such file or directory in /home2/sested59/public_html/sistema/painel-aluno/paginas/gerar_boleto.php on line 2
+[26-Aug-2024 18:11:24 America/Fortaleza] PHP Fatal error:  Uncaught Error: Failed opening required '../vendor/autoload.php' (include_path='.:/opt/cpanel/ea-php82/root/usr/share/pear') in /home2/sested59/public_html/sistema/painel-aluno/paginas/gerar_boleto.php:2
+Stack trace:
+#0 {main}
+  thrown in /home2/sested59/public_html/sistema/painel-aluno/paginas/gerar_boleto.php on line 2
+[26-Aug-2024 18:11:53 America/Fortaleza] PHP Warning:  require_once(../vendor/autoload.php): Failed to open stream: No such file or directory in /home2/sested59/public_html/sistema/painel-aluno/paginas/gerar_boleto.php on line 2
+[26-Aug-2024 18:11:53 America/Fortaleza] PHP Fatal error:  Uncaught Error: Failed opening required '../vendor/autoload.php' (include_path='.:/opt/cpanel/ea-php82/root/usr/share/pear') in /home2/sested59/public_html/sistema/painel-aluno/paginas/gerar_boleto.php:2
+Stack trace:
+#0 {main}
+  thrown in /home2/sested59/public_html/sistema/painel-aluno/paginas/gerar_boleto.php on line 2
+[26-Aug-2024 18:14:09 America/Fortaleza] PHP Warning:  require_once(../../vendor/autoload.php): Failed to open stream: No such file or directory in /home2/sested59/public_html/sistema/painel-aluno/paginas/gerar_boleto.php on line 2
+[26-Aug-2024 18:14:09 America/Fortaleza] PHP Fatal error:  Uncaught Error: Failed opening required '../../vendor/autoload.php' (include_path='.:/opt/cpanel/ea-php82/root/usr/share/pear') in /home2/sested59/public_html/sistema/painel-aluno/paginas/gerar_boleto.php:2
+Stack trace:
+#0 {main}
+  thrown in /home2/sested59/public_html/sistema/painel-aluno/paginas/gerar_boleto.php on line 2
+[26-Aug-2024 18:16:03 America/Fortaleza] PHP Warning:  Undefined variable $pdo in /home2/sested59/public_html/sistema/painel-aluno/paginas/gerar_boleto.php on line 20
+[26-Aug-2024 18:16:03 America/Fortaleza] PHP Fatal error:  Uncaught Error: Call to a member function query() on null in /home2/sested59/public_html/sistema/painel-aluno/paginas/gerar_boleto.php:20
+Stack trace:
+#0 {main}
+  thrown in /home2/sested59/public_html/sistema/painel-aluno/paginas/gerar_boleto.php on line 20
+[26-Aug-2024 18:16:39 America/Fortaleza] PHP Warning:  Undefined variable $pdo in /home2/sested59/public_html/sistema/painel-aluno/paginas/gerar_boleto.php on line 20
+[26-Aug-2024 18:16:39 America/Fortaleza] PHP Fatal error:  Uncaught Error: Call to a member function query() on null in /home2/sested59/public_html/sistema/painel-aluno/paginas/gerar_boleto.php:20
+Stack trace:
+#0 {main}
+  thrown in /home2/sested59/public_html/sistema/painel-aluno/paginas/gerar_boleto.php on line 20
+[26-Aug-2024 18:17:17 America/Fortaleza] PHP Warning:  require_once(../conexao.php): Failed to open stream: No such file or directory in /home2/sested59/public_html/sistema/painel-aluno/paginas/gerar_boleto.php on line 3
+[26-Aug-2024 18:17:17 America/Fortaleza] PHP Fatal error:  Uncaught Error: Failed opening required '../conexao.php' (include_path='.:/opt/cpanel/ea-php82/root/usr/share/pear') in /home2/sested59/public_html/sistema/painel-aluno/paginas/gerar_boleto.php:3
+Stack trace:
+#0 {main}
+  thrown in /home2/sested59/public_html/sistema/painel-aluno/paginas/gerar_boleto.php on line 3
+[26-Aug-2024 17:17:27 America/Porto_Velho] PHP Fatal error:  Uncaught Error: Call to undefined function var_cump() in /home2/sested59/public_html/sistema/painel-aluno/paginas/gerar_boleto.php:24
+Stack trace:
+#0 {main}
+  thrown in /home2/sested59/public_html/sistema/painel-aluno/paginas/gerar_boleto.php on line 24
+[26-Aug-2024 18:18:12 America/Fortaleza] PHP Warning:  require_once(../conexao.php): Failed to open stream: No such file or directory in /home2/sested59/public_html/sistema/painel-aluno/paginas/gerar_boleto.php on line 3
+[26-Aug-2024 18:18:12 America/Fortaleza] PHP Fatal error:  Uncaught Error: Failed opening required '../conexao.php' (include_path='.:/opt/cpanel/ea-php82/root/usr/share/pear') in /home2/sested59/public_html/sistema/painel-aluno/paginas/gerar_boleto.php:3
+Stack trace:
+#0 {main}
+  thrown in /home2/sested59/public_html/sistema/painel-aluno/paginas/gerar_boleto.php on line 3
+[26-Aug-2024 18:18:15 America/Fortaleza] PHP Warning:  require_once(../conexao.php): Failed to open stream: No such file or directory in /home2/sested59/public_html/sistema/painel-aluno/paginas/gerar_boleto.php on line 3
+[26-Aug-2024 18:18:15 America/Fortaleza] PHP Fatal error:  Uncaught Error: Failed opening required '../conexao.php' (include_path='.:/opt/cpanel/ea-php82/root/usr/share/pear') in /home2/sested59/public_html/sistema/painel-aluno/paginas/gerar_boleto.php:3
+Stack trace:
+#0 {main}
+  thrown in /home2/sested59/public_html/sistema/painel-aluno/paginas/gerar_boleto.php on line 3
+[26-Aug-2024 18:18:27 America/Fortaleza] PHP Warning:  require_once(../conexao.php): Failed to open stream: No such file or directory in /home2/sested59/public_html/sistema/painel-aluno/paginas/gerar_boleto.php on line 3
+[26-Aug-2024 18:18:27 America/Fortaleza] PHP Fatal error:  Uncaught Error: Failed opening required '../conexao.php' (include_path='.:/opt/cpanel/ea-php82/root/usr/share/pear') in /home2/sested59/public_html/sistema/painel-aluno/paginas/gerar_boleto.php:3
+Stack trace:
+#0 {main}
+  thrown in /home2/sested59/public_html/sistema/painel-aluno/paginas/gerar_boleto.php on line 3
+[26-Aug-2024 18:18:38 America/Fortaleza] PHP Warning:  require_once(../conexao.php): Failed to open stream: No such file or directory in /home2/sested59/public_html/sistema/painel-aluno/paginas/gerar_boleto.php on line 3
+[26-Aug-2024 18:18:38 America/Fortaleza] PHP Fatal error:  Uncaught Error: Failed opening required '../conexao.php' (include_path='.:/opt/cpanel/ea-php82/root/usr/share/pear') in /home2/sested59/public_html/sistema/painel-aluno/paginas/gerar_boleto.php:3
+Stack trace:
+#0 {main}
+  thrown in /home2/sested59/public_html/sistema/painel-aluno/paginas/gerar_boleto.php on line 3
+[26-Aug-2024 18:19:02 America/Fortaleza] PHP Warning:  require_once(../conexao.php): Failed to open stream: No such file or directory in /home2/sested59/public_html/sistema/painel-aluno/paginas/gerar_boleto.php on line 3
+[26-Aug-2024 18:19:02 America/Fortaleza] PHP Fatal error:  Uncaught Error: Failed opening required '../conexao.php' (include_path='.:/opt/cpanel/ea-php82/root/usr/share/pear') in /home2/sested59/public_html/sistema/painel-aluno/paginas/gerar_boleto.php:3
+Stack trace:
+#0 {main}
+  thrown in /home2/sested59/public_html/sistema/painel-aluno/paginas/gerar_boleto.php on line 3
+[26-Aug-2024 17:45:04 America/Porto_Velho] PHP Fatal error:  Uncaught Error: Class "Client" not found in /home2/sested59/public_html/sistema/painel-aluno/paginas/gerar_boleto.php:41
+Stack trace:
+#0 {main}
+  thrown in /home2/sested59/public_html/sistema/painel-aluno/paginas/gerar_boleto.php on line 41
+[26-Aug-2024 19:04:57 America/Fortaleza] PHP Parse error:  syntax error, unexpected identifier "asaas" in /home2/sested59/public_html/sistema/painel-aluno/paginas/gerar_boleto.php on line 84
+[26-Aug-2024 19:50:44 America/Fortaleza] PHP Parse error:  syntax error, unexpected string content "", expecting "-" or identifier or variable or number in /home2/sested59/public_html/sistema/painel-aluno/paginas/gerar_boleto.php on line 95
+[26-Aug-2024 19:52:12 America/Fortaleza] PHP Parse error:  syntax error, unexpected string content "", expecting "-" or identifier or variable or number in /home2/sested59/public_html/sistema/painel-aluno/paginas/gerar_boleto.php on line 95
+[26-Aug-2024 19:53:53 America/Fortaleza] PHP Parse error:  syntax error, unexpected string content "", expecting "-" or identifier or variable or number in /home2/sested59/public_html/sistema/painel-aluno/paginas/gerar_boleto.php on line 95
+[26-Aug-2024 19:02:10 America/Porto_Velho] PHP Warning:  Undefined variable $id_do_aluno in /home2/sested59/public_html/sistema/painel-aluno/paginas/gerar_boleto.php on line 16
+[26-Aug-2024 19:07:53 America/Porto_Velho] PHP Warning:  Undefined variable $id_ in /home2/sested59/public_html/sistema/painel-aluno/paginas/gerar_boleto.php on line 116
+[26-Aug-2024 19:09:45 America/Porto_Velho] PHP Warning:  Undefined variable $pdo_matricula in /home2/sested59/public_html/sistema/painel-aluno/paginas/gerar_boleto.php on line 111
+[26-Aug-2024 19:09:45 America/Porto_Velho] PHP Fatal error:  Uncaught Error: Call to a member function prepare() on null in /home2/sested59/public_html/sistema/painel-aluno/paginas/gerar_boleto.php:111
+Stack trace:
+#0 {main}
+  thrown in /home2/sested59/public_html/sistema/painel-aluno/paginas/gerar_boleto.php on line 111
+[28-Aug-2024 15:07:35 America/Porto_Velho] PHP Warning:  Cannot modify header information - headers already sent by (output started at /home2/sested59/public_html/sistema/painel-aluno/paginas/gerar_boleto.php:16) in /home2/sested59/public_html/sistema/painel-aluno/paginas/gerar_boleto.php on line 122
+[28-Aug-2024 15:07:56 America/Porto_Velho] PHP Warning:  Cannot modify header information - headers already sent by (output started at /home2/sested59/public_html/sistema/painel-aluno/paginas/gerar_boleto.php:16) in /home2/sested59/public_html/sistema/painel-aluno/paginas/gerar_boleto.php on line 122
+[28-Aug-2024 15:23:37 America/Porto_Velho] PHP Warning:  Undefined variable $id_do_curso_pag in /home2/sested59/public_html/sistema/painel-aluno/paginas/gerar_boleto.php on line 47
+[28-Aug-2024 15:23:37 America/Porto_Velho] PHP Warning:  Undefined variable $id_usuario_professor in /home2/sested59/public_html/sistema/painel-aluno/paginas/gerar_boleto.php on line 59
+[28-Aug-2024 15:23:39 America/Porto_Velho] PHP Warning:  Cannot modify header information - headers already sent by (output started at /home2/sested59/public_html/sistema/painel-aluno/paginas/gerar_boleto.php:44) in /home2/sested59/public_html/sistema/painel-aluno/paginas/gerar_boleto.php on line 212
+[28-Aug-2024 16:33:44 America/Fortaleza] PHP Parse error:  syntax error, unexpected variable "$id_do_curso_pag" in /home2/sested59/public_html/sistema/painel-aluno/paginas/gerar_boleto.php on line 46
+[28-Aug-2024 16:35:07 America/Fortaleza] PHP Parse error:  syntax error, unexpected variable "$id_do_curso_pag" in /home2/sested59/public_html/sistema/painel-aluno/paginas/gerar_boleto.php on line 45
+[28-Aug-2024 15:35:18 America/Porto_Velho] PHP Warning:  Undefined variable $id_do_curso_pag in /home2/sested59/public_html/sistema/painel-aluno/paginas/gerar_boleto.php on line 50
+[28-Aug-2024 15:35:18 America/Porto_Velho] PHP Warning:  Undefined variable $id_usuario_professor in /home2/sested59/public_html/sistema/painel-aluno/paginas/gerar_boleto.php on line 62
+[28-Aug-2024 15:35:18 America/Porto_Velho] PHP Warning:  Undefined variable $clienteGuzzle in /home2/sested59/public_html/sistema/painel-aluno/paginas/gerar_boleto.php on line 144
+[28-Aug-2024 15:35:18 America/Porto_Velho] PHP Fatal error:  Uncaught Error: Call to a member function request() on null in /home2/sested59/public_html/sistema/painel-aluno/paginas/gerar_boleto.php:144
+Stack trace:
+#0 {main}
+  thrown in /home2/sested59/public_html/sistema/painel-aluno/paginas/gerar_boleto.php on line 144
+[28-Aug-2024 15:35:35 America/Porto_Velho] PHP Warning:  Undefined variable $id_do_curso_pag in /home2/sested59/public_html/sistema/painel-aluno/paginas/gerar_boleto.php on line 50
+[28-Aug-2024 15:35:35 America/Porto_Velho] PHP Warning:  Undefined variable $id_usuario_professor in /home2/sested59/public_html/sistema/painel-aluno/paginas/gerar_boleto.php on line 62
+[28-Aug-2024 15:35:35 America/Porto_Velho] PHP Warning:  Undefined variable $clienteGuzzle in /home2/sested59/public_html/sistema/painel-aluno/paginas/gerar_boleto.php on line 144
+[28-Aug-2024 15:35:35 America/Porto_Velho] PHP Fatal error:  Uncaught Error: Call to a member function request() on null in /home2/sested59/public_html/sistema/painel-aluno/paginas/gerar_boleto.php:144
+Stack trace:
+#0 {main}
+  thrown in /home2/sested59/public_html/sistema/painel-aluno/paginas/gerar_boleto.php on line 144
+[28-Aug-2024 15:35:49 America/Porto_Velho] PHP Warning:  Undefined variable $id_do_curso_pag in /home2/sested59/public_html/sistema/painel-aluno/paginas/gerar_boleto.php on line 50
+[28-Aug-2024 15:35:49 America/Porto_Velho] PHP Warning:  Undefined variable $id_usuario_professor in /home2/sested59/public_html/sistema/painel-aluno/paginas/gerar_boleto.php on line 62
+[28-Aug-2024 15:35:49 America/Porto_Velho] PHP Warning:  Undefined variable $clienteGuzzle in /home2/sested59/public_html/sistema/painel-aluno/paginas/gerar_boleto.php on line 144
+[28-Aug-2024 15:35:49 America/Porto_Velho] PHP Fatal error:  Uncaught Error: Call to a member function request() on null in /home2/sested59/public_html/sistema/painel-aluno/paginas/gerar_boleto.php:144
+Stack trace:
+#0 {main}
+  thrown in /home2/sested59/public_html/sistema/painel-aluno/paginas/gerar_boleto.php on line 144
+[28-Aug-2024 15:36:08 America/Porto_Velho] PHP Warning:  Undefined variable $id_do_curso_pag in /home2/sested59/public_html/sistema/painel-aluno/paginas/gerar_boleto.php on line 50
+[28-Aug-2024 15:36:08 America/Porto_Velho] PHP Warning:  Undefined variable $id_usuario_professor in /home2/sested59/public_html/sistema/painel-aluno/paginas/gerar_boleto.php on line 62
+[28-Aug-2024 15:36:10 America/Porto_Velho] PHP Warning:  Cannot modify header information - headers already sent by (output started at /home2/sested59/public_html/sistema/painel-aluno/paginas/gerar_boleto.php:46) in /home2/sested59/public_html/sistema/painel-aluno/paginas/gerar_boleto.php on line 215
+[28-Aug-2024 16:36:28 America/Fortaleza] PHP Parse error:  syntax error, unexpected token "echo" in /home2/sested59/public_html/sistema/painel-aluno/paginas/gerar_boleto.php on line 46
+[28-Aug-2024 15:37:09 America/Porto_Velho] PHP Fatal error:  Uncaught PDOException: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'matricula.aluno' in 'where clause' in /home2/sested59/public_html/sistema/painel-aluno/paginas/gerar_boleto.php:44
+Stack trace:
+#0 /home2/sested59/public_html/sistema/painel-aluno/paginas/gerar_boleto.php(44): PDO->query('SELECT matricul...')
+#1 {main}
+  thrown in /home2/sested59/public_html/sistema/painel-aluno/paginas/gerar_boleto.php on line 44
+[28-Aug-2024 15:37:12 America/Porto_Velho] PHP Fatal error:  Uncaught PDOException: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'matricula.aluno' in 'where clause' in /home2/sested59/public_html/sistema/painel-aluno/paginas/gerar_boleto.php:44
+Stack trace:
+#0 /home2/sested59/public_html/sistema/painel-aluno/paginas/gerar_boleto.php(44): PDO->query('SELECT matricul...')
+#1 {main}
+  thrown in /home2/sested59/public_html/sistema/painel-aluno/paginas/gerar_boleto.php on line 44
+[28-Aug-2024 15:37:23 America/Porto_Velho] PHP Fatal error:  Uncaught PDOException: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'matricula.aluno' in 'where clause' in /home2/sested59/public_html/sistema/painel-aluno/paginas/gerar_boleto.php:44
+Stack trace:
+#0 /home2/sested59/public_html/sistema/painel-aluno/paginas/gerar_boleto.php(44): PDO->query('SELECT matricul...')
+#1 {main}
+  thrown in /home2/sested59/public_html/sistema/painel-aluno/paginas/gerar_boleto.php on line 44
+[28-Aug-2024 15:38:53 America/Porto_Velho] PHP Fatal error:  Uncaught Error: Object of class PDOStatement could not be converted to string in /home2/sested59/public_html/sistema/painel-aluno/paginas/gerar_boleto.php:57
+Stack trace:
+#0 {main}
+  thrown in /home2/sested59/public_html/sistema/painel-aluno/paginas/gerar_boleto.php on line 57
+[28-Aug-2024 15:39:08 America/Porto_Velho] PHP Warning:  Array to string conversion in /home2/sested59/public_html/sistema/painel-aluno/paginas/gerar_boleto.php on line 54
+[28-Aug-2024 15:39:08 America/Porto_Velho] PHP Warning:  Array to string conversion in /home2/sested59/public_html/sistema/painel-aluno/paginas/gerar_boleto.php on line 57
+[28-Aug-2024 15:39:08 America/Porto_Velho] PHP Warning:  Undefined variable $id_usuario_professor in /home2/sested59/public_html/sistema/painel-aluno/paginas/gerar_boleto.php on line 69
+[28-Aug-2024 15:39:09 America/Porto_Velho] PHP Warning:  Cannot modify header information - headers already sent by (output started at /home2/sested59/public_html/sistema/painel-aluno/paginas/gerar_boleto.php:54) in /home2/sested59/public_html/sistema/painel-aluno/paginas/gerar_boleto.php on line 222
+[28-Aug-2024 15:39:33 America/Porto_Velho] PHP Warning:  Array to string conversion in /home2/sested59/public_html/sistema/painel-aluno/paginas/gerar_boleto.php on line 57
+[28-Aug-2024 15:39:33 America/Porto_Velho] PHP Warning:  Undefined variable $id_usuario_professor in /home2/sested59/public_html/sistema/painel-aluno/paginas/gerar_boleto.php on line 69
+[28-Aug-2024 15:39:34 America/Porto_Velho] PHP Warning:  Cannot modify header information - headers already sent by (output started at /home2/sested59/public_html/sistema/painel-aluno/paginas/gerar_boleto.php:54) in /home2/sested59/public_html/sistema/painel-aluno/paginas/gerar_boleto.php on line 222
+[28-Aug-2024 15:39:58 America/Porto_Velho] PHP Warning:  Array to string conversion in /home2/sested59/public_html/sistema/painel-aluno/paginas/gerar_boleto.php on line 57
+[28-Aug-2024 15:39:58 America/Porto_Velho] PHP Warning:  Undefined variable $id_usuario_professor in /home2/sested59/public_html/sistema/painel-aluno/paginas/gerar_boleto.php on line 69
+[28-Aug-2024 15:40:00 America/Porto_Velho] PHP Warning:  Cannot modify header information - headers already sent by (output started at /home2/sested59/public_html/sistema/painel-aluno/paginas/gerar_boleto.php:54) in /home2/sested59/public_html/sistema/painel-aluno/paginas/gerar_boleto.php on line 222
+[28-Aug-2024 15:40:26 America/Porto_Velho] PHP Warning:  Cannot modify header information - headers already sent by (output started at /home2/sested59/public_html/sistema/painel-aluno/paginas/gerar_boleto.php:54) in /home2/sested59/public_html/sistema/painel-aluno/paginas/gerar_boleto.php on line 222
+[28-Aug-2024 15:41:54 America/Porto_Velho] PHP Warning:  Cannot modify header information - headers already sent by (output started at /home2/sested59/public_html/sistema/painel-aluno/paginas/gerar_boleto.php:66) in /home2/sested59/public_html/sistema/painel-aluno/paginas/gerar_boleto.php on line 222
+[28-Aug-2024 15:43:06 America/Porto_Velho] PHP Warning:  Cannot modify header information - headers already sent by (output started at /home2/sested59/public_html/sistema/painel-aluno/paginas/gerar_boleto.php:129) in /home2/sested59/public_html/sistema/painel-aluno/paginas/gerar_boleto.php on line 220
+[03-Feb-2025 13:33:58 America/Porto_Velho] PHP Warning:  Undefined array key "id" in /home2/sested59/public_html/sistema/painel-aluno/paginas/gerar_boleto.php on line 147
+[03-Feb-2025 13:33:58 America/Porto_Velho] PHP Warning:  Undefined array key "id" in /home2/sested59/public_html/sistema/painel-aluno/paginas/gerar_boleto.php on line 183
+[03-Feb-2025 13:33:58 America/Porto_Velho] PHP Warning:  Undefined array key "id" in /home2/sested59/public_html/sistema/painel-aluno/paginas/gerar_boleto.php on line 192
+[03-Feb-2025 13:33:58 America/Porto_Velho] PHP Warning:  Undefined array key "invoiceUrl" in /home2/sested59/public_html/sistema/painel-aluno/paginas/gerar_boleto.php on line 200
+[23-Feb-2025 20:23:35 America/Porto_Velho] PHP Warning:  Undefined array key "id" in /home2/sested59/public_html/sistema/painel-aluno/paginas/gerar_boleto.php on line 147
+[23-Feb-2025 20:23:36 America/Porto_Velho] PHP Warning:  Undefined array key "id" in /home2/sested59/public_html/sistema/painel-aluno/paginas/gerar_boleto.php on line 183
+[23-Feb-2025 20:23:36 America/Porto_Velho] PHP Warning:  Undefined array key "id" in /home2/sested59/public_html/sistema/painel-aluno/paginas/gerar_boleto.php on line 192
+[23-Feb-2025 20:23:36 America/Porto_Velho] PHP Warning:  Undefined array key "invoiceUrl" in /home2/sested59/public_html/sistema/painel-aluno/paginas/gerar_boleto.php on line 200
+[23-Feb-2025 20:24:00 America/Porto_Velho] PHP Warning:  Undefined array key "id" in /home2/sested59/public_html/sistema/painel-aluno/paginas/gerar_boleto.php on line 147
+[23-Feb-2025 20:24:01 America/Porto_Velho] PHP Warning:  Undefined array key "id" in /home2/sested59/public_html/sistema/painel-aluno/paginas/gerar_boleto.php on line 183
+[23-Feb-2025 20:24:01 America/Porto_Velho] PHP Warning:  Undefined array key "id" in /home2/sested59/public_html/sistema/painel-aluno/paginas/gerar_boleto.php on line 192
+[23-Feb-2025 20:24:01 America/Porto_Velho] PHP Warning:  Undefined array key "invoiceUrl" in /home2/sested59/public_html/sistema/painel-aluno/paginas/gerar_boleto.php on line 200
+[24-Feb-2025 20:44:48 America/Porto_Velho] PHP Warning:  Undefined array key "id" in /home2/sested59/public_html/sistema/painel-aluno/paginas/gerar_boleto.php on line 147
+[24-Feb-2025 20:44:49 America/Porto_Velho] PHP Warning:  Undefined array key "id" in /home2/sested59/public_html/sistema/painel-aluno/paginas/gerar_boleto.php on line 183
+[24-Feb-2025 20:44:49 America/Porto_Velho] PHP Warning:  Undefined array key "id" in /home2/sested59/public_html/sistema/painel-aluno/paginas/gerar_boleto.php on line 192
+[24-Feb-2025 20:44:49 America/Porto_Velho] PHP Warning:  Undefined array key "invoiceUrl" in /home2/sested59/public_html/sistema/painel-aluno/paginas/gerar_boleto.php on line 200
+[25-Feb-2025 09:23:13 America/Porto_Velho] PHP Warning:  Undefined array key "id" in /home2/sested59/public_html/sistema/painel-aluno/paginas/gerar_boleto.php on line 147
+[25-Feb-2025 09:23:14 America/Porto_Velho] PHP Warning:  Undefined array key "id" in /home2/sested59/public_html/sistema/painel-aluno/paginas/gerar_boleto.php on line 183
+[25-Feb-2025 09:23:14 America/Porto_Velho] PHP Warning:  Undefined array key "id" in /home2/sested59/public_html/sistema/painel-aluno/paginas/gerar_boleto.php on line 192
+[25-Feb-2025 09:23:14 America/Porto_Velho] PHP Warning:  Undefined array key "invoiceUrl" in /home2/sested59/public_html/sistema/painel-aluno/paginas/gerar_boleto.php on line 200
+[25-Feb-2025 09:35:44 America/Porto_Velho] PHP Warning:  Undefined array key "id" in /home2/sested59/public_html/sistema/painel-aluno/paginas/gerar_boleto.php on line 147
+[25-Feb-2025 09:35:45 America/Porto_Velho] PHP Warning:  Undefined array key "id" in /home2/sested59/public_html/sistema/painel-aluno/paginas/gerar_boleto.php on line 183
+[25-Feb-2025 09:35:45 America/Porto_Velho] PHP Warning:  Undefined array key "id" in /home2/sested59/public_html/sistema/painel-aluno/paginas/gerar_boleto.php on line 192
+[25-Feb-2025 09:35:45 America/Porto_Velho] PHP Warning:  Undefined array key "invoiceUrl" in /home2/sested59/public_html/sistema/painel-aluno/paginas/gerar_boleto.php on line 200
+[25-Feb-2025 09:42:19 America/Porto_Velho] PHP Warning:  Undefined array key "id" in /home2/sested59/public_html/sistema/painel-aluno/paginas/gerar_boleto.php on line 147
+[25-Feb-2025 09:42:20 America/Porto_Velho] PHP Warning:  Undefined array key "id" in /home2/sested59/public_html/sistema/painel-aluno/paginas/gerar_boleto.php on line 183
+[25-Feb-2025 09:42:20 America/Porto_Velho] PHP Warning:  Undefined array key "id" in /home2/sested59/public_html/sistema/painel-aluno/paginas/gerar_boleto.php on line 192
+[25-Feb-2025 09:42:20 America/Porto_Velho] PHP Warning:  Undefined array key "invoiceUrl" in /home2/sested59/public_html/sistema/painel-aluno/paginas/gerar_boleto.php on line 200
+[02-May-2025 16:08:39 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sested-eja.com.br/sistema/painel-aluno/paginas/gerar_boleto.php on line 146
+[02-May-2025 16:08:39 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sested-eja.com.br/sistema/painel-aluno/paginas/gerar_boleto.php on line 146
+[17-Jun-2025 17:45:48 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sested-eja.com/sistema/painel-aluno/paginas/gerar_boleto.php on line 63
+[17-Jun-2025 17:45:48 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sested-eja.com/sistema/painel-aluno/paginas/gerar_boleto.php on line 63
+[17-Jun-2025 17:45:48 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sested-eja.com/sistema/painel-aluno/paginas/gerar_boleto.php on line 64
+[17-Jun-2025 17:45:48 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sested-eja.com/sistema/painel-aluno/paginas/gerar_boleto.php on line 64
+[17-Jun-2025 17:45:50 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sested-eja.com/sistema/painel-aluno/paginas/gerar_boleto.php on line 118
+[17-Jun-2025 17:45:50 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sested-eja.com/sistema/painel-aluno/paginas/gerar_boleto.php on line 118
+[17-Jun-2025 18:03:11 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sested-eja.com/sistema/painel-aluno/paginas/gerar_boleto.php on line 69
+[17-Jun-2025 18:03:11 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sested-eja.com/sistema/painel-aluno/paginas/gerar_boleto.php on line 69
+[17-Jun-2025 18:03:11 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sested-eja.com/sistema/painel-aluno/paginas/gerar_boleto.php on line 70
+[17-Jun-2025 18:03:11 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sested-eja.com/sistema/painel-aluno/paginas/gerar_boleto.php on line 70
+[17-Jun-2025 18:03:14 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sested-eja.com/sistema/painel-aluno/paginas/gerar_boleto.php on line 131
+[17-Jun-2025 18:03:14 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sested-eja.com/sistema/painel-aluno/paginas/gerar_boleto.php on line 131
+[17-Jun-2025 18:24:17 America/Porto_Velho] PHP Warning:  Undefined variable $id_matricula in /home2/sested59/sested-eja.com/sistema/painel-aluno/paginas/gerar_boleto.php on line 25
+[17-Jun-2025 18:24:17 America/Porto_Velho] PHP Warning:  Undefined variable $id_do_aluno in /home2/sested59/sested-eja.com/sistema/painel-aluno/paginas/gerar_boleto.php on line 26
+[17-Jun-2025 18:24:17 America/Porto_Velho] PHP Warning:  Undefined variable $id_do_aluno in /home2/sested59/sested-eja.com/sistema/painel-aluno/paginas/gerar_boleto.php on line 30
+[17-Jun-2025 18:24:17 America/Porto_Velho] PHP Warning:  Undefined variable $id_matricula in /home2/sested59/sested-eja.com/sistema/painel-aluno/paginas/gerar_boleto.php on line 36
+[17-Jun-2025 18:24:17 America/Porto_Velho] PHP Warning:  Undefined variable $id_do_aluno in /home2/sested59/sested-eja.com/sistema/painel-aluno/paginas/gerar_boleto.php on line 42
+[17-Jun-2025 18:24:17 America/Porto_Velho] PHP Warning:  Undefined variable $id_matricula in /home2/sested59/sested-eja.com/sistema/painel-aluno/paginas/gerar_boleto.php on line 48
+[17-Jun-2025 18:24:17 America/Porto_Velho] PHP Warning:  Undefined variable $id_do_aluno in /home2/sested59/sested-eja.com/sistema/painel-aluno/paginas/gerar_boleto.php on line 48
+[17-Jun-2025 18:24:54 America/Porto_Velho] PHP Warning:  Undefined variable $id_do_aluno in /home2/sested59/sested-eja.com/sistema/painel-aluno/paginas/gerar_boleto.php on line 37
+[17-Jun-2025 18:24:54 America/Porto_Velho] PHP Warning:  Undefined variable $id_do_aluno in /home2/sested59/sested-eja.com/sistema/painel-aluno/paginas/gerar_boleto.php on line 41
+[17-Jun-2025 18:24:54 America/Porto_Velho] PHP Warning:  Undefined variable $id_do_aluno in /home2/sested59/sested-eja.com/sistema/painel-aluno/paginas/gerar_boleto.php on line 53
+[17-Jun-2025 18:24:54 America/Porto_Velho] PHP Warning:  Undefined variable $id_do_aluno in /home2/sested59/sested-eja.com/sistema/painel-aluno/paginas/gerar_boleto.php on line 59
+[17-Jun-2025 18:26:51 America/Porto_Velho] PHP Warning:  Undefined variable $id_do_aluno in /home2/sested59/sested-eja.com/sistema/painel-aluno/paginas/gerar_boleto.php on line 37
+[17-Jun-2025 18:26:51 America/Porto_Velho] PHP Warning:  Undefined variable $id_do_aluno in /home2/sested59/sested-eja.com/sistema/painel-aluno/paginas/gerar_boleto.php on line 41
+[17-Jun-2025 18:26:51 America/Porto_Velho] PHP Warning:  Undefined variable $id_do_aluno in /home2/sested59/sested-eja.com/sistema/painel-aluno/paginas/gerar_boleto.php on line 53
+[17-Jun-2025 18:26:51 America/Porto_Velho] PHP Warning:  Undefined variable $id_do_aluno in /home2/sested59/sested-eja.com/sistema/painel-aluno/paginas/gerar_boleto.php on line 59
+[17-Nov-2025 13:31:34 America/Porto_Velho] PHP Warning:  require_once(../../../efi/boleto_p.php): Failed to open stream: No such file or directory in /home2/sested59/public_html/sistema/painel-aluno/paginas/gerar_boleto.php on line 5
+[17-Nov-2025 13:31:34 America/Porto_Velho] PHP Fatal error:  Uncaught Error: Failed opening required '../../../efi/boleto_p.php' (include_path='.:/opt/cpanel/ea-php82/root/usr/share/pear') in /home2/sested59/public_html/sistema/painel-aluno/paginas/gerar_boleto.php:5
+Stack trace:
+#0 {main}
+  thrown in /home2/sested59/public_html/sistema/painel-aluno/paginas/gerar_boleto.php on line 5
+[17-Nov-2025 13:31:41 America/Porto_Velho] PHP Warning:  require_once(../../../efi/boleto_p.php): Failed to open stream: No such file or directory in /home2/sested59/public_html/sistema/painel-aluno/paginas/gerar_boleto.php on line 5
+[17-Nov-2025 13:31:41 America/Porto_Velho] PHP Fatal error:  Uncaught Error: Failed opening required '../../../efi/boleto_p.php' (include_path='.:/opt/cpanel/ea-php82/root/usr/share/pear') in /home2/sested59/public_html/sistema/painel-aluno/paginas/gerar_boleto.php:5
+Stack trace:
+#0 {main}
+  thrown in /home2/sested59/public_html/sistema/painel-aluno/paginas/gerar_boleto.php on line 5
+[17-Nov-2025 14:10:28 America/Porto_Velho] PHP Warning:  require_once(../../../efi/boleto_p.php): Failed to open stream: No such file or directory in /home2/sested59/public_html/sistema/painel-aluno/paginas/gerar_boleto.php on line 5
+[17-Nov-2025 14:10:28 America/Porto_Velho] PHP Fatal error:  Uncaught Error: Failed opening required '../../../efi/boleto_p.php' (include_path='.:/opt/cpanel/ea-php82/root/usr/share/pear') in /home2/sested59/public_html/sistema/painel-aluno/paginas/gerar_boleto.php:5
+Stack trace:
+#0 {main}
+  thrown in /home2/sested59/public_html/sistema/painel-aluno/paginas/gerar_boleto.php on line 5
+[17-Nov-2025 14:14:45 America/Porto_Velho] PHP Warning:  require_once(../../../efi/boleto_p.php): Failed to open stream: No such file or directory in /home2/sested59/public_html/sistema/painel-aluno/paginas/gerar_boleto.php on line 10
+[17-Nov-2025 14:14:45 America/Porto_Velho] PHP Fatal error:  Uncaught Error: Failed opening required '../../../efi/boleto_p.php' (include_path='.:/opt/cpanel/ea-php82/root/usr/share/pear') in /home2/sested59/public_html/sistema/painel-aluno/paginas/gerar_boleto.php:10
+Stack trace:
+#0 {main}
+  thrown in /home2/sested59/public_html/sistema/painel-aluno/paginas/gerar_boleto.php on line 10
+[17-Nov-2025 14:19:15 America/Porto_Velho] PHP Fatal error:  Uncaught Error: Call to private method EFIBoletoPayment::getAccessToken() from global scope in /home2/sested59/public_html/sistema/painel-aluno/paginas/gerar_boleto.php:29
+Stack trace:
+#0 {main}
+  thrown in /home2/sested59/public_html/sistema/painel-aluno/paginas/gerar_boleto.php on line 29
+[17-Nov-2025 14:19:51 America/Porto_Velho] PHP Fatal error:  Uncaught Error: Call to private method EFIBoletoPayment::getAccessToken() from global scope in /home2/sested59/public_html/sistema/painel-aluno/paginas/gerar_boleto.php:29
+Stack trace:
+#0 {main}
+  thrown in /home2/sested59/public_html/sistema/painel-aluno/paginas/gerar_boleto.php on line 29
+[19-Dec-2025 13:52:54 America/Porto_Velho] PHP Warning:  Undefined array key "repasses" in /home2/sested59/public_html/efi/boleto_p.php on line 90
+[19-Dec-2025 13:53:14 America/Porto_Velho] PHP Warning:  Undefined array key "repasses" in /home2/sested59/public_html/efi/boleto_p.php on line 90
+[19-Dec-2025 14:21:57 America/Porto_Velho] PHP Warning:  Undefined array key "repasses" in /home2/sested59/public_html/efi/boleto_p.php on line 90
+[19-Dec-2025 14:48:22 America/Porto_Velho] PHP Warning:  Undefined array key "repasses" in /home2/sested59/public_html/efi/boleto_p.php on line 90
+[19-Dec-2025 14:56:58 America/Porto_Velho] PHP Warning:  Undefined array key "repasses" in /home2/sested59/public_html/efi/boleto_p.php on line 90
+[19-Dec-2025 14:58:32 America/Porto_Velho] PHP Warning:  Undefined array key "repasses" in /home2/sested59/public_html/efi/boleto_p.php on line 90
+[19-Dec-2025 15:00:21 America/Porto_Velho] PHP Warning:  Undefined array key "repasses" in /home2/sested59/public_html/efi/boleto_p.php on line 90
+[19-Dec-2025 15:02:18 America/Porto_Velho] PHP Warning:  Undefined array key "repasses" in /home2/sested59/public_html/efi/boleto_p.php on line 90
+[19-Dec-2025 15:02:21 America/Porto_Velho] PHP Warning:  Undefined array key "repasses" in /home2/sested59/public_html/efi/boleto_p.php on line 90
+[19-Dec-2025 15:03:29 America/Porto_Velho] PHP Warning:  Undefined array key "repasses" in /home2/sested59/public_html/efi/boleto_p.php on line 90
+[19-Dec-2025 15:04:45 America/Porto_Velho] PHP Warning:  Undefined array key "repasses" in /home2/sested59/public_html/efi/boleto_p.php on line 90
+[19-Dec-2025 15:10:55 America/Porto_Velho] PHP Warning:  Undefined array key "repasses" in /home2/sested59/public_html/efi/boleto_p.php on line 90
+[19-Dec-2025 15:10:57 America/Porto_Velho] PHP Warning:  Undefined array key "repasses" in /home2/sested59/public_html/efi/boleto_p.php on line 90
+[19-Dec-2025 15:13:05 America/Porto_Velho] PHP Warning:  Undefined variable $payload in /home2/sested59/public_html/sistema/painel-aluno/paginas/gerar_boleto.php on line 108
+[19-Dec-2025 15:13:05 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/public_html/efi/boleto_p.php on line 87
+[19-Dec-2025 15:13:05 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/public_html/efi/boleto_p.php on line 90
+[19-Dec-2025 15:13:05 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/public_html/efi/boleto_p.php on line 99
+[19-Dec-2025 15:14:23 America/Porto_Velho] PHP Warning:  Undefined variable $payload in /home2/sested59/public_html/sistema/painel-aluno/paginas/gerar_boleto.php on line 108
+[19-Dec-2025 15:14:24 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/public_html/efi/boleto_p.php on line 87
+[19-Dec-2025 15:14:24 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/public_html/efi/boleto_p.php on line 90
+[19-Dec-2025 15:14:24 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/public_html/efi/boleto_p.php on line 99
+[19-Dec-2025 15:15:28 America/Porto_Velho] PHP Warning:  Undefined variable $payload in /home2/sested59/public_html/sistema/painel-aluno/paginas/gerar_boleto.php on line 108
+[19-Dec-2025 15:15:28 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/public_html/efi/boleto_p.php on line 87
+[19-Dec-2025 15:15:28 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/public_html/efi/boleto_p.php on line 90
+[19-Dec-2025 15:15:28 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/public_html/efi/boleto_p.php on line 99
+[19-Dec-2025 15:16:04 America/Porto_Velho] PHP Warning:  Undefined variable $payload in /home2/sested59/public_html/sistema/painel-aluno/paginas/gerar_boleto.php on line 108
+[19-Dec-2025 15:16:04 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/public_html/efi/boleto_p.php on line 87
+[19-Dec-2025 15:16:04 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/public_html/efi/boleto_p.php on line 90
+[19-Dec-2025 15:16:04 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/public_html/efi/boleto_p.php on line 99

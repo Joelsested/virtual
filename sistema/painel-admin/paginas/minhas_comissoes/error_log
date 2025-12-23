@@ -1,0 +1,60 @@
+[04-Mar-2025 13:15:23 America/Porto_Velho] PHP Fatal error:  Uncaught PDOException: SQLSTATE[42S02]: Base table or view not found: 1146 Table 'sested59_sestedead.comissoes_pagar' doesn't exist in /home2/sested59/public_html/sistema/painel-admin/paginas/minhas_comissoes/listar.php:28
+Stack trace:
+#0 /home2/sested59/public_html/sistema/painel-admin/paginas/minhas_comissoes/listar.php(28): PDO->query('SELECT * FROM c...')
+#1 {main}
+  thrown in /home2/sested59/public_html/sistema/painel-admin/paginas/minhas_comissoes/listar.php on line 28
+[04-Mar-2025 13:15:53 America/Porto_Velho] PHP Fatal error:  Uncaught PDOException: SQLSTATE[42S02]: Base table or view not found: 1146 Table 'sested59_sestedead.comissoes_pagar' doesn't exist in /home2/sested59/public_html/sistema/painel-admin/paginas/minhas_comissoes/listar.php:28
+Stack trace:
+#0 /home2/sested59/public_html/sistema/painel-admin/paginas/minhas_comissoes/listar.php(28): PDO->query('SELECT * FROM c...')
+#1 {main}
+  thrown in /home2/sested59/public_html/sistema/painel-admin/paginas/minhas_comissoes/listar.php on line 28
+[04-Mar-2025 13:15:58 America/Porto_Velho] PHP Fatal error:  Uncaught PDOException: SQLSTATE[42S02]: Base table or view not found: 1146 Table 'sested59_sestedead.comissoes_pagar' doesn't exist in /home2/sested59/public_html/sistema/painel-admin/paginas/minhas_comissoes/listar.php:28
+Stack trace:
+#0 /home2/sested59/public_html/sistema/painel-admin/paginas/minhas_comissoes/listar.php(28): PDO->query('SELECT * FROM c...')
+#1 {main}
+  thrown in /home2/sested59/public_html/sistema/painel-admin/paginas/minhas_comissoes/listar.php on line 28
+[04-Mar-2025 13:16:00 America/Porto_Velho] PHP Fatal error:  Uncaught PDOException: SQLSTATE[42S02]: Base table or view not found: 1146 Table 'sested59_sestedead.comissoes_pagar' doesn't exist in /home2/sested59/public_html/sistema/painel-admin/paginas/minhas_comissoes/listar.php:28
+Stack trace:
+#0 /home2/sested59/public_html/sistema/painel-admin/paginas/minhas_comissoes/listar.php(28): PDO->query('SELECT * FROM c...')
+#1 {main}
+  thrown in /home2/sested59/public_html/sistema/painel-admin/paginas/minhas_comissoes/listar.php on line 28
+[04-Mar-2025 13:16:04 America/Porto_Velho] PHP Fatal error:  Uncaught PDOException: SQLSTATE[42S02]: Base table or view not found: 1146 Table 'sested59_sestedead.comissoes_pagar' doesn't exist in /home2/sested59/public_html/sistema/painel-admin/paginas/minhas_comissoes/listar.php:28
+Stack trace:
+#0 /home2/sested59/public_html/sistema/painel-admin/paginas/minhas_comissoes/listar.php(28): PDO->query('SELECT * FROM c...')
+#1 {main}
+  thrown in /home2/sested59/public_html/sistema/painel-admin/paginas/minhas_comissoes/listar.php on line 28
+[04-Mar-2025 13:16:07 America/Porto_Velho] PHP Fatal error:  Uncaught PDOException: SQLSTATE[42S02]: Base table or view not found: 1146 Table 'sested59_sestedead.comissoes_pagar' doesn't exist in /home2/sested59/public_html/sistema/painel-admin/paginas/minhas_comissoes/listar.php:28
+Stack trace:
+#0 /home2/sested59/public_html/sistema/painel-admin/paginas/minhas_comissoes/listar.php(28): PDO->query('SELECT * FROM c...')
+#1 {main}
+  thrown in /home2/sested59/public_html/sistema/painel-admin/paginas/minhas_comissoes/listar.php on line 28
+[04-Mar-2025 13:58:55 America/Porto_Velho] PHP Warning:  Undefined array key "porcentagem_comissao" in /home2/sested59/public_html/sistema/painel-admin/paginas/minhas_comissoes/listar.php on line 77
+[04-Mar-2025 13:58:55 America/Porto_Velho] PHP Warning:  Undefined array key "valor_pagar" in /home2/sested59/public_html/sistema/painel-admin/paginas/minhas_comissoes/listar.php on line 78
+[04-Mar-2025 18:04:43 America/Porto_Velho] PHP Fatal error:  Uncaught TypeError: date(): Argument #2 ($timestamp) must be of type ?int, string given in /home2/sested59/public_html/sistema/painel-admin/paginas/minhas_comissoes/listar.php:80
+Stack trace:
+#0 /home2/sested59/public_html/sistema/painel-admin/paginas/minhas_comissoes/listar.php(80): date('d/m/Y - h:m', '0000-00-00')
+#1 {main}
+  thrown in /home2/sested59/public_html/sistema/painel-admin/paginas/minhas_comissoes/listar.php on line 80
+[04-Mar-2025 18:04:45 America/Porto_Velho] PHP Fatal error:  Uncaught TypeError: date(): Argument #2 ($timestamp) must be of type ?int, string given in /home2/sested59/public_html/sistema/painel-admin/paginas/minhas_comissoes/listar.php:80
+Stack trace:
+#0 /home2/sested59/public_html/sistema/painel-admin/paginas/minhas_comissoes/listar.php(80): date('d/m/Y - h:m', '0000-00-00')
+#1 {main}
+  thrown in /home2/sested59/public_html/sistema/painel-admin/paginas/minhas_comissoes/listar.php on line 80
+[04-Mar-2025 18:04:46 America/Porto_Velho] PHP Fatal error:  Uncaught TypeError: date(): Argument #2 ($timestamp) must be of type ?int, string given in /home2/sested59/public_html/sistema/painel-admin/paginas/minhas_comissoes/listar.php:80
+Stack trace:
+#0 /home2/sested59/public_html/sistema/painel-admin/paginas/minhas_comissoes/listar.php(80): date('d/m/Y - h:m', '0000-00-00')
+#1 {main}
+  thrown in /home2/sested59/public_html/sistema/painel-admin/paginas/minhas_comissoes/listar.php on line 80
+[04-Mar-2025 18:04:50 America/Porto_Velho] PHP Fatal error:  Uncaught TypeError: date(): Argument #2 ($timestamp) must be of type ?int, string given in /home2/sested59/public_html/sistema/painel-admin/paginas/minhas_comissoes/listar.php:80
+Stack trace:
+#0 /home2/sested59/public_html/sistema/painel-admin/paginas/minhas_comissoes/listar.php(80): date('d/m/Y - h:m', '0000-00-00')
+#1 {main}
+  thrown in /home2/sested59/public_html/sistema/painel-admin/paginas/minhas_comissoes/listar.php on line 80
+[04-Mar-2025 18:04:51 America/Porto_Velho] PHP Fatal error:  Uncaught TypeError: date(): Argument #2 ($timestamp) must be of type ?int, string given in /home2/sested59/public_html/sistema/painel-admin/paginas/minhas_comissoes/listar.php:80
+Stack trace:
+#0 /home2/sested59/public_html/sistema/painel-admin/paginas/minhas_comissoes/listar.php(80): date('d/m/Y - h:m', '0000-00-00')
+#1 {main}
+  thrown in /home2/sested59/public_html/sistema/painel-admin/paginas/minhas_comissoes/listar.php on line 80
+[09-Mar-2025 19:53:13 America/Porto_Velho] PHP Warning:  Undefined variable $9.9 in /home2/sested59/public_html/sistema/painel-admin/paginas/minhas_comissoes/listar.php on line 82
+[09-Mar-2025 19:53:15 America/Porto_Velho] PHP Warning:  Undefined variable $9.9 in /home2/sested59/public_html/sistema/painel-admin/paginas/minhas_comissoes/listar.php on line 82
+[09-Mar-2025 19:53:17 America/Porto_Velho] PHP Warning:  Undefined variable $9.9 in /home2/sested59/public_html/sistema/painel-admin/paginas/minhas_comissoes/listar.php on line 82

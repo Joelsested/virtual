@@ -1,0 +1,361 @@
+[10-Aug-2024 01:13:04 America/Porto_Velho] PHP Warning:  Undefined array key "id" in /home2/sested59/public_html/sistema/rel/rel_certificado.php on line 5
+[10-Aug-2024 01:13:05 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/public_html/sistema/rel/certificado.php on line 15
+[10-Aug-2024 01:13:05 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/public_html/sistema/rel/certificado.php on line 15
+[10-Aug-2024 01:13:05 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/public_html/sistema/rel/certificado.php on line 16
+[10-Aug-2024 01:13:05 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/public_html/sistema/rel/certificado.php on line 16
+[10-Aug-2024 01:13:05 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/public_html/sistema/rel/certificado.php on line 17
+[10-Aug-2024 01:13:05 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/public_html/sistema/rel/certificado.php on line 17
+[10-Aug-2024 01:13:05 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/public_html/sistema/rel/certificado.php on line 18
+[10-Aug-2024 01:13:05 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/public_html/sistema/rel/certificado.php on line 18
+[10-Aug-2024 01:13:05 America/Porto_Velho] PHP Warning:  Undefined variable $id_mat in /home2/sested59/public_html/sistema/rel/certificado.php on line 128
+[12-Aug-2024 06:55:15 America/Porto_Velho] PHP Warning:  Undefined array key "id" in /home2/sested59/public_html/sistema/rel/rel_certificado.php on line 5
+[12-Aug-2024 06:55:16 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/public_html/sistema/rel/certificado.php on line 15
+[12-Aug-2024 06:55:16 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/public_html/sistema/rel/certificado.php on line 15
+[12-Aug-2024 06:55:16 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/public_html/sistema/rel/certificado.php on line 16
+[12-Aug-2024 06:55:16 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/public_html/sistema/rel/certificado.php on line 16
+[12-Aug-2024 06:55:16 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/public_html/sistema/rel/certificado.php on line 17
+[12-Aug-2024 06:55:16 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/public_html/sistema/rel/certificado.php on line 17
+[12-Aug-2024 06:55:16 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/public_html/sistema/rel/certificado.php on line 18
+[12-Aug-2024 06:55:16 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/public_html/sistema/rel/certificado.php on line 18
+[12-Aug-2024 06:55:16 America/Porto_Velho] PHP Warning:  Undefined variable $id_mat in /home2/sested59/public_html/sistema/rel/certificado.php on line 128
+[20-Aug-2024 16:55:01 America/Porto_Velho] PHP Warning:  Undefined variable $id_mat in /home2/sested59/public_html/sistema/rel/certificado.php on line 128
+[20-Aug-2024 17:12:43 America/Porto_Velho] PHP Warning:  Undefined variable $id_mat in /home2/sested59/public_html/sistema/rel/certificado.php on line 128
+[21-Aug-2024 06:28:13 America/Porto_Velho] PHP Warning:  Undefined array key "id" in /home2/sested59/public_html/sistema/rel/rel_certificado.php on line 5
+[21-Aug-2024 06:28:13 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/public_html/sistema/rel/certificado.php on line 15
+[21-Aug-2024 06:28:13 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/public_html/sistema/rel/certificado.php on line 15
+[21-Aug-2024 06:28:13 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/public_html/sistema/rel/certificado.php on line 16
+[21-Aug-2024 06:28:13 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/public_html/sistema/rel/certificado.php on line 16
+[21-Aug-2024 06:28:13 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/public_html/sistema/rel/certificado.php on line 17
+[21-Aug-2024 06:28:13 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/public_html/sistema/rel/certificado.php on line 17
+[21-Aug-2024 06:28:13 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/public_html/sistema/rel/certificado.php on line 18
+[21-Aug-2024 06:28:13 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/public_html/sistema/rel/certificado.php on line 18
+[21-Aug-2024 06:28:13 America/Porto_Velho] PHP Warning:  Undefined variable $id_mat in /home2/sested59/public_html/sistema/rel/certificado.php on line 128
+[26-Aug-2024 21:59:27 America/Porto_Velho] PHP Warning:  Undefined variable $id_mat in /home2/sested59/public_html/sistema/rel/certificado.php on line 128
+[10-Sep-2024 13:54:58 America/Porto_Velho] PHP Warning:  Undefined array key "id" in /home2/sested59/public_html/sistema/rel/rel_certificado.php on line 5
+[10-Sep-2024 13:54:58 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/public_html/sistema/rel/certificado.php on line 15
+[10-Sep-2024 13:54:58 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/public_html/sistema/rel/certificado.php on line 15
+[10-Sep-2024 13:54:58 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/public_html/sistema/rel/certificado.php on line 16
+[10-Sep-2024 13:54:58 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/public_html/sistema/rel/certificado.php on line 16
+[10-Sep-2024 13:54:58 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/public_html/sistema/rel/certificado.php on line 17
+[10-Sep-2024 13:54:58 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/public_html/sistema/rel/certificado.php on line 17
+[10-Sep-2024 13:54:58 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/public_html/sistema/rel/certificado.php on line 18
+[10-Sep-2024 13:54:58 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/public_html/sistema/rel/certificado.php on line 18
+[10-Sep-2024 13:54:58 America/Porto_Velho] PHP Warning:  Undefined variable $id_mat in /home2/sested59/public_html/sistema/rel/certificado.php on line 128
+[16-Sep-2024 12:54:11 America/Porto_Velho] PHP Warning:  Undefined array key "id" in /home2/sested59/public_html/sistema/rel/rel_certificado.php on line 5
+[16-Sep-2024 12:54:12 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/public_html/sistema/rel/certificado.php on line 15
+[16-Sep-2024 12:54:12 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/public_html/sistema/rel/certificado.php on line 15
+[16-Sep-2024 12:54:12 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/public_html/sistema/rel/certificado.php on line 16
+[16-Sep-2024 12:54:12 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/public_html/sistema/rel/certificado.php on line 16
+[16-Sep-2024 12:54:12 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/public_html/sistema/rel/certificado.php on line 17
+[16-Sep-2024 12:54:12 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/public_html/sistema/rel/certificado.php on line 17
+[16-Sep-2024 12:54:12 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/public_html/sistema/rel/certificado.php on line 18
+[16-Sep-2024 12:54:12 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/public_html/sistema/rel/certificado.php on line 18
+[16-Sep-2024 12:54:12 America/Porto_Velho] PHP Warning:  Undefined variable $id_mat in /home2/sested59/public_html/sistema/rel/certificado.php on line 128
+[18-Sep-2024 03:56:07 America/Porto_Velho] PHP Warning:  Undefined array key "id" in /home2/sested59/public_html/sistema/rel/rel_certificado.php on line 5
+[18-Sep-2024 03:56:08 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/public_html/sistema/rel/certificado.php on line 15
+[18-Sep-2024 03:56:08 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/public_html/sistema/rel/certificado.php on line 15
+[18-Sep-2024 03:56:08 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/public_html/sistema/rel/certificado.php on line 16
+[18-Sep-2024 03:56:08 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/public_html/sistema/rel/certificado.php on line 16
+[18-Sep-2024 03:56:08 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/public_html/sistema/rel/certificado.php on line 17
+[18-Sep-2024 03:56:08 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/public_html/sistema/rel/certificado.php on line 17
+[18-Sep-2024 03:56:08 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/public_html/sistema/rel/certificado.php on line 18
+[18-Sep-2024 03:56:08 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/public_html/sistema/rel/certificado.php on line 18
+[18-Sep-2024 03:56:08 America/Porto_Velho] PHP Warning:  Undefined variable $id_mat in /home2/sested59/public_html/sistema/rel/certificado.php on line 128
+[18-Sep-2024 23:25:42 America/Porto_Velho] PHP Warning:  Undefined array key "id" in /home2/sested59/public_html/sistema/rel/rel_certificado.php on line 5
+[18-Sep-2024 23:25:43 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/public_html/sistema/rel/certificado.php on line 15
+[18-Sep-2024 23:25:43 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/public_html/sistema/rel/certificado.php on line 15
+[18-Sep-2024 23:25:43 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/public_html/sistema/rel/certificado.php on line 16
+[18-Sep-2024 23:25:43 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/public_html/sistema/rel/certificado.php on line 16
+[18-Sep-2024 23:25:43 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/public_html/sistema/rel/certificado.php on line 17
+[18-Sep-2024 23:25:43 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/public_html/sistema/rel/certificado.php on line 17
+[18-Sep-2024 23:25:43 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/public_html/sistema/rel/certificado.php on line 18
+[18-Sep-2024 23:25:43 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/public_html/sistema/rel/certificado.php on line 18
+[18-Sep-2024 23:25:43 America/Porto_Velho] PHP Warning:  Undefined variable $id_mat in /home2/sested59/public_html/sistema/rel/certificado.php on line 128
+[27-Sep-2024 04:53:25 America/Porto_Velho] PHP Warning:  Undefined array key "id" in /home2/sested59/public_html/sistema/rel/rel_certificado.php on line 5
+[27-Sep-2024 04:53:26 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/public_html/sistema/rel/certificado.php on line 15
+[27-Sep-2024 04:53:26 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/public_html/sistema/rel/certificado.php on line 15
+[27-Sep-2024 04:53:26 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/public_html/sistema/rel/certificado.php on line 16
+[27-Sep-2024 04:53:26 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/public_html/sistema/rel/certificado.php on line 16
+[27-Sep-2024 04:53:26 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/public_html/sistema/rel/certificado.php on line 17
+[27-Sep-2024 04:53:26 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/public_html/sistema/rel/certificado.php on line 17
+[27-Sep-2024 04:53:26 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/public_html/sistema/rel/certificado.php on line 18
+[27-Sep-2024 04:53:26 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/public_html/sistema/rel/certificado.php on line 18
+[27-Sep-2024 04:53:26 America/Porto_Velho] PHP Warning:  Undefined variable $id_mat in /home2/sested59/public_html/sistema/rel/certificado.php on line 128
+[29-Sep-2024 07:38:43 America/Porto_Velho] PHP Warning:  Undefined array key "id" in /home2/sested59/public_html/sistema/rel/rel_certificado.php on line 5
+[29-Sep-2024 07:38:44 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/public_html/sistema/rel/certificado.php on line 15
+[29-Sep-2024 07:38:44 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/public_html/sistema/rel/certificado.php on line 15
+[29-Sep-2024 07:38:44 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/public_html/sistema/rel/certificado.php on line 16
+[29-Sep-2024 07:38:44 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/public_html/sistema/rel/certificado.php on line 16
+[29-Sep-2024 07:38:44 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/public_html/sistema/rel/certificado.php on line 17
+[29-Sep-2024 07:38:44 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/public_html/sistema/rel/certificado.php on line 17
+[29-Sep-2024 07:38:44 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/public_html/sistema/rel/certificado.php on line 18
+[29-Sep-2024 07:38:44 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/public_html/sistema/rel/certificado.php on line 18
+[29-Sep-2024 07:38:44 America/Porto_Velho] PHP Warning:  Undefined variable $id_mat in /home2/sested59/public_html/sistema/rel/certificado.php on line 128
+[02-Oct-2024 09:10:49 America/Porto_Velho] PHP Warning:  Undefined array key "id" in /home2/sested59/public_html/sistema/rel/rel_certificado.php on line 5
+[02-Oct-2024 09:10:50 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/public_html/sistema/rel/certificado.php on line 15
+[02-Oct-2024 09:10:50 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/public_html/sistema/rel/certificado.php on line 15
+[02-Oct-2024 09:10:50 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/public_html/sistema/rel/certificado.php on line 16
+[02-Oct-2024 09:10:50 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/public_html/sistema/rel/certificado.php on line 16
+[02-Oct-2024 09:10:50 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/public_html/sistema/rel/certificado.php on line 17
+[02-Oct-2024 09:10:50 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/public_html/sistema/rel/certificado.php on line 17
+[02-Oct-2024 09:10:50 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/public_html/sistema/rel/certificado.php on line 18
+[02-Oct-2024 09:10:50 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/public_html/sistema/rel/certificado.php on line 18
+[02-Oct-2024 09:10:50 America/Porto_Velho] PHP Warning:  Undefined variable $id_mat in /home2/sested59/public_html/sistema/rel/certificado.php on line 128
+[06-Oct-2024 02:41:20 America/Porto_Velho] PHP Warning:  Undefined array key "id" in /home2/sested59/public_html/sistema/rel/rel_certificado.php on line 5
+[06-Oct-2024 02:41:21 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/public_html/sistema/rel/certificado.php on line 15
+[06-Oct-2024 02:41:21 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/public_html/sistema/rel/certificado.php on line 15
+[06-Oct-2024 02:41:21 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/public_html/sistema/rel/certificado.php on line 16
+[06-Oct-2024 02:41:21 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/public_html/sistema/rel/certificado.php on line 16
+[06-Oct-2024 02:41:21 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/public_html/sistema/rel/certificado.php on line 17
+[06-Oct-2024 02:41:21 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/public_html/sistema/rel/certificado.php on line 17
+[06-Oct-2024 02:41:21 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/public_html/sistema/rel/certificado.php on line 18
+[06-Oct-2024 02:41:21 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/public_html/sistema/rel/certificado.php on line 18
+[06-Oct-2024 02:41:21 America/Porto_Velho] PHP Warning:  Undefined variable $id_mat in /home2/sested59/public_html/sistema/rel/certificado.php on line 128
+[14-Oct-2024 10:23:04 America/Porto_Velho] PHP Warning:  Undefined array key "id" in /home2/sested59/public_html/sistema/rel/rel_certificado.php on line 5
+[14-Oct-2024 10:23:05 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/public_html/sistema/rel/certificado.php on line 15
+[14-Oct-2024 10:23:05 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/public_html/sistema/rel/certificado.php on line 15
+[14-Oct-2024 10:23:05 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/public_html/sistema/rel/certificado.php on line 16
+[14-Oct-2024 10:23:05 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/public_html/sistema/rel/certificado.php on line 16
+[14-Oct-2024 10:23:05 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/public_html/sistema/rel/certificado.php on line 17
+[14-Oct-2024 10:23:05 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/public_html/sistema/rel/certificado.php on line 17
+[14-Oct-2024 10:23:05 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/public_html/sistema/rel/certificado.php on line 18
+[14-Oct-2024 10:23:05 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/public_html/sistema/rel/certificado.php on line 18
+[14-Oct-2024 10:23:05 America/Porto_Velho] PHP Warning:  Undefined variable $id_mat in /home2/sested59/public_html/sistema/rel/certificado.php on line 128
+[17-Oct-2024 21:18:50 America/Porto_Velho] PHP Warning:  Undefined array key "id" in /home2/sested59/public_html/sistema/rel/rel_certificado.php on line 5
+[17-Oct-2024 21:18:51 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/public_html/sistema/rel/certificado.php on line 15
+[17-Oct-2024 21:18:51 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/public_html/sistema/rel/certificado.php on line 15
+[17-Oct-2024 21:18:51 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/public_html/sistema/rel/certificado.php on line 16
+[17-Oct-2024 21:18:51 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/public_html/sistema/rel/certificado.php on line 16
+[17-Oct-2024 21:18:51 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/public_html/sistema/rel/certificado.php on line 17
+[17-Oct-2024 21:18:51 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/public_html/sistema/rel/certificado.php on line 17
+[17-Oct-2024 21:18:51 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/public_html/sistema/rel/certificado.php on line 18
+[17-Oct-2024 21:18:51 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/public_html/sistema/rel/certificado.php on line 18
+[17-Oct-2024 21:18:51 America/Porto_Velho] PHP Warning:  Undefined variable $id_mat in /home2/sested59/public_html/sistema/rel/certificado.php on line 128
+[18-Oct-2024 06:39:06 America/Porto_Velho] PHP Warning:  Undefined array key "id" in /home2/sested59/public_html/sistema/rel/rel_certificado.php on line 5
+[18-Oct-2024 06:39:07 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/public_html/sistema/rel/certificado.php on line 15
+[18-Oct-2024 06:39:07 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/public_html/sistema/rel/certificado.php on line 15
+[18-Oct-2024 06:39:07 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/public_html/sistema/rel/certificado.php on line 16
+[18-Oct-2024 06:39:07 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/public_html/sistema/rel/certificado.php on line 16
+[18-Oct-2024 06:39:07 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/public_html/sistema/rel/certificado.php on line 17
+[18-Oct-2024 06:39:07 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/public_html/sistema/rel/certificado.php on line 17
+[18-Oct-2024 06:39:07 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/public_html/sistema/rel/certificado.php on line 18
+[18-Oct-2024 06:39:07 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/public_html/sistema/rel/certificado.php on line 18
+[18-Oct-2024 06:39:07 America/Porto_Velho] PHP Warning:  Undefined variable $id_mat in /home2/sested59/public_html/sistema/rel/certificado.php on line 128
+[20-Oct-2024 10:12:50 America/Porto_Velho] PHP Warning:  Undefined array key "id" in /home2/sested59/public_html/sistema/rel/rel_certificado.php on line 5
+[20-Oct-2024 10:12:50 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/public_html/sistema/rel/certificado.php on line 15
+[20-Oct-2024 10:12:50 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/public_html/sistema/rel/certificado.php on line 15
+[20-Oct-2024 10:12:50 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/public_html/sistema/rel/certificado.php on line 16
+[20-Oct-2024 10:12:50 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/public_html/sistema/rel/certificado.php on line 16
+[20-Oct-2024 10:12:50 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/public_html/sistema/rel/certificado.php on line 17
+[20-Oct-2024 10:12:50 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/public_html/sistema/rel/certificado.php on line 17
+[20-Oct-2024 10:12:50 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/public_html/sistema/rel/certificado.php on line 18
+[20-Oct-2024 10:12:50 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/public_html/sistema/rel/certificado.php on line 18
+[20-Oct-2024 10:12:50 America/Porto_Velho] PHP Warning:  Undefined variable $id_mat in /home2/sested59/public_html/sistema/rel/certificado.php on line 128
+[20-Oct-2024 18:01:46 America/Porto_Velho] PHP Warning:  Undefined array key "id" in /home2/sested59/public_html/sistema/rel/rel_certificado.php on line 5
+[20-Oct-2024 18:01:47 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/public_html/sistema/rel/certificado.php on line 15
+[20-Oct-2024 18:01:47 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/public_html/sistema/rel/certificado.php on line 15
+[20-Oct-2024 18:01:47 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/public_html/sistema/rel/certificado.php on line 16
+[20-Oct-2024 18:01:47 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/public_html/sistema/rel/certificado.php on line 16
+[20-Oct-2024 18:01:47 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/public_html/sistema/rel/certificado.php on line 17
+[20-Oct-2024 18:01:47 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/public_html/sistema/rel/certificado.php on line 17
+[20-Oct-2024 18:01:47 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/public_html/sistema/rel/certificado.php on line 18
+[20-Oct-2024 18:01:47 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/public_html/sistema/rel/certificado.php on line 18
+[20-Oct-2024 18:01:47 America/Porto_Velho] PHP Warning:  Undefined variable $id_mat in /home2/sested59/public_html/sistema/rel/certificado.php on line 128
+[25-Oct-2024 07:31:09 America/Porto_Velho] PHP Warning:  Undefined array key "id" in /home2/sested59/public_html/sistema/rel/rel_certificado.php on line 5
+[25-Oct-2024 07:31:10 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/public_html/sistema/rel/certificado.php on line 15
+[25-Oct-2024 07:31:10 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/public_html/sistema/rel/certificado.php on line 15
+[25-Oct-2024 07:31:10 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/public_html/sistema/rel/certificado.php on line 16
+[25-Oct-2024 07:31:10 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/public_html/sistema/rel/certificado.php on line 16
+[25-Oct-2024 07:31:10 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/public_html/sistema/rel/certificado.php on line 17
+[25-Oct-2024 07:31:10 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/public_html/sistema/rel/certificado.php on line 17
+[25-Oct-2024 07:31:10 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/public_html/sistema/rel/certificado.php on line 18
+[25-Oct-2024 07:31:10 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/public_html/sistema/rel/certificado.php on line 18
+[25-Oct-2024 07:31:10 America/Porto_Velho] PHP Warning:  Undefined variable $id_mat in /home2/sested59/public_html/sistema/rel/certificado.php on line 128
+[30-Oct-2024 22:18:55 America/Porto_Velho] PHP Warning:  Undefined array key "id" in /home2/sested59/public_html/sistema/rel/rel_certificado.php on line 5
+[30-Oct-2024 22:18:55 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/public_html/sistema/rel/certificado.php on line 15
+[30-Oct-2024 22:18:55 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/public_html/sistema/rel/certificado.php on line 15
+[30-Oct-2024 22:18:55 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/public_html/sistema/rel/certificado.php on line 16
+[30-Oct-2024 22:18:55 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/public_html/sistema/rel/certificado.php on line 16
+[30-Oct-2024 22:18:55 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/public_html/sistema/rel/certificado.php on line 17
+[30-Oct-2024 22:18:55 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/public_html/sistema/rel/certificado.php on line 17
+[30-Oct-2024 22:18:55 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/public_html/sistema/rel/certificado.php on line 18
+[30-Oct-2024 22:18:55 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/public_html/sistema/rel/certificado.php on line 18
+[30-Oct-2024 22:18:55 America/Porto_Velho] PHP Warning:  Undefined variable $id_mat in /home2/sested59/public_html/sistema/rel/certificado.php on line 128
+[01-Nov-2024 11:09:30 America/Porto_Velho] PHP Warning:  Undefined array key "id" in /home2/sested59/public_html/sistema/rel/rel_certificado.php on line 5
+[01-Nov-2024 11:09:30 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/public_html/sistema/rel/certificado.php on line 15
+[01-Nov-2024 11:09:30 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/public_html/sistema/rel/certificado.php on line 15
+[01-Nov-2024 11:09:30 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/public_html/sistema/rel/certificado.php on line 16
+[01-Nov-2024 11:09:30 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/public_html/sistema/rel/certificado.php on line 16
+[01-Nov-2024 11:09:30 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/public_html/sistema/rel/certificado.php on line 17
+[01-Nov-2024 11:09:30 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/public_html/sistema/rel/certificado.php on line 17
+[01-Nov-2024 11:09:30 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/public_html/sistema/rel/certificado.php on line 18
+[01-Nov-2024 11:09:30 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/public_html/sistema/rel/certificado.php on line 18
+[01-Nov-2024 11:09:30 America/Porto_Velho] PHP Warning:  Undefined variable $id_mat in /home2/sested59/public_html/sistema/rel/certificado.php on line 128
+[10-Nov-2024 15:47:30 America/Porto_Velho] PHP Warning:  Undefined array key "id" in /home2/sested59/public_html/sistema/rel/rel_certificado.php on line 5
+[10-Nov-2024 15:47:31 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/public_html/sistema/rel/certificado.php on line 15
+[10-Nov-2024 15:47:31 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/public_html/sistema/rel/certificado.php on line 15
+[10-Nov-2024 15:47:31 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/public_html/sistema/rel/certificado.php on line 16
+[10-Nov-2024 15:47:31 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/public_html/sistema/rel/certificado.php on line 16
+[10-Nov-2024 15:47:31 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/public_html/sistema/rel/certificado.php on line 17
+[10-Nov-2024 15:47:31 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/public_html/sistema/rel/certificado.php on line 17
+[10-Nov-2024 15:47:31 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/public_html/sistema/rel/certificado.php on line 18
+[10-Nov-2024 15:47:31 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/public_html/sistema/rel/certificado.php on line 18
+[10-Nov-2024 15:47:31 America/Porto_Velho] PHP Warning:  Undefined variable $id_mat in /home2/sested59/public_html/sistema/rel/certificado.php on line 128
+[12-Nov-2024 23:19:24 America/Porto_Velho] PHP Warning:  Undefined array key "id" in /home2/sested59/public_html/sistema/rel/rel_certificado.php on line 5
+[12-Nov-2024 23:19:24 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/public_html/sistema/rel/certificado.php on line 15
+[12-Nov-2024 23:19:24 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/public_html/sistema/rel/certificado.php on line 15
+[12-Nov-2024 23:19:24 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/public_html/sistema/rel/certificado.php on line 16
+[12-Nov-2024 23:19:24 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/public_html/sistema/rel/certificado.php on line 16
+[12-Nov-2024 23:19:24 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/public_html/sistema/rel/certificado.php on line 17
+[12-Nov-2024 23:19:24 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/public_html/sistema/rel/certificado.php on line 17
+[12-Nov-2024 23:19:24 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/public_html/sistema/rel/certificado.php on line 18
+[12-Nov-2024 23:19:24 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/public_html/sistema/rel/certificado.php on line 18
+[12-Nov-2024 23:19:24 America/Porto_Velho] PHP Warning:  Undefined variable $id_mat in /home2/sested59/public_html/sistema/rel/certificado.php on line 128
+[13-Nov-2024 10:35:21 America/Porto_Velho] PHP Warning:  Undefined array key "id" in /home2/sested59/public_html/sistema/rel/rel_certificado.php on line 5
+[13-Nov-2024 10:35:21 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/public_html/sistema/rel/certificado.php on line 15
+[13-Nov-2024 10:35:21 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/public_html/sistema/rel/certificado.php on line 15
+[13-Nov-2024 10:35:21 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/public_html/sistema/rel/certificado.php on line 16
+[13-Nov-2024 10:35:21 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/public_html/sistema/rel/certificado.php on line 16
+[13-Nov-2024 10:35:21 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/public_html/sistema/rel/certificado.php on line 17
+[13-Nov-2024 10:35:21 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/public_html/sistema/rel/certificado.php on line 17
+[13-Nov-2024 10:35:21 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/public_html/sistema/rel/certificado.php on line 18
+[13-Nov-2024 10:35:21 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/public_html/sistema/rel/certificado.php on line 18
+[13-Nov-2024 10:35:21 America/Porto_Velho] PHP Warning:  Undefined variable $id_mat in /home2/sested59/public_html/sistema/rel/certificado.php on line 128
+[17-Nov-2024 10:37:11 America/Porto_Velho] PHP Warning:  Undefined array key "id" in /home2/sested59/public_html/sistema/rel/rel_certificado.php on line 5
+[17-Nov-2024 10:37:11 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/public_html/sistema/rel/certificado.php on line 15
+[17-Nov-2024 10:37:11 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/public_html/sistema/rel/certificado.php on line 15
+[17-Nov-2024 10:37:11 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/public_html/sistema/rel/certificado.php on line 16
+[17-Nov-2024 10:37:11 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/public_html/sistema/rel/certificado.php on line 16
+[17-Nov-2024 10:37:11 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/public_html/sistema/rel/certificado.php on line 17
+[17-Nov-2024 10:37:11 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/public_html/sistema/rel/certificado.php on line 17
+[17-Nov-2024 10:37:11 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/public_html/sistema/rel/certificado.php on line 18
+[17-Nov-2024 10:37:11 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/public_html/sistema/rel/certificado.php on line 18
+[17-Nov-2024 10:37:11 America/Porto_Velho] PHP Warning:  Undefined variable $id_mat in /home2/sested59/public_html/sistema/rel/certificado.php on line 128
+[17-Nov-2024 14:58:30 America/Porto_Velho] PHP Warning:  Undefined array key "id" in /home2/sested59/public_html/sistema/rel/rel_certificado.php on line 5
+[17-Nov-2024 14:58:31 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/public_html/sistema/rel/certificado.php on line 15
+[17-Nov-2024 14:58:31 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/public_html/sistema/rel/certificado.php on line 15
+[17-Nov-2024 14:58:31 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/public_html/sistema/rel/certificado.php on line 16
+[17-Nov-2024 14:58:31 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/public_html/sistema/rel/certificado.php on line 16
+[17-Nov-2024 14:58:31 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/public_html/sistema/rel/certificado.php on line 17
+[17-Nov-2024 14:58:31 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/public_html/sistema/rel/certificado.php on line 17
+[17-Nov-2024 14:58:31 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/public_html/sistema/rel/certificado.php on line 18
+[17-Nov-2024 14:58:31 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/public_html/sistema/rel/certificado.php on line 18
+[17-Nov-2024 14:58:31 America/Porto_Velho] PHP Warning:  Undefined variable $id_mat in /home2/sested59/public_html/sistema/rel/certificado.php on line 128
+[20-Nov-2024 10:38:20 America/Porto_Velho] PHP Warning:  Undefined array key "id" in /home2/sested59/public_html/sistema/rel/rel_certificado.php on line 5
+[20-Nov-2024 10:38:20 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/public_html/sistema/rel/certificado.php on line 15
+[20-Nov-2024 10:38:20 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/public_html/sistema/rel/certificado.php on line 15
+[20-Nov-2024 10:38:20 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/public_html/sistema/rel/certificado.php on line 16
+[20-Nov-2024 10:38:20 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/public_html/sistema/rel/certificado.php on line 16
+[20-Nov-2024 10:38:20 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/public_html/sistema/rel/certificado.php on line 17
+[20-Nov-2024 10:38:20 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/public_html/sistema/rel/certificado.php on line 17
+[20-Nov-2024 10:38:20 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/public_html/sistema/rel/certificado.php on line 18
+[20-Nov-2024 10:38:20 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/public_html/sistema/rel/certificado.php on line 18
+[20-Nov-2024 10:38:20 America/Porto_Velho] PHP Warning:  Undefined variable $id_mat in /home2/sested59/public_html/sistema/rel/certificado.php on line 128
+[26-Nov-2024 15:27:22 America/Porto_Velho] PHP Warning:  Undefined array key "id" in /home2/sested59/public_html/sistema/rel/rel_certificado.php on line 5
+[26-Nov-2024 15:27:23 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/public_html/sistema/rel/certificado.php on line 15
+[26-Nov-2024 15:27:23 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/public_html/sistema/rel/certificado.php on line 15
+[26-Nov-2024 15:27:23 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/public_html/sistema/rel/certificado.php on line 16
+[26-Nov-2024 15:27:23 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/public_html/sistema/rel/certificado.php on line 16
+[26-Nov-2024 15:27:23 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/public_html/sistema/rel/certificado.php on line 17
+[26-Nov-2024 15:27:23 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/public_html/sistema/rel/certificado.php on line 17
+[26-Nov-2024 15:27:23 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/public_html/sistema/rel/certificado.php on line 18
+[26-Nov-2024 15:27:23 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/public_html/sistema/rel/certificado.php on line 18
+[26-Nov-2024 15:27:23 America/Porto_Velho] PHP Warning:  Undefined variable $id_mat in /home2/sested59/public_html/sistema/rel/certificado.php on line 128
+[27-Mar-2025 11:33:40 America/Porto_Velho] PHP Warning:  Undefined array key "id" in /home2/sested59/sested-eja.com.br/sistema/rel/rel_certificado.php on line 5
+[27-Mar-2025 11:33:40 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sested-eja.com.br/sistema/rel/certificado.php on line 15
+[27-Mar-2025 11:33:40 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sested-eja.com.br/sistema/rel/certificado.php on line 15
+[27-Mar-2025 11:33:40 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sested-eja.com.br/sistema/rel/certificado.php on line 16
+[27-Mar-2025 11:33:40 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sested-eja.com.br/sistema/rel/certificado.php on line 16
+[27-Mar-2025 11:33:40 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sested-eja.com.br/sistema/rel/certificado.php on line 17
+[27-Mar-2025 11:33:40 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sested-eja.com.br/sistema/rel/certificado.php on line 17
+[27-Mar-2025 11:33:40 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sested-eja.com.br/sistema/rel/certificado.php on line 18
+[27-Mar-2025 11:33:40 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sested-eja.com.br/sistema/rel/certificado.php on line 18
+[27-Mar-2025 11:33:40 America/Porto_Velho] PHP Warning:  Undefined variable $id_mat in /home2/sested59/sested-eja.com.br/sistema/rel/certificado.php on line 128
+[27-Mar-2025 11:50:42 America/Porto_Velho] PHP Warning:  Undefined array key "id" in /home2/sested59/sested-eja.com.br/sistema/rel/rel_certificado.php on line 5
+[27-Mar-2025 11:50:42 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sested-eja.com.br/sistema/rel/certificado.php on line 15
+[27-Mar-2025 11:50:42 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sested-eja.com.br/sistema/rel/certificado.php on line 15
+[27-Mar-2025 11:50:42 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sested-eja.com.br/sistema/rel/certificado.php on line 16
+[27-Mar-2025 11:50:42 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sested-eja.com.br/sistema/rel/certificado.php on line 16
+[27-Mar-2025 11:50:42 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sested-eja.com.br/sistema/rel/certificado.php on line 17
+[27-Mar-2025 11:50:42 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sested-eja.com.br/sistema/rel/certificado.php on line 17
+[27-Mar-2025 11:50:42 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sested-eja.com.br/sistema/rel/certificado.php on line 18
+[27-Mar-2025 11:50:42 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sested-eja.com.br/sistema/rel/certificado.php on line 18
+[27-Mar-2025 11:50:42 America/Porto_Velho] PHP Warning:  Undefined variable $id_mat in /home2/sested59/sested-eja.com.br/sistema/rel/certificado.php on line 128
+[27-Mar-2025 11:55:30 America/Porto_Velho] PHP Warning:  Undefined array key "id" in /home2/sested59/sested-eja.com.br/sistema/rel/rel_certificado.php on line 5
+[27-Mar-2025 11:55:30 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sested-eja.com.br/sistema/rel/certificado.php on line 15
+[27-Mar-2025 11:55:30 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sested-eja.com.br/sistema/rel/certificado.php on line 15
+[27-Mar-2025 11:55:30 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sested-eja.com.br/sistema/rel/certificado.php on line 16
+[27-Mar-2025 11:55:30 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sested-eja.com.br/sistema/rel/certificado.php on line 16
+[27-Mar-2025 11:55:30 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sested-eja.com.br/sistema/rel/certificado.php on line 17
+[27-Mar-2025 11:55:30 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sested-eja.com.br/sistema/rel/certificado.php on line 17
+[27-Mar-2025 11:55:30 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sested-eja.com.br/sistema/rel/certificado.php on line 18
+[27-Mar-2025 11:55:30 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sested-eja.com.br/sistema/rel/certificado.php on line 18
+[27-Mar-2025 11:55:30 America/Porto_Velho] PHP Warning:  Undefined variable $id_mat in /home2/sested59/sested-eja.com.br/sistema/rel/certificado.php on line 128
+[27-Mar-2025 21:21:28 America/Porto_Velho] PHP Warning:  Undefined variable $id_mat in /home2/sested59/sested-eja.com.br/sistema/rel/certificado.php on line 128
+[28-Mar-2025 01:16:37 America/Porto_Velho] PHP Warning:  Undefined variable $id_mat in /home2/sested59/sested-eja.com.br/sistema/rel/certificado.php on line 145
+[28-Mar-2025 07:47:52 America/Porto_Velho] PHP Warning:  Undefined variable $id_mat in /home2/sested59/sested-eja.com.br/sistema/rel/certificado.php on line 145
+[28-Mar-2025 07:47:53 America/Porto_Velho] PHP Warning:  Undefined variable $id_mat in /home2/sested59/sested-eja.com.br/sistema/rel/certificado.php on line 145
+[28-Mar-2025 07:50:21 America/Porto_Velho] PHP Warning:  Undefined variable $id_mat in /home2/sested59/sested-eja.com.br/sistema/rel/certificado.php on line 145
+[28-Mar-2025 07:50:22 America/Porto_Velho] PHP Warning:  Undefined variable $id_mat in /home2/sested59/sested-eja.com.br/sistema/rel/certificado.php on line 145
+[28-Mar-2025 08:45:47 America/Porto_Velho] PHP Warning:  Undefined array key "nivel" in /home2/sested59/sested-eja.com.br/sistema/rel/declaracao_fundamental_class.php on line 7
+[28-Mar-2025 08:45:47 America/Porto_Velho] PHP Warning:  Undefined array key "nivel" in /home2/sested59/sested-eja.com.br/sistema/rel/declaracao_fundamental_class.php on line 7
+[28-Mar-2025 08:46:01 America/Porto_Velho] PHP Warning:  Undefined array key "nivel" in /home2/sested59/sested-eja.com.br/sistema/rel/declaracao_fundamental_class.php on line 7
+[28-Mar-2025 08:46:01 America/Porto_Velho] PHP Warning:  Undefined array key "nivel" in /home2/sested59/sested-eja.com.br/sistema/rel/declaracao_fundamental_class.php on line 7
+[28-Mar-2025 12:04:35 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sested-eja.com.br/sistema/rel/avaliacoes2.php on line 13
+[28-Mar-2025 12:04:35 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sested-eja.com.br/sistema/rel/avaliacoes2.php on line 13
+[28-Mar-2025 12:04:35 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sested-eja.com.br/sistema/rel/avaliacoes2.php on line 14
+[28-Mar-2025 12:04:35 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sested-eja.com.br/sistema/rel/avaliacoes2.php on line 14
+[28-Mar-2025 12:04:56 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sested-eja.com.br/sistema/rel/avaliacoes2.php on line 13
+[28-Mar-2025 12:04:56 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sested-eja.com.br/sistema/rel/avaliacoes2.php on line 13
+[28-Mar-2025 12:04:56 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sested-eja.com.br/sistema/rel/avaliacoes2.php on line 14
+[28-Mar-2025 12:04:56 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sested-eja.com.br/sistema/rel/avaliacoes2.php on line 14
+[02-Apr-2025 16:31:12 America/Porto_Velho] PHP Warning:  Undefined variable $id_mat in /home2/sested59/sested-eja.com.br/sistema/rel/certificado.php on line 145
+[04-Apr-2025 11:16:16 America/Porto_Velho] PHP Warning:  Undefined variable $id_mat in /home2/sested59/sested-eja.com.br/sistema/rel/certificado.php on line 145
+[04-Apr-2025 11:35:32 America/Porto_Velho] PHP Warning:  Undefined variable $id_mat in /home2/sested59/sested-eja.com.br/sistema/rel/certificado.php on line 145
+[11-Apr-2025 16:05:26 America/Porto_Velho] PHP Warning:  Undefined array key "nivel" in /home2/sested59/sested-eja.com.br/sistema/rel/rel_certificado.php on line 7
+[11-Apr-2025 16:05:26 America/Porto_Velho] PHP Warning:  Undefined array key "nivel" in /home2/sested59/sested-eja.com.br/sistema/rel/rel_certificado.php on line 7
+[25-Apr-2025 15:06:00 America/Fortaleza] PHP Warning:  Undefined array key "curso" in /home2/sested59/sested-eja.com.br/sistema/rel/avaliacoes_class2.php on line 3
+[25-Apr-2025 15:06:05 America/Fortaleza] PHP Warning:  Undefined array key "curso" in /home2/sested59/sested-eja.com.br/sistema/rel/avaliacoes_class2.php on line 3
+[25-Apr-2025 15:06:14 America/Fortaleza] PHP Warning:  Undefined array key "curso" in /home2/sested59/sested-eja.com.br/sistema/rel/avaliacoes_class2.php on line 3
+[25-Apr-2025 16:06:29 America/Porto_Velho] PHP Warning:  Undefined array key "nivel" in /home2/sested59/sested-eja.com.br/sistema/rel/rel_certificado.php on line 7
+[25-Apr-2025 16:06:29 America/Porto_Velho] PHP Warning:  Undefined array key "nivel" in /home2/sested59/sested-eja.com.br/sistema/rel/rel_certificado.php on line 7
+[26-Apr-2025 12:43:37 America/Porto_Velho] PHP Warning:  Undefined array key "nivel" in /home2/sested59/sested-eja.com.br/sistema/rel/rel_certificado.php on line 7
+[26-Apr-2025 12:43:37 America/Porto_Velho] PHP Warning:  Undefined array key "nivel" in /home2/sested59/sested-eja.com.br/sistema/rel/rel_certificado.php on line 7
+[26-Apr-2025 17:02:49 America/Porto_Velho] PHP Warning:  Undefined array key "nivel" in /home2/sested59/sested-eja.com.br/sistema/rel/rel_certificado.php on line 7
+[26-Apr-2025 17:02:49 America/Porto_Velho] PHP Warning:  Undefined array key "nivel" in /home2/sested59/sested-eja.com.br/sistema/rel/rel_certificado.php on line 7
+[26-Apr-2025 18:24:22 America/Porto_Velho] PHP Warning:  Undefined array key "nivel" in /home2/sested59/sested-eja.com.br/sistema/rel/rel_certificado.php on line 7
+[26-Apr-2025 18:24:22 America/Porto_Velho] PHP Warning:  Undefined array key "nivel" in /home2/sested59/sested-eja.com.br/sistema/rel/rel_certificado.php on line 7
+[27-Apr-2025 18:02:56 America/Porto_Velho] PHP Warning:  Undefined array key "nivel" in /home2/sested59/sested-eja.com.br/sistema/rel/rel_certificado.php on line 7
+[27-Apr-2025 18:02:56 America/Porto_Velho] PHP Warning:  Undefined array key "nivel" in /home2/sested59/sested-eja.com.br/sistema/rel/rel_certificado.php on line 7
+[27-Apr-2025 20:24:44 America/Porto_Velho] PHP Warning:  Undefined array key "nivel" in /home2/sested59/sested-eja.com.br/sistema/rel/rel_certificado.php on line 7
+[27-Apr-2025 20:24:44 America/Porto_Velho] PHP Warning:  Undefined array key "nivel" in /home2/sested59/sested-eja.com.br/sistema/rel/rel_certificado.php on line 7
+[29-Apr-2025 00:36:03 America/Porto_Velho] PHP Warning:  Undefined array key "nivel" in /home2/sested59/sested-eja.com.br/sistema/rel/rel_certificado.php on line 7
+[29-Apr-2025 00:36:03 America/Porto_Velho] PHP Warning:  Undefined array key "nivel" in /home2/sested59/sested-eja.com.br/sistema/rel/rel_certificado.php on line 7
+[29-Apr-2025 03:41:24 America/Porto_Velho] PHP Warning:  Undefined array key "nivel" in /home2/sested59/sested-eja.com.br/sistema/rel/rel_certificado.php on line 7
+[29-Apr-2025 03:41:24 America/Porto_Velho] PHP Warning:  Undefined array key "nivel" in /home2/sested59/sested-eja.com.br/sistema/rel/rel_certificado.php on line 7
+[30-Apr-2025 01:29:10 America/Porto_Velho] PHP Warning:  Undefined array key "nivel" in /home2/sested59/sested-eja.com.br/sistema/rel/rel_certificado.php on line 7
+[30-Apr-2025 01:29:10 America/Porto_Velho] PHP Warning:  Undefined array key "nivel" in /home2/sested59/sested-eja.com.br/sistema/rel/rel_certificado.php on line 7
+[01-May-2025 01:10:26 America/Porto_Velho] PHP Warning:  Undefined array key "nivel" in /home2/sested59/sested-eja.com.br/sistema/rel/rel_certificado.php on line 7
+[01-May-2025 01:10:26 America/Porto_Velho] PHP Warning:  Undefined array key "nivel" in /home2/sested59/sested-eja.com.br/sistema/rel/rel_certificado.php on line 7
+[02-May-2025 03:20:34 America/Porto_Velho] PHP Warning:  Undefined array key "nivel" in /home2/sested59/sested-eja.com.br/sistema/rel/rel_certificado.php on line 7
+[02-May-2025 03:20:34 America/Porto_Velho] PHP Warning:  Undefined array key "nivel" in /home2/sested59/sested-eja.com.br/sistema/rel/rel_certificado.php on line 7
+[03-May-2025 03:13:35 America/Porto_Velho] PHP Warning:  Undefined array key "nivel" in /home2/sested59/sested-eja.com.br/sistema/rel/rel_certificado.php on line 7
+[03-May-2025 03:13:35 America/Porto_Velho] PHP Warning:  Undefined array key "nivel" in /home2/sested59/sested-eja.com.br/sistema/rel/rel_certificado.php on line 7
+[03-May-2025 17:52:45 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sested-eja.com.br/sistema/rel/vendas.php on line 253
+[03-May-2025 17:52:45 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sested-eja.com.br/sistema/rel/vendas.php on line 253
+[03-May-2025 17:52:45 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sested-eja.com.br/sistema/rel/vendas.php on line 254
+[03-May-2025 17:52:45 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sested-eja.com.br/sistema/rel/vendas.php on line 254
+[03-May-2025 17:52:45 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sested-eja.com.br/sistema/rel/vendas.php on line 249
+[03-May-2025 17:52:45 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sested-eja.com.br/sistema/rel/vendas.php on line 249
+[03-May-2025 17:52:45 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sested-eja.com.br/sistema/rel/vendas.php on line 249
+[03-May-2025 17:52:45 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sested-eja.com.br/sistema/rel/vendas.php on line 249
+[03-May-2025 17:52:45 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sested-eja.com.br/sistema/rel/vendas.php on line 249
+[03-May-2025 17:52:45 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sested-eja.com.br/sistema/rel/vendas.php on line 249
+[03-May-2025 17:52:45 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sested-eja.com.br/sistema/rel/vendas.php on line 249
+[03-May-2025 17:52:45 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sested-eja.com.br/sistema/rel/vendas.php on line 249
+[03-May-2025 17:52:45 America/Porto_Velho] PHP Warning:  Undefined array key 0 in /home2/sested59/sested-eja.com.br/sistema/rel/vendas.php on line 249
+[03-May-2025 17:52:45 America/Porto_Velho] PHP Warning:  Trying to access array offset on value of type null in /home2/sested59/sested-eja.com.br/sistema/rel/vendas.php on line 249
+[04-May-2025 03:31:15 America/Porto_Velho] PHP Warning:  Undefined array key "nivel" in /home2/sested59/sested-eja.com.br/sistema/rel/rel_certificado.php on line 7
+[04-May-2025 03:31:15 America/Porto_Velho] PHP Warning:  Undefined array key "nivel" in /home2/sested59/sested-eja.com.br/sistema/rel/rel_certificado.php on line 7
+[04-Jul-2025 10:42:56 America/Porto_Velho] PHP Warning:  Undefined variable $id_mat in /home2/sested59/sested-eja.com/sistema/rel/certificado.php on line 145
+[04-Jul-2025 10:42:58 America/Porto_Velho] PHP Warning:  Undefined variable $id_mat in /home2/sested59/sested-eja.com/sistema/rel/certificado.php on line 145
