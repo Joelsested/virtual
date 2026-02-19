@@ -1,19 +1,22 @@
 <?php
 require_once('../conexao.php');
 require_once(__DIR__ . '/../../helpers.php');
+require_once __DIR__ . '/../../config/env.php';
+require_once __DIR__ . '/../../config/csrf.php';
+csrf_start();
 
-function sairComMensagem(string $mensagem) : void
+function sairComMensagem(string $mensagem): void
 {
     $mensagem = addslashes($mensagem);
     echo "<script>alert('{$mensagem}');history.back();</script>";
     exit();
 }
 
-function loginAlunoUnico(PDO $pdo, string $emailBase, string $cpfDigits, int $usuarioVendedorId) : string
+function montarLoginAlunoUnico(PDO $pdo, string $emailBase, string $cpfDigits, int $usuarioVendedorId): string
 {
     $base = trim($emailBase);
     if ($base === '') {
-        $base = $cpfDigits !== ''  ($cpfDigits . '@aluno.local') : ('aluno.vinculado.' . $usuarioVendedorId . '@aluno.local');
+        $base = $cpfDigits !== '' ? ($cpfDigits . '@aluno.local') : ('aluno.vinculado.' . $usuarioVendedorId . '@aluno.local');
     }
 
     $login = $base;
@@ -21,7 +24,8 @@ function loginAlunoUnico(PDO $pdo, string $emailBase, string $cpfDigits, int $us
     while (true) {
         $stmt = $pdo->prepare("SELECT id FROM usuarios WHERE usuario = :usuario LIMIT 1");
         $stmt->execute([':usuario' => $login]);
-        if (!(int) $stmt->fetchColumn()) {
+        $existe = (int) ($stmt->fetchColumn() ?: 0);
+        if ($existe <= 0) {
             return $login;
         }
         $partes = explode('@', $base, 2);
@@ -37,119 +41,213 @@ function loginAlunoUnico(PDO $pdo, string $emailBase, string $cpfDigits, int $us
     }
 }
 
-function resolveUsuarioAtendente(PDO $pdo, int $usuarioVendedorId, int $idPessoaVendedor) : int
-{
-    $stmtVend = $pdo->prepare("SELECT professor, tutor_id FROM vendedores WHERE id = :id LIMIT 1");
-    $stmtVend->execute([':id' => $idPessoaVendedor]);
-    $vendedor = $stmtVend->fetch(PDO::FETCH_ASSOC) : [];
-    $professor = (int) ($vendedor['professor'] ?? 0);
-    $tutorId = (int) ($vendedor['tutor_id'] ?? 0);
-
-    if ($professor === 1) {
-        if ($tutorId <= 0) {
-            return $usuarioVendedorId;
-        }
-        $stmtTutor = $pdo->prepare("SELECT id FROM usuarios WHERE nivel = 'Tutor' AND id_pessoa = :id_pessoa AND ativo = 'Sim' LIMIT 1");
-        $stmtTutor->execute([':id_pessoa' => $tutorId]);
-        $usuarioTutor = (int) ($stmtTutor->fetchColumn() : 0);
-        if ($usuarioTutor > 0) {
-            return $usuarioTutor;
-        }
-        return $usuarioVendedorId;
+function sincronizarDadosAlunoDoVendedor(
+    PDO $pdo,
+    int $usuarioAlunoId,
+    int $usuarioAtendente,
+    int $usuarioVendedorId,
+    array $dadosAluno,
+    bool $temResponsavelCol
+): void {
+    if ($usuarioAlunoId <= 0) {
+        return;
     }
 
-    return $usuarioVendedorId;
+    $stmtPessoa = $pdo->prepare("SELECT id_pessoa FROM usuarios WHERE id = :id AND nivel = 'Aluno' LIMIT 1");
+    $stmtPessoa->execute([':id' => $usuarioAlunoId]);
+    $idPessoaAluno = (int) ($stmtPessoa->fetchColumn() ?: 0);
+    if ($idPessoaAluno <= 0) {
+        return;
+    }
+
+    $sqlAluno = "UPDATE alunos SET nome = :nome, email = :email, cpf = :cpf, nascimento = :nascimento, telefone = :telefone, foto = :foto, usuario = :usuario";
+    if ($temResponsavelCol) {
+        $sqlAluno .= ", responsavel_id = :responsavel_id";
+    }
+    $sqlAluno .= " WHERE id = :id";
+
+    $paramsAluno = [
+        ':id' => $idPessoaAluno,
+        ':nome' => (string) ($dadosAluno['nome'] ?? ''),
+        ':email' => (string) ($dadosAluno['email'] ?? ''),
+        ':cpf' => (string) ($dadosAluno['cpf'] ?? ''),
+        ':nascimento' => (string) ($dadosAluno['nascimento'] ?? ''),
+        ':telefone' => (string) ($dadosAluno['telefone'] ?? ''),
+        ':foto' => (string) ($dadosAluno['foto'] ?? 'sem-perfil.jpg'),
+        ':usuario' => $usuarioAtendente
+    ];
+    if ($temResponsavelCol) {
+        $paramsAluno[':responsavel_id'] = $usuarioVendedorId;
+    }
+    $stmtUpdAluno = $pdo->prepare($sqlAluno);
+    $stmtUpdAluno->execute($paramsAluno);
+
+    $stmtUpdUsuario = $pdo->prepare("UPDATE usuarios SET nome = :nome, cpf = :cpf, foto = :foto WHERE id = :id AND nivel = 'Aluno'");
+    $stmtUpdUsuario->execute([
+        ':nome' => (string) ($dadosAluno['nome'] ?? ''),
+        ':cpf' => (string) ($dadosAluno['cpf'] ?? ''),
+        ':foto' => (string) ($dadosAluno['foto'] ?? 'sem-perfil.jpg'),
+        ':id' => $usuarioAlunoId
+    ]);
 }
 
-function buscarOuCriarAlunoDoVendedor(PDO $pdo, int $usuarioVendedorId, int $idPessoaVendedor, array $usuarioVendedor) : int
+function buscarOuCriarAlunoDoVendedor(PDO $pdo, int $usuarioVendedorId, array $vendedor, int $idPessoaVendedor): int
 {
-    $stmtPessoaVend = $pdo->prepare("SELECT nome, email, cpf, nascimento, telefone, foto FROM vendedores WHERE id = :id LIMIT 1");
-    $stmtPessoaVend->execute([':id' => $idPessoaVendedor]);
-    $pessoaVendedor = $stmtPessoaVend->fetch(PDO::FETCH_ASSOC) : [];
-
-    $nomeAluno = trim((string) ($pessoaVendedor['nome'] ?? $usuarioVendedor['nome'] ?? 'Aluno'));
-    $emailAluno = trim((string) ($pessoaVendedor['email'] ?? $usuarioVendedor['usuario'] ?? ''));
-    $cpfAluno = trim((string) ($pessoaVendedor['cpf'] ?? $usuarioVendedor['cpf'] ?? ''));
-    $cpfDigits = digitsOnly($cpfAluno);
-    $nascimentoAluno = trim((string) ($pessoaVendedor['nascimento'] ?? ''));
-    $telefoneAluno = trim((string) ($pessoaVendedor['telefone'] ?? ''));
-    $fotoAluno = trim((string) ($pessoaVendedor['foto'] ?? $usuarioVendedor['foto'] ?? '')) : 'sem-perfil.jpg';
-
+    $cpfDigits = digitsOnly((string) ($vendedor['cpf'] ?? ''));
     if ($cpfDigits === '') {
         return 0;
     }
 
-    $usuarioAtendente = resolveUsuarioAtendente($pdo, $usuarioVendedorId, $idPessoaVendedor);
-    if ($usuarioAtendente <= 0) {
-        return 0;
+    $stmtPessoaVendedor = $pdo->prepare("SELECT nome, email, cpf, nascimento, foto, telefone FROM vendedores WHERE id = :id LIMIT 1");
+    $stmtPessoaVendedor->execute([':id' => $idPessoaVendedor]);
+    $pessoaVendedor = $stmtPessoaVendedor->fetch(PDO::FETCH_ASSOC) ?: [];
+
+    $nomeAluno = trim((string) ($pessoaVendedor['nome'] ?? $vendedor['nome'] ?? 'Aluno'));
+    $emailBase = trim((string) ($pessoaVendedor['email'] ?? $vendedor['usuario'] ?? ''));
+    $cpfAluno = trim((string) ($pessoaVendedor['cpf'] ?? $vendedor['cpf'] ?? ''));
+    $nascimentoAluno = trim((string) ($pessoaVendedor['nascimento'] ?? ''));
+    $telefoneAluno = trim((string) ($pessoaVendedor['telefone'] ?? ''));
+    if ($nascimentoAluno === '') {
+        $nascimentoAluno = '1990-01-01';
     }
+    $senhaAluno = birthDigits($nascimentoAluno);
+    if ($senhaAluno === '') {
+        $nascimentoAluno = '1990-01-01';
+        $senhaAluno = '01011990';
+    }
+    $senhaCrip = md5($senhaAluno);
+    $fotoAluno = trim((string) ($pessoaVendedor['foto'] ?? $vendedor['foto'] ?? '')) ?: 'sem-perfil.jpg';
+    $temResponsavelCol = ensureAlunosResponsavelColumn($pdo);
 
     $cpfColUsuarios = cleanCpfColumn('cpf');
-    $stmtUsuarioAluno = $pdo->prepare("SELECT id FROM usuarios WHERE nivel = 'Aluno' AND {$cpfColUsuarios} = :cpf ORDER BY (ativo = 'Sim') DESC, id DESC LIMIT 1");
-    $stmtUsuarioAluno->execute([':cpf' => $cpfDigits]);
-    $usuarioAlunoId = (int) ($stmtUsuarioAluno->fetchColumn() : 0);
+    $stmtAlunoCpf = $pdo->prepare("SELECT id FROM usuarios WHERE nivel = 'Aluno' AND {$cpfColUsuarios} = :cpf ORDER BY (ativo = 'Sim') DESC, id DESC LIMIT 1");
+    $stmtAlunoCpf->execute([':cpf' => $cpfDigits]);
+    $usuarioAlunoId = (int) ($stmtAlunoCpf->fetchColumn() ?: 0);
     if ($usuarioAlunoId > 0) {
-        $stmtPessoaAluno = $pdo->prepare("SELECT id_pessoa FROM usuarios WHERE id = :id LIMIT 1");
-        $stmtPessoaAluno->execute([':id' => $usuarioAlunoId]);
-        $idPessoaAluno = (int) ($stmtPessoaAluno->fetchColumn() : 0);
-        if ($idPessoaAluno > 0) {
-            $stmtUpdAluno = $pdo->prepare("UPDATE alunos SET nome = :nome, email = :email, cpf = :cpf, nascimento = :nascimento, telefone = :telefone, foto = :foto, usuario = :usuario WHERE id = :id");
-            $stmtUpdAluno->execute([':id' => $idPessoaAluno, ':nome' => $nomeAluno, ':email' => $emailAluno, ':cpf' => $cpfAluno, ':nascimento' => $nascimentoAluno, ':telefone' => $telefoneAluno, ':foto' => $fotoAluno, ':usuario' => $usuarioAtendente,
-            ]);
+        $stmtResponsavel = $pdo->prepare("SELECT id, nivel, id_pessoa FROM usuarios WHERE id = :id LIMIT 1");
+        $stmtResponsavel->execute([':id' => $usuarioVendedorId]);
+        $responsavel = $stmtResponsavel->fetch(PDO::FETCH_ASSOC) ?: [];
+        $usuarioAtendente = resolveAtendenteId($pdo, $responsavel, date('Y-m-d'));
+        if ($usuarioAtendente <= 0) {
+            $usuarioAtendente = $usuarioVendedorId;
         }
+        sincronizarDadosAlunoDoVendedor($pdo, $usuarioAlunoId, $usuarioAtendente, $usuarioVendedorId, [
+            'nome' => $nomeAluno,
+            'email' => $emailBase,
+            'cpf' => $cpfAluno,
+            'nascimento' => $nascimentoAluno,
+            'telefone' => $telefoneAluno,
+            'foto' => $fotoAluno
+        ], $temResponsavelCol);
         return $usuarioAlunoId;
     }
 
     $cpfColAlunos = cleanCpfColumn('cpf');
-    $stmtAluno = $pdo->prepare("SELECT id, email FROM alunos WHERE {$cpfColAlunos} = :cpf ORDER BY id DESC LIMIT 1");
-    $stmtAluno->execute([':cpf' => $cpfDigits]);
-    $alunoExistente = $stmtAluno->fetch(PDO::FETCH_ASSOC) : [];
+    $stmtPessoaAluno = $pdo->prepare("SELECT id, nome, email, nascimento, foto, telefone FROM alunos WHERE {$cpfColAlunos} = :cpf ORDER BY id DESC LIMIT 1");
+    $stmtPessoaAluno->execute([':cpf' => $cpfDigits]);
+    $alunoPessoa = $stmtPessoaAluno->fetch(PDO::FETCH_ASSOC) ?: [];
 
-    $loginAluno = loginAlunoUnico($pdo, $emailAluno !== ''  $emailAluno : (string) ($alunoExistente['email'] ?? ''), $cpfDigits, $usuarioVendedorId);
-    $senhaAluno = birthDigits($nascimentoAluno);
-    if ($senhaAluno === '') {
-        $senhaAluno = '01011990';
+    $stmtResponsavel = $pdo->prepare("SELECT id, nivel, id_pessoa FROM usuarios WHERE id = :id LIMIT 1");
+    $stmtResponsavel->execute([':id' => $usuarioVendedorId]);
+    $responsavel = $stmtResponsavel->fetch(PDO::FETCH_ASSOC) ?: [];
+    $usuarioAtendente = resolveAtendenteId($pdo, $responsavel, date('Y-m-d'));
+    if ($usuarioAtendente <= 0) {
+        $usuarioAtendente = $usuarioVendedorId;
     }
 
+    $loginAluno = '';
+    if (!empty($alunoPessoa['email'])) {
+        $emailExistente = trim((string) $alunoPessoa['email']);
+        $stmtLogin = $pdo->prepare("SELECT id FROM usuarios WHERE usuario = :usuario AND nivel = 'Aluno' LIMIT 1");
+        $stmtLogin->execute([':usuario' => $emailExistente]);
+        $usuarioMesmoLogin = (int) ($stmtLogin->fetchColumn() ?: 0);
+        if ($usuarioMesmoLogin <= 0) {
+            $loginAluno = $emailExistente;
+        }
+    }
+    if ($loginAluno === '') {
+        $loginAluno = montarLoginAlunoUnico($pdo, $emailBase, $cpfDigits, $usuarioVendedorId);
+    }
     try {
         $pdo->beginTransaction();
 
-        $idPessoaAluno = (int) ($alunoExistente['id'] ?? 0);
-        if ($idPessoaAluno <= 0) {
+        $alunoPessoaId = (int) ($alunoPessoa['id'] ?? 0);
+        if ($alunoPessoaId <= 0) {
             $alunoId = nextTableId($pdo, 'alunos');
             if ($alunoId) {
-                $sqlAluno = "INSERT INTO alunos SET id = :id, nome = :nome, email = :email, cpf = :cpf, nascimento = :nascimento, telefone = :telefone, foto = :foto, usuario = :usuario, ativo = 'Sim', data = curDate()";
+                $sqlAluno = "INSERT INTO alunos SET id = :id, nome = :nome, email = :email, cpf = :cpf, nascimento = :nascimento, telefone = :telefone, foto = :foto, data = curDate(), usuario = :usuario, ativo = 'Sim'";
             } else {
-                $sqlAluno = "INSERT INTO alunos SET nome = :nome, email = :email, cpf = :cpf, nascimento = :nascimento, telefone = :telefone, foto = :foto, usuario = :usuario, ativo = 'Sim', data = curDate()";
+                $sqlAluno = "INSERT INTO alunos SET nome = :nome, email = :email, cpf = :cpf, nascimento = :nascimento, telefone = :telefone, foto = :foto, data = curDate(), usuario = :usuario, ativo = 'Sim'";
             }
-            $stmtInsAluno = $pdo->prepare($sqlAluno);
-            $paramsAluno = [':nome' => $nomeAluno, ':email' => $emailAluno !== '' ? $emailAluno : $loginAluno, ':cpf' => $cpfAluno, ':nascimento' => $nascimentoAluno, ':telefone' => $telefoneAluno, ':foto' => $fotoAluno, ':usuario' => $usuarioAtendente,
+            if ($temResponsavelCol) {
+                $sqlAluno .= ", responsavel_id = :responsavel_id";
+            }
+            $stmtInsertAluno = $pdo->prepare($sqlAluno);
+            $paramsAluno = [
+                ':nome' => $nomeAluno,
+                ':email' => $emailBase !== '' ? $emailBase : $loginAluno,
+                ':cpf' => $cpfAluno,
+                ':nascimento' => $nascimentoAluno,
+                ':telefone' => $telefoneAluno,
+                ':foto' => $fotoAluno,
+                ':usuario' => $usuarioAtendente
             ];
             if ($alunoId) {
                 $paramsAluno[':id'] = $alunoId;
             }
-            $stmtInsAluno->execute($paramsAluno);
-            $idPessoaAluno = $alunoId : (int) $pdo->lastInsertId();
+            if ($temResponsavelCol) {
+                $paramsAluno[':responsavel_id'] = $usuarioVendedorId;
+            }
+            $stmtInsertAluno->execute($paramsAluno);
+            $alunoPessoaId = $alunoId ?: (int) $pdo->lastInsertId();
         } else {
-            $stmtUpdAluno = $pdo->prepare("UPDATE alunos SET nome = :nome, email = :email, cpf = :cpf, nascimento = :nascimento, telefone = :telefone, foto = :foto, usuario = :usuario WHERE id = :id");
-            $stmtUpdAluno->execute([':id' => $idPessoaAluno, ':nome' => $nomeAluno, ':email' => $emailAluno !== ''  $emailAluno : (string) ($alunoExistente['email'] ?? $loginAluno), ':cpf' => $cpfAluno, ':nascimento' => $nascimentoAluno, ':telefone' => $telefoneAluno, ':foto' => $fotoAluno, ':usuario' => $usuarioAtendente,
-            ]);
+            $sqlSyncAluno = "UPDATE alunos SET nome = :nome, email = :email, cpf = :cpf, nascimento = :nascimento, telefone = :telefone, foto = :foto, usuario = :usuario";
+            if ($temResponsavelCol) {
+                $sqlSyncAluno .= ", responsavel_id = :responsavel_id";
+            }
+            $sqlSyncAluno .= " WHERE id = :id";
+            $stmtSyncAluno = $pdo->prepare($sqlSyncAluno);
+            $paramsSyncAluno = [
+                ':id' => $alunoPessoaId,
+                ':nome' => $nomeAluno,
+                ':email' => $emailBase !== '' ? $emailBase : ($alunoPessoa['email'] ?? ''),
+                ':cpf' => $cpfAluno,
+                ':nascimento' => $nascimentoAluno,
+                ':telefone' => $telefoneAluno,
+                ':foto' => $fotoAluno,
+                ':usuario' => $usuarioAtendente
+            ];
+            if ($temResponsavelCol) {
+                $paramsSyncAluno[':responsavel_id'] = $usuarioVendedorId;
+            }
+            $stmtSyncAluno->execute($paramsSyncAluno);
         }
 
-        $novoUsuarioAluno = nextTableId($pdo, 'usuarios');
-        if ($novoUsuarioAluno) {
-            $sqlUsuario = "INSERT INTO usuarios SET id = :id, nome = :nome, usuario = :usuario, senha = '', senha_crip = :senha_crip, cpf = :cpf, nivel = 'Aluno', foto = :foto, id_pessoa = :id_pessoa, ativo = 'Sim', data = curDate()";
+        $usuarioIdAluno = nextTableId($pdo, 'usuarios');
+        if ($usuarioIdAluno) {
+            $sqlUsuario = "INSERT INTO usuarios SET id = :id, nome = :nome, usuario = :usuario, senha = :senha, senha_crip = :senha_crip, cpf = :cpf, nivel = 'Aluno', foto = :foto, id_pessoa = :id_pessoa, ativo = 'Sim', data = curDate()";
         } else {
-            $sqlUsuario = "INSERT INTO usuarios SET nome = :nome, usuario = :usuario, senha = '', senha_crip = :senha_crip, cpf = :cpf, nivel = 'Aluno', foto = :foto, id_pessoa = :id_pessoa, ativo = 'Sim', data = curDate()";
+            $sqlUsuario = "INSERT INTO usuarios SET nome = :nome, usuario = :usuario, senha = :senha, senha_crip = :senha_crip, cpf = :cpf, nivel = 'Aluno', foto = :foto, id_pessoa = :id_pessoa, ativo = 'Sim', data = curDate()";
         }
-        $stmtInsUsuario = $pdo->prepare($sqlUsuario);
-        $paramsUsuario = [':nome' => $nomeAluno, ':usuario' => $loginAluno, ':senha_crip' => md5($senhaAluno), ':cpf' => $cpfAluno, ':foto' => $fotoAluno, ':id_pessoa' => $idPessoaAluno,
+        $stmtInsertUsuario = $pdo->prepare($sqlUsuario);
+        $paramsUsuario = [
+            ':nome' => $nomeAluno,
+            ':usuario' => $loginAluno,
+            ':senha' => '',
+            ':senha_crip' => $senhaCrip,
+            ':cpf' => $cpfAluno,
+            ':foto' => $fotoAluno,
+            ':id_pessoa' => $alunoPessoaId
         ];
-        if ($novoUsuarioAluno) {
-            $paramsUsuario[':id'] = $novoUsuarioAluno;
+        if ($usuarioIdAluno) {
+            $paramsUsuario[':id'] = $usuarioIdAluno;
         }
-        $stmtInsUsuario->execute($paramsUsuario);
-        $usuarioAlunoId = $novoUsuarioAluno : (int) $pdo->lastInsertId();
+        $stmtInsertUsuario->execute($paramsUsuario);
+        $usuarioAlunoId = $usuarioIdAluno ?: (int) $pdo->lastInsertId();
+
+        if ($usuarioAlunoId <= 0) {
+            throw new Exception('Falha ao criar usuario aluno.');
+        }
 
         $pdo->commit();
         return $usuarioAlunoId;
@@ -163,6 +261,7 @@ function buscarOuCriarAlunoDoVendedor(PDO $pdo, int $usuarioVendedorId, int $idP
 
 $nivelSessao = (string) ($_SESSION['nivel'] ?? '');
 $usuarioSessao = (int) ($_SESSION['id'] ?? 0);
+
 if ($usuarioSessao <= 0 || $nivelSessao === '') {
     sairComMensagem('Sessao invalida. Faca login novamente.');
 }
@@ -172,42 +271,53 @@ if (!in_array($nivelSessao, $niveisPermitidos, true)) {
     sairComMensagem('Permissao negada para trocar de perfil.');
 }
 
-$usuarioVendedorId = ($nivelSessao === 'Vendedor') ?? $usuarioSessao : (int) ($_POST['vendedor_usuario_id'] ?? 0);
+$usuarioVendedorId = 0;
+if ($nivelSessao === 'Vendedor') {
+    $usuarioVendedorId = $usuarioSessao;
+} else {
+    $usuarioVendedorId = (int) ($_POST['vendedor_usuario_id'] ?? 0);
+}
+
 if ($usuarioVendedorId <= 0) {
     sairComMensagem('Vendedor nao informado.');
 }
 
-$stmtUsuarioVendedor = $pdo->prepare("SELECT id, nome, usuario, cpf, foto, id_pessoa, nivel, ativo FROM usuarios WHERE id = :id LIMIT 1");
-$stmtUsuarioVendedor->execute([':id' => $usuarioVendedorId]);
-$usuarioVendedor = $stmtUsuarioVendedor->fetch(PDO::FETCH_ASSOC) : [];
-if (($usuarioVendedor['nivel'] ?? '') !== 'Vendedor' || ($usuarioVendedor['ativo'] ?? '') !== 'Sim') {
+$stmtVendedor = $pdo->prepare("SELECT id, nome, usuario, cpf, id_pessoa, nivel, foto, ativo FROM usuarios WHERE id = :id LIMIT 1");
+$stmtVendedor->execute([':id' => $usuarioVendedorId]);
+$vendedor = $stmtVendedor->fetch(PDO::FETCH_ASSOC) ?: [];
+if (($vendedor['nivel'] ?? '') !== 'Vendedor' || ($vendedor['ativo'] ?? '') !== 'Sim') {
     sairComMensagem('Conta de vendedor invalida ou inativa.');
 }
 
-$idPessoaVendedor = (int) ($usuarioVendedor['id_pessoa'] ?? 0);
+$idPessoaVendedor = (int) ($vendedor['id_pessoa'] ?? 0);
 if ($idPessoaVendedor <= 0) {
-    $cpfDigits = digitsOnly((string) ($usuarioVendedor['cpf'] ?? ''));
-    $emailVendedor = trim((string) ($usuarioVendedor['usuario'] ?? ''));
+    $cpfDigits = digitsOnly((string) ($vendedor['cpf'] ?? ''));
+    $emailVendedor = trim((string) ($vendedor['usuario'] ?? ''));
+
     if ($cpfDigits !== '') {
-        $stmtV = $pdo->prepare("SELECT id FROM vendedores WHERE " . cleanCpfColumn('cpf') . " = :cpf LIMIT 1");
-        $stmtV->execute([':cpf' => $cpfDigits]);
-        $idPessoaVendedor = (int) ($stmtV->fetchColumn() : 0);
+        $stmtVend = $pdo->prepare("SELECT id FROM vendedores WHERE REPLACE(REPLACE(cpf, '.', ''), '-', '') = :cpf LIMIT 1");
+        $stmtVend->execute([':cpf' => $cpfDigits]);
+        $idPessoaVendedor = (int) ($stmtVend->fetchColumn() ?: 0);
     }
+
     if ($idPessoaVendedor <= 0 && $emailVendedor !== '') {
-        $stmtV = $pdo->prepare("SELECT id FROM vendedores WHERE email = :email LIMIT 1");
-        $stmtV->execute([':email' => $emailVendedor]);
-        $idPessoaVendedor = (int) ($stmtV->fetchColumn() : 0);
+        $stmtVend = $pdo->prepare("SELECT id FROM vendedores WHERE email = :email LIMIT 1");
+        $stmtVend->execute([':email' => $emailVendedor]);
+        $idPessoaVendedor = (int) ($stmtVend->fetchColumn() ?: 0);
     }
+
     if ($idPessoaVendedor > 0) {
-        $stmtAtualiza = $pdo->prepare("UPDATE usuarios SET id_pessoa = :id_pessoa WHERE id = :id LIMIT 1");
-        $stmtAtualiza->execute([':id_pessoa' => $idPessoaVendedor, ':id' => $usuarioVendedorId]);
+        $stmtAtualizaPessoa = $pdo->prepare("UPDATE usuarios SET id_pessoa = :id_pessoa WHERE id = :id LIMIT 1");
+        $stmtAtualizaPessoa->execute([
+            ':id_pessoa' => $idPessoaVendedor,
+            ':id' => $usuarioVendedorId
+        ]);
     }
 }
 
 if ($idPessoaVendedor <= 0) {
     sairComMensagem('Vendedor invalido para troca de perfil.');
 }
-
 try {
     $stmtCol = $pdo->query("SHOW COLUMNS FROM vendedores LIKE 'pode_login_como_aluno'");
     $hasCol = (bool) ($stmtCol && $stmtCol->fetch(PDO::FETCH_ASSOC));
@@ -216,21 +326,23 @@ try {
     }
     $stmtPerm = $pdo->prepare("SELECT pode_login_como_aluno FROM vendedores WHERE id = :id LIMIT 1");
     $stmtPerm->execute([':id' => $idPessoaVendedor]);
-    if ((int) ($stmtPerm->fetchColumn()  : 0) !== 1) {
+    $podeLoginComoAluno = (int) ($stmtPerm->fetchColumn() ?: 0) === 1;
+    if (!$podeLoginComoAluno) {
         sairComMensagem('Login como aluno nao esta liberado para este vendedor.');
     }
 } catch (Exception $e) {
     sairComMensagem('Nao foi possivel validar permissao de login como aluno.');
 }
 
-$usuarioAlunoId = buscarOuCriarAlunoDoVendedor($pdo, $usuarioVendedorId, $idPessoaVendedor, $usuarioVendedor);
+$usuarioAlunoId = buscarOuCriarAlunoDoVendedor($pdo, $usuarioVendedorId, $vendedor, $idPessoaVendedor);
+
 if ($usuarioAlunoId <= 0) {
     sairComMensagem('Nao foi possivel localizar ou criar o cadastro de aluno deste vendedor.');
 }
 
 $stmtAluno = $pdo->prepare("SELECT id, nome, cpf, nivel, ativo FROM usuarios WHERE id = :id LIMIT 1");
 $stmtAluno->execute([':id' => $usuarioAlunoId]);
-$aluno = $stmtAluno->fetch(PDO::FETCH_ASSOC) : [];
+$aluno = $stmtAluno->fetch(PDO::FETCH_ASSOC) ?: [];
 if (($aluno['nivel'] ?? '') !== 'Aluno' || ($aluno['ativo'] ?? '') !== 'Sim') {
     sairComMensagem('Conta de aluno invalida ou inativa.');
 }

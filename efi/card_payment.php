@@ -8,6 +8,71 @@ ini_set('display_startup_errors', 0);
 
 @session_start();
 
+function obterUsuarioResponsavelAluno(array $aluno): int
+{
+    $responsavelId = isset($aluno['responsavel_id']) ? (int) $aluno['responsavel_id'] : 0;
+    if ($responsavelId > 0) {
+        return $responsavelId;
+    }
+
+    return (int) ($aluno['usuario'] ?? 0);
+}
+
+function tabelaTemColunaLocal(PDO $pdo, string $tabela, string $coluna): bool
+{
+    $stmt = $pdo->prepare("SHOW COLUMNS FROM {$tabela} LIKE :coluna");
+    $stmt->execute([':coluna' => $coluna]);
+    return (bool) $stmt->fetch(PDO::FETCH_ASSOC);
+}
+
+function featureAutoatendimentoVendedorAtiva(): bool
+{
+    $flag = env('FEATURE_AUTOATENDIMENTO_VENDEDOR', '1');
+    return in_array(strtolower((string) $flag), ['1', 'true', 'on', 'sim'], true);
+}
+
+function vendedorPodeLoginComoAluno(PDO $pdo, int $idPessoaVendedor): bool
+{
+    if ($idPessoaVendedor <= 0) {
+        return false;
+    }
+    if (!tabelaTemColunaLocal($pdo, 'vendedores', 'pode_login_como_aluno')) {
+        return false;
+    }
+
+    $stmt = $pdo->prepare("SELECT pode_login_como_aluno FROM vendedores WHERE id = :id LIMIT 1");
+    $stmt->execute([':id' => $idPessoaVendedor]);
+    return (int) ($stmt->fetchColumn() ?: 0) === 1;
+}
+
+function existeVinculoVendedorAluno(PDO $pdo, int $usuarioVendedorId, int $usuarioAlunoId): bool
+{
+    if ($usuarioVendedorId <= 0 || $usuarioAlunoId <= 0) {
+        return false;
+    }
+    $stmtTabela = $pdo->query("SHOW TABLES LIKE 'usuarios_vinculos'");
+    if (!$stmtTabela || !$stmtTabela->fetch(PDO::FETCH_NUM)) {
+        return false;
+    }
+
+    $stmt = $pdo->prepare("SELECT id FROM usuarios_vinculos WHERE usuario_vendedor_id = :vendedor AND usuario_aluno_id = :aluno LIMIT 1");
+    $stmt->execute([
+        ':vendedor' => $usuarioVendedorId,
+        ':aluno' => $usuarioAlunoId,
+    ]);
+    return (bool) $stmt->fetchColumn();
+}
+
+function registrarAuditoriaAutoatendimento(string $origem, int $usuarioAlunoId, int $usuarioVendedorId, int $matriculaId): void
+{
+    $linha = date('Y-m-d H:i:s')
+        . " origem={$origem}"
+        . " aluno_user={$usuarioAlunoId}"
+        . " vendedor_user={$usuarioVendedorId}"
+        . " matricula={$matriculaId}"
+        . PHP_EOL;
+    @file_put_contents(__DIR__ . '/split_autoatendimento.log', $linha, FILE_APPEND);
+}
 header('Content-Type: application/json; charset=utf-8');
 $json = file_get_contents('php://input');
 $data = json_decode($json, true);
@@ -57,14 +122,6 @@ $config = [
     'sandbox' => $options['sandbox'] // true para teste, false para produção
 ];
 
-$notificationBase = env('EFI_WEBHOOK_BASE_URL', '');
-if ($notificationBase === '') {
-    $notificationBase = $url_sistema;
-}
-$notificationBase = rtrim($notificationBase, '/') . '/';
-if (stripos($notificationBase, 'https://') !== 0) {
-    $notificationBase = 'https://sestedcursosvirtual.com/';
-}
 
 $queryPix = $pdo->query("SELECT desconto_pix FROM config");
 $resPix = $queryPix->fetchAll(PDO::FETCH_ASSOC);
@@ -74,6 +131,8 @@ $descontoPix = json_encode($resPix[0]['desconto_pix']);
 $query2 = $pdo->prepare("SELECT * FROM usuarios where id = :id");
 $query2->execute([':id' => $id_do_aluno]);
 $res2 = $query2->fetchAll(PDO::FETCH_ASSOC);
+$nivel_responsavel_pelo_cadastro_do_aluno = 0;
+$usuario_atendente_do_aluno = 0;
 
 if (@count($res2) > 0) {
     $id_pessoa = $res2[0]['id_pessoa'];
@@ -85,7 +144,8 @@ if (@count($res2) > 0) {
         $nome_aluno = $res3[0]['nome'];
         $email_aluno = $res3[0]['email'];
         $cpf_aluno = str_replace('-', '', str_replace('.', '', $res3[0]['cpf']));
-        $nivel_responsavel_pelo_cadastro_do_aluno = $res3[0]['usuario'];
+        $nivel_responsavel_pelo_cadastro_do_aluno = obterUsuarioResponsavelAluno($res3[0]);
+        $usuario_atendente_do_aluno = (int) ($res3[0]['usuario'] ?? 0);
     }
 }
 
@@ -115,150 +175,193 @@ if (@count($res) > 0) {
 
 
 
-//encontra o usuario comum do professor
-$consulta_usuario = $pdo->prepare("SELECT * FROM usuarios where id = :id");
-$consulta_usuario->execute([':id' => $id_usuario_professor]);
-$reposta_cosulta_usuario = $consulta_usuario->fetchAll(PDO::FETCH_ASSOC);
+// Centraliza regras de repasse por dono comercial (responsavel_id) e atendente operacional (alunos.usuario).
+$queryConfig = $pdo->query("SELECT * FROM config");
+$resConfig = $queryConfig->fetchAll(PDO::FETCH_ASSOC);
 
-$nivel_do_vendedor_do_curso = isset($reposta_cosulta_usuario[0]['nivel']) ? $reposta_cosulta_usuario[0]['nivel'] : 'sem nível';
-$wallet_id_do_vendedor_do_curso = isset($reposta_cosulta_usuario[0]['wallet_id']) ? $reposta_cosulta_usuario[0]['wallet_id'] : '0';
+$consulta_comissao_nivel_responsavel = $pdo->prepare("SELECT id, nivel, id_pessoa, wallet_id FROM usuarios WHERE id = :id LIMIT 1");
+$consulta_comissao_nivel_responsavel->execute([':id' => $nivel_responsavel_pelo_cadastro_do_aluno]);
+$responsavelUser = $consulta_comissao_nivel_responsavel->fetch(PDO::FETCH_ASSOC) ?: [];
 
-//encontra porcentagem para split para o vendedor
-$consulta_comissoes = $pdo->prepare("SELECT * from comissoes where nivel = :nivel");
-$consulta_comissoes->execute([':nivel' => $nivel_do_vendedor_do_curso]);
-$resposta_comissoes = $consulta_comissoes->fetchAll(PDO::FETCH_ASSOC);
-$porcentagem_vendedor = isset($resposta_comissoes[0]['porcentagem']) ? $resposta_comissoes[0]['porcentagem'] : 0;
+$nivel_responsavel = (string) ($responsavelUser['nivel'] ?? '');
+$id_pessoa_responsavel = (int) ($responsavelUser['id_pessoa'] ?? 0);
+$wallet_id_nivel_responsavel_pelo_cadastro = trim((string) ($responsavelUser['wallet_id'] ?? ''));
 
-//econtra os niveis (perfis) que recebem comissoes fixas por TODAS as vendas
-$consulta_comissoes_que_recebem_fixo = $pdo->query("SELECT * from comissoes where recebeSempre = 1 ");
+$usuario_atendente_do_aluno = (int) ($usuario_atendente_do_aluno ?? 0);
+if ($usuario_atendente_do_aluno <= 0) {
+    $usuario_atendente_do_aluno = $nivel_responsavel_pelo_cadastro_do_aluno;
+}
+
+$consulta_usuario_atendente = $pdo->prepare("SELECT id, nivel, id_pessoa, wallet_id FROM usuarios WHERE id = :id LIMIT 1");
+$consulta_usuario_atendente->execute([':id' => $usuario_atendente_do_aluno]);
+$atendenteUser = $consulta_usuario_atendente->fetch(PDO::FETCH_ASSOC) ?: [];
+
+$nivel_atendente = (string) ($atendenteUser['nivel'] ?? '');
+$id_pessoa_atendente = (int) ($atendenteUser['id_pessoa'] ?? 0);
+$wallet_id_atendente = trim((string) ($atendenteUser['wallet_id'] ?? ''));
+
+$autoatendimentoVendedor = false;
+if (
+    featureAutoatendimentoVendedorAtiva()
+    && $nivel_responsavel === 'Vendedor'
+    && (int) $id_do_aluno > 0
+    && (int) ($responsavelUser['id'] ?? 0) > 0
+    && vendedorPodeLoginComoAluno($pdo, $id_pessoa_responsavel)
+    && existeVinculoVendedorAluno($pdo, (int) $responsavelUser['id'], (int) $id_do_aluno)
+) {
+    $autoatendimentoVendedor = true;
+    $wallet_id_atendente = $wallet_id_nivel_responsavel_pelo_cadastro;
+    registrarAuditoriaAutoatendimento('efi/card_payment.php', (int) $id_do_aluno, (int) $responsavelUser['id'], (int) ($id_venda ?? 0));
+}
+
+$consulta_comissoes_que_recebem_fixo = $pdo->query("SELECT * FROM comissoes WHERE recebeSempre = 1");
 $resposta_comissoes_que_recebem_fixo = $consulta_comissoes_que_recebem_fixo->fetchAll(PDO::FETCH_ASSOC);
 
 $lista_cargos_recebem_fixo = [];
 foreach ($resposta_comissoes_que_recebem_fixo as $registro) {
-    array_push($lista_cargos_recebem_fixo, $registro['nivel']);
+    $lista_cargos_recebem_fixo[] = $registro['nivel'];
 }
 
-$lista_cargos_recebem_fixo_str = implode("','", $lista_cargos_recebem_fixo);
-$lista_cargos_recebem_fixo_str = "'" . $lista_cargos_recebem_fixo_str . "'";
+$fixos_wallet_ids = [];
+if (!empty($lista_cargos_recebem_fixo)) {
+    $lista_cargos_recebem_fixo_str = "'" . implode("','", $lista_cargos_recebem_fixo) . "'";
+    $consulta_usuarios_que_recebem_fixo = $pdo->query(
+        "SELECT usuarios.wallet_id, comissoes.porcentagem
+         FROM usuarios
+         INNER JOIN comissoes ON comissoes.nivel = usuarios.nivel
+         WHERE usuarios.nivel IN ($lista_cargos_recebem_fixo_str)
+           AND usuarios.wallet_id IS NOT NULL"
+    );
+    $lista_de_usuarios_que_recebem_fixo = $consulta_usuarios_que_recebem_fixo->fetchAll(PDO::FETCH_ASSOC);
 
-$consulta_usuarios_que_recebem_fixo = $pdo->query(
-    "SELECT usuarios.wallet_id, comissoes.porcentagem 
-    FROM usuarios 
-    INNER JOIN comissoes ON comissoes.nivel = usuarios.nivel 
-    WHERE usuarios.nivel IN ($lista_cargos_recebem_fixo_str) 
-    AND usuarios.wallet_id IS NOT NULL"
-);
-$lista_de_usuarios_que_recebem_fixo = $consulta_usuarios_que_recebem_fixo->fetchAll(PDO::FETCH_ASSOC);
+    foreach ($lista_de_usuarios_que_recebem_fixo as $item) {
+        if (!empty($item['wallet_id'])) {
+            $fixos_wallet_ids[] = [
+                'payee_code' => $item['wallet_id'],
+                'percentage' => (float) $item['porcentagem'] * 100,
+            ];
+        }
+    }
+}
 
-//Wallet ids e respectivas porcentagens para repasses
-$repasses = array();
-$fixos_wallet_ids = array_filter(array_map(function ($item) {
-    if (!empty($item['wallet_id'])) {
-        return [
-            'payee_code' => $item['wallet_id'],
-            'percentage' => $item['porcentagem'] * 100
+function addOrUpdatePayee(&$fixos_wallet_ids, $payee_code, $percentage)
+{
+    $payee_code = trim((string) $payee_code);
+    $percentage = (float) $percentage;
+
+    if ($payee_code === '' || $percentage <= 0) {
+        return;
+    }
+
+    foreach ($fixos_wallet_ids as &$item) {
+        if (($item['payee_code'] ?? '') === $payee_code) {
+            $item['percentage'] = (float) ($item['percentage'] ?? 0) + $percentage;
+            return;
+        }
+    }
+
+    $fixos_wallet_ids[] = [
+        'payee_code' => $payee_code,
+        'percentage' => $percentage,
+    ];
+}
+
+function normalizarRepasses(array $repasses): array
+{
+    $agrupado = [];
+
+    foreach ($repasses as $item) {
+        $payeeCode = trim((string) ($item['payee_code'] ?? ''));
+        $percentage = isset($item['percentage']) && is_numeric($item['percentage']) ? (float) $item['percentage'] : 0.0;
+
+        if ($payeeCode === '' || $percentage <= 0) {
+            continue;
+        }
+
+        if (!isset($agrupado[$payeeCode])) {
+            $agrupado[$payeeCode] = 0.0;
+        }
+
+        $agrupado[$payeeCode] += $percentage;
+    }
+
+    $normalizado = [];
+    foreach ($agrupado as $payeeCode => $percentageTotal) {
+        $normalizado[] = [
+            'payee_code' => $payeeCode,
+            'percentage' => (int) round($percentageTotal),
         ];
     }
-    return null;
-}, $lista_de_usuarios_que_recebem_fixo));
 
-$fixos_wallet_ids = array_values($fixos_wallet_ids);
-if ($wallet_id_do_vendedor_do_curso)
-    array_push($fixos_wallet_ids, [
-        'payee_code' => $wallet_id_do_vendedor_do_curso,
-        'percentage' => $porcentagem_vendedor * 100
-    ]);
-
-//VERIFICA SE O NIVEL RESPONSAVEL PELO CADASTRO DO ALUNO POSSUI OS DADOS DE COMISSÃO REGISTRADO
-$consulta_comissao_nivel_responsavel = $pdo->prepare("SELECT * FROM usuarios where id = :id");
-$consulta_comissao_nivel_responsavel->execute([':id' => $nivel_responsavel_pelo_cadastro_do_aluno]);
-$resposta_comissao_nivel_responsavel = $consulta_comissao_nivel_responsavel->fetchAll(PDO::FETCH_ASSOC);
-$wallet_id_nivel_responsavel_pelo_cadastro = isset($resposta_comissao_nivel_responsavel[0]['wallet_id']) ? $resposta_comissao_nivel_responsavel[0]['wallet_id'] : 0;
-
-$vendedor_id = $resposta_comissao_nivel_responsavel[0]['id_pessoa'];
-
-// Verifica o nível do responsável pelo cadastro
-$nivel_responsavel = $resposta_comissao_nivel_responsavel[0]['nivel'];
-
-// Define a tabela a ser consultada com base no nível
-if ($nivel_responsavel == 'Vendedor') {
-    $tabela_comissao = 'vendedores';
-} elseif ($nivel_responsavel == 'Tutor') {
-    $tabela_comissao = 'tutores';
-} else {
-    // Defina um comportamento padrão caso o nível não seja nem Vendedor nem Tutor
-    $tabela_comissao = null;
+    return $normalizado;
 }
 
-// Se a tabela foi definida, faz a consulta
-if ($tabela_comissao) {
-    $consulta_comissao_nivel_responsavel = $pdo->prepare("SELECT comissao FROM {$tabela_comissao} WHERE id = :id");
-    $consulta_comissao_nivel_responsavel->execute([':id' => $vendedor_id]);
-    $resposta_comissao_nivel_responsavel = $consulta_comissao_nivel_responsavel->fetchAll(PDO::FETCH_ASSOC);
-    // Agora você pode acessar os dados de comissão
-    $comissao_vendedor = $resposta_comissao_nivel_responsavel[0]['comissao'];
-} else {
-    // Caso o nível não seja válido, trate o erro ou defina um valor padrão
-    $comissao_vendedor = 0;
+$comissao_dono = 0.0;
+if ($nivel_responsavel === 'Vendedor' && $id_pessoa_responsavel > 0) {
+    $stmtComissaoResp = $pdo->prepare("SELECT comissao FROM vendedores WHERE id = :id");
+    $stmtComissaoResp->execute([':id' => $id_pessoa_responsavel]);
+    $comissao_dono = (float) ($stmtComissaoResp->fetchColumn() ?: 0);
+} elseif ($nivel_responsavel === 'Parceiro' && $id_pessoa_responsavel > 0) {
+    $stmtComissaoResp = $pdo->prepare("SELECT comissao FROM parceiros WHERE id = :id");
+    $stmtComissaoResp->execute([':id' => $id_pessoa_responsavel]);
+    $comissao_dono = (float) ($stmtComissaoResp->fetchColumn() ?: 0);
+} elseif ($nivel_responsavel === 'Secretario' && $id_pessoa_responsavel > 0) {
+    $stmtSecMeus = $pdo->prepare("SELECT comissao_meus_alunos FROM secretarios WHERE id = :id");
+    $stmtSecMeus->execute([':id' => $id_pessoa_responsavel]);
+    $comissao_dono = (float) ($stmtSecMeus->fetchColumn() ?: 0);
+} elseif ($nivel_responsavel === 'Tutor' && $id_pessoa_responsavel > 0) {
+    $temMeusTutor = tabelaTemColunaLocal($pdo, 'tutores', 'comissao_meus_alunos');
+    if ($temMeusTutor) {
+        $stmtTutorMeus = $pdo->prepare("SELECT COALESCE(comissao_meus_alunos, comissao, 0) FROM tutores WHERE id = :id");
+    } else {
+        $stmtTutorMeus = $pdo->prepare("SELECT COALESCE(comissao, 0) FROM tutores WHERE id = :id");
+    }
+    $stmtTutorMeus->execute([':id' => $id_pessoa_responsavel]);
+    $comissao_dono = (float) ($stmtTutorMeus->fetchColumn() ?: 0);
+} elseif ($nivel_responsavel === 'Tesoureiro') {
+    $comissao_dono = (float) ($resConfig[0]['comissao_tesoureiro'] ?? 0);
 }
 
-//OBTER COMISSAO DO TUTOR
-$consulta_vendedor_professor = $pdo->query("SELECT comissao_tutor FROM config");
-$resposta_consulta_vendedor_professor = $consulta_vendedor_professor->fetch(PDO::FETCH_ASSOC)['comissao_tutor'];
+if (!empty($wallet_id_nivel_responsavel_pelo_cadastro) && $comissao_dono > 0) {
+    addOrUpdatePayee($fixos_wallet_ids, $wallet_id_nivel_responsavel_pelo_cadastro, $comissao_dono * 100);
+}
 
 $vendedor_e_professor = 0;
-$tutor_atendente_id = null;
-if ($nivel_responsavel == 'Vendedor' && !empty($vendedor_id)) {
-    $consulta_vendedor_e_professor = $pdo->prepare("SELECT professor, tutor_id FROM vendedores where id = :id");
-    $consulta_vendedor_e_professor->execute([':id' => $vendedor_id]);
-    $resposta_consulta_vendedor_e_professor = $consulta_vendedor_e_professor->fetch(PDO::FETCH_ASSOC) ?: [];
-    $vendedor_e_professor = $resposta_consulta_vendedor_e_professor['professor'] ?? 0;
-    $tutor_atendente_id = $resposta_consulta_vendedor_e_professor['tutor_id'] ?? null;
+if (($nivel_responsavel === 'Vendedor' || $nivel_responsavel === 'Parceiro') && $id_pessoa_responsavel > 0) {
+    $tabelaResp = $nivel_responsavel === 'Vendedor' ? 'vendedores' : 'parceiros';
+    $stmtResp = $pdo->prepare("SELECT professor FROM {$tabelaResp} WHERE id = :id");
+    $stmtResp->execute([':id' => $id_pessoa_responsavel]);
+    $vendedor_e_professor = (int) ($stmtResp->fetchColumn() ?: 0);
 }
 
-$tutor_wallet_id = null;
-if (!empty($tutor_atendente_id)) {
-    $consulta_tutor = $pdo->prepare("SELECT wallet_id FROM usuarios WHERE id_pessoa = :id_pessoa AND nivel = 'Tutor' LIMIT 1");
-    $consulta_tutor->execute([':id_pessoa' => $tutor_atendente_id]);
-    $tutor_wallet_id = $consulta_tutor->fetchColumn();
-}
+if ($vendedor_e_professor === 1 && !empty($wallet_id_atendente)) {
+    if ($nivel_atendente === 'Secretario' && $id_pessoa_atendente > 0) {
+        $stmtSecOutros = $pdo->prepare("SELECT comissao_outros_alunos FROM secretarios WHERE id = :id");
+        $stmtSecOutros->execute([':id' => $id_pessoa_atendente]);
+        $comissao_secretario_outros = (float) ($stmtSecOutros->fetchColumn() ?: 0);
 
-if ($nivel_responsavel == 'Tutor') {
-    if (!empty($wallet_id_nivel_responsavel_pelo_cadastro)) {
-        array_push($fixos_wallet_ids, [
-            'payee_code' => $wallet_id_nivel_responsavel_pelo_cadastro,
-            'percentage' => $comissao_vendedor * 100
-        ]);
+        if ($comissao_secretario_outros > 0) {
+            addOrUpdatePayee($fixos_wallet_ids, $wallet_id_atendente, $comissao_secretario_outros * 100);
+        }
+    } elseif ($nivel_atendente === 'Tutor' && $id_pessoa_atendente > 0) {
+        $temOutrosTutor = tabelaTemColunaLocal($pdo, 'tutores', 'comissao_outros_alunos');
+        if ($temOutrosTutor) {
+            $stmtTutorOutros = $pdo->prepare("SELECT COALESCE(comissao_outros_alunos, 0) FROM tutores WHERE id = :id");
+            $stmtTutorOutros->execute([':id' => $id_pessoa_atendente]);
+            $comissao_tutor_outros = (float) ($stmtTutorOutros->fetchColumn() ?: 0);
+        } else {
+            $comissao_tutor_outros = (float) ($resConfig[0]['comissao_tutor'] ?? 0);
+        }
+
+        if ($comissao_tutor_outros > 0) {
+            addOrUpdatePayee($fixos_wallet_ids, $wallet_id_atendente, $comissao_tutor_outros * 100);
+        }
     }
 }
 
-if ($vendedor_e_professor && $tutor_wallet_id) {
-    array_push($fixos_wallet_ids, [
-        'payee_code' => $tutor_wallet_id,
-        'percentage' => $resposta_consulta_vendedor_professor * 100
-    ]);
-}
+$fixos_wallet_ids = normalizarRepasses($fixos_wallet_ids);
 
-//VERIFICA A PORCENTAGEM DE COMISSAO DO NIVEL RESPONSAVEL PELO CADASTRO DO ALUNO
-$nivel_do_responsavel_pelo_cadastro_do_aluno = isset($resposta_comissao_nivel_responsavel[0]['nivel']) ? $resposta_comissao_nivel_responsavel[0]['nivel'] : 'sem nível';
-$consulta_valor_da_comissao_do_responsavel = $pdo->prepare("SELECT * FROM comissoes where nivel = :nivel");
-$consulta_valor_da_comissao_do_responsavel->execute([':nivel' => $nivel_do_responsavel_pelo_cadastro_do_aluno]);
-$resposta_valor_da_comissao_do_responsavel = $consulta_valor_da_comissao_do_responsavel->fetchAll(PDO::FETCH_ASSOC);
-
-$porcentagem_de_pagamento_para_responsavel = isset($resposta_valor_da_comissao_do_responsavel[0]['porcentagem']) ? $resposta_valor_da_comissao_do_responsavel[0]['porcentagem'] : 0;
-
-if ($wallet_id_nivel_responsavel_pelo_cadastro && $nivel_responsavel == 'Vendedor')
-    array_push($fixos_wallet_ids, [
-        'payee_code' => $wallet_id_nivel_responsavel_pelo_cadastro,
-        'percentage' => intval($comissao_vendedor) * 100
-    ]);
-
-
-
-
-
-
-// Configurações da API da Efí (antiga GerenciaNet)
+// Configurações da API da Ef? (antiga GerenciaNet)
 $clientId = env('EFI_CARD_CLIENT_ID', $options['clientId'] ?? '');
 $clientSecret = env('EFI_CARD_CLIENT_SECRET', $options['clientSecret'] ?? '');
 
@@ -299,7 +402,8 @@ try {
         'zipcode' => $data['zipcode'] ?? null,
         'city' => $data['city'] ?? null,
         'state' => $data['state'] ?? null,
-        'notification_url' => $notificationBase . 'efi_webhook_boleto.php'
+        'notification_url' => 'https://www.sested-eja.com/efi_webhook_boleto.php',
+        'repasses' => $fixos_wallet_ids
     ];
 
     // Validações básicas
@@ -355,8 +459,5 @@ try {
 }
 
 ?>
-
-
-
 
 

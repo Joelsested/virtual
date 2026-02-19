@@ -25,7 +25,9 @@ try {
     }
 
     $stmt = $pdo->prepare("UPDATE vendedores SET pode_login_como_aluno = :valor WHERE id = :id");
-    $stmt->execute([':valor' => $novoValor, ':id' => $id,
+    $stmt->execute([
+        ':valor' => $novoValor,
+        ':id' => $id,
     ]);
 
     $msg = $novoValor === 1 ? 'Login como aluno habilitado.' : 'Login como aluno desabilitado.';
@@ -35,3 +37,4 @@ try {
     echo "<script>alert('Nao foi possivel atualizar a permissao.');window.location='../../index.php?pagina=vendedores';</script>";
     exit();
 }
+

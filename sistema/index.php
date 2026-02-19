@@ -1,15 +1,10 @@
-<?php
-$host = $_SERVER['HTTP_HOST'] ?? '';
-$scheme = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') || ($_SERVER['SERVER_PORT'] ?? 0) == 443 ? 'https' : 'http';
-$scriptDir = dirname($_SERVER['SCRIPT_NAME'] ?? '');
-$basePath = preg_replace('#/(virtual|sestedcursos)/sistema$#', '', $scriptDir);
-$basePath = rtrim($basePath, '/');
-$loginUrl = "{$scheme}://{$host}{$basePath}/provao/sistema/index.php?sistema=virtual";
-if (!headers_sent()) { ? header('Location: ' . $loginUrl);
-}
-exit();
-
+<?php 
 require_once('conexao.php');
+if (!headers_sent()) {
+	header('Cache-Control: no-store, no-cache, must-revalidate, max-age=0');
+	header('Pragma: no-cache');
+	header('Expires: 0');
+}
 $senha_admin = '123456';
 $senha_admin_hash = password_hash($senha_admin, PASSWORD_DEFAULT);
 
@@ -19,11 +14,11 @@ $senha_prof_hash = password_hash($senha_prof, PASSWORD_DEFAULT);
 
 $email_prof = 'professorpadrao@gmail.com';
 
-//VERIFICAR SE EXISTE UM USUÃƒÂRIO ADMINISTRADOR CRIADO NO BANCO
+//VERIFICAR SE EXISTE UM USUÁRIO ADMINISTRADOR CRIADO NO BANCO
 $query = $pdo->query("SELECT * FROM usuarios where nivel = 'Administrador'");
 $res = $query->fetchAll(PDO::FETCH_ASSOC);
 if(@count($res) == 0){
-	//CRIAR UM USUÃƒÂRIO ADMINISTRADOR CASO NÃƒÂO EXISTA NENHUM USUÃƒÂRIO
+	//CRIAR UM USUÁRIO ADMINISTRADOR CASO N?O EXISTA NENHUM USUÁRIO
 	$stmtAdminUser = $pdo->prepare("INSERT INTO usuarios SET nome = 'Administrador', cpf = '000.000.000-00', usuario = :email, senha='', senha_crip = :senha_crip, nivel = 'Administrador', foto = 'sem-perfil.jpg', id_pessoa = 1, ativo = 'Sim', data = curDate() ");
 	$stmtAdminUser->execute([':email' => $email_sistema, ':senha_crip' => $senha_admin_hash]);
 
@@ -38,7 +33,7 @@ if(@count($res) == 0){
 $query = $pdo->query("SELECT * FROM usuarios where nome = 'Professor_padrao'");
 $res = $query->fetchAll(PDO::FETCH_ASSOC);
 if(@count($res) == 0){
-	//CRIAR UM USUÃƒÂRIO ADMINISTRADOR CASO NÃƒÂO EXISTA NENHUM USUÃƒÂRIO
+	//CRIAR UM USUÁRIO ADMINISTRADOR CASO N?O EXISTA NENHUM USUÁRIO
 	$stmtProf = $pdo->prepare("INSERT INTO usuarios SET nome = 'Professor_padrao', usuario = :email, senha='', senha_crip = :senha_crip, nivel = 'Professor', foto = 'sem-perfil.jpg', ativo = 'Sim', data = curDate() ");
 	$stmtProf->execute([':email' => $email_prof, ':senha_crip' => $senha_prof_hash]);
 
@@ -46,7 +41,7 @@ if(@count($res) == 0){
 }
 
 
-//VERIFICAR SE A TABELA DE ENVIOS ESTÃƒÂ VAZIA
+//VERIFICAR SE A TABELA DE ENVIOS EST? VAZIA
 $query = $pdo->query("SELECT * FROM envios");
 $res = $query->fetchAll(PDO::FETCH_ASSOC);
 if(@count($res) == 0){
@@ -90,7 +85,7 @@ $responsaveis = $consulta_responsaveis ? $consulta_responsaveis->fetchAll(PDO::F
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-	<meta name="description" content="SESTED Cursos, Profissionalizantes, Participe das nossas formaÃƒÂ§ÃƒÂµes e seja um profissional reconhecido!!">
+	<meta name="description" content="SESTED Cursos, Profissionalizantes, Participe das nossas formações e seja um profissional reconhecido!!">
 	<meta name="author" content="Sested Cursos">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 
@@ -113,7 +108,7 @@ $responsaveis = $consulta_responsaveis ? $consulta_responsaveis->fetchAll(PDO::F
 			<div class="container-fluid">
 				<div class="row">
 					<div class="col-md-4 login-sec">
-						<h5 class="text-center mb-4"><a href="../" title="Voltar para o Site"><img class="mr-1" src="img/logo.png" width="50px"></a>FaÃƒÂ§a seu Login</h5>
+						<h5 class="text-center mb-4"><a href="../" title="Voltar para o Site"><img class="mr-1" src="img/logo.png" width="50px"></a>Faça seu Login</h5>
 
 
 						<form class="login100-form validate-form" action="autenticar.php" method="POST">
@@ -125,11 +120,11 @@ $responsaveis = $consulta_responsaveis ? $consulta_responsaveis->fetchAll(PDO::F
 								</div>
 
 							<div class="wrap-input100 validate-input">
-								<span class="label-input100">Data de nascimento</span>
+								<span class="label-input100">Senha</span>
 								<div class="input-group">
 									<input type="password" name="senha" id="senha" class="input100" placeholder="Data de nascimento (DDMMAAAA)" required>
 									<div class="input-group-append">
-										<button type="button" class="btn btn-outline-secondary btn-sm" id="toggleSenha" aria-label="Mostrar data" title="Mostrar data"><i class="fa fa-eye"></i></button>
+										<button type="button" class="btn btn-outline-secondary btn-sm" id="toggleSenha" aria-label="Mostrar senha" title="Mostrar senha"><i class="fa fa-eye"></i></button>
 									</div>
 								</div>
 								<small class="text-muted">Informe somente os numeros da data de nascimento (DDMMAAAA).</small>
@@ -150,7 +145,7 @@ $responsaveis = $consulta_responsaveis ? $consulta_responsaveis->fetchAll(PDO::F
 						</form>
 
 						<div class="text-center p-t-8 p-b-31">
-							NÃƒÂ£o tem Cadastro
+							Não tem Cadastro?
 
 							<a href="" class="text-primary" data-toggle="modal" data-target="#modalCadastro">Cadastre-se</a>
 
@@ -166,8 +161,8 @@ $responsaveis = $consulta_responsaveis ? $consulta_responsaveis->fetchAll(PDO::F
 
 								<div class="carousel-inner">
 									<div class="carousel-item active">
-										<a href="<?php echo $link_banner >?>" target="_blank" title="Ir para <?php echo $nome_banner ?>"
-											<img src="painel-admin/img/login/<?php echo $foto_banner >" height="" width="100%"?>
+										<a href="<?php echo $link_banner ?>" target="_blank" title="Ir para <?php echo $nome_banner ?>">
+											<img src="painel-admin/img/login/<?php echo $foto_banner ?>" height="" width="100%">
 										</a>
 
 									</div>
@@ -198,10 +193,10 @@ $(function(){
         senha.attr('type', isPassword ? 'text' : 'password');
         if (isPassword) {
             icone.removeClass('fa-eye').addClass('fa-eye-slash');
-            botao.attr('aria-label', 'Ocultar data').attr('title', 'Ocultar data');
+            botao.attr('aria-label', 'Ocultar senha').attr('title', 'Ocultar senha');
         } else {
             icone.removeClass('fa-eye-slash').addClass('fa-eye');
-            botao.attr('aria-label', 'Mostrar data').attr('title', 'Mostrar data');
+            botao.attr('aria-label', 'Mostrar senha').attr('title', 'Mostrar senha');
         }
     });
 });
@@ -218,13 +213,15 @@ $(function(){
 	<div class="modal-dialog" role="document">
 		<div class="modal-content">
 			<div class="modal-header">
-				<h5 class="modal-title" id="exampleModalLabel">FaÃƒÂ§a seu Cadastro</h5>
+				<h5 class="modal-title" id="exampleModalLabel">Faça seu Cadastro</h5>
 				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 					<span aria-hidden="true">&times;</span>
 				</button>
 			</div>
 			<form id="form-cadastro">
-			<div class="modal-body"<?php if($professor_cad == 'Sim'){ >
+			<div class="modal-body">
+
+					<?php if($professor_cad == 'Sim'){ ?>
 					<div class="form-group">
 						<label for="exampleFormControlInput1"><small>Aluno / Professor</small></label>
 							<select class="form-control" name="tipo" id="tipo"> 
@@ -259,17 +256,18 @@ $(function(){
 						<label for="professor_tutor_id"><small>Responsavel</small></label>
 						<select class="form-control" id="professor_tutor_id" name="professor_tutor_id" required>
 							<option value="">Selecione</option>
-							<?php foreach ($responsaveis as $responsavel)  : ?>
+							<?php foreach ($responsaveis as $responsavel) : ?>
 								<?php
 								$telefone_responsavel = $responsavel['telefone'] ?? '';
 								$telefone_digits = preg_replace('/\D/', '', $telefone_responsavel);
 								$nome_responsavel = $responsavel['nome'] ?? '';
 								$nivel_responsavel = $responsavel['nivel'] ?? '';
-?>
-								<option value="<?php echo (int) $responsavel['id'] >?>"
+								?>
+								<option value="<?php echo (int) $responsavel['id'] ?>"
 									data-nome="<?php echo htmlspecialchars($nome_responsavel, ENT_QUOTES) ?>"
 									data-telefone="<?php echo htmlspecialchars($telefone_responsavel, ENT_QUOTES) ?>"
-									data-phone="<?php echo htmlspecialchars($telefone_digits, ENT_QUOTES) ?>"<?php echo htmlspecialchars($nome_responsavel) ?> (<?php echo htmlspecialchars($nivel_responsavel) ?>)
+									data-phone="<?php echo htmlspecialchars($telefone_digits, ENT_QUOTES) ?>">
+									<?php echo htmlspecialchars($nome_responsavel) ?> (<?php echo htmlspecialchars($nivel_responsavel) ?>)
 								</option>
 							<?php endforeach; ?>
 						</select>
@@ -277,7 +275,7 @@ $(function(){
 
 					<div class="form-check">
 						<input type="checkbox" class="form-check-input" id="termos" name="termos" value="Sim" required>
-						<label class="form-check-label" for="exampleCheck1"><small>Aceitar <a href="../termos" target="_blank">Termos e CondiÃƒÂ§ÃƒÂµes</a> e <a href="../politica" target="_blank">PolitÃƒÂ­ca de Privacidade</a></small></label>
+						<label class="form-check-label" for="exampleCheck1"><small>Aceitar <a href="../termos" target="_blank">Termos e Condições</a> e <a href="../politica" target="_blank">Política de Privacidade</a></small></label>
 					</div>					
 				
 				<br><small><div align="center" id="mensagem-cadastro"></div></small>
@@ -298,6 +296,7 @@ $(function(){
 
 
 <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script type="text/javascript" src="js/cep-autocomplete.js"></script>
 
 
  <script type="text/javascript">
@@ -315,9 +314,11 @@ $(function(){
 				$('#mensagem-cadastro').removeClass();
 				$('#contato-professor').hide().html('');
 				if (mensagem.trim() == "Cadastrado com Sucesso") {
-					$('#mensagem-cadastro').addClass('text-success') ?? $('#mensagem-cadastro').text(mensagem)	
+					$('#mensagem-cadastro').addClass('text-success')
+					$('#mensagem-cadastro').text(mensagem)	
 					const nascimentoDigits = $('#nascimento_cadastro').val().replace(/\D/g, '');
-					$('#usuario').val($('#cpf_cadastro').val()) ?? $('#senha').val(nascimentoDigits)				
+					$('#usuario').val($('#cpf_cadastro').val())
+					$('#senha').val(nascimentoDigits)				
 
 					var contatoHtml = montarContatoProfessor();
 					if (contatoHtml) {
@@ -325,7 +326,8 @@ $(function(){
 					}
 				} else {
 
-					$('#mensagem-cadastro').addClass('text-danger') ?? $('#mensagem-cadastro').text(mensagem)
+					$('#mensagem-cadastro').addClass('text-danger')
+					$('#mensagem-cadastro').text(mensagem)
 				}
 
 
@@ -366,7 +368,7 @@ $(function(){
 			html += '<div><strong>' + nomeHtml + '</strong></div>';
 		}
 		if (phoneDigits) {
-			html += '<div><a target="_blank" href="https://api.whatsapp.com/send1=pt_BR&phone=55' + phoneDigits + '"><i class="fa fa-whatsapp"></i> ' + telefoneHtml + '</a></div>';
+			html += '<div><a target="_blank" href="https://api.whatsapp.com/send?1=pt_BR&phone=55' + phoneDigits + '"><i class="fa fa-whatsapp"></i> ' + telefoneHtml + '</a></div>';
 		} else if (telefoneHtml) {
 			html += '<div>' + telefoneHtml + '</div>';
 		}
@@ -399,3 +401,7 @@ $(function(){
 
 
  
+
+
+
+

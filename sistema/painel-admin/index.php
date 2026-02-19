@@ -2,11 +2,16 @@
 
 
 require_once('../conexao.php');
+if (!headers_sent()) {
+	header('Cache-Control: no-store, no-cache, must-revalidate, max-age=0');
+	header('Pragma: no-cache');
+	header('Expires: 0');
+}
 require_once('verificar.php');
 
 $csrf_token = csrf_token();
 
-$pagina = isset($_GET['pagina']) ?? $_GET['pagina'] ?: '';
+$pagina = isset($_GET['pagina']) ? $_GET['pagina'] : '';
 
 $data_atual = date('Y-m-d');
 $mes_atual = Date('m');
@@ -26,6 +31,46 @@ if (@$_GET['pagina'] != "") {
   }
 }
 
+if (!function_exists('normalizar_slug_pagina_admin')) {
+  function normalizar_slug_pagina_admin($valor)
+  {
+    $slug = trim((string) $valor);
+    if ($slug === '') {
+      return '';
+    }
+    $slug = strtolower($slug);
+    $slug = strtr($slug, [
+      'á' => 'a', 'à' => 'a', 'â' => 'a', 'ã' => 'a', 'ä' => 'a',
+      'é' => 'e', 'è' => 'e', 'ê' => 'e', 'ë' => 'e',
+      'í' => 'i', 'ì' => 'i', 'î' => 'i', 'ï' => 'i',
+      'ó' => 'o', 'ò' => 'o', 'ô' => 'o', 'õ' => 'o', 'ö' => 'o',
+      'ú' => 'u', 'ù' => 'u', 'û' => 'u', 'ü' => 'u',
+      'ç' => 'c',
+      'Á' => 'a', 'À' => 'a', 'Â' => 'a', 'Ã' => 'a', 'Ä' => 'a',
+      'É' => 'e', 'È' => 'e', 'Ê' => 'e', 'Ë' => 'e',
+      'Í' => 'i', 'Ì' => 'i', 'Î' => 'i', 'Ï' => 'i',
+      'Ó' => 'o', 'Ò' => 'o', 'Ô' => 'o', 'Õ' => 'o', 'Ö' => 'o',
+      'Ú' => 'u', 'Ù' => 'u', 'Û' => 'u', 'Ü' => 'u',
+      'Ç' => 'c',
+    ]);
+    $slug = preg_replace('/[^a-z0-9_]/', '', $slug);
+    return $slug;
+  }
+}
+
+$menuOriginal = (string) $menu;
+$menuSlug = normalizar_slug_pagina_admin($menuOriginal);
+$arquivoMenuOriginal = __DIR__ . '/paginas/' . $menuOriginal . '.php';
+$arquivoMenuSlug = __DIR__ . '/paginas/' . $menuSlug . '.php';
+
+if ($menuSlug !== '' && file_exists($arquivoMenuSlug)) {
+  $menu = $menuSlug;
+} elseif (!file_exists($arquivoMenuOriginal)) {
+  $menu = (@$_SESSION['nivel'] == 'Administrador' || @$_SESSION['nivel'] == 'Secretario' || @$_SESSION['nivel'] == 'Tesoureiro' || @$_SESSION['nivel'] == 'Assessor')
+    ? 'home'
+    : 'home_professor';
+}
+
 if (@$_SESSION['nivel'] == 'Administrador' or @$_SESSION['nivel'] == 'Secretario' or @$_SESSION['nivel'] == 'Tesoureiro') {
   $ocultar = '';
 } else {
@@ -38,7 +83,7 @@ if (@$_SESSION['nivel'] == 'Secretario') {
 }
 
 
-//RECUPERAR DADOS DO USU?RIO
+//RECUPERAR DADOS DO USUÁRIO
 $query = $pdo->query("SELECT * FROM usuarios where id = '$id_usuario'");
 $res = $query->fetchAll(PDO::FETCH_ASSOC);
 $nome_usuario = $res[0]['nome'];
@@ -47,6 +92,54 @@ $nivel_usuario = $res[0]['nivel'];
 $foto_usuario = $res[0]['foto'];
 $cpf_usuario = $res[0]['cpf'];
 
+$telefone_usuario = '';
+$nascimento_usuario = '';
+$id_pessoa_usuario = (int) ($res[0]['id_pessoa'] ?? 0);
+
+$tableMapPerfil = [
+  'Administrador' => 'administradores',
+  'Professor' => 'professores',
+  'Secretario' => 'secretarios',
+  'Tesoureiro' => 'tesoureiros',
+  'Tutor' => 'tutores',
+  'Parceiro' => 'parceiros',
+  'Assessor' => 'assessores',
+  'Vendedor' => 'vendedores',
+];
+
+if ($id_pessoa_usuario > 0 && isset($tableMapPerfil[$nivel_usuario])) {
+  $tabelaPerfil = $tableMapPerfil[$nivel_usuario];
+
+  try {
+    $stmtCols = $pdo->prepare("SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = :tabela AND COLUMN_NAME IN ('telefone', 'nascimento')");
+    $stmtCols->execute([':tabela' => $tabelaPerfil]);
+    $cols = $stmtCols->fetchAll(PDO::FETCH_COLUMN);
+
+    $campos = [];
+    if (in_array('telefone', $cols, true)) {
+      $campos[] = 'telefone';
+    }
+    if (in_array('nascimento', $cols, true)) {
+      $campos[] = 'nascimento';
+    }
+
+    if (!empty($campos)) {
+      $sqlPerfil = "SELECT " . implode(', ', $campos) . " FROM {$tabelaPerfil} WHERE id = :id LIMIT 1";
+      $stmtPerfil = $pdo->prepare($sqlPerfil);
+      $stmtPerfil->execute([':id' => $id_pessoa_usuario]);
+      $perfil = $stmtPerfil->fetch(PDO::FETCH_ASSOC);
+
+      if (is_array($perfil)) {
+        $telefone_usuario = trim((string) ($perfil['telefone'] ?? ''));
+        $nascimento_usuario = trim((string) ($perfil['nascimento'] ?? ''));
+      }
+    }
+  } catch (Exception $e) {
+    $telefone_usuario = '';
+    $nascimento_usuario = '';
+  }
+}
+
 
 
 if (@$_SESSION['nivel'] == 'Tutor' || @$_SESSION['nivel'] == 'Parceiro' || @$_SESSION['nivel'] == 'Professor' || @$_SESSION['nivel'] == 'Vendedor') {
@@ -54,45 +147,25 @@ if (@$_SESSION['nivel'] == 'Tutor' || @$_SESSION['nivel'] == 'Parceiro' || @$_SE
 } else {
   $classe_f = '';
 }
-
 $mostrarEntrarComoAluno = false;
-if ($nivel_usuario === 'Vendedor') {
+if ($nivel_usuario === 'Vendedor' && $id_pessoa_usuario > 0) {
   try {
     $stmtCol = $pdo->query("SHOW COLUMNS FROM vendedores LIKE 'pode_login_como_aluno'");
     $hasCol = (bool) ($stmtCol && $stmtCol->fetch(PDO::FETCH_ASSOC));
     if (!$hasCol) {
       $pdo->exec("ALTER TABLE vendedores ADD COLUMN pode_login_como_aluno TINYINT(1) NOT NULL DEFAULT 0");
     }
-    $idPessoaVendedor = (int) ($res[0]['id_pessoa'] ?? 0);
-    if ($idPessoaVendedor <= 0) {
-      $cpfDigits = preg_replace('/\D/', '', (string) ($res[0]['cpf'] ?? ''));
-      $emailVendedor = strtolower(trim((string) ($res[0]['usuario'] ?? '')));
-      if ($cpfDigits !== '') {
-        $stmtV = $pdo->prepare("SELECT id FROM vendedores WHERE REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(cpf, '.', ''), '-', ''), ' ', ''), '/', ''), '(', ''), ')', '') = :cpf LIMIT 1");
-        $stmtV->execute([':cpf' => $cpfDigits]);
-        $idPessoaVendedor = (int) ($stmtV->fetchColumn() : 0);
-      }
-      if ($idPessoaVendedor <= 0 && $emailVendedor !== '') {
-        $stmtV = $pdo->prepare("SELECT id FROM vendedores WHERE LOWER(email) = :email LIMIT 1");
-        $stmtV->execute([':email' => $emailVendedor]);
-        $idPessoaVendedor = (int) ($stmtV->fetchColumn() : 0);
-      }
-      if ($idPessoaVendedor > 0) {
-        $stmtAtualiza = $pdo->prepare("UPDATE usuarios SET id_pessoa = :id_pessoa WHERE id = :id LIMIT 1");
-        $stmtAtualiza->execute([':id_pessoa' => $idPessoaVendedor, ':id' => (int)$id_usuario]);
-      }
-    }
-    if ($idPessoaVendedor > 0) {
-      $stmtPerm = $pdo->prepare("SELECT pode_login_como_aluno FROM vendedores WHERE id = :id LIMIT 1");
-      $stmtPerm->execute([':id' => $idPessoaVendedor]);
-      $mostrarEntrarComoAluno = ((int) ($stmtPerm->fetchColumn() : 0) === 1);
-    }
+    $stmtPerm = $pdo->prepare("SELECT pode_login_como_aluno FROM vendedores WHERE id = :id LIMIT 1");
+    $stmtPerm->execute([':id' => $id_pessoa_usuario]);
+    $mostrarEntrarComoAluno = ((int) ($stmtPerm->fetchColumn() ?: 0) === 1);
   } catch (Exception $e) {
     $mostrarEntrarComoAluno = false;
   }
 }
 
 $mostrar_relatorios_responsavel = in_array($nivel_usuario, ['Vendedor', 'Tutor', 'Parceiro', 'Secretario', 'Tesoureiro'], true);
+$mostrar_relatorios_financeiros = in_array($nivel_usuario, ['Administrador', 'Secretario', 'Tesoureiro'], true);
+$mostrar_relatorios_financeiros_completo = in_array($nivel_usuario, ['Administrador', 'Secretario'], true);
 
 $stmt = $pdo->query("SELECT * FROM cores_sistema ORDER BY nome_classe");
 $cores = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -112,95 +185,6 @@ $texto_submenu = $coress['texto_submenu'];
 $bg_menu_hover = $coress['bg_menu_hover'];
 $_SESSION['last_activity'] = time();
 
-$env_values = [];
-$base_ecossistema = dirname(__DIR__, 3);
-$slug_env = '';
-$id_sessao_env = isset($_SESSION['sistema_id'])  (int) $_SESSION['sistema_id'] ?: 0;
-if ($id_sessao_env > 0) {
-  try {
-    $stmtSlugEnv = $pdo->prepare("SELECT slug FROM sistemas WHERE id = :id LIMIT 1");
-    $stmtSlugEnv->execute([':id' => $id_sessao_env]);
-    $slug_db = $stmtSlugEnv->fetchColumn();
-    if (!empty($slug_db)) {
-      $slug_env = (string) $slug_db;
-    }
-  } catch (Exception $e) {
-    $slug_env = '';
-  }
-}
-if ($slug_env === '' && $id_sessao_env > 0) {
-  $mapa_slug_env = [1 => 'virtual', 2 => 'provao', 3 => 'sestedcursos'];
-  $slug_env = $mapa_slug_env[$id_sessao_env] ?? '';
-}
-if ($slug_env === '' && isset($sistema_slug_atual) && $sistema_slug_atual !== '') {
-  $slug_env = $sistema_slug_atual;
-}
-if ($slug_env === '') {
-  $slug_env = basename(dirname(__DIR__, 3));
-}
-$slug_env = strtolower(trim((string)$slug_env));
-$slug_alias = ['capacitacoes' => 'sestedcursos', 'sestedcursos' => 'sestedcursos', 'provao' => 'provao', 'virtual' => 'virtual', 'sested-virtual' => 'virtual', 'sested_virtual' => 'virtual',
-];
-if (isset($slug_alias[$slug_env])) {
-  $slug_env = $slug_alias[$slug_env];
-}
-$env_path = $base_ecossistema . '/' . $slug_env . '/.env';
-if (!is_file($env_path)) {
-  $env_path = dirname(__DIR__, 2) . '/.env';
-}
-if (is_file($env_path)) {
-  $env_lines = file($env_path, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
-  foreach ($env_lines as $line) {
-    if (strpos(trim($line), '#') === 0) {
-      continue;
-    }
-    if (strpos($line, '=') !== false) {
-      list($key, $value) = explode('=', $line, 2);
-      $env_values[trim($key)] = trim($value);
-    }
-  }
-}
-$efi_sandbox_env = $env_values['EFI_SANDBOX'] ?? 'false';
-$efi_client_id_prod_env = $env_values['EFI_CLIENT_ID_PROD'] ?? '';
-$efi_client_secret_prod_env = $env_values['EFI_CLIENT_SECRET_PROD'] ?? '';
-$efi_cert_path_prod_env = $env_values['EFI_CERT_PATH_PROD'] ?? '';
-$efi_cert_name_prod_env = $env_values['EFI_CERT_NAME_PROD'] ?? '';
-$efi_cert_name_homolog_env = $env_values['EFI_CERT_NAME_HOMOLOG'] ?? '';
-$efi_client_id_homolog_env = $env_values['EFI_CLIENT_ID_HOMOLOG'] ?? '';
-$efi_client_secret_homolog_env = $env_values['EFI_CLIENT_SECRET_HOMOLOG'] ?? '';
-$efi_cert_path_homolog_env = $env_values['EFI_CERT_PATH_HOMOLOG'] ?? '';
-$efi_webhook_base_env = $env_values['EFI_WEBHOOK_BASE_URL'] ?? '';
-$efi_webhook_url_prod_env = '';
-$efi_webhook_path_prod_env = '';
-$efi_webhook_url_homolog_env = '';
-$efi_webhook_path_homolog_env = '';
-try {
-  $qEfy = $pdo->query("SELECT nome, webhook_url, webhook_path FROM gateways WHERE UPPER(nome) IN ('EFY', 'EFI', 'EFY_PRODUCAO', 'EFI_PRODUCAO', 'EFY_HOMOLOG', 'EFI_HOMOLOG') ORDER BY id ASC");
-  $rowsEfy = $qEfy->fetchAll(PDO::FETCH_ASSOC);
-  foreach ($rowsEfy as $rowEfy) {
-    $nomeEfy = strtoupper((string)($rowEfy['nome'] ?? ''));
-    if (strpos($nomeEfy, 'HOMOLOG') !== false) {
-      $efi_webhook_url_homolog_env = (string)($rowEfy['webhook_url'] ?? '');
-      $efi_webhook_path_homolog_env = (string)($rowEfy['webhook_path'] ?? '');
-      continue;
-    }
-    if (strpos($nomeEfy, 'PRODUCAO') !== false) {
-      $efi_webhook_url_prod_env = (string)($rowEfy['webhook_url'] ?? '');
-      $efi_webhook_path_prod_env = (string)($rowEfy['webhook_path'] ?? '');
-      continue;
-    }
-    if ($efi_webhook_url_prod_env === '' && $efi_webhook_path_prod_env === '') {
-      $efi_webhook_url_prod_env = (string)($rowEfy['webhook_url'] ?? '');
-      $efi_webhook_path_prod_env = (string)($rowEfy['webhook_path'] ?? '');
-    } else {
-      $efi_webhook_url_homolog_env = (string)($rowEfy['webhook_url'] ?? '');
-      $efi_webhook_path_homolog_env = (string)($rowEfy['webhook_path'] ?? '');
-    }
-  }
-} catch (Exception $e) {
-  // Mantem tela funcional sem bloquear configuracoes.
-}
-
 
 ?>
 <!DOCTYPE HTML>
@@ -212,7 +196,7 @@ try {
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-  <meta name="csrf-token" content="<?php echo htmlspecialchars($csrf_token, ENT_QUOTES, 'UTF-8'); >?>"
+  <meta name="csrf-token" content="<?php echo htmlspecialchars($csrf_token, ENT_QUOTES, 'UTF-8'); ?>">
 
 
   <script
@@ -301,7 +285,7 @@ try {
   <script src="js/modernizr.custom.js"></script>
 
   <!--webfonts-->
-  <link href="//fonts.googleapis.com/cssfamily=PT+Sans:400,400i,700,700i&amp;subset=cyrillic,cyrillic-ext,latin-ext"
+  <link href="//fonts.googleapis.com/css?family=PT+Sans:400,400i,700,700i&amp;subset=cyrillic,cyrillic-ext,latin-ext"
     rel="stylesheet">
   <!--//webfonts-->
 
@@ -386,13 +370,13 @@ try {
 
     .treeview li {
       background-color:
-        <= $bg_menu >
+        <?= $bg_menu ?>
         !important;
     }
 
     .treeview li a {
       color:
-        <= $texto_submenu >
+        <?= $texto_submenu ?>
         !important;
     }
   </style>
@@ -468,7 +452,7 @@ try {
       <!--left-fixed -navigation-->
       <aside class="sidebar-left">
         <nav class="navbar navbar-inverse"
-          style="overflow: scroll; height:100%; scrollbar-width: thin; background-color: <?php echo $bg_menu >;"?>
+          style="overflow: scroll; height:100%; scrollbar-width: thin; background-color: <?php echo $bg_menu ?>;">
           <div class="navbar-header">
             <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target=".collapse"
               aria-expanded="false">
@@ -484,7 +468,7 @@ try {
           <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
             <ul class="sidebar-menu">
 
-              <li class="treeview li-menu <= empty($pagina) ? 'active' : '' >">
+              <li class="treeview li-menu <?= empty($pagina) ? 'active' : '' ?>">
                 <a href="index.php">
                   <i class="fa fa-home"></i> <span class="text-menu">Home</span>
                 </a>
@@ -492,17 +476,17 @@ try {
 
 
               <li
-                class="treeview li-menu <?php echo $ocultar ?> <= in_array($pagina, ['matriculas', 'matriculas_aprovadas']) ? 'active' : '' >"
+                class="treeview li-menu <?php echo $ocultar ?> <?= in_array($pagina, ['Matrículas_aprovadas']) ? 'active' : '' ?>">
                 <a href="#">
                   <i class="fa fa-envelope-o"></i>
-                  <span class="text-menu">MatrÃƒÂ­culas</span>
+                  <span class="text-menu">Matrícula</span>
                   <i class="fa fa-angle-left pull-right"></i>
                 </a>
                 <ul class="treeview-menu ">
-                  <li><a href="index.php?pagina=matriculas"><i class="fa fa-angle-right"></i>
-                      Matriculas Pendentes</a></li>
+                  <li><a href="index.php?pagina=Matrículas"><i class="fa fa-angle-right"></i>
+                      Matrículas Pendentes</a></li>
 
-                  <li><a href="index.php?pagina=matriculas_aprovadas"><i class="fa fa-angle-right"></i> Matriculas
+                  <li><a href="index.php?pagina=Matrículas_aprovadas"><i class="fa fa-angle-right"></i> Matrículas
                       Aprovadas</a></li>
 
 
@@ -511,7 +495,7 @@ try {
               </li>
 
               <li
-                class="treeview li-menu <= in_array($pagina, ['alunos', 'administradores', 'assessores', 'secretarios', 'parceiros', 'professores', 'vendedores', 'tutores', 'tesoureiros', 'usuarios']) ? 'active' : '' >">
+                class="treeview li-menu <?= in_array($pagina, ['alunos', 'administradores', 'assessores', 'secretarios', 'parceiros', 'professores', 'vendedores', 'tutores', 'tesoureiros', 'usuarios']) ? 'active' : '' ?>">
                 <a href="#">
                   <i class="fa fa-users"></i>
                   <span class="text-menu">Pessoas</span>
@@ -521,55 +505,55 @@ try {
                   <li><a href="index.php?pagina=alunos"><i class="fa fa-angle-right "></i> Alunos</a>
                   </li>
 
-                  <?php if ($nivel_usuario == 'Tutor') { ?>
+                  <?php if ($nivel_usuario == 'Tutor' || $nivel_usuario == 'Secretario') { ?>
                     <li><a href="index.php?pagina=atendimentos_alunos"><i class="fa fa-angle-right "></i>Outros Alunos</a>
                     </li>
                   <?php } ?>
                   <?php if ($nivel_usuario == 'Secretario' || $nivel_usuario == 'Tesoureiro') { ?>
-                    <li><a href="index.php?pagina=atendimentos_novo"><i class="fa fa-angle-right "></i>Meus Alunos</a>
+                    <li><a href="index.php?pagina=atendimentos_novo"><i class="fa fa-angle-right "></i>Mês</a>
                     </li>
                   <?php } ?>
 
-                  <!--<?php if ($nivel_usuario == 'Tutor') { >--?>
+                  <!--<?php if ($nivel_usuario == 'Tutor') { ?>-->
                     <!--  <li><a href="index.php?pagina=atendimentos_alunos"><i class="fa fa-angle-right "></i>Outros Alunos</a>-->
                     <!--  </li>-->
-                    <!--<?php } >--?>
+                    <!--<?php } ?>-->
 
-                  <li class="<?php echo $ocultar2 ><?php echo $classe_f ?>"<a
+                  <li class=" <?php echo $ocultar2 ?><?php echo $classe_f ?>"><a
                       href="index.php?pagina=administradores"><i class="fa fa-angle-right"></i>
                       Administradores</a></li>
-                  <li class="<?php echo $classe_f >?>"<a href="index.php?pagina=assessores"><i
+                  <li class=" <?php echo $classe_f ?>"><a href="index.php?pagina=assessores"><i
                         class="fa fa-angle-right"></i>Assessores</a></li>
 
-                  <li class="<?php echo $ocultar2 ><?php echo $classe_f ?>"<a href=?>"index.php?pagina=secretarios"><i
+                  <li class=" <?php echo $ocultar2 ?><?php echo $classe_f ?>"><a href="index.php?pagina=secretarios"><i
                         class="fa fa-angle-right"></i>
                       Secretarios</a></li>
 
-                  <li class="<?php echo $classe_f >?>"<a href="index.php?pagina=parceiros"><i
+                  <li class=" <?php echo $classe_f ?>"><a href="index.php?pagina=parceiros"><i
                         class="fa fa-angle-right"></i>Parceiros</a></li>
 
-                  <li class="<?php echo $classe_f >?>"<a href="index.php?pagina=professores"><i
+                  <li class=" <?php echo $classe_f ?>"><a href="index.php?pagina=professores"><i
                         class="fa fa-angle-right "></i>Professores</a></li>
 
-                  <li class="<?php echo $classe_f >?>"<a href="index.php?pagina=vendedores"><i
+                  <li class=" <?php echo $classe_f ?>"><a href="index.php?pagina=vendedores"><i
                         class="fa fa-angle-right "></i>Vendedores</a></li>
 
-                  <li class="<?php echo $classe_f >?>"<a href="index.php?pagina=tutores"><i
+                  <li class=" <?php echo $classe_f ?>"><a href="index.php?pagina=tutores"><i
                         class="fa fa-angle-right"></i>Tutores</a></li>
 
-                  <li class="<?php echo $ocultar2 ><?php echo $classe_f ?>"<a href=?>"index.php?pagina=tesoureiros"><i
+                  <li class=" <?php echo $ocultar2 ?><?php echo $classe_f ?>"><a href="index.php?pagina=tesoureiros"><i
                         class="fa fa-angle-right"></i>
                       Tesoureiros</a></li>
 
-                  <li class="<?php echo $ocultar2 ><?php echo $classe_f ?>"<a href=?>"index.php?pagina=usuarios"><i
+                  <li class=" <?php echo $ocultar2 ?><?php echo $classe_f ?>"><a href="index.php?pagina=usuarios"><i
                         class="fa fa-angle-right"></i>
-                      Usu?rios</a></li>
+                      Usuários</a></li>
                 </ul>
               </li>
 
 
               <li
-                class="treeview li-menu <?php echo $ocultar2 ?><?php echo $classe_f ?> <= in_array($pagina, ['cursos', 'categorias', 'grupos', 'linguagens', 'pacotes']) ? 'active' : '' >"
+                class="treeview li-menu <?php echo $ocultar2 ?><?php echo $classe_f ?> <?= in_array($pagina, ['cursos', 'categorias', 'grupos', 'linguagens', 'pacotes']) ? 'active' : '' ?>">
                 <a href="#">
                   <i class="fa fa-book"></i>
                   <span class="text-menu">Cursos / Pacotes</span>
@@ -579,11 +563,11 @@ try {
                   <li><a href="index.php?pagina=cursos"><i class="fa fa-angle-right"></i> Cursos</a>
                   </li>
 
-                  <li class="<?php echo $ocultar >?>"<a href="index.php?pagina=categorias"><i
+                  <li class="<?php echo $ocultar ?>"><a href="index.php?pagina=categorias"><i
                         class="fa fa-angle-right"></i> Categorias</a></li>
-                  <li class="<?php echo $ocultar >?>"<a href="index.php?pagina=grupos"><i class="fa fa-angle-right"></i>
+                  <li class="<?php echo $ocultar ?>"><a href="index.php?pagina=grupos"><i class="fa fa-angle-right"></i>
                       Grupos</a></li>
-                  <li class="<?php echo $ocultar >?>"<a href="index.php?pagina=linguagens"><i
+                  <li class="<?php echo $ocultar ?>"><a href="index.php?pagina=linguagens"><i
                         class="fa fa-angle-right"></i> Linguagens</a></li>
                   <li><a href="index.php?pagina=pacotes"><i class="fa fa-angle-right"></i> Pacotes</a>
                   </li>
@@ -593,14 +577,14 @@ try {
                 </ul>
               </li>
 
-              <li class="treeview <?php echo $ocultar >"
+              <li class="treeview <?php echo $ocultar ?>">
                 <a href="index.php?pagina=cupons">
                   <i class="fa fa-money"></i> <span class="text-menu">Cupom de Desconto</span>
                 </a>
               </li>
 
 
-              <li class="treeview li-menu <?php echo $ocultar > <?php echo $ocultar2 ?>"
+              <li class="treeview li-menu <?php echo $ocultar ?> <?php echo $ocultar2 ?>">
                 <a href="#">
                   <i class="fa fa-cog"></i>
                   <span class="text-menu">Recursos / Ferramentas</span>
@@ -630,7 +614,7 @@ try {
 
 
 
-              <li class="treeview li-menu <?php echo $ocultar > <?php echo $ocultar2 ?>"
+              <li class="treeview li-menu <?php echo $ocultar ?> <?php echo $ocultar2 ?>">
                 <a href="#">
                   <i class="fa fa-usd"></i>
                   <span class="text-menu">Financeiro</span>
@@ -640,25 +624,20 @@ try {
                   <li><a href="index.php?pagina=vendas"><i class="fa fa-angle-right"></i> Vendas</a>
                   </li>
 
-                  <li><a href="index.php?pagina=pagar"><i class="fa fa-angle-right"></i> Contas a
-                      Pagar</a></li>
+                  <li><a href="index.php?pagina=pagar"><i class="fa fa-angle-right"></i> Contas à Pagar</a></li>
 
-                  <li><a href="index.php?pagina=receber"><i class="fa fa-angle-right"></i> Contas a
-                      Receber</a></li>
+                  <li><a href="index.php?pagina=receber"><i class="fa fa-angle-right"></i> Contas à Receber</a></li>
 
-                  <li><a href="index.php?pagina=movimentacoes"><i class="fa fa-angle-right"></i>
-                      MovimentaÃƒÂ§ÃƒÂµes</a></li>
-
-
+                  <li><a href="index.php?pagina=Movimentações"><i class="fa fa-angle-right"></i>
+                      Movimentações</a></li>
                   <li><a href="index.php?pagina=asaas_comissoes"><i class="fa fa-angle-right"></i>
-                      ComissÃƒÂµes</a></li>
-
-                </ul>
+                      Comissões Fixas</a></li>
+</ul>
               </li>
 
 
                             <?php if ($mostrar_relatorios_responsavel) { ?>
-                <li class="treeview li-menu <= in_array($pagina, ['relatorio_alunos_responsavel', 'relatorio_financeiro_aluno']) ? 'active' : '' >">
+                <li class="treeview li-menu <?= in_array($pagina, ['relatorio_alunos_responsavel', 'relatorio_financeiro_aluno']) ? 'active' : '' ?>">
                   <a href="#">
                     <i class="fa fa-file-text-o"></i>
                     <span class="text-menu">Relatorios</span>
@@ -673,46 +652,50 @@ try {
                 </li>
               <?php } ?>
 
-<li class="treeview li-menu <?php echo $ocultar > <?php echo $ocultar2 ?>"
-                <a href="#">
-                  <i class="fa fa-file-pdf-o"></i>
-                  <span class="text-menu">RelatÃƒÂ³rios Financeiros</span>
-                  <i class="fa fa-angle-left pull-right"></i>
-                </a>
-                <ul class="treeview-menu">
-                  <li><a href="#" data-toggle="modal" data-target="#RelVen"><i class="fa fa-angle-right"></i> Vendas</a>
-                  </li>
+              <?php if ($mostrar_relatorios_financeiros) { ?>
+                <li class="treeview li-menu <?php echo $ocultar ?>">
+                  <a href="#">
+                    <i class="fa fa-file-pdf-o"></i>
+                    <span class="text-menu">Relatórios Financeiros</span>
+                    <i class="fa fa-angle-left pull-right"></i>
+                  </a>
+                  <ul class="treeview-menu">
+                    <?php if ($mostrar_relatorios_financeiros_completo) { ?>
+                      <li><a href="#" data-toggle="modal" data-target="#RelVen"><i class="fa fa-angle-right"></i> Vendas</a>
+                      </li>
 
-                  <li><a href="#" data-toggle="modal" data-target="#RelCon"><i class="fa fa-angle-right"></i> Contas</a>
-                  </li>
+                      <li><a href="#" data-toggle="modal" data-target="#RelCon"><i class="fa fa-angle-right"></i> Contas</a>
+                      </li>
 
-                  <li><a href="#" data-toggle="modal" data-target="#RelLucro"><i class="fa fa-angle-right"></i>
-                      Detalhamento de Lucro</a></li>
+                      <li><a href="#" data-toggle="modal" data-target="#RelLucro"><i class="fa fa-angle-right"></i>
+                          Detalhamento de Lucro</a></li>
 
-                  <li><a href="index.php?pagina=relatorio_comissoes"><i class="fa fa-angle-right"></i> Comissoes</a></li>
-                      
-                  <li><a href="index.php?pagina=relatorio_alunos"><i class="fa fa-angle-right"></i>
-                  RelatÃƒÂ³rios de Alunos</a></li>
-                  
-                  <li><a href="index.php?pagina=relatorio_alunos_responsavel"><i class="fa fa-angle-right"></i>
-                  Relatorio de Alunos por Responsavel</a></li>
+                      <li><a href="index.php?pagina=relatorio_comissoes"><i class="fa fa-angle-right"></i> Comissões</a></li>
+                    <?php } ?>
 
-                   <li><a href="index.php?pagina=relatorio_alunos_efi"><i class="fa fa-angle-right"></i>
-                RelatÃƒÂ³rio de Alunos EFI</a></li>
+                    <li><a href="index.php?pagina=relatorio_alunos"><i class="fa fa-angle-right"></i>
+                        Relatórios de Alunos</a></li>
+
+                    <li><a href="index.php?pagina=relatorio_alunos_responsavel"><i class="fa fa-angle-right"></i>
+                        Relatório de Alunos por Responsavel</a></li>
+
+                    <?php if ($mostrar_relatorios_financeiros_completo) { ?>
+                      <li><a href="index.php?pagina=relatorio_alunos_efi"><i class="fa fa-angle-right"></i>
+                          Relatórios de Alunos EFI</a></li>
+                    <?php } ?>
+                  </ul>
+                </li>
+              <?php } ?>
 
 
-                </ul>
-              </li>
 
-
-
-              <li class="treeview li-menu <?php echo $ocultar2 > <?php echo $classe_f ?>"
+              <li class="treeview li-menu <?php echo $ocultar2 ?> <?php echo $classe_f ?>">
                 <a href="index.php?pagina=perguntas">
                   <i class="fa fa-question"></i> <span class="text-menu">Perguntas Pendentes</span>
                 </a>
               </li>
               
-               <li class="treeview li-menu <?php echo $classe_f >"
+               <li class="treeview li-menu <?php echo $classe_f ?>">
 
                 <a href="index.php?pagina=certificados">
 
@@ -723,8 +706,8 @@ try {
               </li>
 
 
-              <?php if ($nivel_usuario == 'Vendedor' || $nivel_usuario == 'Tutor' || $nivel_usuario == 'Parceiro') { ?>
-                <li class="treeview <= $pagina === 'simulado' ? 'active' : '' >">
+              <?php if ($nivel_usuario == 'Vendedor' || $nivel_usuario == 'Tutor' || $nivel_usuario == 'Parceiro' || $nivel_usuario == 'Secretario') { ?>
+                <li class="treeview <?= $pagina === 'simulado' ? 'active' : '' ?>">
                   <a href="index.php?pagina=simulado">
                     <i class="fa fa-calculator"></i> <span class="text-menu">Simulado</span>
                   </a>
@@ -734,19 +717,19 @@ try {
               <?php if ($nivel_usuario == 'Professor' || $nivel_usuario == 'Tutor' || $nivel_usuario == 'Parceiro' || $nivel_usuario == 'Assessor' || $nivel_usuario == 'Vendedor') { ?>
                 <li class="treeview">
                   <a href="index.php?pagina=minhas_comissoes">
-                    <i class="fa fa-usd"></i> <span class="text-menu">Minhas ComissÃƒÂµes</span>
+                    <i class="fa fa-usd"></i> <span class="text-menu">Mês</span>
                   </a>
                 </li>
               <?php } ?>
 
 
-              <li class="treeview li-menu <?php echo $ocultar > <?php echo $ocultar2 ?>"
+              <li class="treeview li-menu <?php echo $ocultar ?> <?php echo $ocultar2 ?>">
                 <a href="backup/backup.php" target="_blank">
                   <i class="fa fa-database"></i> <span class="text-menu">Backup</span>
                 </a>
               </li>
 
-              <li class="treeview li-menu <?php echo $ocultar > <?php echo $ocultar2 ?>"
+              <li class="treeview li-menu <?php echo $ocultar ?> <?php echo $ocultar2 ?>">
                 <a href="index.php?pagina=gateway">
                   <i class="fa fa-money"></i> <span class="text-menu">Gateway</span>
                 </a>
@@ -771,9 +754,11 @@ try {
     <!-- header-starts -->
     <div class="sticky-header header-section">
 
-      <div class="header-left"<?php
+      <div class="header-left">
+
+        <?php
         $total_respondidas = 0;
-        //listar notificaÃƒÂ§ÃƒÂµes das perguntas que os cursos pertencem ao professor
+        //listar notificações das perguntas que os cursos pertencem ao professor
         $query = $pdo->query("SELECT * FROM perguntas where respondida != 'Sim'");
         $res = $query->fetchAll(PDO::FETCH_ASSOC);
         for ($i = 0; $i < @count($res); $i++) {
@@ -802,7 +787,7 @@ try {
 
 
 
-?>
+        ?>
 
         <div class="openCloseMenu" id="newToggleMenu">
 
@@ -813,7 +798,7 @@ try {
               <li class="dropdown head-dpdn">
                 <a title="Perguntas Pendentes" href="index.php?pagina=perguntas" class="dropdown-toggle"><i
                     class="fa fa-bell"></i><span
-                    class="badge <?php echo $classe_badge ?>"<?php echo $total_respondidas ?></span></a>
+                    class="badge <?php echo $classe_badge ?>"><?php echo $total_respondidas ?></span></a>
 
               </li>
 
@@ -836,7 +821,7 @@ try {
 
               <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
                 <div class="profile_img">
-                  <span class="prfil-img"><img src="img/perfil/<?php echo $foto_usuario >" alt="" width="50px"
+                  <span class="prfil-img"><img src="img/perfil/<?php echo $foto_usuario ?>" alt="" width="50px"
                       height="50px"> </span>
                   <div class="user-name">
                     <p><?php echo $nome_usuario ?></p>
@@ -855,22 +840,23 @@ try {
                     Editar Perfil
                   </a>
                 </li>
-
-                <?php if ($mostrarEntrarComoAluno)  : ?>
-                <li>
-                  <form method="POST" action="entrar-como-aluno.php" style="margin:0;">
-                    <button type="submit" class="btn btn-link" style="display:block;width:100%;text-align:left;padding:8px 20px;">
-                      <i class="fa fa-exchange"></i> Entrar como aluno
-                    </button>
-                  </form>
-                </li>
+                <?php if ($mostrarEntrarComoAluno): ?>
+                  <li>
+                    <form action="entrar-como-aluno.php" method="POST" style="margin:0;">
+                      <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars($csrf_token, ENT_QUOTES, 'UTF-8'); ?>">
+                      <input type="hidden" name="vendedor_usuario_id" value="<?php echo (int) $id_usuario; ?>">
+                      <button type="submit" style="border:0;background:transparent;width:100%;text-align:left;padding:6px 20px;color:#333;">
+                        <i class="fa fa-graduation-cap"></i> Entrar como Aluno
+                      </button>
+                    </form>
+                  </li>
                 <?php endif; ?>
 
 
 
-                <li class="treeview li-menu <?php echo $ocultar2 > <?php echo $classe_f ?>"
+                <li class="treeview li-menu <?php echo $ocultar2 ?> <?php echo $classe_f ?>">
                   <a href="" data-toggle="modal" data-target="#modalConfig">
-                    <i class="fa fa-cog"></i> ConfiguraÃƒÂ§ÃƒÂµes</a>
+                    <i class="fa fa-cog"></i> Configurações</a>
                 </li>
 
                 <li> <a href="../logout.php"><i class="fa fa-sign-out"></i> Logout</a> </li>
@@ -890,9 +876,10 @@ try {
 
     <!-- main content start-->
     <div id="page-wrapper">
-      <div class="main-page"<?php
+      <div class="main-page">
+        <?php
         require_once('paginas/' . $menu . '.php');
-?>
+        ?>
 
       </div>
     </div>
@@ -982,31 +969,41 @@ try {
           <div class="row">
             <div class="col-md-6">
               <div class="form-group">
-                <label>Nome Completo</label>
-                <input type="text" class="form-control" name="nome_usu" value="<?php echo $nome_usuario >?>" required?>
+                <label>Não</label>
+                <input type="text" class="form-control" name="nome_usu" value="<?php echo $nome_usuario ?>" required>
               </div>
             </div>
             <div class="col-md-6">
               <div class="form-group">
                 <label>CPF</label>
-                <input type="text" class="form-control" id="cpf_usu" name="cpf_usu" value="<?php echo $cpf_usuario >?>"
-                  required>
+                <input type="text" class="form-control" id="cpf_usu" name="cpf_usu" value="<?php echo $cpf_usuario ?>" required>
               </div>
             </div>
-
           </div>
-
 
           <div class="row">
             <div class="col-md-6">
               <div class="form-group">
                 <label>Email</label>
-                <input type="email" class="form-control" name="email_usu" value="<?php echo $email_usuario >?>" required?>
+                <input type="email" class="form-control" name="email_usu" value="<?php echo $email_usuario ?>" required>
               </div>
             </div>
-
+            <div class="col-md-6">
+              <div class="form-group">
+                <label>Telefone</label>
+                <input type="text" class="form-control" id="telefone_usu" name="telefone_usu" value="<?php echo $telefone_usuario ?>" placeholder="(00) 00000-0000">
+              </div>
+            </div>
           </div>
 
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+                <label>Data de Nascimento</label>
+                <input type="text" class="form-control" id="nascimento_usu" name="nascimento_usu" value="<?php echo $nascimento_usuario ?>" placeholder="DD/MM/AAAA">
+              </div>
+            </div>
+          </div>
 
           <div class="row">
             <div class="col-md-8">
@@ -1017,14 +1014,13 @@ try {
             </div>
             <div class="col-md-4">
               <div id="divImg">
-                <img src="img/perfil/<?php echo $foto_usuario >" width="100px" id="target-usu"?>
+                <img src="img/perfil/<?php echo $foto_usuario ?>" width="100px" id="target-usu">
               </div>
             </div>
-
           </div>
 
-          <input type="hidden" name="id_usu" value="<?php echo $id_usuario >?>"
-          <input type="hidden" name="foto_usu" value="<?php echo $foto_usuario >?>"
+          <input type="hidden" name="id_usu" value="<?php echo $id_usuario ?>">
+          <input type="hidden" name="foto_usu" value="<?php echo $foto_usuario ?>">
 
           <small>
             <div id="mensagem-usu" align="center" class="mt-3"></div>
@@ -1040,94 +1036,8 @@ try {
     </div>
   </div>
 </div>
-
-
-<!-- Modal -->
-<div class="modal fade" id="modalLayouts" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-  aria-hidden="true">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h4 class="modal-title" id="exampleModalLabel">Editar Cores do Sistema</h4>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="margin-top: -20px">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <form method="post" id="form-usu">
-        <div class="modal-body">
-
-          <div class="row">
-            <div class="col-md-6">
-              <div class="form-group">
-                <label>Nome Completo</label>
-                <input type="text" class="form-control" name="nome_usu" value="<?php echo $nome_usuario >?>" required?>
-              </div>
-            </div>
-            <div class="col-md-6">
-              <div class="form-group">
-                <label>CPF</label>
-                <input type="text" class="form-control" id="cpf_usu" name="cpf_usu" value="<?php echo $cpf_usuario >?>"
-                  required>
-              </div>
-            </div>
-
-          </div>
-
-
-          <div class="row">
-            <div class="col-md-6">
-              <div class="form-group">
-                <label>Email</label>
-                <input type="email" class="form-control" name="email_usu" value="<?php echo $email_usuario >?>" required?>
-              </div>
-            </div>
-            <div class="col-md-6">
-              <div class="form-group">
-                  required>
-              </div>
-            </div>
-
-          </div>
-
-
-          <div class="row">
-            <div class="col-md-8">
-              <div class="form-group">
-                <label>Foto do usuario</label>
-                <input class="form-control" type="file" name="foto" onChange="carregarImgPerfil();" id="foto-usu">
-              </div>
-            </div>
-            <div class="col-md-4">
-              <div id="divImg">
-                <img src="img/perfil/<?php echo $foto_usuario >" width="100px" id="target-usu"?>
-              </div>
-            </div>
-
-          </div>
-
-          <input type="hidden" name="id_usu" value="<?php echo $id_usuario >?>"
-          <input type="hidden" name="foto_usu" value="<?php echo $foto_usuario >?>"
-
-          <small>
-            <div id="mensagem-usu" align="center" class="mt-3"></div>
-          </small>
-
-        </div>
-
-        <div class="modal-footer">
-          <button type="submit" class="btn btn-primary">Editar Dados</button>
-        </div>
-      </form>
-
-    </div>
-  </div>
-</div>
-
-
-
-
-<!-- <div class="modal fade" id="modalLayout" tabindex="-1" role="dialog" aria-labelledby="modalCoresLabel"
-  aria-hidden="true">
+<!-- Modal Cores -->
+<div class="modal fade" id="modalLayout" tabindex="-1" role="dialog" aria-labelledby="modalCoresLabel" aria-hidden="true" style="z-index: 9999;">
   <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
       <div class="modal-header">
@@ -1139,98 +1049,63 @@ try {
 
       <form method="post" id="form-cores">
         <div class="modal-body">
-          <div class="row">
-            <div class="col-md-6">
-              <div class="form-group">
-                <label for="nome_classe">Nome da Classe</label>
-                <input type="text" class="form-control" name="nome_classe" id="nome_classe"
-                  placeholder="Ex: primary-color, btn-success" required>
-              </div>
-            </div>
+          <button type="button" class="btn btn-sm btn-primary mb-3" id="add-cor">Adicionar cor</button>
 
-            <div class="col-md-6">
-              <div class="form-group">
-                <label for="codigo_cor">C?digo da Cor</label>
-                <div class="color-input-group">
-                  <input type="text" class="form-control" name="codigo_cor" id="codigo_cor" placeholder="#FF5733"
-                    required>
-                  <input type="color" class="color-picker" id="color-picker" onchange="updateColorInput()">
-                </div>
-              </div>
-            </div>
-          </div>
-
-       
-          <input type="hidden" name="id_cor" id="id_cor">
-          <input type="hidden" name="acao" value="salvar_cor">
-
-          <small>
-            <div id="mensagem-cores" align="center" class="mt-3"></div>
-          </small>
-        </div>
-
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-          <button type="submit" class="btn btn-primary">Salvar</button>
-        </div>
-      </form>
-    </div>
-  </div>
-</div> -->
-
-
-
-<!-- Modal -->
-<div class="modal fade" id="modalLayout" tabindex="-1" role="dialog" aria-labelledby="modalCoresLabel"
-  aria-hidden="true" style="z-index: 9999;">
-  <div class="modal-dialog modal-lg" role="document">
-    <div class="modal-content">
-
-      <div class="modal-header">
-        <h4 class="modal-title" id="modalCoresLabel">Editar Cores do Sistema</h4>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-
-      <form method="post" id="form-cores">
-        <div class="modal-body">
           <div id="cores-container">
-            <div id="campos-cores"<?php foreach ($cores as $index => $cor)  : ?>
-                <div class="row mb-3 cor-item">
-                  <div class="col-md-6">
-                    <div class="form-group">
-                      <label><= htmlspecialchars($cor['nome_item']) ></label>
-                      <input type="text" class="form-control" name="nome_classe[]"
-                        value="<= htmlspecialchars($cor['nome_classe']) >" required>
-                    </div>
+            <?php foreach ($cores as $cor): ?>
+              <div class="row mb-3 cor-item">
+                <div class="col-md-5">
+                  <div class="form-group">
+                    <label><?= htmlspecialchars($cor['nome_item'] ?? $cor['nome_classe']) ?></label>
+                    <input type="text" class="form-control" name="nome_classe[]" value="<?= htmlspecialchars($cor['nome_classe']) ?>" required>
                   </div>
-
-                  <div class="col-md-6">
-                    <div class="form-group">
-                      <label>CÃƒÂ³digo da Cor</label>
-                      <div class="color-input-group d-flex align-items-center gap-2">
-                        <input type="text" class="form-control" name="valor_cor[]"
-                          value="<= htmlspecialchars($cor['valor_cor']) >" required>
-                        <input type="color" class="color-picker" value="<= htmlspecialchars($cor['valor_cor']) >"
-                          onchange="this.previousElementSibling.value = this.value">
-                      </div>
-                    </div>
-                  </div>
-                  <input type="hidden" name="id_cor[]" value="<= $cor['id'] >">
-                  <input type="hidden" name="id_cor[]" value="">
-
-                  <!-- <div class="col-md-2 d-flex align-items-end">
-                    <button type="button" class="btn btn-danger btn-sm remove-cor">Remover</button>
-                  </div> -->
                 </div>
-              <?php endforeach; ?>
-            </div>
+
+                <div class="col-md-5">
+                  <div class="form-group">
+                    <label>Código da Cor</label>
+                    <div class="color-input-group d-flex align-items-center" style="gap: 8px;">
+                      <input type="text" class="form-control" name="valor_cor[]" value="<?= htmlspecialchars($cor['valor_cor']) ?>" required>
+                      <input type="color" class="color-picker" value="<?= htmlspecialchars($cor['valor_cor']) ?>" onchange="this.previousElementSibling.value = this.value">
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-md-2 d-flex align-items-end">
+                  <button type="button" class="btn btn-danger btn-sm remove-cor">Remover</button>
+                </div>
+
+                <input type="hidden" name="id_cor[]" value="<?= (int) $cor['id'] ?>">
+              </div>
+            <?php endforeach; ?>
           </div>
 
+          <div id="cor-template" style="display:none;">
+            <div class="row mb-3 cor-item">
+              <div class="col-md-5">
+                <div class="form-group">
+                  <label>Nome da Classe</label>
+                  <input type="text" class="form-control" name="nome_classe[]" value="" required>
+                </div>
+              </div>
 
-          <div id="cor-template"></div>
+              <div class="col-md-5">
+                <div class="form-group">
+                  <label>Código da Cor</label>
+                  <div class="color-input-group d-flex align-items-center" style="gap: 8px;">
+                    <input type="text" class="form-control" name="valor_cor[]" value="#000000" required>
+                    <input type="color" class="color-picker" value="#000000" onchange="this.previousElementSibling.value = this.value">
+                  </div>
+                </div>
+              </div>
 
+              <div class="col-md-2 d-flex align-items-end">
+                <button type="button" class="btn btn-danger btn-sm remove-cor">Remover</button>
+              </div>
+
+              <input type="hidden" name="id_cor[]" value="">
+            </div>
+          </div>
 
           <small>
             <div id="mensagem-cores" align="center" class="mt-3"></div>
@@ -1244,41 +1119,32 @@ try {
           <button type="submit" class="btn btn-primary">Salvar</button>
         </div>
       </form>
-
     </div>
   </div>
 </div>
-
-
-
-
-
-<!-- Modal Config-->
-
+<!-- Modal -->
 <div class="modal fade" id="modalConfig" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
   aria-hidden="true">
-  <div class="modal-dialog modal-lg" role="document" style="width:95%; max-width:1280px;">
+  <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
       <div class="modal-header btn-primary text-white">
-        <h4 class="modal-title" id="exampleModalLabel">Editar ConfiguraÃƒÂ§ÃƒÂµes</h4>
+        <h4 class="modal-title" id="exampleModalLabel">Editar Configurações</h4>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"
-          style="color: white; ? margin-top : -20px;">
+          style="color: white;  margin-top: -20px;">
           <span style="font-size: x-large;" aria-hidden="true">&times;</span>
         </button>
       </div>
-      <form method="post" id="form-config" action="editar-config.php" enctype="multipart/form-data">
-        <input type="hidden" name="sistema_id_alvo" value="<?php echo (int) $sistema_id_atual; >?>"
-        <input type="hidden" name="sistema_slug_alvo" value="<?php echo htmlspecialchars((string)$sistema_slug_atual, ENT_QUOTES, 'UTF-8'); >?>"
-        <div class="modal-body" style="max-height:72vh; overflow-y:auto;">
+      <form method="post" id="form-config">
+        <div class="modal-body">
           <!-- Nav tabs -->
           <ul class="nav nav-tabs" id="configTabs" role="tablist">
             <li class="nav-item">
               <a class="nav-link active" id="config-tab" data-toggle="tab" href="#config" role="tab"
-                aria-controls="config" aria-selected="true">ConfiguraÃƒÂ§ÃƒÂµes</a>
+                aria-controls="config" aria-selected="true">Configurações</a>
             </li>
             <li class="nav-item">
               <a class="nav-link" id="basic-tab" data-toggle="tab" href="#basic" role="tab" aria-controls="basic"
-                aria-selected="false">Dados BÃƒÂ¡sicos</a>
+                aria-selected="false">Dados Básicos</a>
             </li>
             <li class="nav-item">
               <a class="nav-link" id="numeric-tab" data-toggle="tab" href="#numeric" role="tab" aria-controls="numeric"
@@ -1290,11 +1156,11 @@ try {
             </li>
             <li class="nav-item">
               <a class="nav-link" id="security-tab" data-toggle="tab" href="#security" role="tab"
-                aria-controls="security" aria-selected="false">SeguranÃƒÂ§a</a>
+                aria-controls="security" aria-selected="false">Segurança</a>
             </li>
             <li class="nav-item">
 
-              <a href="" data-toggle="modal" data-target="#modalLayout">
+              <a href="#" data-toggle="modal" data-target="#modalLayout" onclick="return false;">
                 <i class="fa fa-cog"></i> Cores</a>
             </li>
           </ul>
@@ -1307,110 +1173,17 @@ try {
             <!-- Tab 4: Security -->
             <div class="tab-pane fade" id="security" role="tabpanel" aria-labelledby="security-tab">
               <div class="card-body">
-                  
-                  <div class="row">
-                    <div class="col-md-6">
-                      <div class="card mb-4">
-                        <div class="card-header bg-light">
-                          <div style="display: flex; flex-direction: row; align-items: center; gap: 6px;">
-                            <img src="https://sejaefi.com.br/favicon.ico" width="20px" />
-                            <h3>EFI (Gerencianet)</h3>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div id="efy-security-form" style="margin-top: 22px; padding: 22px; width: 100%;">
-                      <input type="hidden" name="efi_client_id_prod" id="efi_client_id_prod" value="<?php echo htmlspecialchars($efi_client_id_prod_env, ENT_QUOTES, 'UTF-8'); >?>"
-                      <input type="hidden" name="efi_client_secret_prod" id="efi_client_secret_prod" value="<?php echo htmlspecialchars($efi_client_secret_prod_env, ENT_QUOTES, 'UTF-8'); >?>"
-                      <input type="hidden" name="efi_webhook_url_prod" id="efi_webhook_url_prod" value="<?php echo htmlspecialchars($efi_webhook_url_prod_env, ENT_QUOTES, 'UTF-8'); >?>"
-                      <input type="hidden" name="efi_webhook_path_prod" id="efi_webhook_path_prod" value="<?php echo htmlspecialchars($efi_webhook_path_prod_env, ENT_QUOTES, 'UTF-8'); >?>"
-                      <input type="hidden" name="efi_client_id_homolog" id="efi_client_id_homolog" value="<?php echo htmlspecialchars($efi_client_id_homolog_env, ENT_QUOTES, 'UTF-8'); >?>"
-                      <input type="hidden" name="efi_client_secret_homolog" id="efi_client_secret_homolog" value="<?php echo htmlspecialchars($efi_client_secret_homolog_env, ENT_QUOTES, 'UTF-8'); >?>"
-                      <input type="hidden" name="efi_webhook_url_homolog" id="efi_webhook_url_homolog" value="<?php echo htmlspecialchars($efi_webhook_url_homolog_env, ENT_QUOTES, 'UTF-8'); >?>"
-                      <input type="hidden" name="efi_webhook_path_homolog" id="efi_webhook_path_homolog" value="<?php echo htmlspecialchars($efi_webhook_path_homolog_env, ENT_QUOTES, 'UTF-8'); >?>"
-                      <input type="hidden" name="efi_webhook_base_url" value="<?php echo htmlspecialchars($efi_webhook_base_env, ENT_QUOTES, 'UTF-8'); >?>"
-
-                      <div class="row">
-                        <div class="col-md-3">
-                          <div class="form-group">
-                            <label>Ambiente ativo</label>
-                            <select class="form-control" id="efi_sandbox" name="efi_sandbox">
-                              <option value="false" <?php if ($efi_sandbox_env === 'false') { > selected <?php } >>ProduÃƒÂ§ÃƒÂ£o</option>
-                              <option value="true" <?php if ($efi_sandbox_env === 'true') { > selected <?php } >>HomologaÃƒÂ§ÃƒÂ£o</option>
-                            </select>
-                          </div>
-                        </div>
-                        <div class="col-md-4">
-                          <div class="form-group">
-                            <label>Client ID (ambiente selecionado)</label>
-                            <input type="text" class="form-control" id="efi_client_id_selected" name="efi_client_id_selected">
-                          </div>
-                        </div>
-                        <div class="col-md-5">
-                          <div class="form-group">
-                            <label>Client Secret (ambiente selecionado)</label>
-                            <input type="text" class="form-control" id="efi_client_secret_selected" name="efi_client_secret_selected">
-                          </div>
-                        </div>
-                      </div>
-
-                      <div class="row">
-                        <div class="col-md-6">
-                          <div class="form-group">
-                            <label>Webhook URL (ambiente selecionado)</label>
-                            <input type="text" class="form-control" id="efi_webhook_url_selected" name="efi_webhook_url_selected">
-                            <small>Use URL publica (http/https). Em localhost, deixe em branco e use o Webhook Path.</small>
-                          </div>
-                        </div>
-                        <div class="col-md-6">
-                          <div class="form-group">
-                            <label>Webhook Path interno (ambiente selecionado)</label>
-                            <input type="text" class="form-control" id="efi_webhook_path_selected" name="efi_webhook_path_selected">
-                          </div>
-                        </div>
-                      </div>
-
-                      <div class="row">
-                        <div class="col-md-12">
-                          <div class="alert alert-info" style="margin-bottom:10px;">
-                            Certificado do ambiente selecionado: <strong id="cert-atual-label"></strong>
-                          </div>
-                        </div>
-                      </div>
-
-                      <div class="row">
-                        <div class="col-md-6">
-                          <div class="form-group">
-                            <label>Certificado HomologaÃƒÂ§ÃƒÂ£o (.p12)</label>
-                            <input type="file" class="form-control" name="cert_p12_sandbox" accept=".p12">
-                            <small>Certificado atual: <strong><?php echo htmlspecialchars(($efi_cert_name_homolog_env !== ''  $efi_cert_name_homolog_env : ($efi_cert_path_homolog_env ? basename((string)$efi_cert_path_homolog_env) : 'nenhum')), ENT_QUOTES, 'UTF-8'); ?></strong></small>
-                          </div>
-                        </div>
-                        <div class="col-md-6">
-                          <div class="form-group">
-                            <label>Certificado ProduÃƒÂ§ÃƒÂ£o (.p12)</label>
-                            <input type="file" class="form-control" name="cert_p12_producao" accept=".p12">
-                            <small>Certificado atual: <strong><?php echo htmlspecialchars(($efi_cert_name_prod_env !== ''  $efi_cert_name_prod_env : ($efi_cert_path_prod_env ? basename((string)$efi_cert_path_prod_env) : 'nenhum')), ENT_QUOTES, 'UTF-8'); ?></strong></small>
-                          </div>
-                        </div>
-                      </div>
-
-                      <div class="row">
-                        <div class="col-md-6">
-                          <div class="form-group">
-                            <label>Senha .p12 HomologaÃƒÂ§ÃƒÂ£o</label>
-                            <input type="text" class="form-control" name="cert_password_sandbox">
-                          </div>
-                        </div>
-                        <div class="col-md-6">
-                          <div class="form-group">
-                            <label>Senha .p12 ProduÃƒÂ§ÃƒÂ£o</label>
-                            <input type="text" class="form-control" name="cert_password_producao">
-                          </div>
-                        </div>
-                      </div>
-                    </div>
+                <div class="row">
+                  <div class="col-md-12">
+                    <?php
+                    // embed a página de gateway efy reutilizando o php já criado
+                    $pagina_gateway = __DIR__ . '/paginas/gateway_efy.php';
+                    if (file_exists($pagina_gateway)) {
+                      include $pagina_gateway;
+                    } else {
+                      echo '<div class="alert alert-warning">Página de configuração do gateway não encontrada.</div>';
+                    }
+                    ?>
                   </div>
                 </div>
 
@@ -1418,87 +1191,6 @@ try {
             </div>
 
             <!-- Tab 3: Uploads -->
-            <script>
-              (function () {
-                var root = document.getElementById('efy-security-form');
-                if (!root) return;
-                var ambienteSel = document.getElementById('efi_sandbox');
-                var clientIdInput = document.getElementById('efi_client_id_selected');
-                var clientSecretInput = document.getElementById('efi_client_secret_selected');
-                var webhookUrlInput = document.getElementById('efi_webhook_url_selected');
-                var webhookPathInput = document.getElementById('efi_webhook_path_selected');
-                var certLabel = document.getElementById('cert-atual-label');
-
-                var envData = <?php echo json_encode(['prod' => ['client_id' =?> (string)($efi_client_id_prod_env ?? ''), 'client_secret' => (string)($efi_client_secret_prod_env ?? ''), 'webhook_url' => (string)($efi_webhook_url_prod_env ?? ''), 'webhook_path' => (string)($efi_webhook_path_prod_env ?? ''), 'cert_name' => ($efi_cert_path_prod_env ? basename((string)$efi_cert_path_prod_env) : 'nenhum'),
-                  ], 'homolog' => ['client_id' => (string)($efi_client_id_homolog_env ?? ''), 'client_secret' => (string)($efi_client_secret_homolog_env ?? ''), 'webhook_url' => (string)($efi_webhook_url_homolog_env ?? ''), 'webhook_path' => (string)($efi_webhook_path_homolog_env ?? ''), 'cert_name' => ($efi_cert_path_homolog_env ? basename((string)$efi_cert_path_homolog_env) : 'nenhum'),
-                  ],
-                ], JSON_UNESCAPED_UNICODE); >;
-
-                function currentEnvKey() {
-                  return ambienteSel && ambienteSel.value === 'true' ? 'homolog' : 'prod';
-                }
-
-                var lastEnvKey = currentEnvKey();
-
-                function persistCurrent(key) {
-                  var targetKey = key || currentEnvKey();
-                  if (!envData[targetKey]) envData[targetKey] = {};
-                  envData[targetKey].client_id = clientIdInput.value || '';
-                  envData[targetKey].client_secret = clientSecretInput.value || '';
-                  envData[targetKey].webhook_url = webhookUrlInput.value || '';
-                  envData[targetKey].webhook_path = webhookPathInput.value || '';
-                }
-
-                function applyEnv(key) {
-                  var env = envData[key] || {};
-                  clientIdInput.value = env.client_id || '';
-                  clientSecretInput.value = env.client_secret || '';
-                  webhookUrlInput.value = env.webhook_url || '';
-                  webhookPathInput.value = env.webhook_path || '';
-                }
-
-                function syncHidden() {
-                  var prod = envData.prod || {};
-                  var homolog = envData.homolog || {};
-                  document.getElementById('efi_client_id_prod').value = prod.client_id || '';
-                  document.getElementById('efi_client_secret_prod').value = prod.client_secret || '';
-                  document.getElementById('efi_webhook_url_prod').value = prod.webhook_url || '';
-                  document.getElementById('efi_webhook_path_prod').value = prod.webhook_path || '';
-                  document.getElementById('efi_client_id_homolog').value = homolog.client_id || '';
-                  document.getElementById('efi_client_secret_homolog').value = homolog.client_secret || '';
-                  document.getElementById('efi_webhook_url_homolog').value = homolog.webhook_url || '';
-                  document.getElementById('efi_webhook_path_homolog').value = homolog.webhook_path || '';
-                }
-
-                if (ambienteSel) {
-                  ambienteSel.addEventListener('change', function () {
-                    persistCurrent(lastEnvKey);
-                    applyEnv(currentEnvKey());
-                    lastEnvKey = currentEnvKey();
-                  });
-                }
-
-                var form = document.getElementById('form-config');
-                if (form) {
-                  form.addEventListener('submit', function () {
-                    persistCurrent(lastEnvKey);
-                    syncHidden();
-                  });
-                }
-
-                [clientIdInput, clientSecretInput, webhookUrlInput, webhookPathInput].forEach(function (el) {
-                  if (!el) return;
-                  el.addEventListener('input', function () {
-                    persistCurrent(lastEnvKey);
-                  });
-                });
-
-                if (certLabel) {
-                  certLabel.textContent = 'Certificados configurados abaixo.';
-                }
-                applyEnv(currentEnvKey());
-              })();
-            </script>
             <div class="tab-pane fade" id="uploads" role="tabpanel" aria-labelledby="uploads-tab">
               <div class="card-body">
                 <div class="row">
@@ -1546,7 +1238,7 @@ try {
                   <div class="col-md-6">
                     <div class="card mb-4">
                       <div class="card-header bg-light">
-                        <h5 class="mb-0"><i class="fa fa-file-image mr-2"></i>Imagem Relat?rio
+                        <h5 class="mb-0"><i class="fa fa-file-image mr-2"></i>Imagem Relatório
                           (*jpg)</h5>
                       </div>
                       <div class="card-body text-center">
@@ -1595,49 +1287,49 @@ try {
                 <div class="row">
                   <div class="col-md-3">
                     <div class="form-group">
-                      <label><i class="fa fa-list mr-1"></i> Itens PaginaÃƒÂ§ÃƒÂ£o</label>
+                      <label><i class="fa fa-list mr-1"></i> Itens Paginação</label>
                       <input type="number" class="form-control" id="itens_pag" name="itens_pag"
-                        value="<?php echo $itens_pag ?>"
+                        value="<?php echo $itens_pag ?>">
                     </div>
                   </div>
                   <div class="col-md-3">
                     <div class="form-group">
                       <label><i class="fa fa-th mr-1"></i> Itens Relacionados</label>
                       <input type="number" class="form-control" id="itens_rel" name="itens_rel"
-                        value="<?php echo $itens_rel ?>"
+                        value="<?php echo $itens_rel ?>">
                     </div>
                   </div>
                   <div class="col-md-3">
                     <div class="form-group">
-                      <label><i class="fa fa-unlock mr-1"></i> Aulas Dispon?veis</label>
+                      <label><i class="fa fa-unlock mr-1"></i> Aulas Disponíveis</label>
                       <input type="number" class="form-control" id="aulas_lib" name="aulas_lib"
-                        value="<?php echo $aulas_lib ?>"
+                        value="<?php echo $aulas_lib ?>">
                     </div>
                   </div>
                   <div class="col-md-3">
                     <div class="form-group">
-                      <label><i class="fa fa-star mr-1"></i> CartÃƒÂµes Fidelidade</label>
+                      <label><i class="fa fa-star mr-1"></i> Cartões Fidelidade</label>
                       <input type="number" class="form-control" id="cartoes_fidelidade" name="cartoes_fidelidade"
-                        value="<?php echo $cartoes_fidelidade ?>"
+                        value="<?php echo $cartoes_fidelidade ?>">
                     </div>
                   </div>
                 </div>
 
-                <h5 class="border-bottom pb-2 mb-3 mt-4">ConfiguraÃƒÂ§ÃƒÂµes de Pagamento</h5>
+                <h5 class="border-bottom pb-2 mb-3 mt-4">Configurações de Pagamento</h5>
                 <div class="row">
                   <div class="col-md-3">
                     <div class="form-group">
                       <label><i class="fa fa-percentage mr-1"></i> Desconto Pix %</label>
                       <input type="number" class="form-control" id="desconto_pix" name="desconto_pix"
-                        value="<?php echo $desconto_pix ?>"
+                        value="<?php echo $desconto_pix ?>">
                     </div>
                   </div>
 
                   <div class="col-md-3">
                     <div class="form-group">
-                      <label><i class="fa fa-percentage mr-1"></i> AcrÃƒÂ©scimo CartÃƒÂ£o %</label>
+                      <label><i class="fa fa-percentage mr-1"></i> Acréscimo Cartão %</label>
                       <input type="number" class="form-control" id="acrescimo_cartao_credito" name="acrescimo_cartao_credito"
-                        value="<?php echo $acrescimo_cartao_credito ?>"
+                        value="<?php echo $acrescimo_cartao_credito ?>">
                     </div>
                   </div>
 
@@ -1646,53 +1338,53 @@ try {
                     <div class="form-group">
                       <label><i class="fa fa-dollar-sign mr-1"></i> Taxa Boleto R$</label>
                       <input type="text" class="form-control" id="taxa_boleto" name="taxa_boleto"
-                        value="<?php echo $taxa_boleto ?>"
+                        value="<?php echo $taxa_boleto ?>">
                     </div>
                   </div>
                 </div>
 
-                <h5 class="border-bottom pb-2 mb-3 mt-4">ConfiguraÃƒÂ§ÃƒÂµes de ComissÃƒÂµes</h5>
+                <h5 class="border-bottom pb-2 mb-3 mt-4">Configurações de Comissões</h5>
                 <div class="row">
                   <div class="col-md-2">
                     <div class="form-group">
                       <label><i class="fa fa-percentage mr-1"></i> Professor %</label>
                       <input type="number" class="form-control" id="comissao_professor" name="comissao_professor"
-                        value="<?php echo $comissao_professor ?>"
+                        value="<?php echo $comissao_professor ?>">
                     </div>
                   </div>
                   <div class="col-md-2">
                     <div class="form-group">
                       <label><i class="fa fa-percentage mr-1"></i> Tesoureiro %</label>
-                      <input type="number" class="form-control" id="comissao_tesoureiro" name="comissao_tesoureiro" min="0" max="100" step="0.01"
-                        value="<?php echo $comissao_tesoureiro ?>"
+                      <input type="number" class="form-control" id="comissao_tesoureiro" name="comissao_tesoureiro"
+                        value="<?php echo $comissao_tesoureiro ?>">
                     </div>
                   </div>
                   <div class="col-md-2">
                     <div class="form-group">
-                      <label><i class="fa fa-percentage mr-1"></i> Secret?rio %</label>
-                      <input type="number" class="form-control" id="comissao_secretario" name="comissao_secretario" min="0" max="100" step="0.01"
-                        value="<?php echo $comissao_secretario ?>"
+                      <label><i class="fa fa-percentage mr-1"></i> Secretário %</label>
+                      <input type="number" class="form-control" id="comissao_secretario" name="comissao_secretario"
+                        value="<?php echo $comissao_secretario ?>">
                     </div>
                   </div>
                   <div class="col-md-2">
                     <div class="form-group">
                       <label><i class="fa fa-percentage mr-1"></i> Tutor %</label>
-                      <input type="number" class="form-control" id="comissao_tutor" name="comissao_tutor" min="0" max="100" step="0.01"
-                        value="<?php echo $comissao_tutor ?>"
+                      <input type="number" class="form-control" id="comissao_tutor" name="comissao_tutor"
+                        value="<?php echo $comissao_tutor ?>">
                     </div>
                   </div>
                   <div class="col-md-2">
                     <div class="form-group">
                       <label><i class="fa fa-percentage mr-1"></i> Parceiro %</label>
-                      <input type="number" class="form-control" id="comissao_parceiro" name="comissao_parceiro" min="0" max="100" step="0.01"
-                        value="<?php echo $comissao_parceiro ?>"
+                      <input type="number" class="form-control" id="comissao_parceiro" name="comissao_parceiro"
+                        value="<?php echo $comissao_parceiro ?>">
                     </div>
                   </div>
                   <div class="col-md-2">
                     <div class="form-group">
                       <label><i class="fa fa-percentage mr-1"></i> Assessor %</label>
-                      <input type="number" class="form-control" id="comissao_assessor" name="comissao_assessor" min="0" max="100" step="0.01"
-                        value="<?php echo $comissao_assessor ?>"
+                      <input type="number" class="form-control" id="comissao_assessor" name="comissao_assessor"
+                        value="<?php echo $comissao_assessor ?>">
                     </div>
                   </div>
                 </div>
@@ -1701,85 +1393,85 @@ try {
                   <div class="col-md-3">
                     <div class="form-group">
                       <label><i class="fa fa-percentage mr-1"></i> Vendedor %</label>
-                      <input type="number" class="form-control" id="comissao_vendedor" name="comissao_vendedor" min="0" max="100" step="0.01"
-                        value="<?php echo $comissao_vendedor ?>"
+                      <input type="number" class="form-control" id="comissao_vendedor" name="comissao_vendedor"
+                        value="<?php echo $comissao_vendedor ?>">
                     </div>
                   </div>
                   <div class="col-md-3">
                     <div class="form-group">
-                      <label><i class="fa fa-calendar-day mr-1"></i> Dia PGTO ComissÃƒÂ£o</label>
+                      <label><i class="fa fa-calendar-day mr-1"></i> Dia PGTO Comissão</label>
                       <input type="number" class="form-control" id="dia_pgto_comissao" name="dia_pgto_comissao"
-                        value="<?php echo $dia_pgto_comissao ?>"
+                        value="<?php echo $dia_pgto_comissao ?>">
                     </div>
                   </div>
                   <div class="col-md-3">
                     <div class="form-group">
-                      <label><i class="fa fa-dollar-sign mr-1"></i> R$ Valor Max CartÃƒÂ£o</label>
+                      <label><i class="fa fa-dollar-sign mr-1"></i> R$ Valor Max Cartão</label>
                       <input type="text" class="form-control" id="valor_max_cartao" name="valor_max_cartao"
-                        value="<?php echo $valor_max_cartao ?>"
+                        value="<?php echo $valor_max_cartao ?>">
                     </div>
                   </div>
                 </div>
 
-                <h5 class="border-bottom pb-2 mb-3 mt-4">ConfiguraÃƒÂ§ÃƒÂµes de Email e MatrÃƒÂ­culas</h5>
+                <h5 class="border-bottom pb-2 mb-3 mt-4">Configurações de Email e Matrículas</h5>
                 <div class="row">
                   <div class="col-md-3">
                     <div class="form-group">
                       <label><i class="fa fa-envelope-open mr-1"></i> Total Emails/Envio</label>
                       <input type="number" class="form-control" id="total_emails_por_envio"
-                        name="total_emails_por_envio" value="<?php echo $total_emails_por_envio ?>"
+                        name="total_emails_por_envio" value="<?php echo $total_emails_por_envio ?>">
                     </div>
                   </div>
                   <div class="col-md-3">
                     <div class="form-group">
                       <label><i class="fa fa-clock mr-1"></i> Intervalo Envio (min)</label>
                       <input type="number" class="form-control" id="intervalo_envio_email" name="intervalo_envio_email"
-                        value="<?php echo $intervalo_envio_email ?>"
+                        value="<?php echo $intervalo_envio_email ?>">
                     </div>
                   </div>
                   <div class="col-md-3">
                     <div class="form-group">
-                      <label><i class="fa fa-calendar-alt mr-1"></i> Dias Email MatrÃƒÂ­cula</label>
+                      <label><i class="fa fa-calendar-alt mr-1"></i> Dias Email Matrícula</label>
                       <input type="number" class="form-control" id="dias_email_matricula" name="dias_email_matricula"
-                        value="<?php echo $dias_email_matricula ?>"
+                        value="<?php echo $dias_email_matricula ?>">
                     </div>
                   </div>
                   <div class="col-md-3">
                     <div class="form-group">
-                      <label><i class="fa fa-trash-alt mr-1"></i> Dias Excluir MatrÃƒÂ­cula</label>
+                      <label><i class="fa fa-trash-alt mr-1"></i> Dias Excluir Matrícula</label>
                       <input type="number" class="form-control" id="dias_excluir_matricula"
-                        name="dias_excluir_matricula" value="<?php echo $dias_excluir_matricula ?>"
+                        name="dias_excluir_matricula" value="<?php echo $dias_excluir_matricula ?>">
                     </div>
                   </div>
                 </div>
 
-                <h5 class="border-bottom pb-2 mb-3 mt-4">ConfiguraÃƒÂ§ÃƒÂµes Acad?micas</h5>
+                <h5 class="border-bottom pb-2 mb-3 mt-4">Configurações Acadêmicas</h5>
                 <div class="row">
                   <div class="col-md-3">
                     <div class="form-group">
-                      <label><i class="fa fa-question-circle mr-1"></i> Question?rio</label>
+                      <label><i class="fa fa-question-circle mr-1"></i> Questionário</label>
                       <select class="form-control" name="questionario" id="questionario_config"
-                        value="<?php echo $questionario_config ?>"
-                        <option value="Sim" <?php if ($questionario_config == 'Sim') { > selected <?php } >>Sim</option>
-                        <option value="NÃƒÂ£o" <?php if ($questionario_config == 'NÃƒÂ£o') { > selected <?php } >>NÃƒÂ£o</option>
+                        value="<?php echo $questionario_config ?>">
+                        <option value="Sim" <?php if ($questionario_config == 'Sim') { ?> selected <?php } ?>>Sim</option>
+                        <option value="Não" <?php if ($questionario_config == 'Não') { ?> selected <?php } ?>>Não</option>
                       </select>
                     </div>
                   </div>
                   <div class="col-md-3">
                     <div class="form-group">
-                      <label><i class="fa fa-percentage mr-1"></i> MÃƒÂ©dia AprovaÃƒÂ§ÃƒÂ£o %</label>
+                      <label><i class="fa fa-percentage mr-1"></i> Média Aprovação %</label>
                       <input type="number" class="form-control" id="media_config" name="media"
-                        value="<?php echo $media_config ?>"
+                        value="<?php echo $media_config ?>">
                     </div>
                   </div>
                   <div class="col-md-3">
                     <div class="form-group">
                       <label><i class="fa fa-award mr-1"></i> Verso Certificado</label>
-                      <select class="form-control" name="verso" id="verso" value="<?php echo $verso >?>"
-                        <option value="Sim" <?php if ($verso == 'Sim') { > selected <?php } ?>
+                      <select class="form-control" name="verso" id="verso" value="<?php echo $verso ?>">
+                        <option value="Sim" <?php if ($verso == 'Sim') { ?> selected <?php } ?>>
                           Sim</option>
-                        <option value="NÃƒÂ£o" <?php if ($verso == 'NÃƒÂ£o') { > selected <?php } ?>
-                          NÃƒÂ£o</option>
+                        <option value="Não" <?php if ($verso == 'Não') { ?> selected <?php } ?>>
+                          Não</option>
                       </select>
                     </div>
                   </div>
@@ -1787,9 +1479,9 @@ try {
                     <div class="form-group">
                       <label><i class="fa fa-envelope mr-1"></i> Email ADM Matriculas</label>
                       <select class="form-control" name="email_adm_mat" id="email_adm_mat"
-                        value="<?php echo $email_adm_mat ?>"
-                        <option value="Sim" <?php if ($email_adm_mat == 'Sim') { > selected <?php } >>Sim</option>
-                        <option value="NÃƒÂ£o" <?php if ($email_adm_mat == 'NÃƒÂ£o') { > selected <?php } >>NÃƒÂ£o</option>
+                        value="<?php echo $email_adm_mat ?>">
+                        <option value="Sim" <?php if ($email_adm_mat == 'Sim') { ?> selected <?php } ?>>Sim</option>
+                        <option value="Não" <?php if ($email_adm_mat == 'Não') { ?> selected <?php } ?>>Não</option>
                       </select>
                     </div>
                   </div>
@@ -1797,14 +1489,14 @@ try {
               </div>
             </div>
 
-            <!-- Tab 1: Dados B?sicos -->
-            <div class="tab-pane fade ?? " id="basic" role="tabpanel" aria-labelledby="basic-tab">
+            <!-- Tab 1: Dados Básicos -->
+            <div class="tab-pane fade" id="basic" role="tabpanel" aria-labelledby="basic-tab">
               <div class="card-body">
                 <div class="row">
                   <div class="col-md-4">
                     <div class="form-group">
                       <label><i class="fa fa-building mr-1"></i> Nome Sistema</label>
-                      <input type="text" class="form-control" name="nome_sistema" value="<?php echo $nome_sistema >?>"
+                      <input type="text" class="form-control" name="nome_sistema" value="<?php echo $nome_sistema ?>"
                         required>
                     </div>
                   </div>
@@ -1812,14 +1504,14 @@ try {
                     <div class="form-group">
                       <label><i class="fa fa-phone mr-1"></i> Telefone Sistema</label>
                       <input type="text" class="form-control" id="tel_sistema" name="tel_sistema"
-                        value="<?php echo $tel_sistema ?>" required?>
+                        value="<?php echo $tel_sistema ?>" required>
                     </div>
                   </div>
                   <div class="col-md-4">
                     <div class="form-group">
                       <label><i class="fa fa-envelope mr-1"></i> Email Sistema</label>
                       <input type="text" class="form-control" id="email_sistema" name="email_sistema"
-                        value="<?php echo $email_sistema ?>" required?>
+                        value="<?php echo $email_sistema ?>" required>
                     </div>
                   </div>
                 </div>
@@ -1829,21 +1521,21 @@ try {
                     <div class="form-group">
                       <label><i class="fa fa-id-card mr-1"></i> CNPJ Sistema</label>
                       <input type="text" class="form-control" id="cnpj_sistema" name="cnpj_sistema"
-                        value="<?php echo $cnpj_sistema ?>"
+                        value="<?php echo $cnpj_sistema ?>">
                     </div>
                   </div>
                   <div class="col-md-4">
                     <div class="form-group">
                       <label><i class="fa fa-qrcode mr-1"></i> Tipo Chave Pix</label>
                       <select class="form-control" name="tipo_chave_pix_sistema" id="tipo_chave_pix_sistema"
-                        value="<?php echo $tipo_chave_pix ?>"
-                        <option value="CNPJ" <?php if ($tipo_chave_pix == 'CNPJ') { > selected <?php } >>CNPJ</option>
-                        <option value="CPF" <?php if ($tipo_chave_pix == 'CPF') { > selected <?php } >>CPF</option>
-                        <option value="E-mail" <?php if ($tipo_chave_pix == 'E-mail') { > selected <?php } >>E-mail
+                        value="<?php echo $tipo_chave_pix ?>">
+                        <option value="CNPJ" <?php if ($tipo_chave_pix == 'CNPJ') { ?> selected <?php } ?>>CNPJ</option>
+                        <option value="CPF" <?php if ($tipo_chave_pix == 'CPF') { ?> selected <?php } ?>>CPF</option>
+                        <option value="E-mail" <?php if ($tipo_chave_pix == 'E-mail') { ?> selected <?php } ?>>E-mail
                         </option>
-                        <option value="Telefone" <?php if ($tipo_chave_pix == 'Telefone') { > selected <?php } ?>
+                        <option value="Telefone" <?php if ($tipo_chave_pix == 'Telefone') { ?> selected <?php } ?>>
                           Telefone</option>
-                        <option value="C?digo" <?php if ($tipo_chave_pix == 'C?digo') { > selected <?php } >>C?digo
+                        <option value="Código" <?php if ($tipo_chave_pix == 'Código') { ?> selected <?php } ?>>Código
                         </option>
                       </select>
                     </div>
@@ -1852,7 +1544,7 @@ try {
                     <div class="form-group">
                       <label><i class="fa fa-key mr-1"></i> Chave Pix</label>
                       <input type="text" class="form-control" id="chave_pix" name="chave_pix"
-                        value="<?php echo $chave_pix ?>"
+                        value="<?php echo $chave_pix ?>">
                     </div>
                   </div>
                 </div>
@@ -1863,7 +1555,7 @@ try {
                       <label><i class="fa fa-facebook mr-1" style="color: blue;"></i>
                         Facebook</label>
                       <input type="text" class="form-control" id="facebook_sistema" name="facebook_sistema"
-                        value="<?php echo $facebook_sistema ?>"
+                        value="<?php echo $facebook_sistema ?>">
                     </div>
                   </div>
                   <div class="col-md-4">
@@ -1871,7 +1563,7 @@ try {
                       <label><i class="fa fa-instagram mr-1" style="color: #cc2366;"></i>
                         Instagram</label>
                       <input type="text" class="form-control" id="instagram_sistema" name="instagram_sistema"
-                        value="<?php echo $instagram_sistema ?>"
+                        value="<?php echo $instagram_sistema ?>">
                     </div>
                   </div>
                   <div class="col-md-4">
@@ -1879,7 +1571,7 @@ try {
                       <label><i class="fa fa-youtube mr-1" style="color: red;"></i>
                         Youtube</label>
                       <input type="text" class="form-control" id="youtube_sistema" name="youtube_sistema"
-                        value="<?php echo $youtube_sistema ?>"
+                        value="<?php echo $youtube_sistema ?>">
                     </div>
                   </div>
                 </div>
@@ -1887,9 +1579,9 @@ try {
                 <div class="row">
                   <div class="col-md-6">
                     <div class="form-group">
-                      <label><i class="fa fa-film mr-1"></i> Url V?deo P?gina Sobre</label>
+                      <label><i class="fa fa-film mr-1"></i> Url Vídeo Página Sobre</label>
                       <input type="text" class="form-control" id="video_sobre" name="video_sobre"
-                        value="<?php echo $video_sobre ?>"
+                        value="<?php echo $video_sobre ?>">
                     </div>
                   </div>
                   <div class="col-md-3">
@@ -1897,19 +1589,19 @@ try {
                       <label><i class="fa fa-graduation-cap mr-1"></i> Professor se
                         Cadastrar</label>
                       <select class="form-control" name="professor_cad" id="professor_cad"
-                        value="<?php echo $professor_cad ?>"
-                        <option value="NÃƒÂ£o" <?php if ($professor_cad == 'NÃƒÂ£o') { > selected <?php } >>NÃƒÂ£o</option>
-                        <option value="Sim" <?php if ($professor_cad == 'Sim') { > selected <?php } >>Sim</option>
+                        value="<?php echo $professor_cad ?>">
+                        <option value="Não" <?php if ($professor_cad == 'Não') { ?> selected <?php } ?>>Não</option>
+                        <option value="Sim" <?php if ($professor_cad == 'Sim') { ?> selected <?php } ?>>Sim</option>
                       </select>
                     </div>
                   </div>
                   <div class="col-md-3">
                     <div class="form-group">
-                      <label><i class="fa fa-credit-card mr-1"></i> Api CartÃƒÂ£o</label>
-                      <select class="form-control" name="api_cartao" id="api_cartao" value="<?php echo $api_cartao >?>"
-                        <option value="Api" <?php if ($api_cartao == 'Api') { > selected <?php } >>Api Site (Seguro)
+                      <label><i class="fa fa-credit-card mr-1"></i> Api Cartão</label>
+                      <select class="form-control" name="api_cartao" id="api_cartao" value="<?php echo $api_cartao ?>">
+                        <option value="Api" <?php if ($api_cartao == 'Api') { ?> selected <?php } ?>>Api Site (Seguro)
                         </option>
-                        <option value="Direta" <?php if ($api_cartao == 'Direta') { > selected <?php } >>Api
+                        <option value="Direta" <?php if ($api_cartao == 'Direta') { ?> selected <?php } ?>>Api
                           Transparente</option>
                       </select>
                     </div>
@@ -1918,51 +1610,52 @@ try {
               </div>
             </div>
 
-            <!-- Tab 0: InformaÃƒÂ§ÃƒÂµes -->
-            <div class="tab-pane fade show active" id="config" role="tabpanel" aria-labelledby="config-tab">
+            <!-- Tab 0: Informações -->
+            <div class="tab-pane fade in active" id="config" role="tabpanel" aria-labelledby="config-tab">
               <div class="card-body">
 
                 <div
                   style="padding: 10px; margin-top: 22px; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; color: #4A4A4A;">
                   <h2 style="font-size: 24px; font-weight: 600; margin-bottom: 12px; color: #2C3E50;">
-                    InformaÃƒÂ§ÃƒÂµes do Sistema
+                    Informações do Sistema
                   </h2>
                   <p style="font-size: 15px; margin-bottom: 24px; line-height: 1.6;">
-                    Personalize e ajuste as principais configuraÃƒÂ§ÃƒÂµes do seu sistema. Utilize as abas
+                    Personalize e ajuste as principais configurações do seu sistema. Utilize as abas
                     acima para navegar
-                    entre as categorias disponÃƒÂ­veis:
+                    entre as categorias disponíveis:
                   </p>
 
                   <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; margin-bottom: 24px;">
                     <div style="background: #F7F9FA; border: 1px solid #E1E8ED; border-radius: 8px; padding: 16px;">
-                      <strong style="display: block; font-size: 16px; margin-bottom: 6px;">Dados BÃƒÂ¡sicos</strong>
-                      <span style="font-size: 14px; color: #6B7C93;">Configure informaÃƒÂ§ÃƒÂµes gerais
+                      <strong style="display: block; font-size: 16px; margin-bottom: 6px;">Dados Básicos</strong>
+                      <span style="font-size: 14px; color: #6B7C93;">Configure informações gerais
                         essenciais para o
                         funcionamento do sistema.</span>
                     </div>
                     <div style="background: #F7F9FA; border: 1px solid #E1E8ED; border-radius: 8px; padding: 16px;">
-                      <strong style="display: block; font-size: 16px; margin-bottom: 6px;">Valores e Porcentagens</strong>
-                      <span style="font-size: 14px; color: #6B7C93;">Defina taxas, comissÃƒÂµes de
+                      <strong style="display: block; font-size: 16px; margin-bottom: 6px;">Valores e
+                        Porcentagens</strong>
+                      <span style="font-size: 14px; color: #6B7C93;">Defina taxas, comissões de
                         venda e outros
                         percentuais.</span>
                     </div>
                     <div style="background: #F7F9FA; border: 1px solid #E1E8ED; border-radius: 8px; padding: 16px;">
                       <strong style="display: block; font-size: 16px; margin-bottom: 6px;">Uploads</strong>
-                      <span style="font-size: 14px; color: #6B7C93;">Gerencie parÃƒÂ¢metros para
+                      <span style="font-size: 14px; color: #6B7C93;">Gerencie parâmetros para
                         envio e armazenamento seguro
                         de arquivos.</span>
                     </div>
                     <div style="background: #F7F9FA; border: 1px solid #E1E8ED; border-radius: 8px; padding: 16px;">
-                      <strong style="display: block; font-size: 16px; margin-bottom: 6px;">SeguranÃƒÂ§a</strong>
-                      <span style="font-size: 14px; color: #6B7C93;">Ajuste regras de seguranÃƒÂ§a
-                        para proteger a aplicaÃƒÂ§ÃƒÂ£o
+                      <strong style="display: block; font-size: 16px; margin-bottom: 6px;">Segurança</strong>
+                      <span style="font-size: 14px; color: #6B7C93;">Ajuste regras de segurança
+                        para proteger a aplicação
                         e os dados.</span>
                     </div>
                   </div>
 
                   <p style="font-size: 14px; color: #7B8A99;">
-                    Lembre-se de revisar cuidadosamente e salvar as alteraÃƒÂ§ÃƒÂµes apÃƒÂ³s finalizar a
-                    configuraÃƒÂ§ÃƒÂ£o.
+                    Lembre-se de revisar cuidadosamente e salvar as alterações após finalizar a
+                    configuração.
                   </p>
                 </div>
 
@@ -1976,52 +1669,53 @@ try {
 
         <div id="configTutorial" class="card-body ">
           <div style="padding: 24px; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; color: #4A4A4A;">
-            <h2 style="font-size: 24px; font-weight: 600; margin-bottom: 12px; color: #2C3E50;">InformaÃƒÂ§ÃƒÂµes
+            <h2 style="font-size: 24px; font-weight: 600; margin-bottom: 12px; color: #2C3E50;">Informações
               do Sistema
             </h2>
             <p style="font-size: 15px; margin-bottom: 24px; line-height: 1.6;">
-              Personalize e ajuste as principais configuraÃƒÂ§ÃƒÂµes do seu sistema. Utilize as abas acima para
+              Personalize e ajuste as principais configurações do seu sistema. Utilize as abas acima para
               navegar
-              entre as categorias disponÃƒÂ­veis:
+              entre as categorias disponíveis:
             </p>
 
             <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; margin-bottom: 24px;">
               <div style="background: #F7F9FA; border: 1px solid #E1E8ED; border-radius: 8px; padding: 16px;">
-                <strong style="display: block; font-size: 16px; margin-bottom: 6px;">Dados BÃƒÂ¡sicos</strong>
-                <span style="font-size: 14px; color: #6B7C93;">Configure informaÃƒÂ§ÃƒÂµes gerais essenciais
+                <strong style="display: block; font-size: 16px; margin-bottom: 6px;">Dados
+                  Básicos</strong>
+                <span style="font-size: 14px; color: #6B7C93;">Configure informações gerais essenciais
                   para o
                   funcionamento do sistema.</span>
               </div>
               <div style="background: #F7F9FA; border: 1px solid #E1E8ED; border-radius: 8px; padding: 16px;">
-                <strong style="display: block; font-size: 16px; margin-bottom: 6px;">Valores e Porcentagens</strong>
-                <span style="font-size: 14px; color: #6B7C93;">Defina taxas, comissÃƒÂµes de venda e outros
+                <strong style="display: block; font-size: 16px; margin-bottom: 6px;">Valores e
+                  Porcentagens</strong>
+                <span style="font-size: 14px; color: #6B7C93;">Defina taxas, comissões de venda e outros
                   percentuais.</span>
               </div>
               <div style="background: #F7F9FA; border: 1px solid #E1E8ED; border-radius: 8px; padding: 16px;">
                 <strong style="display: block; font-size: 16px; margin-bottom: 6px;">Uploads</strong>
-                <span style="font-size: 14px; color: #6B7C93;">Gerencie parÃƒÂ¢metros para envio e
+                <span style="font-size: 14px; color: #6B7C93;">Gerencie parâmetros para envio e
                   armazenamento seguro
                   de arquivos.</span>
               </div>
               <div style="background: #F7F9FA; border: 1px solid #E1E8ED; border-radius: 8px; padding: 16px;">
-                <strong style="display: block; font-size: 16px; margin-bottom: 6px;">SeguranÃƒÂ§a</strong>
-                <span style="font-size: 14px; color: #6B7C93;">Ajuste regras de seguranÃƒÂ§a para proteger
-                  a aplicaÃƒÂ§ÃƒÂ£o
+                <strong style="display: block; font-size: 16px; margin-bottom: 6px;">Segurança</strong>
+                <span style="font-size: 14px; color: #6B7C93;">Ajuste regras de segurança para proteger
+                  a aplicação
                   e os dados.</span>
               </div>
             </div>
 
             <p style="font-size: 14px; color: #7B8A99;">
-              Lembre-se de revisar cuidadosamente e salvar as alteraÃƒÂ§ÃƒÂµes apÃƒÂ³s finalizar a configuraÃƒÂ§ÃƒÂ£o.
+              Lembre-se de revisar cuidadosamente e salvar as alterações após finalizar a configuração.
             </p>
           </div>
         </div>
 
         <div class="modal-footer">
-          <small id="mensagem-config" class="mr-auto text-danger"></small>
           <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
           <button type="submit" class="btn btn-primary"><i class="fa fa-save mr-1"></i>Salvar
-            AlteraÃƒÂ§ÃƒÂµes</button>
+            Alterações</button>
         </div>
       </form>
     </div>
@@ -2037,18 +1731,18 @@ try {
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h4 class="modal-title" id="exampleModalLabel">Relat?rio de Vendas
+        <h4 class="modal-title" id="exampleModalLabel">Relatório de Vendas
           <small>(
             <a href="#" onclick="datas('1980-01-01', 'tudo-Ven', 'Ven')">
               <span style="color:#000" id="tudo-Ven">Tudo</span>
             </a> /
-            <a href="#" onclick="datas('<?php echo $data_atual >', 'hoje-Ven', 'Ven')"?>
+            <a href="#" onclick="datas('<?php echo $data_atual ?>', 'hoje-Ven', 'Ven')">
               <span id="hoje-Ven">Hoje</span>
             </a> /
-            <a href="#" onclick="datas('<?php echo $data_mes >', 'mes-Ven', 'Ven')"?>
-              <span style="color:#000" id="mes-Ven">M?s</span>
+            <a href="#" onclick="datas('<?php echo $data_mes ?>', 'mes-Ven', 'Ven')">
+              <span style="color:#000" id="mes-Ven">Mês</span>
             </a> /
-            <a href="#" onclick="datas('<?php echo $data_ano >', 'ano-Ven', 'Ven')"?>
+            <a href="#" onclick="datas('<?php echo $data_ano ?>', 'ano-Ven', 'Ven')">
               <span style="color:#000" id="ano-Ven">Ano</span>
             </a>
             )</small>
@@ -2068,14 +1762,14 @@ try {
               <div class="form-group">
                 <label>Data Inicial</label>
                 <input type="date" class="form-control" name="dataInicial" id="dataInicialRel-Ven"
-                  value="<?php echo date('Y-m-d') ?>" required?>
+                  value="<?php echo date('Y-m-d') ?>" required>
               </div>
             </div>
             <div class="col-md-4">
               <div class="form-group">
                 <label>Data Final</label>
                 <input type="date" class="form-control" name="dataFinal" id="dataFinalRel-Ven"
-                  value="<?php echo date('Y-m-d') ?>" required?>
+                  value="<?php echo date('Y-m-d') ?>" required>
               </div>
             </div>
 
@@ -2100,7 +1794,7 @@ try {
         </div>
 
         <div class="modal-footer">
-          <button type="submit" class="btn btn-primary">Gerar Relat?rio</button>
+          <button type="submit" class="btn btn-primary">Gerar Relatório</button>
         </div>
       </form>
 
@@ -2122,18 +1816,18 @@ try {
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h4 class="modal-title" id="exampleModalLabel">Relat?rio de Contas
+        <h4 class="modal-title" id="exampleModalLabel">Relatório de Contas
           <small>(
             <a href="#" onclick="datas('1980-01-01', 'tudo-Con', 'Con')">
               <span style="color:#000" id="tudo-Con">Tudo</span>
             </a> /
-            <a href="#" onclick="datas('<?php echo $data_atual >', 'hoje-Con', 'Con')"?>
+            <a href="#" onclick="datas('<?php echo $data_atual ?>', 'hoje-Con', 'Con')">
               <span id="hoje-Con">Hoje</span>
             </a> /
-            <a href="#" onclick="datas('<?php echo $data_mes >', 'mes-Con', 'Con')"?>
-              <span style="color:#000" id="mes-Con">M?s</span>
+            <a href="#" onclick="datas('<?php echo $data_mes ?>', 'mes-Con', 'Con')">
+              <span style="color:#000" id="mes-Con">Mês</span>
             </a> /
-            <a href="#" onclick="datas('<?php echo $data_ano >', 'ano-Con', 'Con')"?>
+            <a href="#" onclick="datas('<?php echo $data_ano ?>', 'ano-Con', 'Con')">
               <span style="color:#000" id="ano-Con">Ano</span>
             </a>
             )</small>
@@ -2153,14 +1847,14 @@ try {
               <div class="form-group">
                 <label>Data Inicial</label>
                 <input type="date" class="form-control" name="dataInicial" id="dataInicialRel-Con"
-                  value="<?php echo date('Y-m-d') ?>" required?>
+                  value="<?php echo date('Y-m-d') ?>" required>
               </div>
             </div>
             <div class="col-md-4">
               <div class="form-group">
                 <label>Data Final</label>
                 <input type="date" class="form-control" name="dataFinal" id="dataFinalRel-Con"
-                  value="<?php echo date('Y-m-d') ?>" required?>
+                  value="<?php echo date('Y-m-d') ?>" required>
               </div>
             </div>
 
@@ -2170,7 +1864,7 @@ try {
                 <select class="form-control sel13" name="pago" style="width:100%;">
                   <option value="">Todas</option>
                   <option value="Sim">Somente Pagas</option>
-                  <option value="NÃƒÂ£o">Pendentes</option>
+                  <option value="Não">Pendentes</option>
 
                 </select>
               </div>
@@ -2185,8 +1879,8 @@ try {
               <div class="form-group">
                 <label>Pagar / Receber</label>
                 <select class="form-control sel13" name="tabela" style="width:100%;">
-                  <option value="pagar">Contas ?? Pagar</option>
-                  <option value="receber">Contas ?? Receber</option>
+                  <option value="pagar">Contas à Pagar</option>
+                  <option value="receber">Contas à Receber</option>
 
                 </select>
               </div>
@@ -2212,7 +1906,7 @@ try {
         </div>
 
         <div class="modal-footer">
-          <button type="submit" class="btn btn-primary">Gerar Relat?rio</button>
+          <button type="submit" class="btn btn-primary">Gerar Relatório</button>
         </div>
       </form>
 
@@ -2233,18 +1927,18 @@ try {
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h4 class="modal-title" id="exampleModalLabel">Relat?rio de Lucro
+        <h4 class="modal-title" id="exampleModalLabel">Relatório de Lucro
           <small>(
             <a href="#" onclick="datas('1980-01-01', 'tudo-Luc', 'Luc')">
               <span style="color:#000" id="tudo-Luc">Tudo</span>
             </a> /
-            <a href="#" onclick="datas('<?php echo $data_atual >', 'hoje-Luc', 'Luc')"?>
+            <a href="#" onclick="datas('<?php echo $data_atual ?>', 'hoje-Luc', 'Luc')">
               <span id="hoje-Luc">Hoje</span>
             </a> /
-            <a href="#" onclick="datas('<?php echo $data_mes >', 'mes-Luc', 'Luc')"?>
-              <span style="color:#000" id="mes-Luc">M?s</span>
+            <a href="#" onclick="datas('<?php echo $data_mes ?>', 'mes-Luc', 'Luc')">
+              <span style="color:#000" id="mes-Luc">Mês</span>
             </a> /
-            <a href="#" onclick="datas('<?php echo $data_ano >', 'ano-Luc', 'Luc')"?>
+            <a href="#" onclick="datas('<?php echo $data_ano ?>', 'ano-Luc', 'Luc')">
               <span style="color:#000" id="ano-Luc">Ano</span>
             </a>
             )</small>
@@ -2264,14 +1958,14 @@ try {
               <div class="form-group">
                 <label>Data Inicial</label>
                 <input type="date" class="form-control" name="dataInicial" id="dataInicialRel-Luc"
-                  value="<?php echo date('Y-m-d') ?>" required?>
+                  value="<?php echo date('Y-m-d') ?>" required>
               </div>
             </div>
             <div class="col-md-4">
               <div class="form-group">
                 <label>Data Final</label>
                 <input type="date" class="form-control" name="dataFinal" id="dataFinalRel-Luc"
-                  value="<?php echo date('Y-m-d') ?>" required?>
+                  value="<?php echo date('Y-m-d') ?>" required>
               </div>
             </div>
 
@@ -2284,7 +1978,7 @@ try {
         </div>
 
         <div class="modal-footer">
-          <button type="submit" class="btn btn-primary">Gerar Relat?rio</button>
+          <button type="submit" class="btn btn-primary">Gerar Relatório</button>
         </div>
       </form>
 
@@ -2304,18 +1998,18 @@ try {
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h4 class="modal-title" id="exampleModalLabel">Relat?rio de ComissÃƒÂµes
+        <h4 class="modal-title" id="exampleModalLabel">Relatório de Comissões
           <small>(
             <a href="#" onclick="datas('1980-01-01', 'tudo-Com', 'Com')">
               <span style="color:#000" id="tudo-Com">Tudo</span>
             </a> /
-            <a href="#" onclick="datas('<?php echo $data_atual >', 'hoje-Com', 'Com')"?>
+            <a href="#" onclick="datas('<?php echo $data_atual ?>', 'hoje-Com', 'Com')">
               <span id="hoje-Com">Hoje</span>
             </a> /
-            <a href="#" onclick="datas('<?php echo $data_mes >', 'mes-Com', 'Com')"?>
-              <span style="color:#000" id="mes-Com">M?s</span>
+            <a href="#" onclick="datas('<?php echo $data_mes ?>', 'mes-Com', 'Com')">
+              <span style="color:#000" id="mes-Com">Mês</span>
             </a> /
-            <a href="#" onclick="datas('<?php echo $data_ano >', 'ano-Com', 'Com')"?>
+            <a href="#" onclick="datas('<?php echo $data_ano ?>', 'ano-Com', 'Com')">
               <span style="color:#000" id="ano-Com">Ano</span>
             </a>
             )</small>
@@ -2335,14 +2029,14 @@ try {
               <div class="form-group">
                 <label>Data Inicial</label>
                 <input type="date" class="form-control" name="dataInicial" id="dataInicialRel-Com"
-                  value="<?php echo date('Y-m-d') ?>" required?>
+                  value="<?php echo date('Y-m-d') ?>" required>
               </div>
             </div>
             <div class="col-md-4">
               <div class="form-group">
                 <label>Data Final</label>
                 <input type="date" class="form-control" name="dataFinal" id="dataFinalRel-Com"
-                  value="<?php echo date('Y-m-d') ?>" required?>
+                  value="<?php echo date('Y-m-d') ?>" required>
               </div>
             </div>
 
@@ -2352,7 +2046,7 @@ try {
                 <select class="form-control sel13" name="pago" style="width:100%;">
                   <option value="">Todas</option>
                   <option value="Sim">Somente Pagas</option>
-                  <option value="NÃƒÂ£o">Pendentes</option>
+                  <option value="Não">Pendentes</option>
 
                 </select>
               </div>
@@ -2375,8 +2069,8 @@ try {
                     foreach ($res[$i] as $key => $value) {
                     }
 
-?>
-                    <option value="<?php echo $res[$i]['id'] >?>">(<?php echo $res[$i]['nivel'] ?>)
+                    ?>
+                    <option value="<?php echo $res[$i]['id'] ?>">(<?php echo $res[$i]['nivel'] ?>)
                       <?php echo $res[$i]['nome'] ?>
                     </option>
 
@@ -2397,7 +2091,7 @@ try {
         </div>
 
         <div class="modal-footer">
-          <button type="submit" class="btn btn-primary">Gerar Relat?rio</button>
+          <button type="submit" class="btn btn-primary">Gerar Relatório</button>
         </div>
       </form>
 
@@ -2424,20 +2118,22 @@ try {
       type: 'POST',
       data: formData,
 
-      success: function (mensagem) {
-        $('#mensagem-usu').text('');
-        $('#mensagem-usu').removeClass()
-        if (mensagem.trim() == "Editado com Sucesso") {
-          location.reload();
-          //$('#btn-fechar-usu').click();						
+        success: function (mensagem) {
+          $('#mensagem-usu').text('');
+          $('#mensagem-usu').removeClass()
+          var texto = (mensagem || '').toLowerCase();
+          if (texto.indexOf('sucesso') !== -1) {
+            location.reload();
+            //$('#btn-fechar-usu').click();						
 
-        } else {
+          } else {
 
-          $('#mensagem-usu').addClass('text-danger') ?? $('#mensagem-usu').text(mensagem)
-        }
+            $('#mensagem-usu').addClass('text-danger')
+            $('#mensagem-usu').text(mensagem)
+          }
 
 
-      },
+        },
 
       cache: false,
       contentType: false,
@@ -2452,16 +2148,8 @@ try {
 
 
 <script type="text/javascript">
-  $("#form-config").submit(function (e) {
-    e.preventDefault();
-    var sel = document.getElementById('sistemaSelector');
-    if (sel) {
-      var opt = sel.options[sel.selectedIndex] || null;
-      if (opt) {
-        $('input[name="sistema_id_alvo"]').val(opt.value);
-        $('input[name="sistema_slug_alvo"]').val(opt.getAttribute('data-slug') || '');
-      }
-    }
+  $("#form-config").submit(function () {
+    event.preventDefault();
     var formData = new FormData(this);
 
     $.ajax({
@@ -2479,7 +2167,8 @@ try {
 
         } else {
 
-          $('#mensagem-config').addClass('text-danger') ?? $('#mensagem-config').text(mensagem)
+          $('#mensagem-config').addClass('text-danger')
+          $('#mensagem-config').text(mensagem)
         }
 
 
@@ -2610,10 +2299,11 @@ try {
 
 
 
-<!-- Mascaras JS -->
-<script type="text/javascript" src="../js/mascaras.js"></script>
 <!-- Ajax para funcionar Mascaras JS -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.11/jquery.mask.min.js"></script>
+<!-- Mascaras JS -->
+<script type="text/javascript" src="../js/mascaras.js"></script>
+<script type="text/javascript" src="../js/cep-autocomplete.js"></script>
 
 
 <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
@@ -2644,7 +2334,7 @@ try {
 <script type="text/javascript">
   function datas(data, id, campo) {
 
-    var data_atual = "<= $data_atual >";
+    var data_atual = "<?= $data_atual ?>";
     var separarData = data_atual.split("-");
     var mes = separarData[1];
     var ano = separarData[0];
@@ -2698,17 +2388,17 @@ function isActiveMenu($href)
 {
   $currentUrl = $_SERVER['REQUEST_URI'];
 
-  // Remove domÃƒÂ­nio e parÃƒÂ¢metros extras da URL atual
+  // Remove domínio e parâmetros extras da URL atual
   $currentPath = parse_url($currentUrl, PHP_URL_PATH);
   $currentPage = basename($currentPath); // ex: index.php
-  $currentQuery = $_SERVER['QUERY_STRING']; // ex: pagina=matriculas
+  $currentQuery = $_SERVER['QUERY_STRING']; // ex: pagina=Matrículas
 
-  // Checa se href ? exatamente igual a URI
+  // Checa se href é exatamente igual a URI
   if ($href === $currentPage || strpos($currentUrl, $href) !== false) {
     return 'active';
   }
 
-  // Checa se href tem query string (ex: index.php?pagina=matriculas)
+  // Checa se href tem query string (ex: index.php?pagina=Matrículas)
   if (!empty($currentQuery) && strpos($href, $currentQuery) !== false) {
     return 'active';
   }
@@ -2719,48 +2409,73 @@ function isActiveMenu($href)
 
 
 <script>
-  document.getElementById('add-cor').addEventListener('click', function () {
-    const template = document.querySelector('#cor-template').innerHTML;
-    const container = document.querySelector('#cores-container');
-    container.insertAdjacentHTML('beforeend', template);
-  });
+  const addCorBtn = document.getElementById('add-cor');
+  if (addCorBtn) {
+    addCorBtn.addEventListener('click', function () {
+      const templateNode = document.querySelector('#cor-template');
+      const container = document.querySelector('#cores-container');
+      if (!templateNode || !container) {
+        return;
+      }
+      container.insertAdjacentHTML('beforeend', templateNode.innerHTML);
+    });
+  }
 
   document.addEventListener('click', function (e) {
     if (e.target.classList.contains('remove-cor')) {
-      e.target.closest('.cor-item').remove();
+      const row = e.target.closest('.cor-item');
+      if (row) {
+        row.remove();
+      }
     }
   });
 </script>
 
 
 <script>
-  document.getElementById('form-cores').addEventListener('submit', function (e) {
-    e.preventDefault();
+  const formCores = document.getElementById('form-cores');
+  if (formCores) {
+    formCores.addEventListener('submit', function (e) {
+      e.preventDefault();
 
-    const formData = new FormData(this);
+      const formData = new FormData(this);
 
-    fetch('editar-cores.php', {
-      method: 'POST',
-      body: formData
-    })
-      .then(res => res.json())
-      .then(data => {
-        document.getElementById('mensagem-cores').innerHTML = `
+      fetch('editar-cores.php', {
+        method: 'POST',
+        body: formData
+      })
+        .then(res => res.json())
+        .then(data => {
+          const msg = document.getElementById('mensagem-cores');
+          if (msg) {
+            msg.innerHTML = `
         <div class="alert alert-${data.status}">${data.mensagem}</div>
       `;
-        if (data.status === 'success') {
-          setTimeout(() => {
-            location.reload();
-          }, 1500);
-        }
-      })
-      .catch(() => {
-        document.getElementById('mensagem-cores').innerHTML = `
+          }
+          if (data.status === 'success') {
+            setTimeout(() => {
+              location.reload();
+            }, 1500);
+          }
+        })
+        .catch(() => {
+          const msg = document.getElementById('mensagem-cores');
+          if (msg) {
+            msg.innerHTML = `
         <div class="alert alert-danger">Erro ao salvar as cores.</div>
       `;
-      });
-  });
+          }
+        });
+    });
+  }
 </script>
+
+
+
+
+
+
+
 
 
 

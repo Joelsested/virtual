@@ -1,7 +1,7 @@
 <?php
 require_once('../conexao.php');
 
-function sairComMensagemAluno(string $mensagem) : void
+function sairComMensagemAluno(string $mensagem): void
 {
     $mensagem = addslashes($mensagem);
     echo "<script>alert('{$mensagem}');window.location.href='index.php';</script>";
@@ -16,7 +16,7 @@ $idResgatePost = (int) ($_POST['vendedor_usuario_id_resgate'] ?? 0);
 if (($idRetorno <= 0 || $nivelRetorno === '') && $idVendedorSwitch > 0) {
     $stmtVendedor = $pdo->prepare("SELECT id, nome, cpf, nivel, ativo FROM usuarios WHERE id = :id LIMIT 1");
     $stmtVendedor->execute([':id' => $idVendedorSwitch]);
-    $vendedor = $stmtVendedor->fetch(PDO::FETCH_ASSOC) : [];
+    $vendedor = $stmtVendedor->fetch(PDO::FETCH_ASSOC) ?: [];
     if ($vendedor && ($vendedor['nivel'] ?? '') === 'Vendedor' && ($vendedor['ativo'] ?? '') === 'Sim') {
         $idRetorno = (int) $vendedor['id'];
         $nivelRetorno = 'Vendedor';
@@ -26,7 +26,7 @@ if (($idRetorno <= 0 || $nivelRetorno === '') && $idVendedorSwitch > 0) {
 if (($idRetorno <= 0 || $nivelRetorno === '') && $idResgatePost > 0) {
     $stmtVendedorPost = $pdo->prepare("SELECT id, nome, cpf, nivel, ativo FROM usuarios WHERE id = :id AND nivel = 'Vendedor' LIMIT 1");
     $stmtVendedorPost->execute([':id' => $idResgatePost]);
-    $vendedorPost = $stmtVendedorPost->fetch(PDO::FETCH_ASSOC) : [];
+    $vendedorPost = $stmtVendedorPost->fetch(PDO::FETCH_ASSOC) ?: [];
     if ($vendedorPost && ($vendedorPost['ativo'] ?? '') === 'Sim') {
         $idRetorno = (int) $vendedorPost['id'];
         $nivelRetorno = 'Vendedor';
@@ -39,7 +39,7 @@ if ($idRetorno <= 0 || $nivelRetorno === '') {
 
 $stmt = $pdo->prepare("SELECT id, nome, cpf, nivel, ativo FROM usuarios WHERE id = :id LIMIT 1");
 $stmt->execute([':id' => $idRetorno]);
-$contaRetorno = $stmt->fetch(PDO::FETCH_ASSOC) : [];
+$contaRetorno = $stmt->fetch(PDO::FETCH_ASSOC) ?: [];
 
 if (!$contaRetorno || ($contaRetorno['ativo'] ?? '') !== 'Sim') {
     unset(

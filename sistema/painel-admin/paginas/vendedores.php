@@ -7,6 +7,11 @@ if (@$_SESSION['nivel'] != 'Administrador' and @$_SESSION['nivel'] != 'Secretari
     echo "<script>window.location='../index.php'</script>";
     exit();
 }
+
+$consulta_tutores = $pdo->query("SELECT id, nome FROM tutores WHERE ativo = 'Sim' ORDER BY nome");
+$tutores = $consulta_tutores ? $consulta_tutores->fetchAll(PDO::FETCH_ASSOC) : [];
+$consulta_secretarios = $pdo->query("SELECT id, nome FROM secretarios WHERE ativo = 'Sim' ORDER BY nome");
+$secretarios = $consulta_secretarios ? $consulta_secretarios->fetchAll(PDO::FETCH_ASSOC) : [];
 ?>
 
 <style>
@@ -58,30 +63,30 @@ if (@$_SESSION['nivel'] != 'Administrador' and @$_SESSION['nivel'] != 'Secretari
                     </div>
 
 
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label>CPF</label>
-                                <input type="text" class="form-control" name="cpf" id="cpf" required>
-                            </div>
-                        </div>
+					<div class="row">
+						<div class="col-md-6">
+							<div class="form-group">
+								<label>CPF</label>
+								<input type="text" class="form-control" name="cpf" id="cpf">
+							</div>
+						</div>
 
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label>Email</label>
-                                <input type="email" class="form-control" name="email" id="email" required>
-                            </div>
-                        </div>
-                    </div>
+						<div class="col-md-6">
+							<div class="form-group">
+								<label>Email</label>
+								<input type="email" class="form-control" name="email" id="email" required>
+							</div>
+						</div>
+					</div>
 
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label>Data de Nascimento</label>
-                                <input type="text" class="form-control" name="nascimento" id="nascimento" placeholder="DD/MM/AAAA" required>
-                            </div>
-                        </div>
-                    </div>
+					<div class="row">
+						<div class="col-md-6">
+							<div class="form-group">
+								<label>Data de Nascimento</label>
+								<input type="text" class="form-control" name="nascimento" id="nascimento" required>
+							</div>
+						</div>
+					</div>
 
                     <div class="col-md-12">
                         <div class="form-group">
@@ -98,17 +103,43 @@ if (@$_SESSION['nivel'] != 'Administrador' and @$_SESSION['nivel'] != 'Secretari
                     </div>
                   
 
-                    <div class="col-md-6 d-flex align-items-center" style="margin-top: 30px;">
-                        <div class="form-group">
-                            <input type="checkbox" name="professor" id="professor" class="mr-2">
-                            <label for="professor">Professor</label>
+                    <div class="row">
+                        <div class="col-md-6 d-flex align-items-center" style="margin-top: 30px;">
+                            <div class="form-group">
+                                <input type="checkbox" name="professor" id="professor" class="mr-2">
+                                <label for="professor">Professor</label>
+                            </div>
                         </div>
-                    </div>
-
-                    <div class="col-md-6 d-flex align-items-center" style="margin-top: 30px;">
-                        <div class="form-group">
-                            <input type="checkbox" name="pode_login_como_aluno" id="pode_login_como_aluno" class="mr-2">
-                            <label for="pode_login_como_aluno">Permitir login como aluno</label>
+                        <div class="col-md-6 d-flex align-items-center" style="margin-top: 30px;">
+                            <div class="form-group">
+                                <input type="checkbox" name="pode_login_como_aluno" id="pode_login_como_aluno" class="mr-2">
+                                <label for="pode_login_como_aluno">Permitir login como aluno</label>
+                            </div>
+                        </div>
+                        <div class="col-md-6" id="atendente-wrapper" style="display:none;">
+                            <div class="form-group">
+                                <label>Atendente padrao</label>
+                                <select class="form-control" name="atendente" id="atendente">
+                                    <option value="">Selecione</option>
+                                    <?php if (!empty($tutores)) : ?>
+                                        <optgroup label="Tutores">
+                                            <?php foreach ($tutores as $tutor) : ?>
+                                                <option value="tutor:<?= htmlspecialchars($tutor['id']) ?>"><?= htmlspecialchars($tutor['nome']) ?></option>
+                                            <?php endforeach; ?>
+                                        </optgroup>
+                                    <?php endif; ?>
+                                    <?php if (!empty($secretarios)) : ?>
+                                        <optgroup label="Secretarios">
+                                            <?php foreach ($secretarios as $secretario) : ?>
+                                                <option value="secretario:<?= htmlspecialchars($secretario['id']) ?>"><?= htmlspecialchars($secretario['nome']) ?></option>
+                                            <?php endforeach; ?>
+                                        </optgroup>
+                                    <?php endif; ?>
+                                    <?php if (empty($tutores) && empty($secretarios)) : ?>
+                                        <option value="" disabled>Nenhum atendente cadastrado</option>
+                                    <?php endif; ?>
+                                </select>
+                            </div>
                         </div>
                     </div>
 
@@ -170,20 +201,16 @@ if (@$_SESSION['nivel'] != 'Administrador' and @$_SESSION['nivel'] != 'Secretari
             <div class="modal-body">
 
 
-                    <div class="row" style="border-bottom: 1px solid #cac7c7;">
-                        <div class="col-md-4">
-                            <span><b>CPF: </b></span>
-                            <span id="cpf_mostrar"></span>
-                        </div>
-                        <div class="col-md-4">
-                            <span><b>Telefone: </b></span>
-                            <span id="telefone_mostrar"></span>
-                        </div>
-                        <div class="col-md-4">
-                            <span><b>Nascimento: </b></span>
-                            <span id="nascimento_mostrar"></span>
-                        </div>
+                <div class="row" style="border-bottom: 1px solid #cac7c7;">
+                    <div class="col-md-6">
+                        <span><b>CPF: </b></span>
+                        <span id="cpf_mostrar"></span>
                     </div>
+                    <div class="col-md-6">
+                        <span><b>Telefone: </b></span>
+                        <span id="telefone_mostrar"></span>
+                    </div>
+                </div>
 
 
                 <div class="row" style="border-bottom: 1px solid #cac7c7;">
@@ -244,12 +271,7 @@ if (@$_SESSION['nivel'] != 'Administrador' and @$_SESSION['nivel'] != 'Secretari
 <script type="text/javascript">
     $(document).ready(function() {
         $('#modalForm').on('shown.bs.modal', function() {
-            let isProfessorValue = document.getElementById('professor').textContent;
-            if (isProfessorValue === "true") {
-                $('#professor').prop('checked', true);
-            } else {
-                $('#professor').prop('checked', false);
-            }
+            toggleAtendente();
         });
      
     });
@@ -286,7 +308,7 @@ function formatarCPF(input) {
 }
 
 // --- Campos obrigatórios do formulário ---
-const camposObrigatorios = ['nome', 'cpf', 'email', 'wallet_id', 'comissao', 'nascimento'];
+const camposObrigatorios = ['nome', 'cpf', 'email', 'wallet_id', 'comissao'];
 
 // --- Função para verificar se todos os campos estão preenchidos e válidos ---
 function verificarCampos() {
@@ -306,14 +328,33 @@ function verificarCampos() {
     const email = document.getElementById('email').value.trim();
     const emailValido = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
     const cpfValido = validarCPF(cpf);
+    const professorMarcado = document.getElementById('professor').checked;
+    const atendenteSelect = document.getElementById('atendente');
+    const atendenteValido = !professorMarcado || (atendenteSelect && atendenteSelect.value.trim() !== '');
 
     // Habilita o botão somente se tudo estiver válido
-    if (todosPreenchidos && cpfValido && emailValido) {
+    if (todosPreenchidos && cpfValido && emailValido && atendenteValido) {
         botao.removeAttribute('disabled');
         mensagem.innerHTML = '';
     } else {
         botao.setAttribute('disabled', true);
     }
+}
+
+function toggleAtendente() {
+    const wrapper = document.getElementById('atendente-wrapper');
+    const professorMarcado = document.getElementById('professor').checked;
+    if (!wrapper) {
+        return;
+    }
+    wrapper.style.display = professorMarcado ? 'block' : 'none';
+    if (!professorMarcado) {
+        const atendenteSelect = document.getElementById('atendente');
+        if (atendenteSelect) {
+            atendenteSelect.value = '';
+        }
+    }
+    verificarCampos();
 }
 
 // --- Eventos para atualizar o botão em tempo real ---
@@ -325,6 +366,16 @@ camposObrigatorios.forEach(id => {
         campo.addEventListener('blur', verificarCampos);
     }
 });
+
+const checkboxProfessor = document.getElementById('professor');
+if (checkboxProfessor) {
+    checkboxProfessor.addEventListener('change', toggleAtendente);
+}
+
+const atendenteSelect = document.getElementById('atendente');
+if (atendenteSelect) {
+    atendenteSelect.addEventListener('change', verificarCampos);
+}
 
 // --- Máscara e validação de CPF em tempo real ---
 const inputCPF = document.getElementById('cpf');
@@ -380,3 +431,4 @@ $('#modalForm').on('shown.bs.modal', function() {
         }
     }
 </script>
+
