@@ -2,6 +2,17 @@
 require_once("../../../conexao.php");
 $tabela = 'vendedores';
 
+$stmtCol = $pdo->query("SHOW COLUMNS FROM {$tabela} LIKE 'pode_login_como_aluno'");
+$temColunaPodeLogin = (bool) ($stmtCol && $stmtCol->fetch(PDO::FETCH_ASSOC));
+if (!$temColunaPodeLogin) {
+    try {
+        $pdo->exec("ALTER TABLE {$tabela} ADD COLUMN pode_login_como_aluno TINYINT(1) NOT NULL DEFAULT 0");
+        $temColunaPodeLogin = true;
+    } catch (Exception $e) {
+        $temColunaPodeLogin = false;
+    }
+}
+
 echo <<<HTML
 <small>
 HTML;
@@ -9,7 +20,7 @@ HTML;
 $query = $pdo->query("SELECT * FROM $tabela ORDER BY id desc");
 $res = $query->fetchAll(PDO::FETCH_ASSOC);
 
-$query = $pdo->query("SELECT v.*, u.wallet_id 
+$query = $pdo->query("SELECT v.*, u.wallet_id, u.id AS usuario_id 
       FROM $tabela v 
       LEFT JOIN usuarios u ON v.id = u.id_pessoa 
       WHERE u.nivel = 'Vendedor'
@@ -42,6 +53,7 @@ HTML;
         $id = $res[$i]['id'];
         $nome = $res[$i]['nome'];
         $cpf = $res[$i]['cpf'];
+        $nascimento = $res[$i]['nascimento'];
         $email = $res[$i]['email'];
         $telefone = $res[$i]['telefone'];
         $comissao = $res[$i]['comissao'];
@@ -50,6 +62,9 @@ HTML;
         $data = $res[$i]['data'];
         $ativo = $res[$i]['ativo'];
         $wallet_id = $res[$i]['wallet_id'] ?? 'Não disponível';
+        $pode_login_como_aluno = (int) ($res[$i]['pode_login_como_aluno'] ?? 0);
+        $textoPermissaoLoginAluno = $pode_login_como_aluno === 1 ? 'Ativado' : 'Desativado';
+        $checkedLoginAluno = $pode_login_como_aluno === 1 ? 'checked' : '';
 
         $resProfessor = $professor ? 'Sim' : 'Não';
 
@@ -107,7 +122,7 @@ HTML;
 
 		   <!-- View Data -->
 		   <div class="col-md-4 text-center mb-3">
-              <a href="#" onclick="mostrar('{$nome}', '{$cpf}','{$email}','{$telefone}', '{$wallet_id}', '{$comissao}', '{$professor}', '{$foto}', '{$dataF}', '{$ativo}')" class="btn btn-default btn-block" data-dismiss="modal">
+              <a href="#" onclick="mostrar('{$nome}', '{$cpf}','{$nascimento}','{$email}','{$telefone}', '{$wallet_id}', '{$comissao}', '{$professor}', '{$foto}', '{$dataF}', '{$ativo}')" class="btn btn-default btn-block" data-dismiss="modal">
                 <i class="fa fa-info-circle text-secondary"></i><br>
                 Visualizar
               </a>
@@ -115,7 +130,7 @@ HTML;
 
 		   <!-- Edit Data -->
 		   <div class="col-md-4 text-center mb-3">
-              <a href="#" onclick="editar('{$id}', '{$nome}', '{$cpf}','{$email}','{$telefone}', '{$wallet_id}', '{$comissao}', '{$professor}', '{$foto}')" class="btn btn-default btn-block" data-dismiss="modal">
+              <a href="#" onclick="editar('{$id}', '{$nome}', '{$cpf}','{$nascimento}','{$email}','{$telefone}', '{$wallet_id}', '{$comissao}', '{$professor}', '{$foto}', '{$pode_login_como_aluno}')" class="btn btn-default btn-block" data-dismiss="modal">
                 <i class="fa fa-edit text-primary"></i><br>
                 Editar
               </a>
@@ -129,8 +144,6 @@ HTML;
               </a>
             </div>
 
-           
-            
             <!-- Delete -->
             <div class=" col-md-4 text-center mb-3">
               <a href="#" onclick="if(confirm('Confirm deletion?')) { excluir('{$id}'); }" class="btn btn-default btn-block" data-dismiss="modal">
@@ -145,6 +158,19 @@ HTML;
                 <i class="fa {$icone} text-success"></i><br>
                 {$titulo_link}
               </a>
+            </div>
+            <div class="col-md-4 text-center mb-3">
+              <form method="POST" action="paginas/vendedores/toggle-login-aluno.php" style="margin:0;">
+                <input type="hidden" name="id" value="{$id}">
+                <input type="hidden" name="valor" value="{$pode_login_como_aluno}">
+                <div class="checkbox" style="margin-top:8px;">
+                  <label>
+                    <input type="checkbox" onchange="this.form.submit()" {$checkedLoginAluno}>
+                    Ativar login como aluno
+                  </label>
+                </div>
+                <small>Status: {$textoPermissaoLoginAluno}</small>
+              </form>
             </div>
             
 
@@ -192,15 +218,17 @@ HTML;
         $('#tabela_filter label input').focus();
     });
 
-    function editar(id, nome, cpf, email, telefone, wallet_id, comissao, professor, foto) {
+    function editar(id, nome, cpf, nascimento, email, telefone, wallet_id, comissao, professor, foto, pode_login_como_aluno) {
 
         $('#wallet_id').val(wallet_id);
         $('#comissao').val(comissao);
-        $('#professor').text(professor == "1" ? true : false);
+        $('#professor').prop('checked', professor == "1");
+        $('#pode_login_como_aluno').prop('checked', String(pode_login_como_aluno) === '1');
         $('#id').val(id);
         $('#nome').val(nome);
         $('#telefone').val(telefone);
         $('#cpf').val(cpf);
+        $('#nascimento').val(nascimento);
         $('#email').val(email);
 
         $('#foto').val('');
@@ -211,7 +239,7 @@ HTML;
         $('#mensagem').text('');
     }
 
-    function mostrar(nome, cpf, email, telefone, wallet_id, comissao, professor, foto, data, ativo) {
+    function mostrar(nome, cpf, nascimento, email, telefone, wallet_id, comissao, professor, foto, data, ativo) {
     // Animações e estilos herdados do design original
     const animationStyles = `
     <style>
@@ -360,6 +388,10 @@ HTML;
                         <span class="info-value">${cpf}</span>
                     </div>
                     <div class="info-item">
+                        <span class="info-label">Data de Nascimento</span>
+                        <span class="info-value">${nascimento}</span>
+                    </div>
+                    <div class="info-item">
                         <span class="info-label">Telefone</span>
                         <span class="info-value">${telefone}</span>
                     </div>
@@ -400,13 +432,14 @@ HTML;
 }
 
 
-    function mostrar2(nome, cpf, email, telefone, wallet_id, comissao, professor, foto, data, cartao, ativo) {
+    function mostrar2(nome, cpf, nascimento, email, telefone, wallet_id, comissao, professor, foto, data, cartao, ativo) {
         $('#walletId').val(wallet_id);
         $('#comissao_mostrar').text(comissao);
         $('#professor_mostrar').text(professor == "1" ? "Sim" : "Não");
         $('#nome_mostrar').text(nome);
         $('#telefone_mostrar').text(telefone);
         $('#cpf_mostrar').text(cpf);
+        $('#nascimento_mostrar').text(nascimento);
         $('#email_mostrar').text(email);
         $('#data_mostrar').text(data);
         $('#ativo_mostrar').text(ativo);
@@ -426,6 +459,7 @@ HTML;
         $('#nome').val('');
         $('#telefone').val('');
         $('#cpf').val('');
+        $('#nascimento').val('');
         $('#email').val('');
         $('#foto').val('');
         $('#target').attr('src', 'img/perfil/sem-perfil.jpg');

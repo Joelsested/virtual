@@ -7,8 +7,7 @@ $descricao = $_POST['descricao'];
 $id = $_POST['id'];
 
 $nome_novo = strtolower( preg_replace("[^a-zA-Z0-9-]", "-", 
-        strtr(utf8_decode(trim($nome)), utf8_decode("áàãâéêíóôõúüñçÁÀÃÂÉÊÍÓÔÕÚÜÑÇ"),
-        "aaaaeeiooouuncAAAAEEIOOOUUNC-")) );
+        strtr(utf8_decode(trim($nome)), utf8_decode("áàãâéêíóôõúüñçÁÀÃÂÉÊÍÓÔÕÚÜÑÇ"), "aaaaeeiooouuncAAAAEEIOOOUUNC-")) );
 $url = preg_replace('/[ -]+/' , '-' , $nome_novo);
 
 
@@ -72,4 +71,4 @@ $query->execute();
 
 echo 'Salvo com Sucesso';
 
- ?>
+?>

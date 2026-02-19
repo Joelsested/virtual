@@ -1,5 +1,5 @@
 <?php
-require_once("../../sistema/conexao.php");
+require_once(__DIR__ . "/../../sistema/conexao.php");
 @session_start();
 $id_aluno = $_SESSION['id'];
 $data_hoje = date('Y-m-d');
@@ -61,9 +61,7 @@ $telefone = str_replace(' ', '', $telefone);
 require_once('config.php');
 
 // AUTO LOAD PARA O COMPOSER
-require_once('vendor/autoload.php');
-
-
+require_once(__DIR__ . '/vendor/autoload.php');
 use Gerencianet\Exception\GerencianetException;
 use Gerencianet\Gerencianet;
  
@@ -102,7 +100,7 @@ $boleto = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRIPPED);
         $query = $pdo->query("UPDATE matriculas SET boleto = '$id_boleto' WHERE id = '$id_matricula' ");
      
         //print_r($charge);
-        header("Location: gerar-boleto.php?id=".$charge['data']['charge_id']."&nome=".$nome."&cpf=".$cpf."&fone=".$telefone."&vencimento=".$data_venc);
+        header("Location: ../pagamentos/boletos/gerar-boleto.php?id=".$charge['data']['charge_id']."&nome=".$nome."&cpf=".$cpf."&fone=".$telefone."&vencimento=".$data_venc);
     } catch (GerencianetException $e) {
         print_r($e->code);
         print_r($e->error);

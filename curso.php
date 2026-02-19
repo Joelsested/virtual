@@ -1,19 +1,26 @@
 <?php
 @session_start();
-include('pgtos/cartao/ApiConfig.php');
+require_once('pgtos/cartao/ApiConfig.php');
 ?>
 
 
 
 <body>
 
-	<script src="https://sdk.mercadopago.com/js/v2"></script>
-<script src="/sistema/painel-admin/js/sweetalert2.js"></script>
+	<?php if (!empty($mp_enabled)) { ?>
+		<script src="https://sdk.mercadopago.com/js/v2"></script>
+	<?php } ?>
+	<script src="sistema/painel-admin/js/sweetalert2.js"></script>
+
 </body>
 
 <script>
 
-	const mp = new MercadoPago("<?php echo $public_key ?>");
+	const mpEnabled = <?php echo !empty($mp_enabled) ? 'true' : 'false'; ?>;
+	let mp = null;
+	if (mpEnabled && "<?php echo $public_key ?>" !== "") {
+		mp = new MercadoPago("<?php echo $public_key ?>");
+	}
 
 </script>
 
@@ -21,7 +28,7 @@ include('pgtos/cartao/ApiConfig.php');
 
 require_once("sistema/conexao.php");
 
-include('pgtos/cartao/ApiConfig.php');
+require_once('pgtos/cartao/ApiConfig.php');
 
 
 
@@ -30,7 +37,8 @@ $id_do_aluno = @$_SESSION['id'];
 
 
 
-$query2 = $pdo->query("SELECT * FROM usuarios where id = '$id_do_aluno'");
+$query2 = $pdo->prepare("SELECT * FROM usuarios where id = :id");
+$query2->execute([':id' => $id_do_aluno]);
 
 $res2 = $query2->fetchAll(PDO::FETCH_ASSOC);
 
@@ -38,7 +46,8 @@ if (@count($res2) > 0) {
 
 	$id_pessoa = $res2[0]['id_pessoa'];
 
-	$query3 = $pdo->query("SELECT * FROM alunos where id = '$id_pessoa'");
+	$query3 = $pdo->prepare("SELECT * FROM alunos where id = :id");
+	$query3->execute([':id' => $id_pessoa]);
 
 	$res3 = $query3->fetchAll(PDO::FETCH_ASSOC);
 
@@ -90,7 +99,8 @@ if ($nivel == "Aluno") {
 
 
 
-$query = $pdo->query("SELECT * FROM cursos where nome_url = '$url'");
+$query = $pdo->prepare("SELECT * FROM cursos where nome_url = :url");
+$query->execute([':url' => $url]);
 
 $res = $query->fetchAll(PDO::FETCH_ASSOC);
 
@@ -192,31 +202,44 @@ if ($total_reg > 0) {
 
 
 
-	$query2 = $pdo->query("SELECT * FROM usuarios where id = '$professor'");
+	$query2 = $pdo->prepare("SELECT * FROM usuarios where id = :id");
+	$query2->execute([':id' => $professor]);
 
 	$res2 = $query2->fetchAll(PDO::FETCH_ASSOC);
 
-	$nome_professor = $res2[0]['nome'];
+	$nome_professor = '';
+	if (@count($res2) > 0) {
+		$nome_professor = $res2[0]['nome'];
+	}
 
 
 
-	$query2 = $pdo->query("SELECT * FROM categorias where id = '$categoria'");
-
-	$res2 = $query2->fetchAll(PDO::FETCH_ASSOC);
-
-	$nome_categoria = $res2[0]['nome'];
-
-
-
-	$query2 = $pdo->query("SELECT * FROM grupos where id = '$grupo'");
+	$query2 = $pdo->prepare("SELECT * FROM categorias where id = :id");
+	$query2->execute([':id' => $categoria]);
 
 	$res2 = $query2->fetchAll(PDO::FETCH_ASSOC);
 
-	$nome_grupo = $res2[0]['nome'];
+	$nome_categoria = '';
+	if (@count($res2) > 0) {
+		$nome_categoria = $res2[0]['nome'];
+	}
 
 
 
-	$query2 = $pdo->query("SELECT * FROM aulas where curso = '$id' order by id asc");
+	$query2 = $pdo->prepare("SELECT * FROM grupos where id = :id");
+	$query2->execute([':id' => $grupo]);
+
+	$res2 = $query2->fetchAll(PDO::FETCH_ASSOC);
+
+	$nome_grupo = '';
+	if (@count($res2) > 0) {
+		$nome_grupo = $res2[0]['nome'];
+	}
+
+
+
+	$query2 = $pdo->prepare("SELECT * FROM aulas where curso = :curso order by id asc");
+	$query2->execute([':curso' => $id]);
 
 	$res2 = $query2->fetchAll(PDO::FETCH_ASSOC);
 
@@ -230,7 +253,8 @@ if ($total_reg > 0) {
 
 	//buscar valor da matricula
 
-	$query = $pdo->query("SELECT * FROM matriculas where id_curso = '$id_do_curso_pag' and aluno = '$id_do_aluno' ");
+	$query = $pdo->prepare("SELECT * FROM matriculas where id_curso = :id_curso and aluno = :aluno");
+	$query->execute([':id_curso' => $id_do_curso_pag, ':aluno' => $id_do_aluno]);
 
 	$res = $query->fetchAll(PDO::FETCH_ASSOC);
 
@@ -280,7 +304,8 @@ if ($total_reg > 0) {
 
 
 
-	$query2 = $pdo->query("SELECT * FROM matriculas where id_curso = '$id' and status != 'Aguardando'");
+	$query2 = $pdo->prepare("SELECT * FROM matriculas where id_curso = :id_curso and status != 'Aguardando'");
+	$query2->execute([':id_curso' => $id]);
 
 	$res2 = $query2->fetchAll(PDO::FETCH_ASSOC);
 
@@ -590,16 +615,6 @@ require_once("cabecalho.php");
 
 
 
-
-
-
-
-
-
-
-
-
-
 			<div class="col-md-12" style="margin-bottom: 20px">
 
 
@@ -611,7 +626,9 @@ require_once("cabecalho.php");
 
 				<?php
 
-				$query = $pdo->query("SELECT * FROM cursos where status = 'Aprovado' and sistema = 'Não' and grupo = '$grupo' and id != '$id' ORDER BY id desc limit $itens_rel");
+				$itens_rel = (int) $itens_rel;
+				$query = $pdo->prepare("SELECT * FROM cursos where status = 'Aprovado' and sistema = 'Não' and grupo = :grupo and id != :id ORDER BY id desc limit $itens_rel");
+				$query->execute([':grupo' => $grupo, ':id' => $id]);
 
 				$res = $query->fetchAll(PDO::FETCH_ASSOC);
 
@@ -661,7 +678,8 @@ require_once("cabecalho.php");
 
 
 
-								$query2 = $pdo->query("SELECT * FROM aulas where curso = '$id' and num_aula = 1 order by id asc");
+								$query2 = $pdo->prepare("SELECT * FROM aulas where curso = :curso and num_aula = 1 order by id asc");
+								$query2->execute([':curso' => $id]);
 
 								$res2 = $query2->fetchAll(PDO::FETCH_ASSOC);
 
@@ -707,7 +725,7 @@ require_once("cabecalho.php");
 
 											<div class="portfolio-content" style="text-align: center; ">
 
-												<h6 class="title"><?php echo $nome ?></h6></small>
+												<h6 class="title"><?php echo $nome ?></h6>
 
 												<p style="margin-top:-10px;"><small><?php echo $desc_rapida ?></small></p>
 
@@ -790,7 +808,8 @@ require_once("cabecalho.php");
 
 				<?php
 
-				$query = $pdo->query("SELECT * FROM avaliacoes where curso = '$id_do_curso_pag' and nota > 2 ORDER BY id desc");
+				$query = $pdo->prepare("SELECT * FROM avaliacoes where curso = :curso and nota > 2 ORDER BY id desc");
+				$query->execute([':curso' => $id_do_curso_pag]);
 
 				$res = $query->fetchAll(PDO::FETCH_ASSOC);
 
@@ -820,7 +839,8 @@ require_once("cabecalho.php");
 
 
 
-						$query2 = $pdo->query("SELECT * FROM usuarios where id = '$aluno_ava' ORDER BY id desc");
+						$query2 = $pdo->prepare("SELECT * FROM usuarios where id = :id ORDER BY id desc");
+						$query2->execute([':id' => $aluno_ava]);
 
 						$res2 = $query2->fetchAll(PDO::FETCH_ASSOC);
 
@@ -1024,22 +1044,12 @@ require_once("cabecalho.php");
 
 
 
-
-
-
-
-
-
-
-
-
-
-
 	<div class="col-md-3 col-sm-12">
 
 		<?php
 
-		$query_m = $pdo->query("SELECT * FROM sessao where curso = '$id_do_curso_pag' ORDER BY id asc");
+		$query_m = $pdo->prepare("SELECT * FROM sessao where curso = :curso ORDER BY id asc");
+		$query_m->execute([':curso' => $id_do_curso_pag]);
 
 		$res_m = $query_m->fetchAll(PDO::FETCH_ASSOC);
 
@@ -1071,7 +1081,8 @@ require_once("cabecalho.php");
 
 
 
-				$query = $pdo->query("SELECT * FROM aulas where curso = '$id_do_curso_pag' and sessao = '$sessao' ORDER BY num_aula asc");
+				$query = $pdo->prepare("SELECT * FROM aulas where curso = :curso and sessao = :sessao ORDER BY num_aula asc");
+				$query->execute([':curso' => $id_do_curso_pag, ':sessao' => $sessao]);
 
 				$res = $query->fetchAll(PDO::FETCH_ASSOC);
 
@@ -1148,7 +1159,8 @@ require_once("cabecalho.php");
 
 
 
-			$query = $pdo->query("SELECT * FROM aulas where curso = '$id_do_curso_pag' ORDER BY num_aula asc");
+			$query = $pdo->prepare("SELECT * FROM aulas where curso = :curso ORDER BY num_aula asc");
+			$query->execute([':curso' => $id_do_curso_pag]);
 
 			$res = $query->fetchAll(PDO::FETCH_ASSOC);
 
@@ -1231,7 +1243,7 @@ require_once("cabecalho.php");
 
 
 
-</div>
+
 
 
 
@@ -1256,16 +1268,6 @@ require_once("cabecalho.php");
 
 
 <hr>
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -1372,21 +1374,7 @@ require_once("cabecalho.php");
 					<input type="hidden" name="nome_curso" id="nome_curso">
 
 
-
-
-
-
-
 				</form>
-
-
-
-
-
-
-
-
-
 
 
 			</div>
@@ -1408,21 +1396,6 @@ require_once("cabecalho.php");
 	</div>
 
 </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 <!-- Modal Login -->
@@ -1471,19 +1444,39 @@ require_once("cabecalho.php");
 
 								<div class="form-group">
 
-									<label>Email ou CPF*</label>
+									<label>CPF *</label>
 
-									<input type="email" name="usuario" id="email_login" class="form-control"
-										required="required" placeholder="Digite seu Email ou CPF">
+									<input type="text" name="usuario" id="email_login" class="form-control"
+										required="required" placeholder="Digite seu CPF (somente números)" inputmode="numeric"
+										pattern="\d*" maxlength="11" autocomplete="off">
+
+									<small class="form-text text-muted">Informe apenas os 11 dígitos, sem pontos ou traços.</small>
 
 								</div>
 
 								<div class="form-group">
 
-									<label>Senha *</label>
+									<label>Data de nascimento *</label>
 
-									<input type="password" name="senha" id="senha_login" class="form-control"
-										required="" placeholder="Digite sua Senha">
+									<div class="input-group">
+
+										<input type="password" name="senha" id="senha_login" class="form-control"
+											required="" placeholder="DDMMAAAA" pattern="\d*" maxlength="8" autocomplete="off">
+
+										<div class="input-group-append">
+
+											<button type="button" class="btn btn-outline-secondary toggle-password"
+												data-target="#senha_login">
+
+												<i class="fa fa-eye"></i>
+
+											</button>
+
+										</div>
+
+									</div>
+
+									<small class="form-text text-muted">Use sua data de nascimento no formato DDMMAAAA.</small>
 
 								</div>
 
@@ -1528,51 +1521,32 @@ require_once("cabecalho.php");
 
 
 
-								<div class="form-group">
+				<div class="form-group">
 
-									<label>Nome *</label>
+					<label>Email *</label>
 
-									<input type="text" name="nome" id="nome_cadastro" class="form-control"
-										required="required" placeholder="Digite seu Nome">
+					<input type="email" name="email" id="email_cadastro" class="form-control"
+						required="required" placeholder="Digite seu Email">
 
-								</div>
+				</div>
 
+				<div class="form-group">
 
+					<label>CPF *</label>
 
-								<div class="form-group">
+					<input type="text" name="cpf" id="cpf_cadastro" class="form-control"
+						required="required" placeholder="000.000.000-00">
 
-									<label>Email *</label>
+				</div>
 
-									<input type="email" name="email" id="email_cadastro" class="form-control"
-										required="required" placeholder="Digite seu Email">
+				<div class="form-group">
 
-								</div>
+					<label>Data de Nascimento *</label>
 
-								<div class="row">
+					<input type="date" name="nascimento" id="nascimento_cadastro" class="form-control"
+						required="required">
 
-									<div class="col-sm-6">
-
-										<div class="form-group">
-
-											<label>Senha *</label>
-
-											<input type="password" name="senha" id="senha_cadastro" class="form-control"
-												required="" placeholder="Digite sua Senha">
-
-										</div>
-
-									</div>
-
-
-
-									<div class="col-sm-6">
-
-										<div class="form-group">
-
-											<label>Cofirmar Senha *</label>
-
-											<input type="password" name="conf_senha" id="conf_senha_cadastro"
-												class="form-control" required="" placeholder="Digite sua Senha">
+				</div>
 
 										</div>
 
@@ -1644,17 +1618,6 @@ require_once("cabecalho.php");
 
 
 
-
-
-
-
-
-
-
-
-
-
-
 <!-- Modal Pagamento Novo -->
 
 <div class="modal fade scrollbar-mobile" id="Pagamento" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
@@ -1691,34 +1654,7 @@ require_once("cabecalho.php");
 
 							<div class="<?php echo $classe_col ?> col-sm-12" style="margin-bottom: 10px">
 
-								<div class="row botoes-mobile" style="margin-top: 25px" align="center">
-
-									<form id="cupom-desconto">
-
-										<div class="col-sm-9 esquerda-mobile-input-botao">
-
-											<div class="form-group">
-
-												<input type="text" name="cupom" id="cupom" class="form-control" required
-													placeholder="Código do Cupom">
-
-
-
-											</div>
-
-										</div>
-
-										<div class="col-sm-3 direita-mobile-input-botao" style="margin-left:-20px">
-
-											<button id="btn-cupom" type="submit" name="submit"
-												class="btn btn-success botao-laranja submit-button">Aplicar </button>
-										</div>
-
-										<input type="hidden" name="id_curso_cupom" value="<?php echo $id_do_curso_pag ?>">
-
-									</form>
-
-								</div>
+							
 								<small>
 
 									<div id="msg-cupom" align="center"></div>
@@ -1738,6 +1674,14 @@ require_once("cabecalho.php");
 									pagamento
 
 								</button>
+
+								<?php if ($nivel == "Aluno") { ?>
+									<div class="responsavel-panel mt-3">
+										<label class="col-form-label mb-1">Responsável confirmado</label>
+										<p id="responsavel-resumo" class="text-muted mb-2">Carregando responsável...</p>
+										<button type="button" class="btn btn-link p-0" id="btn-trocar-responsavel" onclick="abrirResponsavel()">Confirmar ou trocar responsável</button>
+									</div>
+								<?php } ?>
 
 							</div>
 						</div>
@@ -1782,13 +1726,6 @@ require_once("cabecalho.php");
 </div>
 
 
-
-
-
-
-
-
-
 <!-- Modal Matricular -->
 
 <div class="modal fade" id="Matricular" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
@@ -1817,9 +1754,6 @@ require_once("cabecalho.php");
 			<div class="modal-body">
 
 
-
-
-
 				<form id="form-matricula">
 
 					<div class="row">
@@ -1845,11 +1779,9 @@ require_once("cabecalho.php");
 									class="btn btn-default submit-button">Matricular <i
 										class="fa fa-caret-right"></i></button>
 
+								
+
 							</div>
-
-
-
-
 
 						</div>
 
@@ -1864,15 +1796,6 @@ require_once("cabecalho.php");
 
 
 				</form>
-
-
-
-
-
-
-
-
-
 
 
 			</div>
@@ -1894,22 +1817,6 @@ require_once("cabecalho.php");
 	</div>
 
 </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 <!-- Modal Aula -->
 
@@ -1956,19 +1863,6 @@ require_once("cabecalho.php");
 </div>
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
 <!-- Modal CPF -->
 
 <div class="modal fade" id="modalCPF" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
@@ -1990,21 +1884,13 @@ require_once("cabecalho.php");
 
 			</div>
 
-
-
 			<div class="modal-body">
-
-
-
-
 
 				<form action="pgtos/boleto/index.php" method="post" target="_blank">
 
 					<div class="row">
 
 						<div class="col-sm-12">
-
-
 
 							<div class="form-group" align="center">
 
@@ -2014,7 +1900,6 @@ require_once("cabecalho.php");
 							</div>
 
 
-
 							<div class="form-group">
 
 								<button type="submit" class="btn btn-default submit-button">Gerar Boleto <i
@@ -2022,33 +1907,14 @@ require_once("cabecalho.php");
 
 							</div>
 
-
-
-
-
 						</div>
 
 					</div>
 
-
-
 					<input type="hidden" name="id" value="<?php echo $id_do_curso_pag ?>">
 
 
-
-
-
 				</form>
-
-
-
-
-
-
-
-
-
-
 
 			</div>
 
@@ -2071,116 +1937,183 @@ require_once("cabecalho.php");
 </div>
 
 
-
-
-
-
 <script>
+const endpointResponsaveis = 'ajax/usuarios/responsaveis.php';
+let responsavelSelecionado = null;
 
+async function escolherResponsavel() {
+    try {
+        const data = await obterResponsaveis();
+        if (!data.success) {
+            Swal.fire('Erro', data.message || 'N?o foi poss?vel carregar os respons?veis.', 'error');
+            return null;
+        }
 
-	async function realizarMatricula() {
+        const options = [];
+        if (data.current && data.current.id) {
+            options.push(data.current);
+        }
+        (data.options || []).forEach((option) => {
+            if (!options.some((item) => item.id === option.id)) {
+                options.push(option);
+            }
+        });
 
-		var curso = '<?= $id_do_curso_pag ?>';
+        if (options.length === 0) {
+            Swal.fire('Aten??o', 'N?o h? respons?veis ativos cadastrados.', 'warning');
+            return null;
+        }
 
-		var pacote = 'Nao';
+        const defaultId = (data.current && data.current.id) ? data.current.id : options[0].id;
+        const selectOptions = options
+            .map((option) => {
+                const selected = option.id == defaultId ? 'selected' : '';
+                return `<option value="${option.id}" ${selected}>${option.nome} (${option.nivel})</option>`;
+            })
+            .join('');
 
-		$.ajax({
+        const html = `
+            <p><strong>Respons?vel atual:</strong> ${data.current ? `${data.current.nome} (${data.current.nivel})` : 'Sem respons?vel definido'}</p>
+            <p>Escolha o responsavel (vendedor, tutor, secretario ou tesoureiro) que confirma esta matricula.</p>
+            <select id="responsavel-seletor" class="swal2-select w-100">${selectOptions}</select>
+        `;
 
-			url: "ajax/cursos/matricula.php",
+		const result = await Swal.fire({
+			title: 'Confirme o respons?vel',
+			html,
+			width: '640px',
+			showCancelButton: true,
+            confirmButtonText: 'Confirmar',
+            cancelButtonText: 'Cancelar',
+            willOpen: () => {
+                const select = document.getElementById('responsavel-seletor');
+                if (select) {
+                    select.focus();
+                }
+            },
+            preConfirm: () => {
+                const select = document.getElementById('responsavel-seletor');
+                return select ? select.value : defaultId;
+            }
+        });
 
-			method: 'POST',
+        if (!result.isConfirmed) {
+            return null;
+        }
 
-			data: {
-				curso,
-				pacote
-			},
+        return result.value || defaultId;
+    } catch (error) {
+        Swal.fire('Erro', 'N?o foi poss?vel carregar os respons?veis. Tente novamente.', 'error');
+        return null;
+    }
+}
 
-			dataType: "text",
-			success: function (mensagem) {
+  function enviarMatricula(curso, pacote, responsavel) {
+      $.ajax({
+          url: "ajax/cursos/matricula.php",
+          method: 'POST',
+          data: {
+              curso,
+              pacote,
+              responsavel,
+              csrf_token: (window.CSRF_TOKEN || '')
+          },
+          dataType: "text",
+          success: function (mensagem) {
+            if (mensagem.trim() == "Matriculado com Sucesso") {
+                window.location.href = '<?= $url_sistema ?>sistema/painel-aluno/index.php?pagina=cursos';
+            } else {
+                Swal.fire({
+                    title: 'Ops!',
+                    icon: 'error',
+                    text: mensagem,
+                    showConfirmButton: true,
+                    confirmButtonText: 'Acessar o Painel do Aluno',
+                    confirmButtonColor: '#3085d6',
+                    showCloseButton: true,
+                    closeButtonColor: '#3085d6',
+                    closeButtonAriaLabel: 'Fechar',
+                });
+            }
+        },
+    });
+}
 
-				if (mensagem.trim() == "Matriculado com Sucesso") {
+async function obterResponsaveis() {
+    const params = new URLSearchParams();
+    const emailField = document.querySelector('#email-matricula');
+    const emailValue = emailField ? emailField.value.trim() : '';
+    if (emailValue) {
+        params.append('email', emailValue);
+    }
+    const response = await fetch(endpointResponsaveis, {
+        method: 'POST',
+        body: params
+    });
+    return response.json();
+}
 
-					Swal.fire({
-						title: 'Matricula Realizada com Sucesso!',
-						text: 'Acesse o seu painel do aluno para realizar o pagamento!',
-						icon: 'success',
-						showConfirmButton: true,
-						confirmButtonText: 'Ir para o Painel do Aluno',
-						confirmButtonColor: '#3085d6',
-					}).then((result) => {
-						if (result.isConfirmed) {
-							window.open('<?= $url_sistema ?>sistema/painel-aluno/index.php?pagina=cursos', '_blank');
-						}
-					});
+async function atualizarResponsavelResumo() {
+    const resumo = document.getElementById('responsavel-resumo');
+    if (!resumo) return;
+    try {
+        const data = await obterResponsaveis();
+        if (!data.success) {
+            resumo.textContent = data.message || 'N?o foi poss?vel carregar o respons?vel.';
+            return;
+        }
+        const current = data.current;
+        const options = data.options || [];
+        if (current && current.id) {
+            responsavelSelecionado = current.id;
+            resumo.textContent = `${current.nome} (${current.nivel})`;
+            return;
+        }
+        if (responsavelSelecionado) {
+            const escolha = options.find((item) => item.id == responsavelSelecionado);
+            if (escolha) {
+                resumo.textContent = `Selecionado: ${escolha.nome} (${escolha.nivel})`;
+                return;
+            }
+        }
+        if (options.length > 0) {
+            const sugerido = options[0];
+            responsavelSelecionado = sugerido.id;
+            resumo.textContent = `Respons?vel sugerido: ${sugerido.nome} (${sugerido.nivel})`;
+            return;
+        }
+        resumo.textContent = 'Nenhum respons?vel dispon?vel.';
+    } catch (error) {
+        resumo.textContent = 'Erro ao carregar o respons?vel.';
+    }
+}
 
-				} else {
+document.addEventListener('DOMContentLoaded', () => {
+    atualizarResponsavelResumo();
+});
 
-					Swal.fire({
-						title: 'Ops!',
-						icon: 'error',
-						text: mensagem,
-						showConfirmButton: true,
-						confirmButtonText: 'Acessar o Painel do Aluno',
-						confirmButtonColor: '#3085d6',
-						showCloseButton: true,
-						closeButtonColor: '#3085d6',
-						closeButtonAriaLabel: 'Fechar',
-					}).then((result) => {
-						if (result.isConfirmed) {
-							window.open('<?= $url_sistema ?>sistema/painel-aluno/index.php?pagina=cursos', '_blank');
-						}
-					});
+async function abrirResponsavel() {
+    const selecionado = await escolherResponsavel();
+    if (selecionado) {
+        responsavelSelecionado = selecionado;
+        await atualizarResponsavelResumo();
+    }
+}
 
-				}
-
-
-			},
-
-
-
-		});
-
-
-	}
-
-
-
-	document.getElementById("paymentForm").addEventListener("submit", function (e) {
-		e.preventDefault(); // impede o envio imediato
-
-		const form = this;
-
-		// 👉 Criando campos extras dinamicamente
-		const extraData = {
-			tokenSeguranca: "TOKEN"
-		};
-
-		for (const key in extraData) {
-			let input = form.querySelector(`input[name="${key}"]`);
-			if (!input) {
-				input = document.createElement("input");
-				input.type = "hidden";
-				input.name = key;
-				form.appendChild(input);
-			}
-			input.value = extraData[key];
-		}
-
-		// 👉 Pegar valores de todos os campos do formulário
-		const formData = new FormData(form);
-		const values = {};
-		formData.forEach((value, key) => {
-			values[key] = value;
-		});
-
-		matriculaAluno(values.formaDePagamento);
-
-		console.log('terminou')
-	});
+async function realizarMatricula() {
+    const curso = '<?= $id_do_curso_pag ?>';
+    const pacote = 'Nao';
+    if (!responsavelSelecionado) {
+        const responsavelId = await escolherResponsavel();
+        if (!responsavelId) {
+            return;
+        }
+        responsavelSelecionado = responsavelId;
+        await atualizarResponsavelResumo();
+    }
+    enviarMatricula(curso, pacote, responsavelSelecionado);
+}
 </script>
-
-
-
 
 
 
@@ -2207,7 +2140,7 @@ require_once("cabecalho.php");
 
 
 
-		console.log(id, nome, valor, modal);
+		// console.log(id, nome, valor, modal);
 
 		// return;
 
@@ -2231,7 +2164,7 @@ require_once("cabecalho.php");
 
 		if (modal == 'Pagamento') {
 
-// 			matriculaAluno();
+			// matriculaAluno('pix');
 
 			setTimeout(() => {
 
@@ -2254,11 +2187,6 @@ require_once("cabecalho.php");
 </script>
 
 
-
-
-
-
-
 <!--AJAX PARA CHAMAR O ENVIAR.PHP DO EMAIL -->
 
 <script type="text/javascript">
@@ -2266,10 +2194,7 @@ require_once("cabecalho.php");
 	$("#form-contato").submit(function () {
 
 		event.preventDefault();
-
 		var formData = new FormData(this);
-
-
 
 		$.ajax({
 
@@ -2278,24 +2203,12 @@ require_once("cabecalho.php");
 			type: 'POST',
 
 			data: formData,
-
 			success: function (mensagem) {
-
-
-
 				$('#msg').removeClass()
-
-
 
 				if (mensagem.trim() === 'Enviado com Sucesso!') {
 
-
-
 					$('#msg').addClass('text-success')
-
-
-
-
 
 					$('#nome').val('');
 
@@ -2304,45 +2217,16 @@ require_once("cabecalho.php");
 					$('#email').val('');
 
 					$('#mensagem').val('');
-
-
-
-
-
-					//$('#btn-fechar').click();
-
-					//location.reload();
-
-
-
-
-
 				} else {
-
-
-
 					$('#msg').addClass('text-danger')
-
 				}
-
-
 
 				$('#msg').text(mensagem)
-
-
-
 			},
 
-
-
 			cache: false,
-
 			contentType: false,
-
 			processData: false,
-
-
-
 		});
 
 
@@ -2350,115 +2234,39 @@ require_once("cabecalho.php");
 	});
 
 </script>
-
-
-
-
-
-
-
-
-
-
-
-
 
 <script type="text/javascript">
+$("#form-cadastro").submit(function (event) {
+    event.preventDefault();
+    var formData = new FormData(this);
 
-	$("#form-cadastro").submit(function () {
-
-		event.preventDefault();
-
-		var formData = new FormData(this);
-
-
-
-		$.ajax({
-
-			url: "sistema/cadastro.php",
-
-			type: 'POST',
-
-			data: formData,
-
-
-
-			success: function (mensagem) {
-
-				$('#msg-login').text('');
-
-				$('#msg-login').removeClass()
-
-				if (mensagem.trim() == "Cadastrado com Sucesso") {
-
-					//$('#btn-fechar-usu').click();
-
-					$('#msg-login').addClass('text-success')
-
-					$('#msg-login').text(mensagem)
-
-					$('#email_login').val($('#email_cadastro').val())
-
-					$('#senha_login').val($('#senha_cadastro').val())
-
-
-
-					$('#nome_cadastro').val('');
-
-					$('#email_cadastro').val('');
-
-					$('#senha_cadastro').val('');
-
-					$('#conf_senha_cadastro').val('');
-
-
-
-
-
-					$('#msg-login').text('Cadastrado com Sucesso!! Clique em Login para prosseguir para o pagamento!')
-
-
-
-				} else {
-
-
-
-					$('#msg-login').addClass('text-danger')
-
-					$('#msg-login').text(mensagem)
-
-				}
-
-
-
-
-
-			},
-
-
-
-			cache: false,
-
-			contentType: false,
-
-			processData: false,
-
-
-
-		});
-
-
-
-	});
-
+    $.ajax({
+        url: "sistema/cadastro.php",
+        type: 'POST',
+        data: formData,
+        success: function (mensagem) {
+            $('#msg-login').text('').removeClass();
+            if (mensagem.trim() == "Cadastrado com Sucesso") {
+                $('#msg-login').addClass('text-success');
+                $('#email_login').val($('#cpf_cadastro').val());
+                const nascimentoDigits = $('#nascimento_cadastro').val().replace(/[^0-9]/g, '');
+                $('#senha_login').val(nascimentoDigits);
+                $('#nome_cadastro').val('');
+                $('#email_cadastro').val('');
+                $('#cpf_cadastro').val('');
+                $('#nascimento_cadastro').val('');
+                $('#msg-login').text('Cadastrado com Sucesso!! Clique em Login para prosseguir!');
+            } else {
+                $('#msg-login').addClass('text-danger');
+                $('#msg-login').text(mensagem);
+            }
+        },
+        cache: false,
+        contentType: false,
+        processData: false
+    });
+});
 </script>
-
-
-
-
-
-
-
 
 
 
@@ -2476,6 +2284,15 @@ require_once("cabecalho.php");
 		var modal = 'Pagamento';
 
 		event.preventDefault();
+
+		const cpfField = $('#email_login');
+		const senhaField = $('#senha_login');
+		if (cpfField.length) {
+			cpfField.val(cpfField.val().replace(/\D/g, ''));
+		}
+		if (senhaField.length) {
+			senhaField.val(senhaField.val().replace(/\D/g, ''));
+		}
 
 		var formData = new FormData(this);
 
@@ -2545,29 +2362,30 @@ require_once("cabecalho.php");
 
 	});
 
+	$('.toggle-password').on('click', function () {
+		const target = $($(this).data('target'));
+		if (!target.length) {
+			return;
+		}
+		const type = target.attr('type') === 'password' ? 'text' : 'password';
+		target.attr('type', type);
+		$(this).find('i').toggleClass('fa-eye fa-eye-slash');
+	});
+
 </script>
-
-
-
-
-
-
-
-
-
-
 
 
 
 <script type="text/javascript">
 
-	$("#form-matricula").submit(function () {
+ 	$("#form-matricula").submit(function () {
 
 
 
-		event.preventDefault();
-
-		var formData = new FormData(this);
+ 		event.preventDefault();
+ 
+ 		var formData = new FormData(this);
+		formData.append('csrf_token', (window.CSRF_TOKEN || ''));
 
 
 
@@ -2630,34 +2448,32 @@ require_once("cabecalho.php");
 </script>
 
 
-
-
-
-
-
 <script type="text/javascript">
 
-	function matriculaAluno() {
+ 	function matriculaAluno(paymentType) {
+ 
+ 		var curso = '<?= $id_do_curso_pag ?>';
+ 
+ 		var pacote = 'Nao';
 
-		var curso = '<?= $id_do_curso_pag ?>';
-
-		var pacote = 'Não';
 
 
-
-		$.ajax({
-
-			url: "ajax/cursos/matricula.php",
-
-			method: 'POST',
-
-			data: {
-
-				curso,
-
-				pacote
-
-			},
+ 		$.ajax({
+ 
+ 			url: "ajax/cursos/matricula.php",
+ 
+ 			method: 'POST',
+ 
+ 			data: {
+ 
+ 				curso,
+ 
+ 				pacote,
+ 
+				paymentType,
+				csrf_token: (window.CSRF_TOKEN || '')
+ 
+ 			},
 
 			dataType: "text",
 
@@ -2669,11 +2485,21 @@ require_once("cabecalho.php");
 
 				if (mensagem.trim() == "Matriculado com Sucesso") {
 
-
+					window.location.href = '<?= $url_sistema ?>sistema/painel-aluno/index.php?pagina=cursos';
 
 				} else {
 
-
+					Swal.fire({
+						title: 'Ops!',
+						icon: 'error',
+						text: mensagem,
+						showConfirmButton: true,
+						confirmButtonText: 'Fechar',
+						confirmButtonColor: '#3085d6',
+						showCloseButton: true,
+						closeButtonColor: '#3085d6',
+						closeButtonAriaLabel: 'Fechar',
+					})
 
 				}
 
@@ -2686,9 +2512,6 @@ require_once("cabecalho.php");
 	}
 
 </script>
-
-
-
 
 
 <script type="text/javascript">
@@ -2708,15 +2531,14 @@ require_once("cabecalho.php");
 </script>
 
 
-
-
-
-
-
 <script type="text/javascript">
 
 	function listarBotaoMP() {
 
+		if (!mpEnabled) {
+			$("#listar-btn-mp").html('');
+			return;
+		}
 
 
 		var id = '<?= $id_do_curso_pag ?>';
@@ -2769,12 +2591,6 @@ require_once("cabecalho.php");
 
 
 
-
-
-
-
-
-
 <script type="text/javascript">
 
 	function excluirAvaliacao(id) {
@@ -2814,16 +2630,6 @@ require_once("cabecalho.php");
 	}
 
 </script>
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -2915,16 +2721,6 @@ require_once("cabecalho.php");
 
 </script>
 
-
-
-
-
-
-
-
-
-
-
 <script type="text/javascript">
 
 	$("#form-cartao-fidelidade").submit(function () {
@@ -2981,14 +2777,6 @@ require_once("cabecalho.php");
 
 </script>
 
-
-
-
-
-
-
-
-
 <?php
 
 require_once("rodape.php");
@@ -3001,15 +2789,11 @@ require_once("rodape.php");
 
 if (@$_POST['painel_aluno'] == 'sim') {
 
-	echo "<script>$('#btn-pagamento').click();</script>";
+	echo "";
 
 }
 
 ?>
-
-
-
-
 
 
 
@@ -3030,15 +2814,6 @@ if (@$_POST['painel_aluno'] == 'sim') {
 	}
 
 </script>
-
-
-
-
-
-
-
-
-
 
 
 <script type="text/javascript">
@@ -3088,12 +2863,6 @@ if (@$_POST['painel_aluno'] == 'sim') {
 	}
 
 </script>
-
-
-
-
-
-
 
 
 
@@ -3182,10 +2951,7 @@ if (@$_POST['painel_aluno'] == 'sim') {
 			const quantidade = parseInt(parcelasSelect.value);
 			if (quantidade === 1) {
 				const valorPorParcela = (valorCurso / quantidade).toFixed(2);
-				valorParceladoDiv.innerHTML = `A parcela ficará em <span style="color:#ff8800; font-zize: 16px; font-weight: bold;">R$ ${valorPorParcela.replace('.', ',')}</span>
-				    <br>
-				    <span>Para pagamentos à vista, você pode realizar o pagamento tanto pelo BOLETO ou pelo PIX</span>
-				`;
+				valorParceladoDiv.innerHTML = `A parcela ficará em <span style="color:#ff8800; font-zize: 16px; font-weight: bold;">R$ ${valorPorParcela.replace('.', ',')}</span>`;
 				valorParceladoDiv.style.display = 'block';
 			}
 			if (quantidade >= 2) {

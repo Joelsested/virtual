@@ -92,7 +92,7 @@ $query->execute();
 
 
 if($cartao == 'Sim'){
-	//ADICIONAR MAIS UM CARTÃO PARA O ALUNO
+	//ADICIONAR MAIS UM CARTÍO PARA O ALUNO
 $cartoes += 1;
 $pdo->query("UPDATE alunos SET cartao = '$cartoes' where id = '$id_pessoa_aluno'");
 }
@@ -166,7 +166,7 @@ if($nivel_do_usu == 'Professor'){
 
 
 
-//LANÇAR COMISSÃO DO PROFESSOR
+//LANÇAR COMISSÍO DO PROFESSOR
 $valor_comissao_pagar = ($valor_comissao * $subtotal) / 100;
 if(strtotime($hoje) < strtotime($data_pgto_comissao)){
 	$data_venc = $data_pgto_comissao;
@@ -178,7 +178,7 @@ if(strtotime($hoje) < strtotime($data_pgto_comissao)){
 if($valor_comissao_pagar > 0){
 	var_dump('teste');
 
-	$query = $pdo->query("INSERT INTO pagar SET descricao = 'Comissão',  valor = '$valor_comissao_pagar', data = curDate(), vencimento = '$data_venc', pago = 'Não', arquivo = 'sem-foto.png', professor = '$usuario_comissao', curso = '$nome_curso'");
+	$query = $pdo->query("INSERT INTO pagar SET descricao = 'Comissão', ?? valor = '$valor_comissao_pagar', data = curDate(), vencimento = '$data_venc', pago = 'Não', arquivo = 'sem-foto.png', professor = '$usuario_comissao', curso = '$nome_curso'");
 }else{
 	echo "string";
 }

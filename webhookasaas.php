@@ -1,4 +1,15 @@
 <?php
+require_once __DIR__ . '/config/env.php';
+$asaas_enabled = filter_var(env('ASAAS_ENABLED', 'false'), FILTER_VALIDATE_BOOLEAN);
+if (!$asaas_enabled) {
+	http_response_code(410);
+	echo json_encode(["status" => "disabled", "message" => "Asaas desativado"]);
+	exit;
+}
+
+require_once __DIR__ . '/config/webhook.php';
+webhook_require_token();
+
 require("./sistema/conexao.php");
 
 header("Content-Type: application/json");
@@ -15,6 +26,76 @@ function logMessage($message, $file = null)
     file_put_contents($file, date('[Y-m-d H:i:s] ') . $message . "\n", FILE_APPEND);
 }
 
+function calcularValorSplitWebhook(array $splitItem, ?float $paymentValue): ?float
+{
+    $valor = $splitItem['totalValue'] ?? $splitItem['value'] ?? $splitItem['fixedValue'] ?? null;
+    if ($valor !== null) {
+        return (float) str_replace(',', '.', (string) $valor);
+    }
+
+    $percentual = $splitItem['percentualValue'] ?? $splitItem['percentual'] ?? null;
+    if ($percentual !== null && $paymentValue !== null) {
+        return ($paymentValue * (float) $percentual) / 100;
+    }
+
+    return null;
+}
+
+function registrarSplitsComissao(PDO $pdo, array $splits, string $gateway, string $pagamentoId, ?int $idMatricula, string $statusPagamento, ?string $dataPagamento, ?float $valorPagamento, $errorLogFile = null)
+{
+    if (empty($splits) || $pagamentoId === '') {
+        return;
+    }
+
+    $statusComissao = in_array($statusPagamento, ['RECEIVED', 'RECEIVED_IN_CASH', 'CONFIRMED'], true) ? 'RECEBIDO' : 'PENDENTE';
+    $dataPgto = $dataPagamento ? substr($dataPagamento, 0, 10) : null;
+    if ($dataPgto !== null && !preg_match('/^\d{4}-\d{2}-\d{2}$/', $dataPgto)) {
+        $dataPgto = null;
+    }
+
+    try {
+        $stmtUsuario = $pdo->prepare("SELECT id FROM usuarios WHERE wallet_id = :wallet_id LIMIT 1");
+        $stmtUpsert = $pdo->prepare("INSERT INTO comissoes_recebimentos
+            (gateway, pagamento_id, id_matricula, wallet_id, usuario_id, valor, status, data_pagamento)
+            VALUES (:gateway, :pagamento_id, :id_matricula, :wallet_id, :usuario_id, :valor, :status, :data_pagamento)
+            ON DUPLICATE KEY UPDATE
+                id_matricula = VALUES(id_matricula),
+                usuario_id = VALUES(usuario_id),
+                valor = VALUES(valor),
+                status = VALUES(status),
+                data_pagamento = VALUES(data_pagamento)");
+
+        foreach ($splits as $splitItem) {
+            $walletId = $splitItem['walletId'] ?? $splitItem['wallet_id'] ?? null;
+            if (!$walletId) {
+                continue;
+            }
+
+            $valorSplit = calcularValorSplitWebhook($splitItem, $valorPagamento);
+            if ($valorSplit === null) {
+                continue;
+            }
+
+            $stmtUsuario->execute([':wallet_id' => $walletId]);
+            $usuarioId = $stmtUsuario->fetchColumn();
+            $usuarioId = $usuarioId ? (int) $usuarioId : null;
+
+            $stmtUpsert->execute([
+                ':gateway' => $gateway,
+                ':pagamento_id' => $pagamentoId,
+                ':id_matricula' => $idMatricula,
+                ':wallet_id' => $walletId,
+                ':usuario_id' => $usuarioId,
+                ':valor' => $valorSplit,
+                ':status' => $statusComissao,
+                ':data_pagamento' => $dataPgto,
+            ]);
+        }
+    } catch (PDOException $e) {
+        logMessage("Erro ao registrar splits de comissao: " . $e->getMessage(), $errorLogFile);
+    }
+}
+
 // Captura os dados da requisição POST
 $inputJSON = file_get_contents("php://input");
 logMessage("Webhook recebido: " . $inputJSON);
@@ -29,20 +110,21 @@ if (json_last_error() !== JSON_ERROR_NONE) {
     exit;
 }
 
-// Enviar os dados para outro webhook
-$webhookUrl = "https://webhook.site/f704a324-f9fe-4c0d-82e2-e6f6acbbeda9";
+// Enviar os dados para outro webhook (opcional)
+$webhookUrl = env('ASAAS_FORWARD_WEBHOOK_URL', '');
+if ($webhookUrl !== '') {
+    $ch = curl_init($webhookUrl);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_POST, true);
+    curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($inputData));
+    curl_setopt($ch, CURLOPT_HTTPHEADER, [
+        "Content-Type: application/json"
+    ]);
 
-$ch = curl_init($webhookUrl);
-curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-curl_setopt($ch, CURLOPT_POST, true);
-curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($inputData));
-curl_setopt($ch, CURLOPT_HTTPHEADER, [
-    "Content-Type: application/json"
-]);
-
-$response = curl_exec($ch);
-$httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-curl_close($ch);
+    $response = curl_exec($ch);
+    $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+    curl_close($ch);
+}
 
 $data = $inputData;
 $eventType = isset($data['event']) ? $data['event'] : 'UNKNOWN_EVENT';
@@ -83,7 +165,7 @@ $statusPagamento = $data['payment']['status'];
 $idDoPagamento = $data['payment']['id'];
 $billingType = $data['payment']['billingType'];
 $asaas_id = $idDoPagamento;
-$valor_pago = $data['payment']['value'];
+$valor_pago = isset($data['payment']['value']) ? (float) str_replace(',', '.', (string) $data['payment']['value']) : 0.0;
 $split = isset($data['payment']['split']) ? $data['payment']['split'] : [];
 
 // Verifica se existe a matrícula correspondente
@@ -91,16 +173,28 @@ try {
     $queryMatriculas = $pdo->prepare("SELECT * FROM matriculas WHERE id_asaas = :asaas_id");
     $queryMatriculas->execute([':asaas_id' => $asaas_id]);
     $resultMatriculas = $queryMatriculas->fetch(PDO::FETCH_ASSOC);
+    $paymentDateRaw = $data['payment']['paymentDate'] ?? $data['payment']['confirmedDate'] ?? $data['payment']['clientPaymentDate'] ?? null;
+    $idMatricula = $resultMatriculas ? (int) ($resultMatriculas['id'] ?? 0) : null;
+    registrarSplitsComissao(
+        $pdo,
+        $split,
+        'asaas',
+        $idDoPagamento,
+        $idMatricula,
+        $statusPagamento,
+        $paymentDateRaw,
+        $valor_pago,
+        $errorLogFile
+    );
 
     if (!$resultMatriculas) {
-        logMessage("Matrícula não encontrada para o ID ASAAS: " . $asaas_id, $errorLogFile);
-        echo json_encode(["status" => "error", "message" => "Matrícula não encontrada"]);
+        logMessage("Matr?cula n?o encontrada para o ID ASAAS: " . $asaas_id, $errorLogFile);
+        echo json_encode(["status" => "error", "message" => "Matr?cula n?o encontrada"]);
         exit;
     }
 
-    logMessage("Matrícula encontrada: " . json_encode($resultMatriculas));
+    logMessage("Matr?cula encontrada: " . json_encode($resultMatriculas));
 
-    // Extrai informações da matrícula
     $valor_curso = $valor_pago;
     $id_curso = $resultMatriculas['id_curso'];
     $aluno_id = $resultMatriculas['aluno'];

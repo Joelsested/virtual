@@ -195,7 +195,7 @@ if (@$_SESSION['nivel'] != 'Administrador' and @$_SESSION['nivel'] != 'Secretari
 
 
 <script type="text/javascript">
-    var pag = "<?= $pag ?>"
+    var pag = "<= $pag >"
 </script>
 <script src="js/ajax.js"></script>
 

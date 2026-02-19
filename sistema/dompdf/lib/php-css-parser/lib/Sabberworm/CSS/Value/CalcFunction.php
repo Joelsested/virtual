@@ -42,13 +42,10 @@ class CalcFunction extends CSSFunction {
 					$iLastComponentType = CalcFunction::T_OPERATOR;
 				} else {
 					throw new UnexpectedTokenException(
-						sprintf(
-							'Next token was expected to be an operand of type %s. Instead "%s" was found.',
+						sprintf( ?? 'Next token was expected to be an operand of type %s. Instead "%s" was found.',
 							implode(', ', $aOperators),
 							$oVal
-						),
-						'',
-						'custom',
+						), '', 'custom',
 						$oParserState->currentLine()
 					);
 				}

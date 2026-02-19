@@ -41,4 +41,3 @@ $query2 = $pdo->query("SELECT * FROM usuarios where id = '$aluno'");
 
 
 ?>
-

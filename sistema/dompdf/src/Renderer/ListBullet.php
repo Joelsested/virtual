@@ -1,9 +1,9 @@
 <?php
 /**
  * @package dompdf
- * @link    http://dompdf.github.com/
- * @author  Benj Carson <benjcarson@digitaljunkies.ca>
- * @author  Helmut Tischer <htischer@weihenstephan.org>
+ * @link ? http ://dompdf.github.com/
+ * @author ?? Benj Carson <benjcarson@digitaljunkies.ca>
+ * @author ?? Helmut Tischer <htischer@weihenstephan.org>
  * @license http://www.gnu.org/copyleft/lesser.html GNU Lesser General Public License
  */
 namespace Dompdf\Renderer;
@@ -16,7 +16,7 @@ use Dompdf\FrameDecorator\ListBullet as ListBulletFrameDecorator;
 /**
  * Renders list bullets
  *
- * @access  private
+ * @access ?? private
  * @package dompdf
  */
 class ListBullet extends AbstractRenderer
@@ -156,8 +156,7 @@ class ListBullet extends AbstractRenderer
             // See also Image::get_min_max_width
             // Tested php ver: value measured in px, suffix "px" not in value: rtrim unnecessary.
             //$w = $frame->get_width();
-            //$h = $frame->get_height();
-            list($width, $height) = Helpers::dompdf_getimagesize($img, $this->_dompdf->getHttpContext());
+            //$h = $frame->get_height(); ? list($width, $height) = Helpers::dompdf_getimagesize($img, $this->_dompdf->getHttpContext());
             $dpi = $this->_dompdf->getOptions()->getDpi();
             $w = ((float)rtrim($width, "px") * 72) / $dpi;
             $h = ((float)rtrim($height, "px") * 72) / $dpi;

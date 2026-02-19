@@ -9,7 +9,7 @@ exit();
 
 echo <<<HTML
 HTML;
-$query_m = $pdo->query("SELECT * FROM $tabela where curso = '$id'  ORDER BY id asc");
+$query_m = $pdo->query("SELECT * FROM $tabela where curso = '$id' ?? ORDER BY id asc");
 $res_m = $query_m->fetchAll(PDO::FETCH_ASSOC);
 $total_reg_m = @count($res_m);
 $ultima_aula = 1;
@@ -86,4 +86,3 @@ echo '<br>';
 
 
 ?>
-

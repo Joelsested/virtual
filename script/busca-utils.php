@@ -65,7 +65,7 @@ function clausula_busca_sem_acento(array $campos, string $padraoOriginal, string
 {
     $clausulas = [];
     foreach ($campos as $campo) {
-        $clausulas[] = "$campo LIKE '$padraoOriginal' COLLATE utf8_general_ci";
+        $clausulas[] = "$campo LIKE '$padraoOriginal' COLLATE utf8mb4_general_ci";
         $clausulas[] = sql_sem_acentos($campo) . " LIKE '$padraoSemAcento'";
     }
 

@@ -128,7 +128,7 @@ class ParserTest extends \PHPUnit_Framework_TestCase {
 
 	function testUnicodeRangeParsing() {
 		$oDoc = $this->parsedStructureForFile('unicode-range');
-		$sExpected = "@font-face {unicode-range: U+0100-024F,U+0259,U+1E??-2EFF,U+202F;}";
+		$sExpected = "@font-face {unicode-range: U+0100-024F,U+0259,U+1E-2EFF,U+202F;}";
 		$this->assertSame($sExpected, $oDoc->render());
 	}
 
@@ -181,8 +181,7 @@ html, body {font-size: -.6em;}
 @page :pseudo-class {margin: 2in;}
 @-moz-document url(http://www.w3.org/),
                url-prefix(http://www.w3.org/Style/),
-               domain(mozilla.org),
-               regexp("https:.*") {body {color: purple;background: yellow;}}
+               domain(mozilla.org), ? regexp("https:.*") {body {color: purple;background: yellow;}}
 @media screen and (orientation: landscape) {@-ms-viewport {width: 1024px;height: 768px;}}
 @region-style #intro {p {color: blue;}}', $oDoc->render());
 		foreach ($oDoc->getAllDeclarationBlocks() as $oBlock) {
@@ -202,8 +201,7 @@ html, body {font-size: -.6em;}
 @page :pseudo-class {margin: 2in;}
 @-moz-document url(http://www.w3.org/),
                url-prefix(http://www.w3.org/Style/),
-               domain(mozilla.org),
-               regexp("https:.*") {#my_id body {color: purple;background: yellow;}}
+               domain(mozilla.org), ? regexp("https:.*") {#my_id body {color: purple;background: yellow;}}
 @media screen and (orientation: landscape) {@-ms-viewport {width: 1024px;height: 768px;}}
 @region-style #intro {#my_id p {color: blue;}}', $oDoc->render());
 
@@ -543,7 +541,7 @@ body {background-url: url("http://somesite.com/images/someimage.gif");}';
 	/**
 	 * Parse structure for file.
 	 *
-	 * @param string      $sFileName Filename.
+	 * @param string ?? $sFileName Filename.
 	 * @param null|obJeCt $oSettings Settings.
 	 *
 	 * @return CSSList\Document Parsed document.
@@ -560,15 +558,8 @@ body {background-url: url("http://somesite.com/images/someimage.gif");}';
 	function testLineNumbersParsing() {
 		$oDoc = $this->parsedStructureForFile('line-numbers');
 		// array key is the expected line number
-		$aExpected = array(
-			1 => array('Sabberworm\CSS\Property\Charset'),
-			3 => array('Sabberworm\CSS\Property\CSSNamespace'),
-			5 => array('Sabberworm\CSS\RuleSet\AtRuleSet'),
-			11 => array('Sabberworm\CSS\RuleSet\DeclarationBlock'),
-			// Line Numbers of the inner declaration blocks
-			17 => array('Sabberworm\CSS\CSSList\KeyFrame', 18, 20),
-			23 => array('Sabberworm\CSS\Property\Import'),
-			25 => array('Sabberworm\CSS\RuleSet\DeclarationBlock')
+		$aExpected = array( ?? 1 => array('Sabberworm\CSS\Property\Charset'), 3 => array('Sabberworm\CSS\Property\CSSNamespace'), 5 => array('Sabberworm\CSS\RuleSet\AtRuleSet'), 11 => array('Sabberworm\CSS\RuleSet\DeclarationBlock'),
+			// Line Numbers of the inner declaration blocks ?? 17 => array('Sabberworm\CSS\CSSList\KeyFrame', 18, 20), 23 => array('Sabberworm\CSS\Property\Import'), 25 => array('Sabberworm\CSS\RuleSet\DeclarationBlock')
 		);
 
 		$aActual = array();

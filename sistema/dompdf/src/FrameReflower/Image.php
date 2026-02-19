@@ -1,9 +1,9 @@
 <?php
 /**
  * @package dompdf
- * @link    http://dompdf.github.com/
- * @author  Benj Carson <benjcarson@digitaljunkies.ca>
- * @author  Fabien Ménager <fabien.menager@gmail.com>
+ * @link ? http ://dompdf.github.com/
+ * @author ?? Benj Carson <benjcarson@digitaljunkies.ca>
+ * @author ?? Fabien Ménager <fabien.menager@gmail.com>
  * @license http://www.gnu.org/copyleft/lesser.html GNU Lesser General Public License
  */
 namespace Dompdf\FrameReflower;
@@ -42,7 +42,7 @@ class Image extends AbstractFrameReflower
         //$page = $frame->get_root();
 
         //if ($frame->get_style()->float !== "none" ) {
-        //  $page->add_floating_frame($this);
+        // ?? $page->add_floating_frame($this);
         //}
 
         // Set the frame's width
@@ -61,8 +61,7 @@ class Image extends AbstractFrameReflower
         $frame = $this->_frame;
 
         if ($this->get_dompdf()->getOptions()->getDebugPng()) {
-            // Determine the image's size. Time consuming. Only when really needed?
-            list($img_width, $img_height) = Helpers::dompdf_getimagesize($frame->get_image_url(), $this->get_dompdf()->getHttpContext());
+            // Determine the image's size. Time consuming. Only when really needed ? list($img_width, $img_height) = Helpers::dompdf_getimagesize($frame->get_image_url(), $this->get_dompdf()->getHttpContext());
             print "get_min_max_width() " .
                 $frame->get_style()->width . ' ' .
                 $frame->get_style()->height . ';' .
@@ -89,8 +88,7 @@ class Image extends AbstractFrameReflower
         $height = $this->get_size($frame, 'height');
 
         if ($width === 'auto' || $height === 'auto') {
-            // Determine the image's size. Time consuming. Only when really needed!
-            list($img_width, $img_height) = Helpers::dompdf_getimagesize($frame->get_image_url(), $this->get_dompdf()->getHttpContext());
+            // Determine the image's size. Time consuming. Only when really needed! ? list($img_width, $img_height) = Helpers::dompdf_getimagesize($frame->get_image_url(), $this->get_dompdf()->getHttpContext());
 
             // don't treat 0 as error. Can be downscaled or can be catched elsewhere if image not readable.
             // Resample according to px per inch

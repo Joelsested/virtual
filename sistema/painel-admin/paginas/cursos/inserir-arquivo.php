@@ -45,4 +45,4 @@ $pdo->query("INSERT INTO arquivos_cursos SET curso = '$id_curso', arquivo = '$im
 
 echo 'Salvo com Sucesso';
 
- ?>
+?>

@@ -40,7 +40,7 @@ if($total_reg > 0){
 
 		$url_login = $url_sistema.'sistema';
 
-		//COLOCAR O CAMPO DE ALERTADO COMO SIM PARA O EMAIL NÃO SER ENVIADO NOVAMENTE
+		//COLOCAR O CAMPO DE ALERTADO COMO SIM PARA O EMAIL NÍO SER ENVIADO NOVAMENTE
 		$pdo->query("UPDATE matriculas set alertado = 'sim' where id = '$id_mat'");
 
 
@@ -57,11 +57,7 @@ if($total_reg > 0){
 
                        <i>Nosso Site - <a href='$url_sistema' target='_blank'>$url_sistema</a></i>
                       <br>
-                      WhatsApp -> <a href='http://api.whatsapp.com/send?1=pt_BR&phone=55$tel_sistema' alt='$tel_sistema' target='_blank'><i class='fab fa-whatsapp'></i>$tel_sistema</a>
-
-
-
-		";
+                      WhatsApp -> <a href='http://api.whatsapp.com/send1=pt_BR&phone=55$tel_sistema' alt='$tel_sistema' target='_blank'><i class='fab fa-whatsapp'></i>$tel_sistema</a> ?? ";
 
 
 		$dest = $email_sistema;
@@ -99,4 +95,4 @@ if($total_reg > 0){
 //ATUALIZAR NO CONFIG O CAMPO SCRIPT DIA PARA O DIA ATUAL
 $pdo->query("UPDATE config set script_dia = curDate()");
 
- ?>
+?>

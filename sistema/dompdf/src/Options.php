@@ -50,7 +50,7 @@ class Options
      * All local files opened by dompdf must be in a subdirectory of this directory
      * or array of directories.
      * DO NOT set it to '/' since this could allow an attacker to use dompdf to
-     * read any files on the server.  This should be an absolute path.
+     * read any files on the server. ?? This should be an absolute path.
      *
      * ==== IMPORTANT ====
      * This setting may increase the risk of system exploit. Do not change
@@ -71,7 +71,7 @@ class Options
      * html target media view which should be rendered into pdf.
      * List of types and parsing rules for future extensions:
      * http://www.w3.org/TR/REC-html40/types.html
-     *   screen, tty, tv, projection, handheld, print, braille, aural, all
+     * ?? screen, tty, tv, projection, handheld, print, braille, aural, all
      * Note: aural is deprecated in CSS 2.1 because it is replaced by speech in CSS 3.
      * Note, even though the generated pdf file is intended for print output,
      * the desired content might be different (e.g. screen or projection view of html file).
@@ -112,11 +112,11 @@ class Options
     /**
      * Image DPI setting
      *
-     * This setting determines the default DPI setting for images and fonts.  The
+     * This setting determines the default DPI setting for images and fonts. ?? The
      * DPI may be overridden for inline images by explicitly setting the
      * image's width & height style attributes (i.e. if the image's native
      * width is 600 pixels and you specify the image's width as 72 points,
-     * the image will have a DPI of 600 in the rendered PDF.  The DPI of
+     * the image will have a DPI of 600 in the rendered PDF. ?? The DPI of
      * background images can not be overridden and is controlled entirely
      * via this parameter.
      *
@@ -263,7 +263,7 @@ class Options
      * PDFlib license key
      *
      * If you are using a licensed, commercial version of PDFlib, specify
-     * your license key here.  If you are using PDFlib-Lite or are evaluating
+     * your license key here. ?? If you are using PDFlib-Lite or are evaluating
      * the commercial version of PDFlib, comment out this setting.
      *
      * @link http://www.pdflib.com

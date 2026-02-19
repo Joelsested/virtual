@@ -1,8 +1,8 @@
 <?php
 /**
  * @package dompdf
- * @link    http://dompdf.github.com/
- * @author  Benj Carson <benjcarson@digitaljunkies.ca>
+ * @link ? http ://dompdf.github.com/
+ * @author ?? Benj Carson <benjcarson@digitaljunkies.ca>
  * @license http://www.gnu.org/copyleft/lesser.html GNU Lesser General Public License
  */
 
@@ -41,7 +41,7 @@ class Inline extends AbstractPositioner
         // End debugging
 
         if (!$p) {
-            throw new Exception("No block-level parent found.  Not good.");
+            throw new Exception("No block-level parent found. ?? Not good.");
         }
 
         $f = $frame;

@@ -4,13 +4,15 @@ require_once('../conexao.php');
 
 require_once('verificar.php');
 
+$csrf_token = csrf_token();
+
 
 
 $id_usuario = $_SESSION['id'];
 
 
 
-$pagina = isset($_GET['pagina']) ? $_GET['pagina'] : '';
+$pagina = isset($_GET['pagina']) ?? $_GET['pagina'] ?: '';
 
 if (@$_GET['pagina'] != "") {
 
@@ -26,9 +28,10 @@ if (@$_GET['pagina'] != "") {
 
 
 
-//RECUPERAR DADOS DO USUÁRIO
+//RECUPERAR DADOS DO USU?RIO
 
-$query = $pdo->query("SELECT * FROM usuarios where id = '$id_usuario'");
+$query = $pdo->prepare("SELECT * FROM usuarios where id = :id");
+$query->execute([':id' => $id_usuario]);
 
 $res = $query->fetchAll(PDO::FETCH_ASSOC);
 
@@ -42,19 +45,20 @@ $foto_usuario = $res[0]['foto'];
 
 $cpf_usuario = $res[0]['cpf'];
 
-$senha_usuario = $res[0]['senha'];
 
 $id_pessoa = $res[0]['id_pessoa'];
 
 
 
-$query = $pdo->query("SELECT * FROM alunos where id = '$id_pessoa'");
+$query = $pdo->prepare("SELECT * FROM alunos where id = :id");
+$query->execute([':id' => $id_pessoa]);
 
 $res = $query->fetchAll(PDO::FETCH_ASSOC);
 
 
 
 $rg_usu = $res[0]['rg'];
+$expedidor_usu = $res[0]['orgao_expedidor'] ?? '';
 
 $expedicao_usu = $res[0]['expedicao'];
 
@@ -83,6 +87,18 @@ $pai_usu = $res[0]['pai'];
 $naturalidade_usu = $res[0]['naturalidade'];
 
 $cartao_aluno = $res[0]['cartao'];
+$id_retorno_resgate = 0;
+$cpfColSql = "REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(cpf, '.', ''), '-', ''), ' ', ''), '/', ''), '(', ''), ')', '')";
+$cpfUsuarioLimpo = preg_replace('/\D/', '', (string) $cpf_usuario);
+$stmtRetornoResgate = $pdo->prepare("SELECT id FROM usuarios WHERE nivel = 'Vendedor' AND ativo = 'Sim' AND id <> :id AND ({$cpfColSql} = :cpf OR LOWER(usuario) = :email) ORDER BY id DESC LIMIT 1");
+$stmtRetornoResgate->execute([':id' => (int) $id_usuario, ':cpf' => $cpfUsuarioLimpo, ':email' => strtolower(trim((string) $email_usuario))
+]);
+$id_retorno_resgate = (int) ($stmtRetornoResgate->fetchColumn() : 0);
+$conta_retorno_disponivel = (
+	(isset($_SESSION['switch_back_id'], $_SESSION['switch_back_nivel']) && (int) $_SESSION['switch_back_id'] > 0)
+	|| (isset($_SESSION['switch_vendedor_usuario_id']) && (int) $_SESSION['switch_vendedor_usuario_id'] > 0)
+	|| ($id_retorno_resgate > 0)
+);
 
 
 
@@ -139,6 +155,7 @@ $bg_menu_hover = $coress['bg_menu_hover'];
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta name="csrf-token" content="<?php echo htmlspecialchars($csrf_token, ENT_QUOTES, 'UTF-8'); >?>"
 
 
 
@@ -196,13 +213,79 @@ $bg_menu_hover = $coress['bg_menu_hover'];
 
 	<script src="js/jquery-1.11.1.min.js"></script>
 
+	<script>
+		window.CSRF_TOKEN = "<?php echo htmlspecialchars($csrf_token, ENT_QUOTES, 'UTF-8'); ?>";
+		(function () {
+			function getToken() {
+				return window.CSRF_TOKEN || '';
+			}
+			if (window.fetch) {
+				var originalFetch = window.fetch;
+				window.fetch = function (resource, init) {
+					init = init || {};
+					var headers = new Headers(init.headers || {});
+					if (!headers.has('X-CSRF-Token')) {
+						headers.set('X-CSRF-Token', getToken());
+					}
+					init.headers = headers;
+					return originalFetch(resource, init);
+				};
+			}
+			if (window.jQuery) {
+				window.jQuery.ajaxSetup({
+					beforeSend: function (xhr) {
+						if (getToken()) {
+							xhr.setRequestHeader('X-CSRF-Token', getToken());
+						}
+					}
+				});
+			}
+			document.addEventListener('submit', function (e) {
+				var form = e.target;
+				if (!form || form.tagName !== 'FORM') {
+					return;
+				}
+				if (form.querySelector('input[name=\"csrf_token\"]')) {
+					return;
+				}
+				var input = document.createElement('input');
+				input.type = 'hidden';
+				input.name = 'csrf_token';
+				input.value = getToken();
+				form.appendChild(input);
+			}, true);
+		})();
+	</script>
+	<script>
+		(function () {
+			var sessionUserId = "<?php echo (int) $id_usuario; ?>";
+			var key = 'active_user_id';
+			try {
+				var activeId = localStorage.getItem(key);
+				if (!activeId) {
+					localStorage.setItem(key, sessionUserId);
+				} else if (activeId !== sessionUserId) {
+					window.location.reload();
+					return;
+				}
+				window.addEventListener('storage', function (e) {
+					if (e.key === key && e.newValue && e.newValue !== sessionUserId) {
+						window.location.reload();
+					}
+				});
+			} catch (err) {
+				// localStorage blocked or unavailable
+			}
+		})();
+	</script>
+
 	<script src="js/modernizr.custom.js"></script>
 
 
 
 	<!--webfonts-->
 
-	<link href="//fonts.googleapis.com/css?family=PT+Sans:400,400i,700,700i&amp;subset=cyrillic,cyrillic-ext,latin-ext" rel="stylesheet">
+	<link href="//fonts.googleapis.com/cssfamily=PT+Sans:400,400i,700,700i&amp;subset=cyrillic,cyrillic-ext,latin-ext" rel="stylesheet">
 
 	<!--//webfonts-->
 
@@ -242,7 +325,7 @@ $bg_menu_hover = $coress['bg_menu_hover'];
 
       background-color:
 
-        <?= $bg_menu ?>
+        <= $bg_menu >
 
         !important;
 
@@ -254,7 +337,7 @@ $bg_menu_hover = $coress['bg_menu_hover'];
 
       color:
 
-        <?= $texto_menu ?>
+        <= $texto_menu >
 
         !important;
 
@@ -406,68 +489,59 @@ $bg_menu_hover = $coress['bg_menu_hover'];
 
 						</button>
 
-						<h1><a class="navbar-brand" href="index.php"><span class="fa fa-book"></span> Sested Cursos<span class="dashboard_text"></span></a></h1>
+						<h1><a class="navbar-brand" href="index.php"><span class="fa fa-book"></span> Sested EJA<span class="dashboard_text"></span></a></h1>
 
 					</div>
 
 					<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 						<ul class="sidebar-menu">
 
-							<li class="treeview <?= empty($pagina) ? 'active' : '' ?>">
+							<li class="treeview <= empty($pagina) ? 'active' : '' >">
 								<a href="index.php">
 									<i class="fa fa-home"></i> <span>Home</span>
 								</a>
 							</li>
 
-							<li class="treeview <?= $pagina === 'cursos' ? 'active' : '' ?>">
+							<li class="treeview <= $pagina === 'cursos' ? 'active' : '' >">
 								<a href="index.php?pagina=cursos">
 									<i class="fa fa-book"></i> <span>Meus Cursos</span>
 								</a>
 							</li>
 
 
-							<li class="treeview <?= $pagina === 'pacotes' ? 'active' : '' ?>">
+							<li class="treeview <= $pagina === 'pacotes' ? 'active' : '' >">
 								<a href="index.php?pagina=pacotes">
 									<i class="fa fa-th-large"></i> <span>Meus Pacotes</span>
 								</a>
 							</li>
 
-							               <li class="treeview">
-    <a href="https://unicorp.loja.srv.br/sga_alunos_login/" target="_blank" class="button-link">
-        <span>Ambiente de Estudo Unicorp</span>
-    </a>
-</li>
-
-<style>
-    .button-link {
-        display: inline-block;
-        padding: 10px 20px;
-        background-color: #00008B;
-        color: #00008B;
-        border: 2px solid #000; /* Borda preta */
-        text-align: center;
-        text-decoration: none; /* Remove o sublinhado */
-        font-size: 16px;
-        border-radius: 5px; /* Bordas arredondadas */
-        background-color: #68706e; }
-</style>
-
-               
+							<li class="treeview <= $pagina === 'andamento' ? 'active' : '' >">
+								<a href="index.php?pagina=andamento">
+									<i class="fa fa-check-square"></i> <span>Cursos em Andamento</span>
+								</a>
+							</li>
 
 
-							<li class="treeview <?= $pagina === 'parcelas' ? 'active' : '' ?>">
+							<li class="treeview <= $pagina === 'finalizados' ? 'active' : '' >">
+								<a href="index.php?pagina=finalizados">
+									<i class="fa fa-check-square"></i> <span>Cursos Finalizados</span>
+								</a>
+							</li>
+
+
+							<li class="treeview <= $pagina === 'parcelas' ? 'active' : '' >">
 								<a href="index.php?pagina=parcelas">
 									<i class="fa fa-money" aria-hidden="true"></i> <span>Parcelas Boleto</span>
 								</a>
 							</li>
 							
-								<li class="treeview <?= $pagina === 'parcelas_cartao' ? 'active' : '' ?>">
+								<li class="treeview <= $pagina === 'parcelas_cartao' ? 'active' : '' >">
 								<a href="index.php?pagina=parcelas_cartao">
-									<i class="fa fa-credit-card" aria-hidden="true"></i> <span>Parcelas Cartão</span>
+									<i class="fa fa-credit-card" aria-hidden="true"></i> <span>Parcelas CartÃ£o</span>
 								</a>
 							</li>
 
-							<li class="treeview <?= $pagina === 'arquivos' ? 'active' : '' ?>">
+							<li class="treeview <= $pagina === 'arquivos' ? 'active' : '' >">
 								<a href="index.php?pagina=arquivos">
 									<i class="fa fa-file" aria-hidden="true"></i> <span>Meus Documentos</span>
 								</a>
@@ -540,7 +614,7 @@ $bg_menu_hover = $coress['bg_menu_hover'];
 
 								<div class="profile_img">
 
-									<span class="prfil-img"><img src="img/perfil/<?php echo $foto_usuario ?>" alt="" width="50px" height="50px"> </span>
+									<span class="prfil-img"><img src="img/perfil/<?php echo $foto_usuario >" alt="" width="50px" height="50px"?> </span>
 
 									<div class="user-name">
 
@@ -563,6 +637,16 @@ $bg_menu_hover = $coress['bg_menu_hover'];
 							<ul class="dropdown-menu drp-mnu">
 
 								<li> <a href="" data-toggle="modal" data-target="#modalPerfil"><i class="fa fa-user"></i> Editar Perfil</a> </li>
+								<?php if ($conta_retorno_disponivel)  : ?>
+								<li>
+									<form method="POST" action="voltar-para-conta.php" style="margin:0;">
+										<input type="hidden" name="vendedor_usuario_id_resgate" value="<?php echo (int) $id_retorno_resgate; >?>"
+										<button type="submit" class="btn btn-link" style="display:block;width:100%;text-align:left;padding:8px 20px;">
+											<i class="fa fa-undo"></i> Voltar para Conta Anterior
+										</button>
+									</form>
+								</li>
+								<?php endif; ?>
 
 
 
@@ -598,13 +682,11 @@ $bg_menu_hover = $coress['bg_menu_hover'];
 
 		<div id="page-wrapper">
 
-			<div class="main-page">
-
-				<?php
+			<div class="main-page"<?php
 
 				require_once('paginas/' . $menu . '.php');
 
-				?>
+?>
 
 
 
@@ -628,7 +710,7 @@ $bg_menu_hover = $coress['bg_menu_hover'];
 
 			<small>
 
-				<p><?php echo $nome_sistema ?> - Desenvolvedor - Joel de Souza - <a href="http://api.whatsapp.com/send?1=pt_BR&phone=<?php echo $tel_whatsapp ?>" title="Chamar no Whatsapp" target="_blank"><i class="fa fa-whatsapp" style="margin-right: 3px"></i><?php echo $tel_sistema ?></a></p>
+				<p><?php echo $nome_sistema > - Desenvolvedor - Joel de Souza - <a href="http://api.whatsapp.com/send1=pt_BR&phone=<?php echo $tel_whatsapp >" title="Chamar no Whatsapp" target="_blank"?><i class="fa fa-whatsapp" style="margin-right: 3px"></i><?php echo $tel_sistema ?></a></p>
 
 			</small>
 
@@ -729,6 +811,21 @@ $bg_menu_hover = $coress['bg_menu_hover'];
 	<script src="js/bootstrap.js"> </script>
 
 	<!-- //Bootstrap Core JavaScript -->
+	<?php
+	if (!empty($_SESSION['payment_notice']) && is_array($_SESSION['payment_notice'])) {
+		$notice = $_SESSION['payment_notice'];
+		unset($_SESSION['payment_notice']);
+		$icon = ($notice['type'] ?? '') === 'success' ? 'success' : 'error';
+		$message = $notice['message'] ?? '';
+?>
+	<script>
+		Swal.fire({
+			icon: <?php echo json_encode($icon); ?>,
+			title: 'Pagamento',
+			text: <?php echo json_encode($message); ?>,
+		});
+	</script>
+	<?php } ?>
 
 
 
@@ -804,7 +901,7 @@ $bg_menu_hover = $coress['bg_menu_hover'];
 
 								<label>Nome do Aluno*</label>
 
-					         <input type="text" class="form-control" name="nome_usu" value="<?php echo $nome_usuario ?>" placeholder="Nome do Aluno" required>
+					         <input type="text" class="form-control" name="nome_usu" value="<?php echo $nome_usuario >?>" placeholder="Nome do Aluno" required?>
 
 
 
@@ -822,7 +919,7 @@ $bg_menu_hover = $coress['bg_menu_hover'];
 
 								<label>Cpf*</label>
 
-							<input type="text" class="form-control" id="cpf_usu" name="cpf_usu" value="<?php echo $cpf_usuario ?>" placeholder="CPF do Aluno">
+							<input type="text" class="form-control" id="cpf_usu" name="cpf_usu" value="<?php echo $cpf_usuario >?>" placeholder="CPF do Aluno" required?>
 
 
 
@@ -838,7 +935,7 @@ $bg_menu_hover = $coress['bg_menu_hover'];
 
 								<label>Email*</label>
 
-								<input type="email" class="form-control" name="email_usu" value="<?php echo $email_usuario ?>" required>
+								<input type="email" class="form-control" name="email_usu" value="<?php echo $email_usuario >?>" required?>
 
                                
 
@@ -854,7 +951,7 @@ $bg_menu_hover = $coress['bg_menu_hover'];
 
 								<label> Telefone:</label>
 
-								<input type="text" class="form-control" id="telefone_usu" name="telefone_usu" value="<?php echo $telefone_usu ?>" placeholder="Telefone">
+								<input type="text" class="form-control" id="telefone_usu" name="telefone_usu" value="<?php echo $telefone_usu >?>" placeholder="Telefone" required?>
 
 
 
@@ -882,7 +979,7 @@ $bg_menu_hover = $coress['bg_menu_hover'];
 
 								<label>Documento:<small><small>( RG, CTPS, etc)</small></small></label>
 
-								<input type="text" class="form-control" name="rg_usu" value="<?php echo $rg_usu ?>" placeholder="Documento pra certificação">
+								<input type="text" class="form-control" name="rg_usu" value="<?php echo $rg_usu >?>" placeholder="Documento pra certificaÃ§Ã£o"?>
 
 							</div>
 
@@ -892,13 +989,29 @@ $bg_menu_hover = $coress['bg_menu_hover'];
 
 							<div class="form-group">
 
-								<label>Data de Expedicao:</label>
+								<label>OrgÃ£o Expedidor:</label>
 
-								<input type="text" class="form-control" id="expedicao_usu" name="expedicao_usu" value="<?php echo $expedicao_usu ?>" placeholder="Data de Expedição">
+								<input type="text" class="form-control" id="expedidor_usu" name="expedidor_usu" value="<?php echo $expedidor_usu >?>" placeholder="OrgÃ£o Expedidor"?>
 
 							</div>
 
 						</div>
+
+
+
+						<div class="col-md-2">
+
+							<div class="form-group">
+
+								<label>Data de Expedicao:</label>
+
+								<input type="text" class="form-control" id="expedicao_usu" name="expedicao_usu" value="<?php echo $expedicao_usu >?>" placeholder="Data de ExpediÃ§Ã£o"?>
+
+							</div>
+
+						</div>
+
+
 
 
 
@@ -908,23 +1021,8 @@ $bg_menu_hover = $coress['bg_menu_hover'];
 
 								<label>Data de Nascimento:</label>
 
-								<input type="text" class="form-control" id="nascimento_usu" name="nascimento_usu" value="<?php echo $nascimento_usu ?>" placeholder="Data de Nascimento">
+								<input type="text" class="form-control" id="nascimento_usu" name="nascimento_usu" value="<?php echo $nascimento_usu >?>" placeholder="Data de Nascimento" required?>
 
-							</div>
-
-						</div>
-
-
-
-
-
-						<div class="col-md-2">
-
-							<div class="form-group">
-
-								<label>Cep:</label>
-
-								<input type="text" class="form-control" id="cep_usu" name="cep_usu" value="<?php echo $cep_usu ?>" placeholder="Cep">
 
 							</div>
 
@@ -936,9 +1034,9 @@ $bg_menu_hover = $coress['bg_menu_hover'];
 
 							<div class="form-group">
 
-								<label>Sexo:</label>
+								<label>Cep:</label>
 
-								<input type="text" class="form-control" id="sexo_usu" name="sexo_usu" value="<?php echo $sexo_usu ?>" placeholder="Sexo">
+								<input type="text" class="form-control" id="cep_usu" name="cep_usu" value="<?php echo $cep_usu >?>" placeholder="Cep"?>
 							</div>
 
 						</div>
@@ -953,9 +1051,9 @@ $bg_menu_hover = $coress['bg_menu_hover'];
 
 							<div class="form-group">
 
-								<label>Endereço:<small><small>(Rua, Número e Bairro)</small></small></label>
+								<label>EndereÃ§o:<small><small>(Rua, NÃÂºmero e Bairro)</small></small></label>
 
-								<input type="text" class="form-control" id="endereco_usu" name="endereco_usu" name="endereco_usu" value="<?php echo $endereco_usu ?>" placeholder="Rua X Número 50 Bairro X">
+								<input type="text" class="form-control" id="endereco_usu" name="endereco_usu" name="endereco_usu" value="<?php echo $endereco_usu >?>" placeholder="Rua X NÃÂºmero 50 Bairro X"?>
 
 							</div>
 
@@ -969,7 +1067,7 @@ $bg_menu_hover = $coress['bg_menu_hover'];
 
 								<label>Numero:</label>
 
-								<input type="text" class="form-control" id="numero_usu" name="numero_usu" value="<?php echo $numero_usu ?>" placeholder="Numero">
+								<input type="text" class="form-control" id="numero_usu" name="numero_usu" value="<?php echo $numero_usu >?>" placeholder="Numero"?>
 
 
 
@@ -985,7 +1083,7 @@ $bg_menu_hover = $coress['bg_menu_hover'];
 
 								<label>Bairro:</label>
 
-								<input type="text" class="form-control" id="bairro_usu" name="bairro_usu" value="<?php echo $bairro_usu ?>" placeholder="Bairro">
+								<input type="text" class="form-control" id="bairro_usu" name="bairro_usu" value="<?php echo $bairro_usu >?>" placeholder="Bairro"?>
 
 
 
@@ -1001,7 +1099,7 @@ $bg_menu_hover = $coress['bg_menu_hover'];
 
 								<label>Cidade:</label>
 
-								<input type="text" class="form-control" id="cidade_usu" name="cidade_usu" value="<?php echo $cidade_usu ?>" placeholder="Cidade">
+								<input type="text" class="form-control" id="cidade_usu" name="cidade_usu" value="<?php echo $cidade_usu >?>" placeholder="Cidade"?>
 
 							</div>
 
@@ -1009,31 +1107,13 @@ $bg_menu_hover = $coress['bg_menu_hover'];
 
 						
 
-						<div class="col-md-2">
+						 <div class="col-md-2">
 
 							<div class="form-group">
 
-								<label>Estado:</label>
+								<label>Sexo:</label>
 
-								<select class="form-control" id="estado_usu" name="estado_usu">
-
-									<option value="RO">RO</option>
-
-									<option value="AC">AC</option>
-
-									<option value="AM">AM</option>
-
-									<option value="RR">RR</option>
-
-									<option value="TO">TO</option>
-
-									<option value="PA">PA</option>
-
-									<option value="MT">MT</option>
-
-
-
-								</select>
+							<input type="text" class="form-control" id="sexo_usu" name="sexo_usu" value="<?php echo $sexo_usu >?>" placeholder="Sexo"?>
 
 
 
@@ -1049,9 +1129,9 @@ $bg_menu_hover = $coress['bg_menu_hover'];
 
 							<div class="form-group">
 
-								<label>Nome da Mãe:</label>
+								<label>Nome da MÃ£e:</label>
 
-								<input type="text" class="form-control" id="mae_usu" name="mae_usu" value="<?php echo $mae_usu ?>" placeholder="Nome da Mae">
+								<input type="text" class="form-control" id="mae_usu" name="mae_usu" value="<?php echo $mae_usu >?>" placeholder="Nome da Mae"?>
 
 							</div>
 
@@ -1065,19 +1145,18 @@ $bg_menu_hover = $coress['bg_menu_hover'];
 
 								<label>Nome do Pai:</label>
 
-								<input type="text" class="form-control" id="pai_usu" name="pai_usu" value="<?php echo $pai_usu ?>" placeholder="Nome do Pai">
+								<input type="text" class="form-control" id="pai_usu" name="pai_usu" value="<?php echo $pai_usu >?>" placeholder="Nome do Pai"?>
 
 							</div>
 
 						</div>
 
-						<div class="col-md-3">
+						<div class="col-md-2">
 
 							<div class="form-group">
 
-								<label>Naturalidade:</label>
-
-								<input type="text" class="form-control" id="naturalidade_usu" name="naturalidade_usu" value="<?php echo $naturalidade_usu ?>" placeholder="Naturalidade">
+								<label>Estado:</label>
+                             <input type="text" class="form-control" id="estado_usu" name="estado_usu" value="<?php echo $estado_usu >?>" placeholder="Estado"?>
 
 							</div>
 
@@ -1089,13 +1168,13 @@ $bg_menu_hover = $coress['bg_menu_hover'];
 
 					   <div class="row">
 
-						<div class="col-md-2">
+						<div class="col-md-3">
 
 							<div class="form-group">
 
-								<label>Senha*</label>
+								<label>Naturalidade:</label>
 
-								<input type="password" class="form-control" name="senha_usu" value="<?php echo $senha_usuario ?>" required>
+								<input type="text" class="form-control" id="naturalidade_usu" name="naturalidade_usu" value="<?php echo $naturalidade_usu >?>" placeholder="Naturalidade"?>
 
 
 
@@ -1123,7 +1202,7 @@ $bg_menu_hover = $coress['bg_menu_hover'];
 
 							<div id="divImg">
 
-								<img src="img/perfil/<?php echo $foto_usuario ?>" width="100px" id="target-usu">
+								<img src="img/perfil/<?php echo $foto_usuario >" width="100px" id="target-usu"?>
 
 							</div>
 
@@ -1141,9 +1220,9 @@ $bg_menu_hover = $coress['bg_menu_hover'];
 
 
 
-					<input type="hidden" name="id_usu" value="<?php echo $id_usuario ?>">
+					<input type="hidden" name="id_usu" value="<?php echo $id_usuario >?>"
 
-					<input type="hidden" name="foto_usu" value="<?php echo $foto_usuario ?>">
+					<input type="hidden" name="foto_usu" value="<?php echo $foto_usuario >?>"
 
 
 
@@ -1152,6 +1231,10 @@ $bg_menu_hover = $coress['bg_menu_hover'];
 						<div id="mensagem-usu" align="center" class="mt-3"></div>
 
 					</small>
+
+					<div class="alert alert-info" style="margin-top: 10px;">
+						Envio de documentos somente em <a href="index.php?pagina=arquivos">Meus Documentos</a>.
+					</div>
 
 
 
@@ -1169,195 +1252,7 @@ $bg_menu_hover = $coress['bg_menu_hover'];
 
 
 
-			<form method="post" id="form-arq">
-
-				<div class="modal-body">
-
-
-
-
-
-
-
-					<div class="row">
-
-						<div class="col-md-6">
-
-							<div class="form-group">
-
-								<label>Descrição</label>
-
-								<input value="" type="text" class="form-control" id="descricao" name="descricao" placeholder="Descrição" required>
-
-							</div>
-
-							<div class="row">
-
-								<div class="col-md-6">
-
-									<div class="form-group">
-
-										<label>arquivo</label>
-
-										<input class="form-control" type="file" name="arquivo_2" onChange="carregarImg2();" id="arquivo_2">
-
-									</div>
-
-
-
-									<div id="divImg">
-
-										<img src="img/arquivos/sem-arquivo.png" width="130px" id="target_2">
-
-									</div>
-
-								</div>
-
-							</div>
-
-
-
-
-
-						</div>
-
-
-
-						<div class="col-md-6">
-
-							<?php
-
-							$id_al = @$_GET['id'];
-
-							$query = $pdo->query("SELECT * FROM arquivos_alunos where aluno = '$id_pessoa' order by id desc ");
-
-							$res = $query->fetchAll(PDO::FETCH_ASSOC);
-
-
-
-							for ($i = 0; $i < count($res); $i++) {
-
-								foreach ($res[$i] as $key => $value) {
-
-								}
-
-
-
-								$arquivo = $res[$i]['arquivo'];
-
-								$id_arq = $res[$i]['id'];
-
-								$descricao = $res[$i]['descricao'];
-
-								$data = $res[$i]['data'];
-
-								$data = implode('/', array_reverse(explode('-', $data)));
-
-
-
-								$ext = pathinfo($arquivo, PATHINFO_EXTENSION);
-
-								if ($ext == 'pdf') {
-
-									$tumb_arquivo = 'pdf.png';
-
-								} else if ($ext == 'rar' || $ext == 'zip') {
-
-									$tumb_arquivo = 'rar.png';
-
-								} else {
-
-									$tumb_arquivo = $arquivo;
-
-								}
-
-
-
-
-
-							?>
-
-
-
-								<a href="img/arquivos/<?php echo $arquivo ?>" target="_blank" title="Abrir Arquivo">
-
-									<span class="mr-2"> <?php echo $descricao ?> </span>
-
-									<span class="mr-2"> Data: <?php echo $data ?> </span></a>
-
-
-
-								<li class="dropdown head-dpdn2" style="display: inline-block;">
-
-									<a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><big><i class="fa fa-trash-o text-danger"></i></big></a>
-
-
-
-									<ul class="dropdown-menu" style="margin-left:-230px;">
-
-										<li>
-
-											<div class="notification_desc2">
-
-												<p>Confirmar Exclusão? <a href="#" onclick="excluir_arq(<?php echo $id_arq ?>)"><span class="text-danger">Sim</span></a></p>
-
-											</div>
-
-										</li>
-
-									</ul>
-
-								</li>
-
-								<hr>
-
-
-
-							<?php } ?>
-
-						</div>
-
-
-
-					</div>
-
-
-
-
-
-
-
-
-
-					<div align="center" id="mensagem_arquivo" class="">
-
-
-
-					</div>
-
-
-
-				</div>
-
-				<div class="modal-footer">
-
-					<button type="button" class="btn btn-secondary" data-dismiss="modal" id="btn-cancelar-excluir">Cancelar</button>
-
-
-
-
-
-					<input type="hidden" id="id" name="id" value="<?php echo @$id_pessoa ?>" required>
-
-
-
-					<button type="submit" id="btn-arquivo" name="btn-arquivo" class="btn btn-primary">Inserir</button>
-
-
-
-				</div>
-
-			</form>
+			
 
 
 
@@ -1415,9 +1310,9 @@ $bg_menu_hover = $coress['bg_menu_hover'];
 
 							<div class="form-group">
 
-								<label>Descrição</label>
+								<label>DescriÃ§Ã£o</label>
 
-								<input value="" type="text" class="form-control" id="descricao" name="descricao" placeholder="Descrição" required>
+								<input value="" type="text" class="form-control" id="descricao" name="descricao" placeholder="DescriÃ§Ã£o" required>
 
 							</div>
 
@@ -1485,7 +1380,7 @@ $bg_menu_hover = $coress['bg_menu_hover'];
 
 
 
-					<input type="hidden" id="id" name="id" value="<?php echo @$id_pessoa ?>" required>
+					<input type="hidden" id="id" name="id" value="<?php echo @$id_pessoa >?>" required?>
 
 
 
@@ -1525,6 +1420,22 @@ $bg_menu_hover = $coress['bg_menu_hover'];
 
 		event.preventDefault();
 
+		var mensagemEl = $('#mensagem-usu');
+		var requiredFields = [
+			{ id: 'nome_usu', label: 'Informe o nome.' },
+			{ id: 'cpf_usu', label: 'Informe o CPF.' },
+			{ id: 'email_usu', label: 'Informe o email.' },
+			{ id: 'telefone_usu', label: 'Informe o telefone.' },
+			{ id: 'nascimento_usu', label: 'Informe a data de nascimento.' }
+		];
+		for (var i = 0; i < requiredFields.length; i++) {
+			var field = document.getElementById(requiredFields[i].id);
+			if (field && !field.value.trim()) {
+				mensagemEl.removeClass().addClass('text-danger').text(requiredFields[i].label);
+				return;
+			}
+		}
+
 		var formData = new FormData(this);
 
 
@@ -1557,9 +1468,7 @@ $bg_menu_hover = $coress['bg_menu_hover'];
 
 
 
-					$('#mensagem-usu').addClass('text-danger')
-
-					$('#mensagem-usu').text(mensagem)
+					$('#mensagem-usu').addClass('text-danger') ?? $('#mensagem-usu').text(mensagem)
 
 				}
 
@@ -1633,9 +1542,7 @@ $bg_menu_hover = $coress['bg_menu_hover'];
 
 
 
-					$('#mensagem-usu').addClass('text-danger')
-
-					$('#mensagem-usu').text(mensagem)
+					$('#mensagem-usu').addClass('text-danger') ?? $('#mensagem-usu').text(mensagem)
 
 				}
 
@@ -1691,15 +1598,13 @@ $bg_menu_hover = $coress['bg_menu_hover'];
 
 
 
-				if (mensagem.trim() == "Excluído com Sucesso") {
+				if (mensagem.trim() == "ExcluÃ­do com Sucesso") {
 
 					location.reload();
 
 				} else {
 
-					$('#mensagem-excluir').addClass('text-danger')
-
-					$('#mensagem-excluir').text(mensagem)
+					$('#mensagem-excluir').addClass('text-danger') ?? $('#mensagem-excluir').text(mensagem)
 
 				}
 
@@ -1939,7 +1844,7 @@ if (@count($res) > 0) {
 
 						<div class="col-md-12">
 
-							<span class="neutra"><a id="link_mostrar_rod" target="_blank"><i>Clique aqui</i></a> para comprar ou ver mais detalhes sobre nossa promoção!!</span>
+							<span class="neutra"><a id="link_mostrar_rod" target="_blank"><i>Clique aqui</i></a> para comprar ou ver mais detalhes sobre nossa promoÃ§Ã£o!!</span>
 
 
 
@@ -1957,9 +1862,7 @@ if (@count($res) > 0) {
 
 
 
-				<div class="row" style="margin-top:10px">
-
-					<?php if ($foto != "sem-foto.png" and $foto != "") { ?>
+				<div class="row" style="margin-top:10px"<?php if ($foto != "sem-foto.png" and $foto != "") { >
 
 						<div class="col-md-6" align="center" style="margin-top:5px">
 
@@ -2105,11 +2008,9 @@ if (@count($res) > 0) {
 
 
 
-<div class="alerta <?php echo $classe_link ?>">
+<div class="alerta <?php echo $classe_link >"<?php echo $tituloF ?>
 
-	<?php echo $tituloF ?>
-
-	<a class="botao-aceitar text-dark" href="#" onclick="mostrarAlerta('<?php echo $titulo ?>', '<?php echo $descricao ?>','<?php echo $link ?>','<?php echo $foto ?>','<?php echo $video ?>')" title="Clique para ver mais detalhes">Veja Mais</a>
+	<a class="botao-aceitar text-dark" href="#" onclick="mostrarAlerta('<?php echo $titulo >', '<?php echo $descricao ?>','<?php echo $link ?>','<?php echo $foto ?>','<?php echo $video ?>')" title="Clique para ver mais detalhes">Veja Mais</a>
 
 </div>
 
@@ -2191,13 +2092,11 @@ if (@count($res) > 0) {
 
 	document.getElementById('cep_usu').addEventListener('input', function() {
 
-		let cep = this.value.replace(/\D/g, ''); // Remove caracteres não numéricos
+		let cep = this.value.replace(/\D/g, ''); // Remove caracteres nÃ£o numÃ©ricos
 
 
 
-		if (cep.length === 8) { // Verifica se o CEP tem 8 dígitos
-
-			fetch(`https://viacep.com.br/ws/${cep}/json/`)
+		if (cep.length === 8) { // Verifica se o CEP tem 8 dÃ­gitos ? fetch(`https://viacep.com.br/ws/${cep}/json/`)
 
 				.then(response => response.json())
 
@@ -2215,7 +2114,7 @@ if (@count($res) > 0) {
 
 					} else {
 
-						alert("CEP não encontrado!");
+						alert("CEP nÃ£o encontrado!");
 
 					}
 
@@ -2228,7 +2127,6 @@ if (@count($res) > 0) {
 	});
 
 </script>
-
 
 
 

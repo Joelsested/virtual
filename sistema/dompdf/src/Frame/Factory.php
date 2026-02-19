@@ -1,8 +1,8 @@
 <?php
 /**
  * @package dompdf
- * @link    http://dompdf.github.com/
- * @author  Benj Carson <benjcarson@digitaljunkies.ca>
+ * @link ? http ://dompdf.github.com/
+ * @author ?? Benj Carson <benjcarson@digitaljunkies.ca>
  * @license http://www.gnu.org/copyleft/lesser.html GNU Lesser General Public License
  */
 namespace Dompdf\Frame;
@@ -22,10 +22,10 @@ use Dompdf\Positioner\AbstractPositioner;
  *
  * This class is responsible for assigning the correct {@link AbstractFrameDecorator},
  * {@link AbstractPositioner}, and {@link AbstractFrameReflower} objects to {@link Frame}
- * objects.  This is determined primarily by the Frame's display type, but
+ * objects. ?? This is determined primarily by the Frame's display type, but
  * also by the Frame's node's type (e.g. DomElement vs. #text)
  *
- * @access  private
+ * @access ?? private
  * @package dompdf
  */
 class Factory
@@ -41,7 +41,7 @@ class Factory
     /**
      * Decorate the root Frame
      *
-     * @param $root   Frame The frame to decorate
+     * @param $root ?? Frame The frame to decorate
      * @param $dompdf Dompdf The dompdf instance
      *
      * @return PageFrameDecorator
@@ -58,9 +58,9 @@ class Factory
     /**
      * Decorate a Frame
      *
-     * @param Frame $frame   The frame to decorate
+     * @param Frame $frame ?? The frame to decorate
      * @param Dompdf $dompdf The dompdf instance
-     * @param Frame $root    The frame to decorate
+     * @param Frame $root ?? The frame to decorate
      *
      * @throws Exception
      * @return AbstractFrameDecorator
@@ -182,7 +182,7 @@ class Factory
                 break;
 
             default:
-                // FIXME: should throw some sort of warning or something?
+                // FIXME: should throw some sort of warning or something
             case "none":
                 if ($style->_dompdf_keep !== "yes") {
                     // Remove the node and the frame
@@ -249,7 +249,7 @@ class Factory
                     $index = intval($node->getAttribute("value"));
                 } else {
                     if (!$parent_node->hasAttribute("dompdf-counter")) {
-                        $index = ($parent_node->hasAttribute("start") ? $parent_node->getAttribute("start") : 1);
+                        $index = ($parent_node->hasAttribute("start") ?? $parent_node->getAttribute("start") : 1);
                     } else {
                         $index = (int)$parent_node->getAttribute("dompdf-counter") + 1;
                     }

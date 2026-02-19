@@ -34,7 +34,10 @@ $cabecalhos = 'MIME-Version: 1.0' . "\r\n";
 $cabecalhos .= 'Content-type: text/html; charset=utf-8;' . "\r\n";
 $cabecalhos .= "From: " .$remetente;
 
-mail($destinatario, $assunto, $mensagem, $cabecalhos);
+$envio_ok = @mail($destinatario, $assunto, $mensagem, $cabecalhos);
+if (!$envio_ok) {
+    error_log('Falha ao enviar email de matricula para ' . $destinatario);
+}
 
 
 
@@ -52,7 +55,10 @@ $cabecalhos = 'MIME-Version: 1.0' . "\r\n";
 $cabecalhos .= 'Content-type: text/html; charset=utf-8;' . "\r\n";
 $cabecalhos .= "From: " .$remetente;
 
-mail($destinatario, $assunto, $mensagem, $cabecalhos);
+$envio_ok = @mail($destinatario, $assunto, $mensagem, $cabecalhos);
+if (!$envio_ok) {
+    error_log('Falha ao enviar email de matricula para administrador.');
+}
 }
 
  ?>

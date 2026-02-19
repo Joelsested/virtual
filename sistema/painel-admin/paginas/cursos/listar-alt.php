@@ -70,7 +70,7 @@ echo <<<HTML
 		<ul class="dropdown-menu" style="margin-left:-230px;">
 		<li>
 		<div class="notification_desc2">
-		<p>Confirmar Exclusão? <a href="#" onclick="excluirAlt('{$id}', '{$id_pergunta}')"><span class="text-danger">Sim</span></a></p>
+		<p>Confirmar Exclusão <a href="#" onclick="excluirAlt('{$id}', '{$id_pergunta}')"><span class="text-danger">Sim</span></a></p>
 		</div>
 		</li>										
 		</ul>
@@ -119,8 +119,7 @@ function excluirAlt(id, pergunta){
             if (mensagem.trim() == "Excluído com Sucesso") {                
                 listarAlt(pergunta);             
             } else {
-                    $('#mensagem-excluir-quest').addClass('text-danger')
-                    $('#mensagem-excluir-quest').text(mensagem)
+                    $('#mensagem-excluir-quest').addClass('text-danger') $('#mensagem-excluir-quest').text(mensagem)
                 }
 
         },      
@@ -133,4 +132,3 @@ function excluirAlt(id, pergunta){
 
 
 </script>
-

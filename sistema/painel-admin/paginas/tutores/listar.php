@@ -41,6 +41,7 @@ HTML;
 		$email = $res[$i]['email'];
 		$telefone = $res[$i]['telefone'];
 		$comissao = $res[$i]['comissao'];
+		$nascimento = $res[$i]['nascimento'] ?? '';
 		$foto = $res[$i]['foto'];
 		$data = $res[$i]['data'];
 		$ativo = $res[$i]['ativo'];
@@ -76,15 +77,15 @@ HTML;
 		</td> 
 		<td class="esc">
 		{$telefone}
-		<a target="_blank" href="https://api.whatsapp.com/send?1=pt_BR&phone=55{$telefone}" title="Chamar no Whatsapp"><i class="fa fa-whatsapp verde"></i></a>
+		<a target="_blank" href="https://api.whatsapp.com/send1=pt_BR&phone=55{$telefone}" title="Chamar no Whatsapp"><i class="fa fa-whatsapp verde"></i></a>
 		</td>
 		<td class="esc">{$email}</td>		
 		<td class="esc">{$dataF}</td>
 		
 		<td>
-		<big><a href="#" onclick="editar('{$id}', '{$nome}', '{$cpf}','{$email}','{$telefone}', '{$wallet_id}', '{$comissao}', '{$foto}')" title="Editar Dados"><i class="fa fa-edit text-primary"></i></a></big>
+		<big><a href="#" onclick="editar('{$id}', '{$nome}', '{$cpf}','{$email}','{$telefone}', '{$wallet_id}', '{$comissao}', '{$foto}', '{$nascimento}')" title="Editar Dados"><i class="fa fa-edit text-primary"></i></a></big>
 
-		<big><a href="#" onclick="mostrar('{$nome}', '{$cpf}','{$email}','{$telefone}', '{$wallet_id}', '{$comissao}', '{$foto}', '{$dataF}', '{$ativo}')" title="Ver Dados"><i class="fa fa-info-circle text-secondary"></i></a></big>
+		<big><a href="#" onclick="mostrar('{$nome}', '{$cpf}','{$email}','{$telefone}', '{$wallet_id}', '{$comissao}', '{$foto}', '{$dataF}', '{$cartao}', '{$ativo}', '{$nascimento}')" title="Ver Dados"><i class="fa fa-info-circle text-secondary"></i></a></big>
 
 
 
@@ -94,7 +95,7 @@ HTML;
 		<ul class="dropdown-menu" style="margin-left:-230px;">
 		<li>
 		<div class="notification_desc2">
-		<p>Confirmar Exclusão? <a href="#" onclick="excluir('{$id}')"><span class="text-danger">Sim</span></a></p>
+		<p>Confirmar Exclusão <a href="#" onclick="excluir('{$id}')"><span class="text-danger">Sim</span></a></p>
 		</div>
 		</li>										
 		</ul>
@@ -131,14 +132,12 @@ HTML;
 
 <script type="text/javascript">
 	$(document).ready(function() {
-		$('#tabela').DataTable({
-			"ordering": false,
-			"stateSave": true,
+		$('#tabela').DataTable({ ? "ordering" : false, ? "stateSave" : true,
 		});
 		$('#tabela_filter label input').focus();
 	});
 
-	function editar(id, nome, cpf, email, telefone, wallet_id, comissao, foto) {
+    function editar(id, nome, cpf, email, telefone, wallet_id, comissao, foto, nascimento) {
 		$('#wallet_id').val(wallet_id);
 		$('#comissao').val(comissao);
 		$('#id').val(id);
@@ -149,6 +148,7 @@ HTML;
 
 		$('#foto').val('');
 		$('#target').attr('src', 'img/perfil/' + foto);
+        $('#nascimento').val(nascimento);
 
 		$('#tituloModal').text('Editar Registro');
 		$('#modalForm').modal('show');
@@ -156,7 +156,7 @@ HTML;
 	}
 
 
-	function mostrar(nome, cpf, email, telefone, wallet_id, comissao, foto, data, cartao, ativo) {
+	function mostrar(nome, cpf, email, telefone, wallet_id, comissao, foto, data, cartao, ativo, nascimento) {
 		$('#walletId').val(wallet_id);
 		$('#comissao_mostrar').text(comissao);
 		$('#nome_mostrar').text(nome);
@@ -166,13 +166,14 @@ HTML;
 		$('#data_mostrar').text(data);
 		$('#ativo_mostrar').text(ativo);
 		$('#target_mostrar').attr('src', 'img/perfil/' + foto);
+		$('#nascimento_mostrar').text(nascimento);
 
 		$('#modalMostrar').modal('show');
 
 	}
 
 
-	function limparCampos() {
+    function limparCampos() {
 		$('#id').val('');
 		$('#wallet_id').val('');
 		$('#comissao').val('');
@@ -180,7 +181,9 @@ HTML;
 		$('#telefone').val('');
 		$('#cpf').val('');
 		$('#email').val('');
+        $('#nascimento').val('');
 		$('#foto').val('');
-		$('#target').attr('src', 'img/perfil/sem-perfil.jpg');
-	}
+        $('#target').attr('src', 'img/perfil/sem-perfil.jpg');
+    }
+
 </script>

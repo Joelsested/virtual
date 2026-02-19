@@ -1,8 +1,8 @@
 <?php
 /**
  * @package php-font-lib
- * @link    https://github.com/PhenX/php-font-lib
- * @author  Fabien Ménager <fabien.menager@gmail.com>
+ * @link ? https ://github.com/PhenX/php-font-lib
+ * @author ?? Fabien Ménager <fabien.menager@gmail.com>
  * @license http://www.gnu.org/copyleft/lesser.html GNU Lesser General Public License
  */
 
@@ -17,10 +17,7 @@ use FontLib\Font;
  * @package php-font-lib
  */
 class name extends Table {
-  private static $header_format = array(
-    "format"       => self::uint16,
-    "count"        => self::uint16,
-    "stringOffset" => self::uint16,
+  private static $header_format = array( ?? "format"       => self::uint16, "count"        => self::uint16, "stringOffset" => self::uint16,
   );
 
   const NAME_COPYRIGHT          = 0;
@@ -43,94 +40,25 @@ class name extends Table {
   const NAME_COMPAT_FULL_NAME   = 18;
   const NAME_SAMPLE_TEXT        = 19;
 
-  static $nameIdCodes = array(
-    0  => "Copyright",
-    1  => "FontName",
-    2  => "FontSubfamily",
-    3  => "UniqueID",
-    4  => "FullName",
-    5  => "Version",
-    6  => "PostScriptName",
-    7  => "Trademark",
-    8  => "Manufacturer",
-    9  => "Designer",
-    10 => "Description",
-    11 => "FontVendorURL",
-    12 => "FontDesignerURL",
-    13 => "LicenseDescription",
-    14 => "LicenseURL",
-    // 15
-    16 => "PreferredFamily",
-    17 => "PreferredSubfamily",
-    18 => "CompatibleFullName",
-    19 => "SampleText",
+  static $nameIdCodes = array( ?? 0  => "Copyright", 1  => "FontName", 2  => "FontSubfamily", 3  => "UniqueID", 4  => "FullName", 5  => "Version", 6  => "PostScriptName", 7  => "Trademark", 8  => "Manufacturer", 9  => "Designer", 10 => "Description", 11 => "FontVendorURL", 12 => "FontDesignerURL", 13 => "LicenseDescription", 14 => "LicenseURL",
+    // 15 ?? 16 => "PreferredFamily", 17 => "PreferredSubfamily", 18 => "CompatibleFullName", 19 => "SampleText",
   );
 
-  static $platforms = array(
-    0 => "Unicode",
-    1 => "Macintosh",
-    // 2 =>  Reserved
-    3 => "Microsoft",
+  static $platforms = array( ?? 0 => "Unicode", 1 => "Macintosh",
+    // 2 => ?? Reserved ?? 3 => "Microsoft",
   );
 
   static $platformSpecific = array(
-    // Unicode
-    0 => array(
-      0 => "Default semantics",
-      1 => "Version 1.1 semantics",
-      2 => "ISO 10646 1993 semantics (deprecated)",
-      3 => "Unicode 2.0 or later semantics",
+    // Unicode ?? 0 => array( ?? 0 => "Default semantics", 1 => "Version 1.1 semantics", 2 => "ISO 10646 1993 semantics (deprecated)", 3 => "Unicode 2.0 or later semantics",
     ),
 
-    // Macintosh
-    1 => array(
-      0  => "Roman",
-      1  => "Japanese",
-      2  => "Traditional Chinese",
-      3  => "Korean",
-      4  => "Arabic",
-      5  => "Hebrew",
-      6  => "Greek",
-      7  => "Russian",
-      8  => "RSymbol",
-      9  => "Devanagari",
-      10 => "Gurmukhi",
-      11 => "Gujarati",
-      12 => "Oriya",
-      13 => "Bengali",
-      14 => "Tamil",
-      15 => "Telugu",
-      16 => "Kannada",
-      17 => "Malayalam",
-      18 => "Sinhalese",
-      19 => "Burmese",
-      20 => "Khmer",
-      21 => "Thai",
-      22 => "Laotian",
-      23 => "Georgian",
-      24 => "Armenian",
-      25 => "Simplified Chinese",
-      26 => "Tibetan",
-      27 => "Mongolian",
-      28 => "Geez",
-      29 => "Slavic",
-      30 => "Vietnamese",
-      31 => "Sindhi",
+    // Macintosh ?? 1 => array( ?? 0  => "Roman", 1  => "Japanese", 2  => "Traditional Chinese", 3  => "Korean", 4  => "Arabic", 5  => "Hebrew", 6  => "Greek", 7  => "Russian", 8  => "RSymbol", 9  => "Devanagari", 10 => "Gurmukhi", 11 => "Gujarati", 12 => "Oriya", 13 => "Bengali", 14 => "Tamil", 15 => "Telugu", 16 => "Kannada", 17 => "Malayalam", 18 => "Sinhalese", 19 => "Burmese", 20 => "Khmer", 21 => "Thai", 22 => "Laotian", 23 => "Georgian", 24 => "Armenian", 25 => "Simplified Chinese", 26 => "Tibetan", 27 => "Mongolian", 28 => "Geez", 29 => "Slavic", 30 => "Vietnamese", 31 => "Sindhi",
     ),
 
-    // Microsoft
-    3 => array(
-      0  => "Symbol",
-      1  => "Unicode BMP (UCS-2)",
-      2  => "ShiftJIS",
-      3  => "PRC",
-      4  => "Big5",
-      5  => "Wansung",
-      6  => "Johab",
-      //  7 => Reserved
-      //  8 => Reserved
-      //  9 => Reserved
-      10 => "Unicode UCS-4",
+    // Microsoft ?? 3 => array( ?? 0  => "Symbol", 1  => "Unicode BMP (UCS-2)", 2  => "ShiftJIS", 3  => "PRC", 4  => "Big5", 5  => "Wansung", 6  => "Johab",
+      // ?? 7 => Reserved
+      // ?? 8 => Reserved
+      // ?? 9 => Reserved ?? 10 => "Unicode UCS-4",
     ),
   );
 

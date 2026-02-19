@@ -1,18 +1,24 @@
-<?php
+﻿<?php
 @session_start();
-include('pgtos/cartao/ApiConfig.php');
+require_once('pgtos/cartao/ApiConfig.php');
 // include('active_gateway.php');
 ?>
 
 <body>
 
-	<script src="https://sdk.mercadopago.com/js/v2"></script>
-	<script src="/sistema/painel-admin/js/sweetalert2.js"></script>
+	<?php if (!empty($mp_enabled)) { ?>
+		<script src="https://sdk.mercadopago.com/js/v2"></script>
+	<?php } ?>
+	<script src="sistema/painel-admin/js/sweetalert2.js"></script>
 </body>
 
 <script>
 
-	const mp = new MercadoPago("<?php echo $public_key ?>");
+	const mpEnabled = <?php echo !empty($mp_enabled) ? 'true' : 'false'; ?>;
+	let mp = null;
+	if (mpEnabled && "<?php echo $public_key ?>" !== "") {
+		mp = new MercadoPago("<?php echo $public_key ?>");
+	}
 
 </script>
 
@@ -62,7 +68,8 @@ $descontoPix = json_encode($resPix[0]['desconto_pix']);
 
 
 
-$query = $pdo->query("SELECT * FROM pacotes where nome_url = '$url'");
+$query = $pdo->prepare("SELECT * FROM pacotes where nome_url = :url");
+$query->execute([':url' => $url]);
 
 $res = $query->fetchAll(PDO::FETCH_ASSOC);
 
@@ -112,7 +119,8 @@ if ($total_reg > 0) {
 
 
 
-	$query2 = $pdo->query("SELECT * FROM usuarios where id = '$professor'");
+	$query2 = $pdo->prepare("SELECT * FROM usuarios where id = :id");
+	$query2->execute([':id' => $professor]);
 
 	$res2 = $query2->fetchAll(PDO::FETCH_ASSOC);
 
@@ -120,7 +128,8 @@ if ($total_reg > 0) {
 
 
 
-	$query2 = $pdo->query("SELECT * FROM linguagens where id = '$linguagem'");
+	$query2 = $pdo->prepare("SELECT * FROM linguagens where id = :id");
+	$query2->execute([':id' => $linguagem]);
 
 	$res2 = $query2->fetchAll(PDO::FETCH_ASSOC);
 
@@ -138,7 +147,8 @@ if ($total_reg > 0) {
 
 
 
-	$query2 = $pdo->query("SELECT * FROM grupos where id = '$grupo'");
+	$query2 = $pdo->prepare("SELECT * FROM grupos where id = :id");
+	$query2->execute([':id' => $grupo]);
 
 	$res2 = $query2->fetchAll(PDO::FETCH_ASSOC);
 
@@ -146,7 +156,8 @@ if ($total_reg > 0) {
 
 
 
-	$query2 = $pdo->query("SELECT * FROM cursos_pacotes where id_pacote = '$id'");
+	$query2 = $pdo->prepare("SELECT * FROM cursos_pacotes where id_pacote = :id_pacote");
+	$query2->execute([':id_pacote' => $id]);
 
 	$res2 = $query2->fetchAll(PDO::FETCH_ASSOC);
 
@@ -167,7 +178,8 @@ if ($total_reg > 0) {
 
 
 
-			$query3 = $pdo->query("SELECT * FROM cursos where id = '$id_curso'");
+			$query3 = $pdo->prepare("SELECT * FROM cursos where id = :id");
+			$query3->execute([':id' => $id_curso]);
 
 			$res3 = $query3->fetchAll(PDO::FETCH_ASSOC);
 
@@ -225,7 +237,8 @@ if ($total_reg > 0) {
 
 	//buscar valor da matricula
 
-	$query = $pdo->query("SELECT * FROM matriculas where id_curso = '$id_do_curso_pag' and aluno = '$id_do_aluno' and status = 'Aguardando' ");
+	$query = $pdo->prepare("SELECT * FROM matriculas where id_curso = :id_curso and aluno = :aluno and status = 'Aguardando'");
+	$query->execute([':id_curso' => $id_do_curso_pag, ':aluno' => $id_do_aluno]);
 
 	$res = $query->fetchAll(PDO::FETCH_ASSOC);
 
@@ -268,7 +281,8 @@ if ($total_reg > 0) {
 
 
 
-	$query2 = $pdo->query("SELECT * FROM matriculas where id_curso = '$id' and status != 'Aguardando'");
+	$query2 = $pdo->prepare("SELECT * FROM matriculas where id_curso = :id_curso and status != 'Aguardando'");
+	$query2->execute([':id_curso' => $id]);
 
 	$res2 = $query2->fetchAll(PDO::FETCH_ASSOC);
 
@@ -358,7 +372,7 @@ require_once("cabecalho.php");
 			<a title="Comprar o Pacote - Liberação Imediata" href="#"
 				onclick="pagamento('<?php echo $id ?>', '<?php echo $nome ?>', '<?php echo $valor_cursoF ?>', '<?php echo $modal ?>')">
 
-				<small><span class="neutra">DÍVIDA EM ATÉ 12 VEZES</span></small><br>
+				<small><span class="neutra">EM ATÉ 12 VEZES</span></small><br>
 
 				<img src="img/01mercado.png" width="100%">
 
@@ -612,7 +626,9 @@ require_once("cabecalho.php");
 
 					<?php
 
-					$query = $pdo->query("SELECT * FROM pacotes where grupo = '$grupo' and id != '$id' ORDER BY id desc limit $itens_rel");
+					$itens_rel = (int) $itens_rel;
+					$query = $pdo->prepare("SELECT * FROM pacotes where grupo = :grupo and id != :id ORDER BY id desc limit $itens_rel");
+					$query->execute([':grupo' => $grupo, ':id' => $id]);
 
 					$res = $query->fetchAll(PDO::FETCH_ASSOC);
 
@@ -789,7 +805,8 @@ require_once("cabecalho.php");
 
 			<?php
 
-			$query = $pdo->query("SELECT * FROM cursos_pacotes where id_pacote = '$id_do_curso_pag' ORDER BY id asc");
+			$query = $pdo->prepare("SELECT * FROM cursos_pacotes where id_pacote = :id_pacote ORDER BY id asc");
+			$query->execute([':id_pacote' => $id_do_curso_pag]);
 
 			$res = $query->fetchAll(PDO::FETCH_ASSOC);
 
@@ -812,7 +829,8 @@ require_once("cabecalho.php");
 
 
 
-					$query2 = $pdo->query("SELECT * FROM cursos where id = '$id_curso'");
+					$query2 = $pdo->prepare("SELECT * FROM cursos where id = :id");
+					$query2->execute([':id' => $id_curso]);
 
 					$res2 = $query2->fetchAll(PDO::FETCH_ASSOC);
 
@@ -1098,19 +1116,39 @@ require_once("cabecalho.php");
 
 								<div class="form-group">
 
-									<label>Email ou CPF*</label>
+									<label>CPF *</label>
 
-									<input type="email" name="usuario" id="email_login" class="form-control"
-										required="required" placeholder="Digite seu Email ou CPF">
+									<input type="text" name="usuario" id="email_login" class="form-control"
+										required="required" placeholder="Digite seu CPF (somente números)" inputmode="numeric"
+										pattern="\d*" maxlength="11" autocomplete="off">
+
+									<small class="form-text text-muted">Informe apenas os 11 dígitos, sem pontos ou traços.</small>
 
 								</div>
 
 								<div class="form-group">
 
-									<label>Senha *</label>
+									<label>Data de nascimento *</label>
 
-									<input type="password" name="senha" id="senha_login" class="form-control"
-										required="" placeholder="Digite sua Senha">
+									<div class="input-group">
+
+										<input type="password" name="senha" id="senha_login" class="form-control"
+											required="" placeholder="DDMMAAAA" pattern="\d*" maxlength="8" autocomplete="off">
+
+										<div class="input-group-append">
+
+											<button type="button" class="btn btn-outline-secondary toggle-password"
+												data-target="#senha_login">
+
+												<i class="fa fa-eye"></i>
+
+											</button>
+
+										</div>
+
+									</div>
+
+									<small class="form-text text-muted">Use sua data de nascimento no formato DDMMAAAA.</small>
 
 								</div>
 
@@ -1149,59 +1187,32 @@ require_once("cabecalho.php");
 
 
 
-							<form id="form-cadastro">
+				<div class="form-group">
 
+					<label>Email *</label>
 
+					<input type="email" name="email" id="email_cadastro" class="form-control"
+						required="required" placeholder="Digite seu Email">
 
-								<div class="form-group">
+				</div>
 
-									<label>Nome *</label>
+				<div class="form-group">
 
-									<input type="text" name="nome" id="nome_cadastro" class="form-control"
-										required="required" placeholder="Digite seu Nome">
+					<label>CPF *</label>
 
-								</div>
+					<input type="text" name="cpf" id="cpf_cadastro" class="form-control"
+						required="required" placeholder="000.000.000-00">
 
+				</div>
 
+				<div class="form-group">
 
-								<div class="form-group">
+					<label>Data de Nascimento *</label>
 
-									<label>Email *</label>
+					<input type="date" name="nascimento" id="nascimento_cadastro" class="form-control"
+						required="required">
 
-									<input type="email" name="email" id="email_cadastro" class="form-control"
-										required="required" placeholder="Digite seu Email">
-
-								</div>
-
-								<div class="row">
-
-									<div class="col-sm-6">
-
-										<div class="form-group">
-
-											<label>Senha *</label>
-
-											<input type="password" name="senha" id="senha_cadastro" class="form-control"
-												required="" placeholder="Digite sua Senha">
-
-										</div>
-
-									</div>
-
-
-
-									<div class="col-sm-6">
-
-										<div class="form-group">
-
-											<label>Cofirmar Senha *</label>
-
-											<input type="password" name="conf_senha" id="conf_senha_cadastro"
-												class="form-control" required="" placeholder="Digite sua Senha">
-
-										</div>
-
-									</div>
+				</div>
 
 
 
@@ -1496,34 +1507,7 @@ require_once("cabecalho.php");
 
 							<div class="<?php echo $classe_col ?> col-sm-12" style="margin-bottom: 10px">
 
-								<div class="row botoes-mobile" style="margin-top: 25px" align="center">
-
-									<form id="cupom-desconto">
-
-										<div class="col-sm-9 esquerda-mobile-input-botao">
-
-											<div class="form-group">
-
-												<input type="text" name="cupom" id="cupom" class="form-control" required
-													placeholder="Código do Cupom">
-
-
-
-											</div>
-
-										</div>
-
-										<div class="col-sm-3 direita-mobile-input-botao" style="margin-left:-20px">
-
-											<button id="btn-cupom" type="submit" name="submit"
-												class="btn btn-success botao-laranja submit-button">Aplicar </button>
-										</div>
-
-										<input type="hidden" name="id_curso_cupom" value="<?php echo $id_do_curso_pag ?>">
-
-									</form>
-
-								</div>
+							
 								<small>
 
 									<div id="msg-cupom" align="center"></div>
@@ -1543,6 +1527,14 @@ require_once("cabecalho.php");
 									pagamento
 
 								</button>
+
+								<?php if ($nivel == "Aluno") { ?>
+									<div class="responsavel-panel mt-3">
+										<label class="col-form-label mb-1">Responsável confirmado</label>
+										<p id="responsavel-resumo" class="text-muted mb-2">Carregando responsável...</p>
+										<button type="button" class="btn btn-link p-0" id="btn-trocar-responsavel" onclick="abrirResponsavel()">Confirmar ou trocar responsável</button>
+									</div>
+								<?php } ?>
 
 							</div>
 						</div>
@@ -1881,74 +1873,175 @@ require_once("cabecalho.php");
 <script>
 
 
-	async function realizarMatricula() {
+const endpointResponsaveis = 'ajax/usuarios/responsaveis.php';
+let responsavelSelecionado = null;
 
-		var curso = '<?= $id_do_curso_pag ?>';
+async function escolherResponsavel() {
+	try {
+		const data = await obterResponsaveis();
+		if (!data.success) {
+			Swal.fire('Erro', data.message || 'Não foi possível carregar os responsáveis.', 'error');
+			return null;
+		}
 
-		var pacote = 'Sim';
-
-		$.ajax({
-
-			url: "ajax/cursos/matricula.php",
-
-			method: 'POST',
-
-			data: {
-				curso,
-				pacote
-			},
-
-			dataType: "text",
-			success: function (mensagem) {
-
-				if (mensagem.trim() == "Matriculado com Sucesso") {
-
-					Swal.fire({
-						title: 'Matricula Realizada com Sucesso!',
-						text: 'Acesse o seu painel do aluno para realizar o pagamento!',
-						icon: 'success',
-						showConfirmButton: true,
-						confirmButtonText: 'Ir para o Painel do Aluno',
-						confirmButtonColor: '#3085d6',
-					}).then((result) => {
-						if (result.isConfirmed) {
-							window.open('<?= $url_sistema ?>sistema/painel-aluno/index.php?pagina=pacotes', '_blank');
-						}
-					});
-
-				} else {
-
-					Swal.fire({
-						title: 'Ops!',
-						icon: 'error',
-						text: mensagem,
-						showConfirmButton: true,
-						confirmButtonText: 'Acessar o Painel do Aluno',
-						confirmButtonColor: '#3085d6',
-						showCloseButton: true,
-						closeButtonColor: '#3085d6',
-						closeButtonAriaLabel: 'Fechar',
-					}).then((result) => {
-						if (result.isConfirmed) {
-							window.open('<?= $url_sistema ?>sistema/painel-aluno/index.php?pagina=pacotes', '_blank');
-						}
-					});
-
-				}
-
-
-			},
-
-
-
+		const options = [];
+		if (data.current && data.current.id) {
+			options.push(data.current);
+		}
+		(data.options || []).forEach((option) => {
+			if (!options.some((item) => item.id === option.id)) {
+				options.push(option);
+			}
 		});
 
+		if (options.length === 0) {
+			Swal.fire('Atenção', 'Não há responsáveis ativos cadastrados.', 'warning');
+			return null;
+		}
 
+		const defaultId = (data.current && data.current.id) ? data.current.id : options[0].id;
+		const selectOptions = options
+			.map((option) => {
+				const selected = option.id == defaultId ? 'selected' : '';
+				return `<option value="${option.id}" ${selected}>${option.nome} (${option.nivel})</option>`;
+			})
+			.join('');
+
+		const html = `
+			<p><strong>Responsável atual:</strong> ${data.current ? `${data.current.nome} (${data.current.nivel})` : 'Sem responsável definido'}</p>
+			<p>Escolha o responsável e confirma esta matrícula.</p>
+			<select id="responsavel-seletor" class="swal2-select w-100">${selectOptions}</select>
+		`;
+
+		const result = await Swal.fire({
+			title: 'Confirme o responsável',
+			html,
+			width: '640px',
+			showCancelButton: true,
+			confirmButtonText: 'Confirmar',
+			cancelButtonText: 'Cancelar',
+			willOpen: () => {
+				const select = document.getElementById('responsavel-seletor');
+				if (select) {
+					select.focus();
+				}
+			},
+			preConfirm: () => {
+				const select = document.getElementById('responsavel-seletor');
+				return select ? select.value : defaultId;
+			}
+		});
+
+		if (!result.isConfirmed) {
+			return null;
+		}
+
+		return result.value || defaultId;
+	} catch (error) {
+		Swal.fire('Erro', 'Não foi possível carregar os responsáveis. Tente novamente.', 'error');
+		return null;
 	}
+}
 
+  function enviarMatricula(curso, pacote, responsavel) {
+  	$.ajax({
+ 		url: "ajax/cursos/matricula.php",
+  		method: 'POST',
+  		data: {
+  			curso,
+  			pacote,
+			responsavel,
+			csrf_token: (window.CSRF_TOKEN || '')
+  		},
+  		dataType: "text",
+  		success: function (mensagem) {
+			if (mensagem.trim() == "Matriculado com Sucesso") {
+				window.location.href = '<?= $url_sistema ?>sistema/painel-aluno/index.php?pagina=pacotes';
+			} else {
+				Swal.fire({
+					title: 'Ops!',
+					icon: 'error',
+					text: mensagem,
+					showConfirmButton: true,
+					confirmButtonText: 'Fechar',
+					confirmButtonColor: '#3085d6',
+					showCloseButton: true,
+					closeButtonColor: '#3085d6',
+					closeButtonAriaLabel: 'Fechar',
+				});
+			}
+		},
+	});
+}
+async function obterResponsaveis() {
+	const response = await fetch(endpointResponsaveis, {
+		method: 'POST'
+	});
+	return response.json();
+}
 
+async function atualizarResponsavelResumo() {
+	const resumo = document.getElementById('responsavel-resumo');
+	if (!resumo) return;
+	try {
+		const data = await obterResponsaveis();
+		if (!data.success) {
+			resumo.textContent = data.message || 'N?o foi poss?vel carregar o respons?vel.';
+			return;
+		}
+		const current = data.current;
+		const options = data.options || [];
+		if (current && current.id) {
+			responsavelSelecionado = current.id;
+			resumo.textContent = `${current.nome} (${current.nivel})`;
+			return;
+		}
+		if (responsavelSelecionado) {
+			const escolha = options.find((item) => item.id == responsavelSelecionado);
+			if (escolha) {
+				resumo.textContent = `Selecionado: ${escolha.nome} (${escolha.nivel})`;
+				return;
+			}
+		}
+		if (options.length > 0) {
+			const sugerido = options[0];
+			responsavelSelecionado = sugerido.id;
+			resumo.textContent = `Respons?vel sugerido: ${sugerido.nome} (${sugerido.nivel})`;
+			return;
+		}
+		resumo.textContent = 'Nenhum responsável disponível.';
+	} catch (error) {
+		resumo.textContent = 'Erro ao carregar o responsável.';
+	}
+}
 
-	document.getElementById("paymentForm").addEventListener("submit", function (e) {
+document.addEventListener('DOMContentLoaded', () => {
+	atualizarResponsavelResumo();
+});
+
+async function abrirResponsavel() {
+	const selecionado = await escolherResponsavel();
+	if (selecionado) {
+		responsavelSelecionado = selecionado;
+		await atualizarResponsavelResumo();
+	}
+}
+
+async function realizarMatricula() {
+	var curso = '<?= $id_do_curso_pag ?>';
+	var pacote = 'Sim';
+	if (!responsavelSelecionado) {
+		const responsavelId = await escolherResponsavel();
+		if (!responsavelId) {
+			return;
+		}
+		responsavelSelecionado = responsavelId;
+		await atualizarResponsavelResumo();
+	}
+	enviarMatricula(curso, pacote, responsavelSelecionado);
+}
+
+document.getElementById("paymentForm").addEventListener("submit", function (e) {
 		e.preventDefault(); // impede o envio imediato
 
 		const form = this;
@@ -2151,92 +2244,193 @@ require_once("cabecalho.php");
 
 
 <script type="text/javascript">
+$("#form-cadastro").submit(function (event) {
+    event.preventDefault();
+    var formData = new FormData(this);
 
-	$("#form-cadastro").submit(function () {
-
-		event.preventDefault();
-
-		var formData = new FormData(this);
-
-
-
-		$.ajax({
-
-			url: "sistema/cadastro.php",
-
-			type: 'POST',
-
-			data: formData,
-
-
-
-			success: function (mensagem) {
-
-				$('#msg-login').text('');
-
-				$('#msg-login').removeClass()
-
-				if (mensagem.trim() == "Cadastrado com Sucesso") {
-
-					//$('#btn-fechar-usu').click();
-
-					$('#msg-login').addClass('text-success')
-
-					$('#msg-login').text(mensagem)
-
-					$('#email_login').val($('#email_cadastro').val())
-
-					$('#senha_login').val($('#senha_cadastro').val())
-
-
-
-					$('#nome_cadastro').val('');
-
-					$('#email_cadastro').val('');
-
-					$('#senha_cadastro').val('');
-
-					$('#conf_senha_cadastro').val('');
+    $.ajax({
+        url: "sistema/cadastro.php",
+        type: 'POST',
+        data: formData,
+        success: function (mensagem) {
+            $('#msg-login').text('').removeClass();
+            if (mensagem.trim() == "Cadastrado com Sucesso") {
+                $('#msg-login').addClass('text-success');
+                $('#email_login').val($('#cpf_cadastro').val());
+                const nascimentoDigits = $('#nascimento_cadastro').val().replace(/[^0-9]/g, '');
+                $('#senha_login').val(nascimentoDigits);
+                $('#nome_cadastro').val('');
+                $('#email_cadastro').val('');
+                $('#cpf_cadastro').val('');
+                $('#nascimento_cadastro').val('');
+                $('#msg-login').text('Cadastrado com Sucesso!! Clique em Login para prosseguir!');
+            } else {
+                $('#msg-login').addClass('text-danger');
+                $('#msg-login').text(mensagem);
+            }
+        },
+        cache: false,
+        contentType: false,
+        processData: false
+    });
+});
+</script>
 
 
 
 
 
-					$('#msg-login').text('Cadastrado com Sucesso!! Clique em Login para prosseguir para o pagamento!')
+
+
+<script type="text/javascript">
+
+	function enviarEmail(nome) {
+
+		$('#msg').text('');
+
+		$('#modalContato').modal('show');
+
+		$('#nome_curso').val(nome);
 
 
 
-				} else {
-
-
-
-					$('#msg-login').addClass('text-danger')
-
-					$('#msg-login').text(mensagem)
-
-				}
+	}
 
 
 
 
 
-			},
+	function pagamento(id, nome, valor, modal) {
+
+		$('#nome_curso_' + modal).text(nome);
+
+		$('#valor_curso_' + modal).text(valor);
+
+		$('#id_curso_' + modal).val(id);
+
+		$('#' + modal).modal('show');
+
+		$('#msg-login').text('');
+
+		$('#msg-pagamento').text('');
+
+		$('#msg-matricula').text('');
 
 
 
-			cache: false,
+		if (modal == 'Pagamento') {
 
-			contentType: false,
+// 			matriculaAluno();
 
-			processData: false,
+			setTimeout(() => {
+
+				listarBotaoMP();
+
+				listarPix();
+
+				listarCartao();
+
+			}, 500);
+
+		}
 
 
 
-		});
+	}
+
+</script>
 
 
 
-	});
+
+
+
+
+<!--AJAX PARA CHAMAR O ENVIAR.PHP DO EMAIL -->
+
+<script type="text/javascript">
+
+	$(document).ready(function () {
+
+
+
+		$('#btn-enviar').click(function (event) {
+
+			event.preventDefault();
+
+
+
+			$.ajax({
+
+				url: "enviar.php",
+
+				method: "post",
+
+				data: $('form').serialize(),
+
+				dataType: "text",
+
+				success: function (mensagem) {
+
+
+
+					$('#msg').removeClass()
+
+
+
+					if (mensagem.trim() === 'Enviado com Sucesso!') {
+
+
+
+						$('#msg').addClass('text-success')
+
+
+
+
+
+						$('#nome').val('');
+
+						$('#telefone').val('');
+
+						$('#email').val('');
+
+						$('#mensagem').val('');
+
+
+
+
+
+						//$('#btn-fechar').click();
+
+						//location.reload();
+
+
+
+
+
+					} else {
+
+
+
+						$('#msg').addClass('text-danger')
+
+					}
+
+
+
+					$('#msg').text(mensagem)
+
+
+
+				},
+
+
+
+			})
+
+		})
+
+	})
 
 </script>
 
@@ -2250,88 +2444,82 @@ require_once("cabecalho.php");
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 <script type="text/javascript">
+$("#form-login").submit(function () {
+	var id = '<?= $id ?>';
+	var nome = '<?= $nome ?>';
+	var valor = '<?= $valor_cursoF ?>';
+	var modal = 'Pagamento';
+	event.preventDefault();
+	const cpfField = $('#email_login');
+	const senhaField = $('#senha_login');
+	if (cpfField.length) {
+		cpfField.val(cpfField.val().replace(/[^0-9]/g, ''));
+	}
+	if (senhaField.length) {
+		senhaField.val(senhaField.val().replace(/[^0-9]/g, ''));
+	}
+	var formData = new FormData(this);
 
-	$("#form-login").submit(function () {
+	$.ajax({
+		url: "ajax/cursos/autenticar-curso.php",
+		type: 'POST',
+		data: formData,
 
-		var id = '<?= $id ?>';
-
-		var nome = '<?= $nome ?>';
-
-		var valor = '<?= $valor_cursoF ?>';
-
-		var modal = 'Pagamento';
-
-		event.preventDefault();
-
-		var formData = new FormData(this);
-
-
-
-		$.ajax({
-
-			url: "ajax/cursos/autenticar-curso.php",
-
-			type: 'POST',
-
-			data: formData,
-
-
-
-			success: function (mensagem) {
-
-				$('#msg-login2').text('');
-
-				$('#msg-login2').removeClass()
-
-				mensagem = mensagem.split('-');
+		success: function (mensagem) {
+			$('#msg-login2').text('');
+			$('#msg-login2').removeClass()
+			mensagem = mensagem.split('-');
 
 
-
-				if (mensagem[0].trim() == "Logado com Sucesso") {
-
+			if (mensagem[0].trim() == "Logado com Sucesso") {
 
 
-					$('#btn-fechar-login').click();
-
-					$('#id_do_aluno').val(mensagem[1])
-
-					pagamento(id, nome, valor, modal)
+				$('#btn-fechar-login').click();
+				$('#id_do_aluno').val(mensagem[1])
+				pagamento(id, nome, valor, modal)
 
 
-
-				} else {
-
+			} else {
 
 
-					$('#msg-login2').addClass('text-danger')
-
-					$('#msg-login2').text(mensagem)
-
-				}
+				$('#msg-login2').addClass('text-danger')
+				$('#msg-login2').text(mensagem)
+			}
 
 
+		},
 
-
-
-			},
-
-
-
-			cache: false,
-
-			contentType: false,
-
-			processData: false,
-
-
-
-		});
-
-
+		cache: false,
+		contentType: false,
+		processData: false,
 
 	});
+});
 
+$('.toggle-password').on('click', function () {
+	const target = $($(this).data('target'));
+	if (!target.length) {
+		return;
+	}
+	const type = target.attr('type') === 'password' ? 'text' : 'password';
+	target.attr('type', type);
+	$(this).find('i').toggleClass('fa-eye fa-eye-slash');
+});
 </script>
 
 
@@ -2346,25 +2534,28 @@ require_once("cabecalho.php");
 
 
 
+
+
 <script type="text/javascript">
 
-	$("#form-matricula").submit(function () {
+ 	$("#form-matricula").submit(function () {
 
 
 
-		event.preventDefault();
+ 		event.preventDefault();
+ 
+ 		var formData = new FormData(this);
+		formData.append('csrf_token', (window.CSRF_TOKEN || ''));
 
-		var formData = new FormData(this);
 
 
-
-		$.ajax({
-
-			url: "ajax/cursos/matricula.php",
-
-			type: 'POST',
-
-			data: formData,
+ 			$.ajax({
+ 
+ 				url: "ajax/cursos/matricula.php",
+ 
+ 				type: 'POST',
+ 
+ 				data: formData,
 
 
 
@@ -2377,22 +2568,20 @@ require_once("cabecalho.php");
 				$('#msg-matricula').removeClass()
 
 				if (mensagem.trim() == "Matriculado com Sucesso") {
-
-
-
-					$('#msg-matricula').text(mensagem)
-
-
-
-				} else {
-
-
-
-					$('#msg-matricula').addClass('text-danger')
-
-					$('#msg-matricula').text(mensagem)
-
-				}
+	window.location.href = '<?= $url_sistema ?>sistema/painel-aluno/index.php?pagina=pacotes';
+} else {
+	Swal.fire({
+		title: 'Ops!',
+		icon: 'error',
+		text: mensagem,
+		showConfirmButton: true,
+		confirmButtonText: 'Fechar',
+		confirmButtonColor: '#3085d6',
+		showCloseButton: true,
+		closeButtonColor: '#3085d6',
+		closeButtonAriaLabel: 'Fechar',
+	});
+}
 
 
 
@@ -2436,15 +2625,15 @@ require_once("cabecalho.php");
 
 
 
-		$.ajax({
-
-			url: "ajax/cursos/matricula.php",
-
-			method: 'POST',
-
-			data: { curso, pacote },
-
-			dataType: "text",
+ 			$.ajax({
+ 
+ 				url: "ajax/cursos/matricula.php",
+ 
+ 				method: 'POST',
+ 
+				data: { curso, pacote, csrf_token: (window.CSRF_TOKEN || '') },
+ 
+ 				dataType: "text",
 
 
 
@@ -2504,6 +2693,10 @@ require_once("cabecalho.php");
 
 	function listarBotaoMP() {
 
+		if (!mpEnabled) {
+			$("#listar-btn-mp").html('');
+			return;
+		}
 		var id = '<?= $id_do_curso_pag ?>';
 
 		var nome = '<?= $nome_do_curso_pag ?>';
@@ -2782,3 +2975,6 @@ if (@$_POST['painel_aluno'] == 'sim') {
 	// Eventos
 	document.getElementById('quantidadeDeParcelas').addEventListener('change', atualizarValorParcelado);
 </script>
+
+
+

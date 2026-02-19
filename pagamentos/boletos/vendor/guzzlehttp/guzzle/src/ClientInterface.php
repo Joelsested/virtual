@@ -12,6 +12,11 @@ use Psr\Http\Message\UriInterface;
  */
 interface ClientInterface
 {
+    /**
+     * The Guzzle major version.
+     */
+    const MAJOR_VERSION = 6;
+
     const VERSION = '6.3.2';
 
     /**

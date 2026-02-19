@@ -1,9 +1,9 @@
 <?php
 header('Content-Type: application/json');
 
-require_once("sistema/conexao.php");
+require_once __DIR__ . '/sistema/conexao.php';
 
-require_once 'efi/pix.php';
+require_once __DIR__ . '/efi/pix.php';
 
 
 // Lê o conteúdo bruto enviado
@@ -20,13 +20,13 @@ if (json_last_error() !== JSON_ERROR_NONE) {
 function consultarTransacaoPix($txid)
 {
 
-    $options = require_once 'efi/options.php';
+    $options = require_once __DIR__ . '/efi/options.php';
 
     $config = [
         'client_id' => $options['clientId'],
         'client_secret' => $options['clientSecret'],
         'certificate_path' => $options['certificate'], // Apenas para PIX
-        'chave_pix' => 'bda40203-4fc1-43b1-b058-b783d6921a37', // Sua chave PIX
+        'chave_pix' => $options['pixKey'] ?? '', // Sua chave PIX
         'sandbox' => $options['sandbox'] // true para teste, false para produção
     ];
 

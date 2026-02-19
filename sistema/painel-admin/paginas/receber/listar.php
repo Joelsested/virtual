@@ -96,7 +96,7 @@ echo <<<HTML
 		<ul class="dropdown-menu" style="margin-left:-230px;">
 		<li>
 		<div class="notification_desc2">
-		<p>Confirmar Exclusão? <a href="#" onclick="excluir('{$id}')"><span class="text-danger">Sim</span></a></p>
+		<p>Confirmar Exclusão <a href="#" onclick="excluir('{$id}')"><span class="text-danger">Sim</span></a></p>
 		</div>
 		</li>										
 		</ul>
@@ -110,7 +110,7 @@ echo <<<HTML
 		<ul class="dropdown-menu" style="margin-left:-230px;">
 		<li>
 		<div class="notification_desc2">
-		<p>Confirmar Baixa na Conta? <a href="#" onclick="baixar('{$id}')"><span class="verde">Sim</span></a></p>
+		<p>Confirmar Baixa na Conta <a href="#" onclick="baixar('{$id}')"><span class="verde">Sim</span></a></p>
 		</div>
 		</li>										
 		</ul>
@@ -150,9 +150,7 @@ HTML;
 <script type="text/javascript">
 
 	$(document).ready( function () {
-		$('#tabela').DataTable({
-			"ordering": false,
-			"stateSave": true,
+		$('#tabela').DataTable({ ? "ordering" : false, ? "stateSave" : true,
 		});
 		$('#tabela_filter label input').focus();
 	} );
@@ -179,7 +177,7 @@ HTML;
 		$('#id').val('');
 		$('#descricao').val('');
 		$('#valor').val('');
-		$('#vencimento').val('<?=$data_atual?>');
+		$('#vencimento').val('<=$data_atual>');
 		$('#arquivo').val('');
 		$('#target').attr('src','img/contas/sem-foto.png');
 	}
@@ -188,4 +186,3 @@ HTML;
 
 
 </script>
-

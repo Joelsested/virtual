@@ -2,7 +2,7 @@
  require_once('../../../vendor/autoload.php');
  require_once("../../conexao.php");
 
- function decodeEscapedUnicode(string $value): string {
+ function decodeEscapedUnicode(string $value) : string {
      return preg_replace_callback('/u([0-9a-fA-F]{4})/', function ($match) {
          $hex = hexdec($match[1]);
          return mb_convert_encoding(pack('n', $hex), 'UTF-8', 'UTF-16BE');
@@ -12,11 +12,11 @@
  $data = $_POST;
  $payloadJson = $data['payload'] ?? '';
  if (trim($payloadJson) === '') {
-     die('Dados do boleto não foram enviados corretamente.');
+     die('Dados do boleto nÃ£o foram enviados corretamente.');
  }
  $payload = json_decode($payloadJson, true);
  if (json_last_error() !== JSON_ERROR_NONE || !is_array($payload)) {
-     die('Dados do boleto inválidos.');
+     die('Dados do boleto invÃ¡lidos.');
  }
 
  if (isset($payload['item_nome'])) {
@@ -27,13 +27,8 @@ require_once '../../../efi/boleto_p.php';
 
 $options = require_once '../../../efi/options.php';
 
-// Configurações da EFI
-$config = [
-    'client_id' => 'Client_Id_aeaff512b0a48d097ecc4e5077ead5bec718f925',
-    'client_secret' => 'Client_Secret_cc62eaa288a65755380191079f9197fc5bf28bd8',
-    'certificate_path' => $options['certificate'], // Apenas para PIX
-    'chave_pix' => 'bda40203-4fc1-43b1-b058-b783d6921a37', // Sua chave PIX
-    'sandbox' => false // true para teste, false para produção
+// ConfiguraÃ§Ãµes da EFI
+$config = ['client_id' => $options['clientId'], 'client_secret' => $options['clientSecret'], 'certificate_path' => $options['certificate'], // Apenas para PIX ?? 'chave_pix' => $options['pixKey'] ?? '', // Sua chave PIX ?? 'sandbox' => $options['sandbox'] // true para teste, false para produÃ‡ÃµÃ‡Âœo
 ];
 
 
@@ -48,11 +43,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         //DADOS RECEBIDOS
         $valor_parcela = $_POST['valor_parcela'];
         $id_parcela = (int) $_POST['id_parcela'];
-        $id_matricula = (int) $_POST['id_matricula']; // USAR O ID DA MATRÍCULA PASSADO VIA POST
+        $id_matricula = (int) $_POST['id_matricula']; // USAR O ID DA MATRÃCULA PASSADO VIA POST
 
 
 
-        //INFORMAÇÕES DO ALUNO
+        //INFORMAÃ‡Ã•ES DO ALUNO
         $id_do_aluno = $_POST['id_aluno'];
 
 
@@ -74,7 +69,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
         }
 
-        // BUSCAR DADOS DA MATRÍCULA ESPECÍFICA PASSADA VIA POST
+        // BUSCAR DADOS DA MATRÃCULA ESPECÃFICA PASSADA VIA POST
         $consulta_matricula = $pdo->query("
     SELECT 
         matriculas.*,
@@ -93,26 +88,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     FROM matriculas 
     LEFT JOIN cursos ON cursos.id = matriculas.id_curso AND matriculas.pacote != 'Sim'
     LEFT JOIN pacotes ON pacotes.id = matriculas.id_curso AND matriculas.pacote = 'Sim'
-    WHERE matriculas.id = '$id_matricula' AND matriculas.aluno = '$id_do_aluno'
-");
+    WHERE matriculas.id = '$id_matricula' AND matriculas.aluno = '$id_do_aluno' ?? ");
 
         $resposta_matricula = $consulta_matricula->fetchAll(PDO::FETCH_ASSOC);
 
-        if (count($resposta_matricula) == 0) {
-            die("Erro: Matrícula não encontrada ou não pertence ao aluno logado.");
+        if (count($resposta_matricula) == 0) { ? die("Erro: MatrÃ­cula nÃ£o encontrada ou nÃ£o pertence ao aluno logado.");
         }
 
       
 
-        if (count($resposta_matricula) == 0) {
-            die("Erro: Matrícula não encontrada ou não pertence ao aluno logado.");
+        if (count($resposta_matricula) == 0) { ? die("Erro: MatrÃ­cula nÃ£o encontrada ou nÃ£o pertence ao aluno logado.");
         }
 
         $id_curso = $resposta_matricula[0]['id_curso'];
 
         $clienteGuzzle = new \GuzzleHttp\Client();
 
-        // BUSCA DADOS DA MATRICULA ESPECÍFICA
+        // BUSCA DADOS DA MATRICULA ESPECÃFICA
         $consulta_dados_matricula = $pdo->query("SELECT * FROM matriculas where id = '$id_matricula' and aluno = '$id_do_aluno' ");
         $resposta_dados_matricula = $consulta_dados_matricula->fetchAll(PDO::FETCH_ASSOC);
 
@@ -125,20 +117,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             $resultado = $boletoPayment->createBoletoCharge($payload);
 
-            $response = [
-                'success' => true,
-                'type' => 'BOLETO',
-                'data' => [
-                    'charge_id' => $resultado['charge_id'],
-                    'status' => $resultado['status'],
-                    'total' => $resultado['total'],
-                    'vencimento' => $resultado['vencimento'],
-                    'linha_digitavel' => $resultado['linha_digitavel'],
-                    'codigo_barras' => $resultado['codigo_barras'],
-                    'link_boleto' => $resultado['link_boleto'],
-                    'pdf_boleto' => $resultado['pdf_boleto']
-                ],
-                'payment_data' => $resultado['payment_data']
+            $response = ['success' => true, 'type' => 'BOLETO', 'data' => ['charge_id' => $resultado['charge_id'], 'status' => $resultado['status'], 'total' => $resultado['total'], 'vencimento' => $resultado['vencimento'], 'linha_digitavel' => $resultado['linha_digitavel'], 'codigo_barras' => $resultado['codigo_barras'], 'link_boleto' => $resultado['link_boleto'], 'pdf_boleto' => $resultado['pdf_boleto']
+                ], 'payment_data' => $resultado['payment_data']
             ];
 
             try {
@@ -151,20 +131,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         WHERE id = $id_parcela";
 
                 $stmt = $pdo->prepare($sql);
-                $stmt->execute([
-                    ':id_asaas' => $resultado['payment_data']['data']['payment']['banking_billet']['pdf']['charge'],
-                    ':charge_id' => $resultado['charge_id'],
-                    ':id_matricula' => $id_matricula,
+                $stmt->execute([':id_asaas' => $resultado['payment_data']['data']['payment']['banking_billet']['pdf']['charge'], ':charge_id' => $resultado['charge_id'], ':id_matricula' => $id_matricula,
                 ]);
 
                 //matriculas
                 $sql_matricula = "UPDATE matriculas SET id_asaas = :id_asaas, forma_pgto = :forma_pgto WHERE id = :id";
 
                 $stmt = $pdo->prepare($sql_matricula);
-                $stmt->execute([
-                    ':id_asaas' => $resultado['payment_data']['data']['payment']['banking_billet']['pdf']['charge'],
-                    ':forma_pgto' => 'BOLETO',
-                    ':id' => $id_matricula,
+                $stmt->execute([':id_asaas' => $resultado['payment_data']['data']['payment']['banking_billet']['pdf']['charge'], ':forma_pgto' => 'BOLETO', ':id' => $id_matricula,
                 ]);
 
                 echo '
@@ -182,7 +156,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <h1 class="text-2xl font-bold text-center mb-4 text-blue-600">Pagamento por Boleto</h1>
                     <div class="border-t border-b border-gray-200 py-4 mb-4">
                         <p class="text-center text-lg mb-2">Valor: <span class="font-bold">R$ ' . number_format($resultado['total'], 2, ',', '.') . '</span></p>
-                        <p class="text-center text-sm text-gray-600">Utilize o código abaixo para pagar o boleto ou faça download do PDF</p>
+                        <p class="text-center text-sm text-gray-600">Utilize o cÃ³digo abaixo para pagar o boleto ou faÃ§a download do PDF</p>
                     </div>
                     <div class="mb-6">
                         <div class="relative mb-4">
@@ -209,7 +183,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             </div>
                             <div class="ml-3">
                                 <p class="text-sm text-yellow-700">
-                                    O boleto tem vencimento em 7 dias. Após o pagamento, a confirmação pode levar até 3 dias úteis.
+                                    O boleto tem vencimento em 7 dias. ApÃ³s o pagamento, a confirmaÃ§Ã£o pode levar atÃ© 3 dias Ãºteis.
                                 </p>
                             </div>
                         </div>
@@ -227,7 +201,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     codigoInput.select();
                     codigoInput.setSelectionRange(0, 99999);
                     document.execCommand("copy");
-                    alert("Código do boleto copiado para a área de transferência!");
+                    alert("CÃ³digo do boleto copiado para a Ã¡rea de transferÃªncia!");
                 }
             </script>
         </body>
@@ -239,7 +213,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             exit();
         } catch (RequestException $e) {
-            echo "Erro na requisição: " . $e->getMessage();
+            echo "Erro na requisiÃ§Ã£o: " . $e->getMessage();
         } catch (Exception $e) {
             echo "Erro: " . $e->getMessage();
         }

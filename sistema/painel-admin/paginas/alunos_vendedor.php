@@ -53,7 +53,7 @@ if (@$_SESSION['nivel'] == 'Administrador' || @$_SESSION['nivel'] == 'Tutor' || 
     $res = $query->fetchAll(PDO::FETCH_ASSOC);
     $total_reg = @count($res);
 } else {
-    $query = $pdo->query("SELECT * FROM $tabela  ORDER BY id desc");
+    $query = $pdo->query("SELECT * FROM $tabela ?? ORDER BY id desc");
     $res = $query->fetchAll(PDO::FETCH_ASSOC);
     $total_reg = @count($res);
 }
@@ -110,7 +110,6 @@ HTML;
 
         $query2 = $pdo->query("SELECT * FROM usuarios where id_pessoa = '$id' and nivel = 'Aluno'");
         $res2 = $query2->fetchAll(PDO::FETCH_ASSOC);
-        $senha_usuario = $res2[0]['senha'];
 
 
 
@@ -156,7 +155,7 @@ HTML;
 		</td> 
 		<td class="esc">
 		{$telefone}
-		<a target="_blank" href="https://api.whatsapp.com/send?1=pt_BR&phone=55{$telefone}" title="Chamar no Whatsapp"><i class="fa {$icone_whatsapp} verde"></i></a>
+		<a target="_blank" href="https://api.whatsapp.com/send1=pt_BR&phone=55{$telefone}" title="Chamar no Whatsapp"><i class="fa {$icone_whatsapp} verde"></i></a>
 		</td>
 		<td class="esc">{$email}</td>		
 		<td class="esc">{$nome_professor}</td>
@@ -185,7 +184,6 @@ HTML;
 
 		   <!-- View Data -->
 		   <div class="col-md-4 text-center mb-3">
-              <a href="#" onclick="mostrar('{$nome}','{$cpf}','{$email}','{$rg}','{$expedicao}','{$telefone}','{$cep}','{$endereco}','{$cidade}','{$estado}','{$sexo}','{$nascimento}','{$mae}','{$pai}','{$naturalidade}', '{$foto}', '{$dataF}', '{$ativo}', '{$senha_usuario}','{$arquivo}')" class="btn btn-default btn-block" data-dismiss="modal">
                 <i class="fa fa-info-circle text-secondary"></i><br>
                 Visualizar
               </a>
@@ -229,7 +227,7 @@ HTML;
             
             <!-- Delete -->
             <div class="{$ocultar} col-md-4 text-center mb-3">
-              <a href="#" onclick="if(confirm('Confirm deletion?')) { excluir('{$id}'); }" class="btn btn-default btn-block" data-dismiss="modal">
+              <a href="#" onclick="if(confirm('Confirm deletion')) { excluir('{$id}'); }" class="btn btn-default btn-block" data-dismiss="modal">
                 <i class="fa fa-trash-o text-danger"></i><br>
                 Apagar
               </a>
@@ -245,7 +243,7 @@ HTML;
             
 
 			<div class="col-md-4 text-center mb-3 {$ocultar2}">
-				<a href="javascript:void(0);" onclick="modalAvaliacao('{$url_sistema}/sistema/rel/avaliacoes_class.php?id={$id}')" class="btn btn-default btn-block">
+				<a href="javascript:void(0);" onclick="modalAvaliacao('{$url_sistema}/sistema/rel/avaliacoes_class.phpid={$id}')" class="btn btn-default btn-block">
 					<i class="fa fa-file-pdf-o text-danger"></i><br>
 					Avaliações
 				</a>
@@ -313,9 +311,7 @@ HTML;
 <script type="text/javascript">
 
     $(document).ready(function () {
-        $('#tabela').DataTable({
-            "ordering": false,
-            "stateSave": true,
+        $('#tabela').DataTable({ ? "ordering" : false, ? "stateSave" : true,
         });
         $('#tabela_filter label input').focus();
     });
@@ -357,7 +353,7 @@ HTML;
 
         // Status com cor apropriada
         const statusColor = ativo === 'Sim' ? '#42e695' : '#ff6b6b';
-        const statusIcon = ativo === 'Sim' ? '<i class="fas fa-check-circle"></i>' : '<i class="fas fa-times-circle"></i>';
+        const statusIcon = ativo === 'Sim' ?? '<i class="fas fa-check-circle"></i>' : '<i class="fas fa-times-circle"></i>';
 
         // Formatando dados
         const formatarData = (dataString) => {
@@ -378,10 +374,7 @@ HTML;
                 to { opacity: 1; transform: translateY(0); }
             }
             
-            @keyframes pulse {
-                0% { transform: scale(1); }
-                50% { transform: scale(1.05); }
-                100% { transform: scale(1); }
+            @keyframes pulse { ?? 0% { transform: scale(1); } 50% { transform: scale(1.05); } 100% { transform: scale(1); }
             }
             
             .profile-card {
@@ -629,11 +622,9 @@ HTML;
 
             success: function (mensagem) {
                 if (mensagem.trim() == "Alterado com Sucesso") {
-                    $('#mensagem-excluir').addClass('verde')
-                    $('#mensagem-excluir').text(mensagem)
+                    $('#mensagem-excluir').addClass('verde') $('#mensagem-excluir').text(mensagem)
                 } else {
-                    $('#mensagem-excluir').addClass('text-danger')
-                    $('#mensagem-excluir').text(mensagem)
+                    $('#mensagem-excluir').addClass('text-danger') $('#mensagem-excluir').text(mensagem)
                 }
             },
 
@@ -692,7 +683,7 @@ HTML;
         }).then((result) => {
             if (result.isConfirmed) {
                 const { ano, data } = result.value;
-                const url = `/sistema/rel/rel_certificado.php?id=${id}&ano=${encodeURIComponent(ano)}&data=${encodeURIComponent(data)}`;
+                const url = `/sistema/rel/rel_certificado.phpid=${id}&ano=${encodeURIComponent(ano)}&data=${encodeURIComponent(data)}`;
                 window.open(url, "_blank"); // Abre em uma nova guia
             }
         });
@@ -732,7 +723,7 @@ HTML;
         }).then((result) => {
             if (result.isConfirmed) {
                 const { ano, data } = result.value;
-                const url = `/sistema/rel/declaracao_fundamental_class.php?id=${id}&ano=${encodeURIComponent(ano)}&data=${encodeURIComponent(data)}`;
+                const url = `/sistema/rel/declaracao_fundamental_class.phpid=${id}&ano=${encodeURIComponent(ano)}&data=${encodeURIComponent(data)}`;
                 window.open(url, "_blank"); // Abre em uma nova guia
             }
         });
@@ -773,7 +764,7 @@ HTML;
         }).then((result) => {
             if (result.isConfirmed) {
                 const { ano, data } = result.value;
-                const url = `/sistema/rel/declaracao_medio_class.php?id=${id}&ano=${encodeURIComponent(ano)}&data=${encodeURIComponent(data)}`;
+                const url = `/sistema/rel/declaracao_medio_class.phpid=${id}&ano=${encodeURIComponent(ano)}&data=${encodeURIComponent(data)}`;
                 window.open(url, "_blank"); // Abre em uma nova guia
             }
         });

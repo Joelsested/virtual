@@ -34,4 +34,3 @@ $arquivo = fopen(date('d-m-Y').'.sql','wt');
         fclose($arquivo); 
  
 ?>
-

@@ -3,6 +3,7 @@ require_once("sistema/conexao.php");
 $login = 'Login';
 $painel = 'sistema';
 @session_start();
+$csrf_token = csrf_token();
 if (@$_SESSION['nivel'] == 'Administrador' || @$_SESSION['nivel'] == 'Professor') {
   $painel = 'sistema/painel-admin';
   $login = 'Painel';
@@ -71,6 +72,7 @@ $topo_pagina = $coress['topo_pagina'];
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="csrf-token" content="<?php echo htmlspecialchars($csrf_token, ENT_QUOTES, 'UTF-8'); ?>">
 
   <?php if (@$palavras_chaves == "") { ?>
     <meta name="keywords"
@@ -99,6 +101,50 @@ $topo_pagina = $coress['topo_pagina'];
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 
 
+  <script>
+    window.CSRF_TOKEN = "<?php echo htmlspecialchars($csrf_token, ENT_QUOTES, 'UTF-8'); ?>";
+    (function () {
+      function getToken() {
+        return window.CSRF_TOKEN || '';
+      }
+      if (window.fetch) {
+        var originalFetch = window.fetch;
+        window.fetch = function (resource, init) {
+          init = init || {};
+          var headers = new Headers(init.headers || {});
+          if (!headers.has('X-CSRF-Token')) {
+            headers.set('X-CSRF-Token', getToken());
+          }
+          init.headers = headers;
+          return originalFetch(resource, init);
+        };
+      }
+      if (window.jQuery) {
+        window.jQuery.ajaxSetup({
+          beforeSend: function (xhr) {
+            if (getToken()) {
+              xhr.setRequestHeader('X-CSRF-Token', getToken());
+            }
+          }
+        });
+      }
+      document.addEventListener('submit', function (e) {
+        var form = e.target;
+        if (!form || form.tagName !== 'FORM') {
+          return;
+        }
+        if (form.querySelector('input[name=\"csrf_token\"]')) {
+          return;
+        }
+        var input = document.createElement('input');
+        input.type = 'hidden';
+        input.name = 'csrf_token';
+        input.value = getToken();
+        form.appendChild(input);
+      }, true);
+    })();
+  </script>
+
   <script src="./script/index.js"></script>
 </head>
 
@@ -109,6 +155,58 @@ $topo_pagina = $coress['topo_pagina'];
       background-color:
         <?= $topo_pagina ?>
         !important;
+    }
+    @media (min-width: 768px) {
+      header .navbar .container > .row {
+        display: flex;
+        align-items: center;
+      }
+      header .navbar-header {
+        display: flex;
+        align-items: center;
+      }
+      header .navbar-brand {
+        display: flex;
+        align-items: center;
+        height: auto;
+        padding: 12px 10px 12px 0;
+      }
+      header .navbar-brand h1 {
+        margin: 0;
+        line-height: 1;
+        font-size: 0;
+      }
+      header .navbar-brand img {
+        display: block;
+      }
+      header .navbar-brand span {
+        margin-left: 8px;
+        line-height: 1;
+        display: inline-block;
+        letter-spacing: 2px;
+        font-size: 11px;
+      }
+      header .navbar-collapse {
+        flex: 1 1 auto;
+        display: flex !important;
+        align-items: center;
+        justify-content: flex-end;
+        min-width: 0;
+      }
+      header .navbar-collapse.navbar-right {
+        float: none !important;
+        margin-right: 0;
+      }
+      header .navbar-nav {
+        margin: 0;
+        float: none;
+        display: flex;
+        flex-wrap: nowrap;
+      }
+      header .navbar-nav > li > a {
+        padding: 20px 10px;
+        font-size: 12px;
+      }
     }
   </style>
 
@@ -168,10 +266,11 @@ $topo_pagina = $coress['topo_pagina'];
           <div id="navbar" class="collapse navbar-collapse navbar-right">
             <ul class="nav navbar-nav">
               <li class="<?php echo $index ?>"><a href="./">Home</a></li>
-              <li><a href="cursos">Todos os Cursos</a></li>
+              <li><a href="pacotes">Todos os pacotes</a></li>
               <li><a href="https://Unienber.com/sested" target="_blank">Mestrado</a></li>
+              <li><a href="https://sestedcursosvirtual.com" target="_blank">Técnicos e Graduação</a></li>
               <li><a href="https://cursos.sested.com" target="_blank">Profissionalizantes</a></li>
-               <li><a href="https://www.sested-eja.com" target="_blank">Provão</a></li>
+
 
               <li class="dropdown <?php echo $cursos ?>">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"

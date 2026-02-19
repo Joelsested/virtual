@@ -1,8 +1,8 @@
 <?php
 /**
  * @package dompdf
- * @link    http://dompdf.github.com/
- * @author  Benj Carson <benjcarson@digitaljunkies.ca>
+ * @link ? http ://dompdf.github.com/
+ * @author ?? Benj Carson <benjcarson@digitaljunkies.ca>
  * @license http://www.gnu.org/copyleft/lesser.html GNU Lesser General Public License
  */
 namespace Dompdf\FrameDecorator;
@@ -20,25 +20,14 @@ use Dompdf\Frame\Factory;
  */
 class Table extends AbstractFrameDecorator
 {
-    public static $VALID_CHILDREN = [
-        "table-row-group",
-        "table-row",
-        "table-header-group",
-        "table-footer-group",
-        "table-column",
-        "table-column-group",
-        "table-caption",
-        "table-cell"
+    public static $VALID_CHILDREN = ["table-row-group", "table-row", "table-header-group", "table-footer-group", "table-column", "table-column-group", "table-caption", "table-cell"
     ];
 
-    public static $ROW_GROUPS = [
-        'table-row-group',
-        'table-header-group',
-        'table-footer-group'
+    public static $ROW_GROUPS = ['table-row-group', 'table-header-group', 'table-footer-group'
     ];
 
     /**
-     * The Cellmap object for this table.  The cellmap maps table cells
+     * The Cellmap object for this table. ?? The cellmap maps table cells
      * to rows and columns, and aids in calculating column widths.
      *
      * @var \Dompdf\Cellmap
@@ -60,7 +49,7 @@ class Table extends AbstractFrameDecorator
     protected $_max_width;
 
     /**
-     * Table header rows.  Each table header is duplicated when a table
+     * Table header rows. ?? Each table header is duplicated when a table
      * spans pages.
      *
      * @var array
@@ -68,7 +57,7 @@ class Table extends AbstractFrameDecorator
     protected $_headers;
 
     /**
-     * Table footer rows.  Each table footer is duplicated when a table
+     * Table footer rows. ?? Each table footer is duplicated when a table
      * spans pages.
      *
      * @var array
@@ -110,8 +99,8 @@ class Table extends AbstractFrameDecorator
     //........................................................................
 
     /**
-     * split the table at $row.  $row and all subsequent rows will be
-     * added to the clone.  This method is overidden in order to remove
+     * split the table at $row. ?? $row and all subsequent rows will be
+     * added to the clone. ?? This method is overidden in order to remove
      * frames from the cellmap properly.
      *
      * @param Frame $child
@@ -307,7 +296,7 @@ class Table extends AbstractFrameDecorator
                     $style = $css->create_style();
                     $style->inherit($this->get_style());
 
-                    // Lookup styles for tbody tags.  If the user wants styles to work
+                    // Lookup styles for tbody tags. ?? If the user wants styles to work
                     // better, they should make the tbody explicit... I'm not going to
                     // try to guess what they intended.
                     if ($tbody_style = $css->lookup("tbody")) {
@@ -328,7 +317,7 @@ class Table extends AbstractFrameDecorator
                     $style = $css->create_style();
                     $style->inherit($this->get_style());
 
-                    // Lookup styles for tr tags.  If the user wants styles to work
+                    // Lookup styles for tr tags. ?? If the user wants styles to work
                     // better, they should make the tr explicit... I'm not going to
                     // try to guess what they intended.
                     if ($tr_style = $css->lookup("tr")) {

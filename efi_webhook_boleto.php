@@ -2,11 +2,11 @@
 header('Content-Type: application/json');
 
 // Incluir arquivos necessários
-require_once("sistema/conexao.php");
-require_once 'efi/boleto.php';
+require_once __DIR__ . '/sistema/conexao.php';
+require_once __DIR__ . '/efi/boleto.php';
 
 // Configurações
-$options = require_once 'efi/options.php';
+$options = require_once __DIR__ . '/efi/options.php';
 $config = [
     'client_id' => $options['clientId'],
     'client_secret' => $options['clientSecret'],

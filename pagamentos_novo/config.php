@@ -1,6 +1,6 @@
 <?php
-require("../sistema/conexao.php");
-require("tokens.php");
+require_once dirname(__DIR__) . "/sistema/conexao.php";
+require_once __DIR__ . "/tokens.php";
 
 $modoProducao = true; // Defina isso como true para usar credenciais de produção e false para usar credenciais de teste
 

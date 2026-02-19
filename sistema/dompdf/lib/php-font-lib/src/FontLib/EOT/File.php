@@ -1,8 +1,8 @@
 <?php
 /**
  * @package php-font-lib
- * @link    https://github.com/PhenX/php-font-lib
- * @author  Fabien Ménager <fabien.menager@gmail.com>
+ * @link ? https ://github.com/PhenX/php-font-lib
+ * @author ?? Fabien Ménager <fabien.menager@gmail.com>
  * @license http://www.gnu.org/copyleft/lesser.html GNU Lesser General Public License
  */
 
@@ -50,9 +50,7 @@ class File extends \FontLib\TrueType\File {
       var_dump("$mtx_version $mtx_copy_limit $mtx_offset_1 $mtx_offset_2");
 
       $pos = $this->pos();
-      $size = $mtx_offset_1 - $pos;
-      var_dump("pos: $pos");
-      var_dump("size: $size");*/
+      $size = $mtx_offset_1 - $pos; ? var_dump("pos: $pos"); ? var_dump("size: $size");*/
     }
 
     if ($flags & self::TTEMBED_XORENCRYPTDATA) {

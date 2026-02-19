@@ -16,7 +16,7 @@ if(@$_SESSION['nivel'] != 'Aluno'){
 	echo "<script>window.location='../index.php'</script>";
 	exit();
 }
- ?>
+?>
 
 
 <div class="bs-example widget-shadow margem-mobile" style="padding:15px; margin-top:-10px" id="listar">
@@ -172,7 +172,7 @@ if(@$_SESSION['nivel'] != 'Aluno'){
 
 					<hr>
 				<div align="center" class="text-muted">
-					<small>Se preferir mande sua dúvida diretamente em nosso whatsapp <a href="http://api.whatsapp.com/send?1=pt_BR&phone=<?php echo $tel_whatsapp ?>" title="Chamar no Whatsapp" target="_blank"><i class="fa fa-whatsapp"></i><?php echo $tel_sistema ?></a></small>
+					<small>Se preferir mande sua dúvida diretamente em nosso whatsapp <a href="http://api.whatsapp.com/send1=pt_BR&phone=<?php echo $tel_whatsapp >" title="Chamar no Whatsapp" target="_blank"?><i class="fa fa-whatsapp"></i><?php echo $tel_sistema ?></a></small>
 				</div>
 					
 
@@ -236,7 +236,7 @@ if(@$_SESSION['nivel'] != 'Aluno'){
 
 
 					<hr>
-				<div  class="modal-footer">
+				<div ?? class="modal-footer">
 					
 				</div>
 					
@@ -313,7 +313,7 @@ if(@$_SESSION['nivel'] != 'Aluno'){
 
 
 					<hr>
-				<div  class="modal-footer">
+				<div ?? class="modal-footer">
 					
 				</div>
 					
@@ -361,7 +361,7 @@ if(@$_SESSION['nivel'] != 'Aluno'){
 
 
 					<hr>
-				<div  class="modal-footer">
+				<div ?? class="modal-footer">
 					<button type="submit" class="btn btn-primary">Finalizar</button>
 				</div>
 					
@@ -385,19 +385,19 @@ if(@$_SESSION['nivel'] != 'Aluno'){
 <input type="hidden" id="id_da_matricula">
 <input type="hidden" id="id_do_curso">
 
-<script type="text/javascript">var pag = "<?=$pag?>"</script>
+<script type="text/javascript">var pag = "<=$pag>"</script>
 <script src="js/ajax.js"></script>
 
 
 <script type="text/javascript">
 	$(document).ready(function() {
-		var id = "<?=$id_pacote_post?>";		
+		var id = "<=$id_pacote_post>";		
 		listarCursos(id)
 
-		var mat = "<?=$id_mat_post?>";
-		var curso = "<?=$id_curso_post?>";
-		var nome = "<?=$nome_curso_post?>";
-		var aulas = "<?=$aulas_curso_post?>";
+		var mat = "<=$id_mat_post>";
+		var curso = "<=$id_curso_post>";
+		var nome = "<=$nome_curso_post>";
+		var aulas = "<=$aulas_curso_post>";
 		
 
 		if(mat != ""){			
@@ -471,8 +471,7 @@ if(@$_SESSION['nivel'] != 'Aluno'){
         	if (mensagem.trim() == "Salvo com Sucesso") {                
                 listar();                
             } else {
-                    $('#mensagem-excluir').addClass('text-danger')
-                    $('#mensagem-excluir').text(mensagem)
+                    $('#mensagem-excluir').addClass('text-danger') ?? $('#mensagem-excluir').text(mensagem)
                 }
             
            
@@ -486,7 +485,7 @@ if(@$_SESSION['nivel'] != 'Aluno'){
 <script type="text/javascript">
 	function abrirAula(id, aula){
 		var id_usu = localStorage.id_usu;
-		var questionario = "<?=$questionario_config?>";
+		var questionario = "<=$questionario_config>";
 
 		$('#id_da_aula').val(id);
 		$.ajax({
@@ -565,7 +564,7 @@ if(@$_SESSION['nivel'] != 'Aluno'){
 		var id_mat = $('#id_da_matricula').val();
 		listarAulas(id_curso, id_mat);
 
-		var id_post = "<?=$id_pacote_post?>";		
+		var id_post = "<=$id_pacote_post>";		
 		listarCursos(id_post)
 
 
@@ -612,14 +611,11 @@ $("#form-perguntas").submit(function () {
             $('#mensagem-pergunta').text('');
             $('#mensagem-pergunta').removeClass()
             if (mensagem.trim() == "Salvo com Sucesso") { 
-            		 $('#pergunta').val('')
-            		  $('#num_aula').val('')                   
-                    $('#btn-fechar-pergunta').click();
+            		 $('#pergunta').val('') ?? $('#num_aula').val('') ?? $('#btn-fechar-pergunta').click();
                     listarPerguntas(id_curso);
                     
                 } else {
-                	$('#mensagem-pergunta').addClass('text-danger')
-                    $('#mensagem-pergunta').text(mensagem)
+                	$('#mensagem-pergunta').addClass('text-danger') ?? $('#mensagem-pergunta').text(mensagem)
                 }
 
             },
@@ -667,8 +663,7 @@ function excluirPergunta(id){
             if (mensagem.trim() == "Excluído com Sucesso") {                
                 listarPerguntas(id_curso);                
             } else {
-                    $('#mensagem-excluir').addClass('text-danger')
-                    $('#mensagem-excluir').text(mensagem)
+                    $('#mensagem-excluir').addClass('text-danger') ?? $('#mensagem-excluir').text(mensagem)
                 }
 
         },      
@@ -716,8 +711,7 @@ $("#form-respostas").submit(function () {
                      listarPerguntas(id_curso)
                     
                 } else {
-                	$('#mensagem-resposta').addClass('text-danger')
-                    $('#mensagem-resposta').text(mensagem)
+                	$('#mensagem-resposta').addClass('text-danger') ?? $('#mensagem-resposta').text(mensagem)
                 }
 
             },
@@ -789,8 +783,7 @@ function excluirResposta(id){
             if (mensagem.trim() == "Excluído com Sucesso") {                
                 listarRespostas(id_pergunta);                
             } else {
-                    $('#mensagem-resposta').addClass('text-danger')
-                    $('#mensagem-resposta').text(mensagem)
+                    $('#mensagem-resposta').addClass('text-danger') ?? $('#mensagem-resposta').text(mensagem)
                 }
 
         },      
@@ -831,13 +824,11 @@ $("#form-avaliar").submit(function () {
             if (mensagem.trim() == "Salvo com Sucesso") { 
             		 	                 
                      //$('#btn-fechar-resposta').click();
-                     $('#mensagem-avaliar').addClass('verde')
-                     $('#mensagem-avaliar').text(mensagem)
+                     $('#mensagem-avaliar').addClass('verde') ?? $('#mensagem-avaliar').text(mensagem)
                      listarCursos()
                     
                 } else {
-                	$('#mensagem-avaliar').addClass('text-danger')
-                    $('#mensagem-avaliar').text(mensagem)
+                	$('#mensagem-avaliar').addClass('text-danger') ?? $('#mensagem-avaliar').text(mensagem)
                 }
 
             },
@@ -866,8 +857,7 @@ function excluir(id){
             if (mensagem.trim() == "Excluído com Sucesso") {                
                 listarCursos();               
             } else {
-                    $('#mensagem-excluir').addClass('text-danger')
-                    $('#mensagem-excluir').text(mensagem)
+                    $('#mensagem-excluir').addClass('text-danger') ?? $('#mensagem-excluir').text(mensagem)
                 }
 
         },      
@@ -929,8 +919,7 @@ $("#form-quest").submit(function () {
                      listarCursos()
 
                 } else {
-                	$('#mensagem-quest').addClass('text-danger')
-                    $('#mensagem-quest').text(msg[0])
+                	$('#mensagem-quest').addClass('text-danger') ?? $('#mensagem-quest').text(msg[0])
                 }
 
             },

@@ -12,36 +12,36 @@ HTML;
 
 $total_dia = 0;
 // $query = $pdo->query("SELECT * FROM $tabela where status != 'Aguardando' and subtotal > 0 and total_recebido > 0 and data >= '$dataInicial' and data <= '$dataFinal' ORDER BY id asc");
-// $query = $pdo->query("SELECT * FROM $tabela  ORDER BY id asc");
+// $query = $pdo->query("SELECT * FROM $tabela ?? ORDER BY id asc");
 
 // $query = $pdo->query("
-//     SELECT 
-//         m.*, 
-//         u1.id_pessoa, 
-//         a.usuario AS id_usuario_aluno, 
-//         u2.nome AS nome_professor
-//     FROM matriculas m
-//     LEFT JOIN usuarios u1 ON m.aluno = u1.id
-//     LEFT JOIN alunos a ON u1.id_pessoa = a.id
-//     LEFT JOIN usuarios u2 ON a.usuario = u2.id
+// ?? SELECT 
+// ?? m.*, 
+// ?? u1.id_pessoa, 
+// ?? a.usuario AS id_usuario_aluno, 
+// ?? u2.nome AS nome_professor
+// ?? FROM matriculas m
+// ?? LEFT JOIN usuarios u1 ON m.aluno = u1.id
+// ?? LEFT JOIN alunos a ON u1.id_pessoa = a.id
+// ?? LEFT JOIN usuarios u2 ON a.usuario = u2.id
 // ");
 
 // $query = $pdo->query("
-//     SELECT 
-//         m.*, 
-//         u1.id_pessoa, 
-//         a.usuario AS id_usuario_aluno, 
-//         u2.nome AS nome_professor
-//     FROM matriculas m
-//     LEFT JOIN usuarios u1 ON m.aluno = u1.id
-//     LEFT JOIN alunos a ON u1.id_pessoa = a.id
-//     LEFT JOIN usuarios u2 ON a.usuario = u2.id
-//     WHERE m.status != 'Aguardando'
-//     AND m.subtotal > 0
-//     AND m.total_recebido > 0
-//     AND m.data >= '$dataInicial'
-//     AND m.data <= '$dataFinal'
-//     ORDER BY m.id ASC
+// ?? SELECT 
+// ?? m.*, 
+// ?? u1.id_pessoa, 
+// ?? a.usuario AS id_usuario_aluno, 
+// ?? u2.nome AS nome_professor
+// ?? FROM matriculas m
+// ?? LEFT JOIN usuarios u1 ON m.aluno = u1.id
+// ?? LEFT JOIN alunos a ON u1.id_pessoa = a.id
+// ?? LEFT JOIN usuarios u2 ON a.usuario = u2.id
+// ?? WHERE m.status != 'Aguardando'
+// ?? AND m.subtotal > 0
+// ?? AND m.total_recebido > 0
+// ?? AND m.data >= '$dataInicial'
+// ?? AND m.data <= '$dataFinal'
+// ?? ORDER BY m.id ASC
 // ");
 
 $query = $pdo->query("
@@ -60,8 +60,7 @@ $query = $pdo->query("
     AND m.total_recebido > 0
     AND m.data >= '$dataInicial'
     AND m.data <= '$dataFinal'
-    ORDER BY m.id ASC
-");
+    ORDER BY m.id ASC ?? ");
 
 // MOSTRAR APENAS Aluno, curso, vendedor, total recebido, data
 
@@ -170,7 +169,7 @@ echo <<<HTML
 		<ul class="dropdown-menu" style="margin-left:-230px;">
 		<li>
 		<div class="notification_desc2">
-		<p>Confirmar Exclusão? <a href="#" onclick="excluir('{$id}')"><span class="text-danger">Sim</span></a></p>
+		<p>Confirmar Exclusão <a href="#" onclick="excluir('{$id}')"><span class="text-danger">Sim</span></a></p>
 		</div>
 		</li>										
 		</ul>
@@ -224,9 +223,7 @@ HTML;
 <script type="text/javascript">
 
 	$(document).ready( function () {
-		$('#tabela').DataTable({
-			"ordering": false,
-			"stateSave": true,
+		$('#tabela').DataTable({ ? "ordering" : false, ? "stateSave" : true,
 		});
 		$('#tabela_filter label input').focus();
 	} );
@@ -257,4 +254,3 @@ HTML;
 
 
 </script>
-

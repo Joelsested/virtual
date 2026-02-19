@@ -1,24 +1,63 @@
 <?php
-require_once("../../../conexao.php");
+require_once(__DIR__ . "/../../../conexao.php");
+require_once(__DIR__ . "/../../../../helpers.php");
 $tabela = 'vendedores';
 
-$nome = $_POST['nome'];
-$email = $_POST['email'];
+$stmtCol = $pdo->query("SHOW COLUMNS FROM {$tabela} LIKE 'pode_login_como_aluno'");
+$temColunaPodeLogin = (bool) ($stmtCol && $stmtCol->fetch(PDO::FETCH_ASSOC));
+if (!$temColunaPodeLogin) {
+    try {
+        $pdo->exec("ALTER TABLE {$tabela} ADD COLUMN pode_login_como_aluno TINYINT(1) NOT NULL DEFAULT 0");
+        $temColunaPodeLogin = true;
+    } catch (Exception $e) {
+        $temColunaPodeLogin = false;
+    }
+}
+
+$nome = trim($_POST['nome'] ?? '');
+$email = trim($_POST['email'] ?? '');
 $telefone = $_POST['telefone'];
-$cpf = $_POST['cpf'];
+$cpf = trim($_POST['cpf'] ?? '');
 $id = $_POST['id'];
 $comissao = $_POST['comissao'] ?? null;
-// $professor = $_POST['professor'] ?? 0;
-$wallet_id = $_POST['wallet_id'];
+$wallet_id = trim($_POST['wallet_id'] ?? '');
+$nascimento = trim($_POST['nascimento'] ?? '');
 
-$senha = '123456';
+if ($nome === '') {
+    echo 'Informe o nome.';
+    exit();
+}
+if ($cpf === '') {
+    echo 'Informe o CPF.';
+    exit();
+}
+if ($email === '') {
+    echo 'Informe o email.';
+    exit();
+}
+if ($nascimento === '') {
+    echo 'Informe a data de nascimento.';
+    exit();
+}
+if ($wallet_id === '') {
+    echo 'Informe o wallet_id.';
+    exit();
+}
+
+$senha = birthDigits($nascimento);
+if ($nascimento === '' || $senha === '') {
+    echo 'Informe uma data de nascimento valida!';
+    exit();
+}
 $senha_crip = md5($senha);
+$nascimentoBr = formatDateBr($nascimento);
 
 if (isset($_POST['professor'])) {
     $professor = 1;
 } else {
     $professor = 0;
 }
+$pode_login_como_aluno = isset($_POST['pode_login_como_aluno']) ? 1 : 0;
 
 //validar email duplicado
 $query = $pdo->query("SELECT * FROM $tabela where email = '$email'");
@@ -94,22 +133,28 @@ if ($id == "") {
         }
     }
 
-    $query = $pdo->prepare("INSERT INTO $tabela SET nome = :nome, email = :email, cpf = :cpf, telefone = :telefone, comissao = :comissao, professor = :professor, foto = '$foto', ativo = 'Sim', data = curDate()");
+    $sqlPodeLogin = $temColunaPodeLogin ? ", pode_login_como_aluno = :pode_login_como_aluno" : "";
+    $query = $pdo->prepare("INSERT INTO $tabela SET nome = :nome, email = :email, cpf = :cpf, telefone = :telefone, nascimento = :nascimento, comissao = :comissao, professor = :professor{$sqlPodeLogin}, foto = '$foto', ativo = 'Sim', data = curDate()");
     $query->bindValue(":nome", "$nome");
     $query->bindValue(":email", "$email");
     $query->bindValue(":telefone", "$telefone");
+    $query->bindValue(":nascimento", "$nascimentoBr");
     $query->bindValue(":comissao", $comissao);
     $query->bindValue(":professor", $professor);
+    if ($temColunaPodeLogin) {
+        $query->bindValue(":pode_login_como_aluno", $pode_login_como_aluno, PDO::PARAM_INT);
+    }
     $query->bindValue(":cpf", "$cpf");
     $query->execute();
     $ult_id = $pdo->lastInsertId();
 
-    $query = $pdo->prepare("INSERT INTO usuarios SET wallet_id = :wallet_id, nome = :nome, usuario = :email, senha = '$senha', cpf = :cpf, senha_crip = '$senha_crip', nivel = 'Vendedor',  foto = '$foto', id_pessoa = '$ult_id', ativo = 'Sim', data = curDate()");
+    $query = $pdo->prepare("INSERT INTO usuarios SET wallet_id = :wallet_id, nome = :nome, usuario = :email, senha = '', cpf = :cpf, senha_crip = :senha_crip, nivel = 'Vendedor',  foto = '$foto', id_pessoa = '$ult_id', ativo = 'Sim', data = curDate()");
 
     $query->bindValue(":nome", "$nome");
     $query->bindValue(":email", "$email");
     $query->bindValue(":cpf", "$cpf");
     $query->bindValue(":wallet_id", "$wallet_id");
+    $query->bindValue(":senha_crip", "$senha_crip");
     $query->execute();
 } else {
 
@@ -125,22 +170,28 @@ if ($id == "") {
             $comissao = 0; // Definir um valor padrão caso nada seja encontrado
         }
     }
-    $query = $pdo->prepare("UPDATE $tabela SET nome = :nome, email = :email, cpf = :cpf, telefone = :telefone,  comissao = :comissao, professor = :professor, foto = '$foto' WHERE id = '$id'");
+    $sqlPodeLogin = $temColunaPodeLogin ? ", pode_login_como_aluno = :pode_login_como_aluno" : "";
+    $query = $pdo->prepare("UPDATE $tabela SET nome = :nome, email = :email, cpf = :cpf, telefone = :telefone, nascimento = :nascimento, comissao = :comissao, professor = :professor{$sqlPodeLogin}, foto = '$foto' WHERE id = '$id'");
     $query->bindValue(":nome", "$nome");
     $query->bindValue(":email", "$email");
     $query->bindValue(":telefone", "$telefone");
+    $query->bindValue(":nascimento", "$nascimentoBr");
     $query->bindValue(":comissao", $comissao);
     $query->bindValue(":professor", $professor);
+    if ($temColunaPodeLogin) {
+        $query->bindValue(":pode_login_como_aluno", $pode_login_como_aluno, PDO::PARAM_INT);
+    }
     $query->bindValue(":cpf", "$cpf");
     $query->execute();
     $ult_id = $pdo->lastInsertId();
 
-    $query = $pdo->prepare("UPDATE usuarios SET wallet_id = :wallet_id, nome = :nome, usuario = :email, cpf = :cpf, foto = '$foto' WHERE id_pessoa = '$id' and nivel = 'Vendedor'");
+    $query = $pdo->prepare("UPDATE usuarios SET wallet_id = :wallet_id, nome = :nome, usuario = :email, cpf = :cpf, senha = '', senha_crip = :senha_crip, foto = '$foto' WHERE id_pessoa = '$id' and nivel = 'Vendedor'");
 
     $query->bindValue(":nome", "$nome");
     $query->bindValue(":email", "$email");
     $query->bindValue(":cpf", "$cpf");
     $query->bindValue(":wallet_id", "$wallet_id");
+    $query->bindValue(":senha_crip", "$senha_crip");
     $query->execute();
 }
 

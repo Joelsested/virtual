@@ -3,8 +3,17 @@
 ini_set('display_errors', 0);
 ini_set('display_startup_errors', 0);
 
-include("./config.php");
-include("../sistema/conexao.php");
+include __DIR__ . "/config.php";
+require_once dirname(__DIR__) . "/sistema/conexao.php";
+require_once __DIR__ . '/../config/env.php';
+$mp_enabled = filter_var(env('MP_ENABLED', 'false'), FILTER_VALIDATE_BOOLEAN);
+if (!$mp_enabled) {
+	http_response_code(410);
+	echo json_encode(["status" => "disabled", "message" => "Mercado Pago desativado"]);
+	exit;
+}
+require_once __DIR__ . '/../config/webhook.php';
+webhook_require_token();
 
 header("Content-Type: application/json");
 
@@ -24,7 +33,7 @@ if (!$inputData || !isset($inputData['data']['id'])) {
 }
 
 // Salvar os dados no arquivo "webhook_mercadopago.json"
-$file = 'webhook_mercadopago.json';
+$file = __DIR__ . '/webhook_mercadopago.json';
 $entry = json_encode($inputData, JSON_PRETTY_PRINT) . ",\n";
 
 // Abre o arquivo e adiciona a nova entrada

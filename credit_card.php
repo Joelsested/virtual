@@ -1416,7 +1416,7 @@ $response = $res[0];
                 // });
 
                 $.ajax({
-                    url: '/efi/card_payment.php',
+                    url: '<?php echo $url_sistema ?>efi/card_payment.php',
                     type: 'POST',
                     contentType: 'application/json; charset=utf-8',
                     data: JSON.stringify(formData),

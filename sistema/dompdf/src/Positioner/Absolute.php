@@ -1,8 +1,8 @@
 <?php
 /**
  * @package dompdf
- * @link    http://dompdf.github.com/
- * @author  Benj Carson <benjcarson@digitaljunkies.ca>
+ * @link ? http ://dompdf.github.com/
+ * @author ?? Benj Carson <benjcarson@digitaljunkies.ca>
  * @license http://www.gnu.org/copyleft/lesser.html GNU Lesser General Public License
  */
 
@@ -47,13 +47,13 @@ class Absolute extends AbstractPositioner
          *
          * Width auto:
          * ____________| left=auto | left=fixed |
-         * right=auto  |     A     |     B      |
-         * right=fixed |     C     |     D      |
+         * right=auto  | ?? A     | ?? B      |
+         * right=fixed | ?? C     | ?? D      |
          *
          * Width fixed:
          * ____________| left=auto | left=fixed |
-         * right=auto  |     E     |     F      |
-         * right=fixed |     G     |     H      |
+         * right=auto  | ?? E     | ?? F      |
+         * right=fixed | ?? G     | ?? H      |
          *****************************/
 
         if ($left === "auto") {

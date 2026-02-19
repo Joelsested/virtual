@@ -1,8 +1,8 @@
 <?php
 /**
  * @package php-font-lib
- * @link    https://github.com/PhenX/php-font-lib
- * @author  Fabien Ménager <fabien.menager@gmail.com>
+ * @link ? https ://github.com/PhenX/php-font-lib
+ * @author ?? Fabien Ménager <fabien.menager@gmail.com>
  * @license http://www.gnu.org/copyleft/lesser.html GNU Lesser General Public License
  */
 
@@ -20,14 +20,14 @@ class BinaryStream {
   protected $f;
 
   const uint8        = 1;
-  const  int8        = 2;
+  const ?? int8        = 2;
   const uint16       = 3;
-  const  int16       = 4;
+  const ?? int16       = 4;
   const uint32       = 5;
-  const  int32       = 6;
+  const ?? int32       = 6;
   const shortFrac    = 7;
   const Fixed        = 8;
-  const  FWord       = 9;
+  const ?? FWord       = 9;
   const uFWord       = 10;
   const F2Dot14      = 11;
   const longDateTime = 12;
@@ -56,7 +56,7 @@ class BinaryStream {
    * Open a font file in a chosen mode
    *
    * @param string $filename The file name of the font to open
-   * @param string $mode     The opening mode
+   * @param string $mode ?? The opening mode
    *
    * @throws \Exception
    * @return bool

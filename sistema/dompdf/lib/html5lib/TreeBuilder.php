@@ -27,12 +27,12 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
 // Tags for FIX ME!!!: (in order of priority)
-//      XXX - should be fixed NAO!
-//      XERROR - with regards to parse errors
-//      XSCRIPT - with regards to scripting mode
-//      XENCODING - with regards to encoding (for reparsing tests)
-//      XDOM - DOM specific code (tagName is explicitly not marked).
-//          this is not (yet) in helper functions.
+// ?? XXX - should be fixed NAO!
+// ?? XERROR - with regards to parse errors
+// ?? XSCRIPT - with regards to scripting mode
+// ?? XENCODING - with regards to encoding (for reparsing tests)
+// ?? XDOM - DOM specific code (tagName is explicitly not marked).
+// ?? this is not (yet) in helper functions.
 
 class HTML5_TreeBuilder {
     public $stack = [];
@@ -65,13 +65,7 @@ class HTML5_TreeBuilder {
     private $scoping = ['applet','button','caption','html','marquee','object','table','td','th', 'svg:foreignObject'];
     private $formatting = ['a','b','big','code','em','font','i','nobr','s','small','strike','strong','tt','u'];
     // dl and ds are speculative
-    private $special = ['address','area','article','aside','base','basefont','bgsound',
-    'blockquote','body','br','center','col','colgroup','command','dc','dd','details','dir','div','dl','ds',
-    'dt','embed','fieldset','figure','footer','form','frame','frameset','h1','h2','h3','h4','h5',
-    'h6','head','header','hgroup','hr','iframe','img','input','isindex','li','link',
-    'listing','menu','meta','nav','noembed','noframes','noscript','ol',
-    'p','param','plaintext','pre','script','select','spacer','style',
-    'tbody','textarea','tfoot','thead','title','tr','ul','wbr'];
+    private $special = ['address','area','article','aside','base','basefont','bgsound', 'blockquote','body','br','center','col','colgroup','command','dc','dd','details','dir','div','dl','ds', 'dt','embed','fieldset','figure','footer','form','frame','frameset','h1','h2','h3','h4','h5', 'h6','head','header','hgroup','hr','iframe','img','input','isindex','li','link', 'listing','menu','meta','nav','noembed','noframes','noscript','ol', 'p','param','plaintext','pre','script','select','spacer','style', 'tbody','textarea','tfoot','thead','title','tr','ul','wbr'];
 
     private $pendingTableCharacters;
     private $pendingTableCharactersDirty;
@@ -171,7 +165,7 @@ class HTML5_TreeBuilder {
      * @param null $mode
      */
     public function emitToken($token, $mode = null) {
-        // XXX: ignore parse errors... why are we emitting them, again?
+        // XXX: ignore parse errors... why are we emitting them, again
         if ($token['type'] === HTML5_Tokenizer::PARSEERROR) {
             return;
         }
@@ -184,7 +178,7 @@ class HTML5_TreeBuilder {
         if ($backtrace[1]['class'] !== 'HTML5_TreeBuilder') echo "--\n";
         echo $this->strConst($mode);
         if ($this->original_mode) echo " (originally ".$this->strConst($this->original_mode).")";
-        echo "\n  ";
+        echo "\n ?? ";
         token_dump($token);
         $this->printStack();
         $this->printActiveFormattingElements();
@@ -201,7 +195,7 @@ class HTML5_TreeBuilder {
             case self::INITIAL:
 
                 /* A character token that is one of U+0009 CHARACTER TABULATION,
-                 * U+000A LINE FEED (LF), U+000C FORM FEED (FF),  or U+0020 SPACE */
+                 * U+000A LINE FEED (LF), U+000C FORM FEED (FF), ?? or U+0020 SPACE */
                 if ($token['type'] === HTML5_Tokenizer::SPACECHARACTER) {
                     /* Ignore the token. */
                     $this->ignored = true;
@@ -253,77 +247,15 @@ class HTML5_TreeBuilder {
                     }
                     $public = is_null($token['public']) ? false : strtolower($token['public']);
                     $system = is_null($token['system']) ? false : strtolower($token['system']);
-                    $publicStartsWithForQuirks = [
-                     "+//silmaril//dtd html pro v0r11 19970101//",
-                     "-//advasoft ltd//dtd html 3.0 aswedit + extensions//",
-                     "-//as//dtd html 3.0 aswedit + extensions//",
-                     "-//ietf//dtd html 2.0 level 1//",
-                     "-//ietf//dtd html 2.0 level 2//",
-                     "-//ietf//dtd html 2.0 strict level 1//",
-                     "-//ietf//dtd html 2.0 strict level 2//",
-                     "-//ietf//dtd html 2.0 strict//",
-                     "-//ietf//dtd html 2.0//",
-                     "-//ietf//dtd html 2.1e//",
-                     "-//ietf//dtd html 3.0//",
-                     "-//ietf//dtd html 3.2 final//",
-                     "-//ietf//dtd html 3.2//",
-                     "-//ietf//dtd html 3//",
-                     "-//ietf//dtd html level 0//",
-                     "-//ietf//dtd html level 1//",
-                     "-//ietf//dtd html level 2//",
-                     "-//ietf//dtd html level 3//",
-                     "-//ietf//dtd html strict level 0//",
-                     "-//ietf//dtd html strict level 1//",
-                     "-//ietf//dtd html strict level 2//",
-                     "-//ietf//dtd html strict level 3//",
-                     "-//ietf//dtd html strict//",
-                     "-//ietf//dtd html//",
-                     "-//metrius//dtd metrius presentational//",
-                     "-//microsoft//dtd internet explorer 2.0 html strict//",
-                     "-//microsoft//dtd internet explorer 2.0 html//",
-                     "-//microsoft//dtd internet explorer 2.0 tables//",
-                     "-//microsoft//dtd internet explorer 3.0 html strict//",
-                     "-//microsoft//dtd internet explorer 3.0 html//",
-                     "-//microsoft//dtd internet explorer 3.0 tables//",
-                     "-//netscape comm. corp.//dtd html//",
-                     "-//netscape comm. corp.//dtd strict html//",
-                     "-//o'reilly and associates//dtd html 2.0//",
-                     "-//o'reilly and associates//dtd html extended 1.0//",
-                     "-//o'reilly and associates//dtd html extended relaxed 1.0//",
-                     "-//spyglass//dtd html 2.0 extended//",
-                     "-//sq//dtd html 2.0 hotmetal + extensions//",
-                     "-//sun microsystems corp.//dtd hotjava html//",
-                     "-//sun microsystems corp.//dtd hotjava strict html//",
-                     "-//w3c//dtd html 3 1995-03-24//",
-                     "-//w3c//dtd html 3.2 draft//",
-                     "-//w3c//dtd html 3.2 final//",
-                     "-//w3c//dtd html 3.2//",
-                     "-//w3c//dtd html 3.2s draft//",
-                     "-//w3c//dtd html 4.0 frameset//",
-                     "-//w3c//dtd html 4.0 transitional//",
-                     "-//w3c//dtd html experimental 19960712//",
-                     "-//w3c//dtd html experimental 970421//",
-                     "-//w3c//dtd w3 html//",
-                     "-//w3o//dtd w3 html 3.0//",
-                     "-//webtechs//dtd mozilla html 2.0//",
-                     "-//webtechs//dtd mozilla html//",
+                    $publicStartsWithForQuirks = ["+//silmaril//dtd html pro v0r11 19970101//", "-//advasoft ltd//dtd html 3.0 aswedit + extensions//", "-//as//dtd html 3.0 aswedit + extensions//", "-//ietf//dtd html 2.0 level 1//", "-//ietf//dtd html 2.0 level 2//", "-//ietf//dtd html 2.0 strict level 1//", "-//ietf//dtd html 2.0 strict level 2//", "-//ietf//dtd html 2.0 strict//", "-//ietf//dtd html 2.0//", "-//ietf//dtd html 2.1e//", "-//ietf//dtd html 3.0//", "-//ietf//dtd html 3.2 final//", "-//ietf//dtd html 3.2//", "-//ietf//dtd html 3//", "-//ietf//dtd html level 0//", "-//ietf//dtd html level 1//", "-//ietf//dtd html level 2//", "-//ietf//dtd html level 3//", "-//ietf//dtd html strict level 0//", "-//ietf//dtd html strict level 1//", "-//ietf//dtd html strict level 2//", "-//ietf//dtd html strict level 3//", "-//ietf//dtd html strict//", "-//ietf//dtd html//", "-//metrius//dtd metrius presentational//", "-//microsoft//dtd internet explorer 2.0 html strict//", "-//microsoft//dtd internet explorer 2.0 html//", "-//microsoft//dtd internet explorer 2.0 tables//", "-//microsoft//dtd internet explorer 3.0 html strict//", "-//microsoft//dtd internet explorer 3.0 html//", "-//microsoft//dtd internet explorer 3.0 tables//", "-//netscape comm. corp.//dtd html//", "-//netscape comm. corp.//dtd strict html//", "-//o'reilly and associates//dtd html 2.0//", "-//o'reilly and associates//dtd html extended 1.0//", "-//o'reilly and associates//dtd html extended relaxed 1.0//", "-//spyglass//dtd html 2.0 extended//", "-//sq//dtd html 2.0 hotmetal + extensions//", "-//sun microsystems corp.//dtd hotjava html//", "-//sun microsystems corp.//dtd hotjava strict html//", "-//w3c//dtd html 3 1995-03-24//", "-//w3c//dtd html 3.2 draft//", "-//w3c//dtd html 3.2 final//", "-//w3c//dtd html 3.2//", "-//w3c//dtd html 3.2s draft//", "-//w3c//dtd html 4.0 frameset//", "-//w3c//dtd html 4.0 transitional//", "-//w3c//dtd html experimental 19960712//", "-//w3c//dtd html experimental 970421//", "-//w3c//dtd w3 html//", "-//w3o//dtd w3 html 3.0//", "-//webtechs//dtd mozilla html 2.0//", "-//webtechs//dtd mozilla html//",
                     ];
-                    $publicSetToForQuirks = [
-                     "-//w3o//dtd w3 html strict 3.0//",
-                     "-/w3c/dtd html 4.0 transitional/en",
-                     "html",
+                    $publicSetToForQuirks = ["-//w3o//dtd w3 html strict 3.0//", "-/w3c/dtd html 4.0 transitional/en", "html",
                     ];
-                    $publicStartsWithAndSystemForQuirks = [
-                     "-//w3c//dtd html 4.01 frameset//",
-                     "-//w3c//dtd html 4.01 transitional//",
+                    $publicStartsWithAndSystemForQuirks = ["-//w3c//dtd html 4.01 frameset//", "-//w3c//dtd html 4.01 transitional//",
                     ];
-                    $publicStartsWithForLimitedQuirks = [
-                     "-//w3c//dtd xhtml 1.0 frameset//",
-                     "-//w3c//dtd xhtml 1.0 transitional//",
+                    $publicStartsWithForLimitedQuirks = ["-//w3c//dtd xhtml 1.0 frameset//", "-//w3c//dtd xhtml 1.0 transitional//",
                     ];
-                    $publicStartsWithAndSystemForLimitedQuirks = [
-                     "-//w3c//dtd html 4.01 frameset//",
-                     "-//w3c//dtd html 4.01 transitional//",
+                    $publicStartsWithAndSystemForLimitedQuirks = ["-//w3c//dtd html 4.01 frameset//", "-//w3c//dtd html 4.01 transitional//",
                     ];
                     // first, do easy checks
                     if (
@@ -420,7 +352,7 @@ class HTML5_TreeBuilder {
                 /* A start tag whose tag name is "html" */
                 } elseif ($token['type'] === HTML5_Tokenizer::STARTTAG && $token['name'] == 'html') {
                     /* Create an element for the token in the HTML namespace. Append it
-                     * to the Document  object. Put this element in the stack of open
+                     * to the Document ?? object. Put this element in the stack of open
                      * elements. */
                     // XDOM
                     $html = $this->insertElement($token, false);
@@ -489,10 +421,7 @@ class HTML5_TreeBuilder {
                 )) {
                     /* Act as if a start tag token with the tag name "head" and no
                      * attributes had been seen, then reprocess the current token. */
-                    $this->emitToken([
-                        'name' => 'head',
-                        'type' => HTML5_Tokenizer::STARTTAG,
-                        'attr' => []
+                    $this->emitToken(['name' => 'head', 'type' => HTML5_Tokenizer::STARTTAG, 'attr' => []
                     ]);
                     $this->emitToken($token);
 
@@ -507,10 +436,7 @@ class HTML5_TreeBuilder {
                      * Note: This will result in an empty head element being
                      * generated, with the current token being reprocessed in the
                      * "after head" insertion mode. */
-                    $this->emitToken([
-                        'name' => 'head',
-                        'type' => HTML5_Tokenizer::STARTTAG,
-                        'attr' => []
+                    $this->emitToken(['name' => 'head', 'type' => HTML5_Tokenizer::STARTTAG, 'attr' => []
                     ]);
                     $this->emitToken($token);
                 }
@@ -598,7 +524,7 @@ class HTML5_TreeBuilder {
                      * "already executed". (fragment case) */
                     // ditto... XSCRIPT
 
-                    /* 4. Append the new element to the current node  and push it onto
+                    /* 4. Append the new element to the current node ?? and push it onto
                      * the stack of open elements.  */
                     end($this->stack)->appendChild($node);
                     $this->stack[] = $node;
@@ -632,9 +558,7 @@ class HTML5_TreeBuilder {
                 } else {
                     /* Act as if an end tag token with the tag name "head" had been
                      * seen, and reprocess the current token. */
-                    $this->emitToken([
-                        'name' => 'head',
-                        'type' => HTML5_Tokenizer::ENDTAG
+                    $this->emitToken(['name' => 'head', 'type' => HTML5_Tokenizer::ENDTAG
                     ]);
 
                     /* Then, reprocess the current token. */
@@ -669,9 +593,7 @@ class HTML5_TreeBuilder {
                     // parse error
                 } else {
                     // parse error
-                    $this->emitToken([
-                        'type' => HTML5_Tokenizer::ENDTAG,
-                        'name' => 'noscript',
+                    $this->emitToken(['type' => HTML5_Tokenizer::ENDTAG, 'name' => 'noscript',
                     ]);
                     $this->emitToken($token);
                 }
@@ -717,8 +639,7 @@ class HTML5_TreeBuilder {
                     /* Change the insertion mode to "in frameset". */
                     $this->mode = self::IN_FRAMESET;
 
-                /* A start tag token whose tag name is one of: "base", "link", "meta",
-                "script", "style", "title" */
+                /* A start tag token whose tag name is one of: "base", "link", "meta", "script", "style", "title" */
                 } elseif ($token['type'] === HTML5_Tokenizer::STARTTAG && in_array($token['name'],
                 ['base', 'link', 'meta', 'noframes', 'script', 'style', 'title'])) {
                     // parse error
@@ -738,10 +659,7 @@ class HTML5_TreeBuilder {
 
                 /* Anything else */
                 } else {
-                    $this->emitToken([
-                        'name' => 'body',
-                        'type' => HTML5_Tokenizer::STARTTAG,
-                        'attr' => []
+                    $this->emitToken(['name' => 'body', 'type' => HTML5_Tokenizer::STARTTAG, 'attr' => []
                     ]);
                     $this->flag_frameset_ok = true;
                     $this->emitToken($token);
@@ -762,7 +680,7 @@ class HTML5_TreeBuilder {
                         $this->insertText($token['data']);
 
                         /* If the token is not one of U+0009 CHARACTER TABULATION,
-                         * U+000A LINE FEED (LF), U+000C FORM FEED (FF),  or U+0020
+                         * U+000A LINE FEED (LF), U+000C FORM FEED (FF), ?? or U+0020
                          * SPACE, then set the frameset-ok flag to "not ok". */
                         // i.e., if any of the characters is not whitespace
                         if (strlen($token['data']) !== strspn($token['data'], HTML5_Tokenizer::WHITESPACE)) {
@@ -819,7 +737,7 @@ class HTML5_TreeBuilder {
 
                             /* Otherwise, for each attribute on the token, check to see
                             if the attribute is already present on the body element (the
-                            second element)    on the stack of open elements. If it is not,
+                            second element) ?? on the stack of open elements. If it is not,
                             add the attribute and its corresponding value to that
                             element. */
                             } else {
@@ -871,9 +789,7 @@ class HTML5_TreeBuilder {
                             then act as if an end tag with the tag name p had been
                             seen. */
                             if ($this->elementInScope('p')) {
-                                $this->emitToken([
-                                    'name' => 'p',
-                                    'type' => HTML5_Tokenizer::ENDTAG
+                                $this->emitToken(['name' => 'p', 'type' => HTML5_Tokenizer::ENDTAG
                                 ]);
                             }
 
@@ -881,15 +797,12 @@ class HTML5_TreeBuilder {
                             $this->insertElement($token);
                         break;
 
-                        /* A start tag whose tag name is one of: "h1", "h2", "h3", "h4",
-                        "h5", "h6" */
+                        /* A start tag whose tag name is one of: "h1", "h2", "h3", "h4", "h5", "h6" */
                         case 'h1': case 'h2': case 'h3': case 'h4': case 'h5': case 'h6':
-                            /* If the stack of open elements has a p  element in scope,
+                            /* If the stack of open elements has a p ?? element in scope,
                             then act as if an end tag with the tag name p had been seen. */
                             if ($this->elementInScope('p')) {
-                                $this->emitToken([
-                                    'name' => 'p',
-                                    'type' => HTML5_Tokenizer::ENDTAG
+                                $this->emitToken(['name' => 'p', 'type' => HTML5_Tokenizer::ENDTAG
                                 ]);
                             }
 
@@ -909,12 +822,10 @@ class HTML5_TreeBuilder {
                         break;
 
                         case 'pre': case 'listing':
-                            /* If the stack of open elements has a p  element in scope,
+                            /* If the stack of open elements has a p ?? element in scope,
                             then act as if an end tag with the tag name p had been seen. */
                             if ($this->elementInScope('p')) {
-                                $this->emitToken([
-                                    'name' => 'p',
-                                    'type' => HTML5_Tokenizer::ENDTAG
+                                $this->emitToken(['name' => 'p', 'type' => HTML5_Tokenizer::ENDTAG
                                 ]);
                             }
                             $this->insertElement($token);
@@ -940,9 +851,7 @@ class HTML5_TreeBuilder {
                                 scope, then act as if an end tag with the tag name p
                                 had been seen. */
                                 if ($this->elementInScope('p')) {
-                                    $this->emitToken([
-                                        'name' => 'p',
-                                        'type' => HTML5_Tokenizer::ENDTAG
+                                    $this->emitToken(['name' => 'p', 'type' => HTML5_Tokenizer::ENDTAG
                                     ]);
                                 }
 
@@ -976,15 +885,13 @@ class HTML5_TreeBuilder {
                                  * jump to the last step. */
                                 if (($token['name'] === 'li' && $node->tagName === 'li') ||
                                 ($token['name'] !== 'li' && ($node->tagName == 'dc' || $node->tagName === 'dd' || $node->tagName == 'ds' || $node->tagName === 'dt'))) { // limited conditional
-                                    $this->emitToken([
-                                        'type' => HTML5_Tokenizer::ENDTAG,
-                                        'name' => $node->tagName,
+                                    $this->emitToken(['type' => HTML5_Tokenizer::ENDTAG, 'name' => $node->tagName,
                                     ]);
                                     break;
                                 }
 
                                 /* 4. If node is not in the formatting category, and is
-                                not    in the phrasing category, and is not an address,
+                                not ?? in the phrasing category, and is not an address,
                                 div or p element, then stop this algorithm. */
                                 if ($cat !== self::FORMATTING && $cat !== self::PHRASING &&
                                 $node->tagName !== 'address' && $node->tagName !== 'div' &&
@@ -998,30 +905,26 @@ class HTML5_TreeBuilder {
 
                             /* 6. This is the last step. */
 
-                            /* If the stack of open elements has a p  element in scope,
+                            /* If the stack of open elements has a p ?? element in scope,
                             then act as if an end tag with the tag name p had been
                             seen. */
                             if ($this->elementInScope('p')) {
-                                $this->emitToken([
-                                    'name' => 'p',
-                                    'type' => HTML5_Tokenizer::ENDTAG
+                                $this->emitToken(['name' => 'p', 'type' => HTML5_Tokenizer::ENDTAG
                                 ]);
                             }
 
                             /* Finally, insert an HTML element with the same tag
-                            name as the    token's. */
+                            name as the ?? token's. */
                             $this->insertElement($token);
                         break;
 
                         /* A start tag token whose tag name is "plaintext" */
                         case 'plaintext':
-                            /* If the stack of open elements has a p  element in scope,
+                            /* If the stack of open elements has a p ?? element in scope,
                             then act as if an end tag with the tag name p had been
                             seen. */
                             if ($this->elementInScope('p')) {
-                                $this->emitToken([
-                                    'name' => 'p',
-                                    'type' => HTML5_Tokenizer::ENDTAG
+                                $this->emitToken(['name' => 'p', 'type' => HTML5_Tokenizer::ENDTAG
                                 ]);
                             }
 
@@ -1039,8 +942,7 @@ class HTML5_TreeBuilder {
                             an element whose tag name is "a" between the end of the
                             list and the last marker on the list (or the start of
                             the list if there is no marker on the list), then this
-                            is a parse error; act as if an end tag with the tag name
-                            "a" had been seen, then remove that element from the list
+                            is a parse error; act as if an end tag with the tag name ?? "a" had been seen, then remove that element from the list
                             of active formatting elements and the stack of open
                             elements if the end tag didn't already remove it (it
                             might not have if the element is not in table scope). */
@@ -1052,9 +954,7 @@ class HTML5_TreeBuilder {
 
                                 } elseif ($this->a_formatting[$n]->tagName === 'a') {
                                     $a = $this->a_formatting[$n];
-                                    $this->emitToken([
-                                        'name' => 'a',
-                                        'type' => HTML5_Tokenizer::ENDTAG
+                                    $this->emitToken(['name' => 'a', 'type' => HTML5_Tokenizer::ENDTAG
                                     ]);
                                     if (in_array($a, $this->a_formatting)) {
                                         $a_i = array_search($a, $this->a_formatting, true);
@@ -1106,9 +1006,7 @@ class HTML5_TreeBuilder {
                              * with the tag name "nobr" had been seen, then once again
                              * reconstruct the active formatting elements, if any. */
                             if ($this->elementInScope('nobr')) {
-                                $this->emitToken([
-                                    'name' => 'nobr',
-                                    'type' => HTML5_Tokenizer::ENDTAG,
+                                $this->emitToken(['name' => 'nobr', 'type' => HTML5_Tokenizer::ENDTAG,
                                 ]);
                                 $this->reconstructActiveFormattingElements();
                             }
@@ -1130,9 +1028,7 @@ class HTML5_TreeBuilder {
                             name "button" had been seen, then reprocess the token. (We don't
                             do that. Unnecessary.) (I hope you're right! -- ezyang) */
                             if ($this->elementInScope('button')) {
-                                $this->emitToken([
-                                    'name' => 'button',
-                                    'type' => HTML5_Tokenizer::ENDTAG
+                                $this->emitToken(['name' => 'button', 'type' => HTML5_Tokenizer::ENDTAG
                                 ]);
                             }
 
@@ -1173,9 +1069,7 @@ class HTML5_TreeBuilder {
                              * seen. */
                             if ($this->quirks_mode !== self::QUIRKS_MODE &&
                             $this->elementInScope('p')) {
-                                $this->emitToken([
-                                    'name' => 'p',
-                                    'type' => HTML5_Tokenizer::ENDTAG
+                                $this->emitToken(['name' => 'p', 'type' => HTML5_Tokenizer::ENDTAG
                                 ]);
                             }
 
@@ -1188,8 +1082,7 @@ class HTML5_TreeBuilder {
                             $this->mode = self::IN_TABLE;
                         break;
 
-                        /* A start tag whose tag name is one of: "area", "basefont",
-                        "bgsound", "br", "embed", "img", "param", "spacer", "wbr" */
+                        /* A start tag whose tag name is one of: "area", "basefont", "bgsound", "br", "embed", "img", "param", "spacer", "wbr" */
                         case 'area': case 'basefont': case 'bgsound': case 'br':
                         case 'embed': case 'img': case 'input': case 'keygen': case 'spacer':
                         case 'wbr':
@@ -1222,9 +1115,7 @@ class HTML5_TreeBuilder {
                             /* If the stack of open elements has a p element in scope,
                             then act as if an end tag with the tag name p had been seen. */
                             if ($this->elementInScope('p')) {
-                                $this->emitToken([
-                                    'name' => 'p',
-                                    'type' => HTML5_Tokenizer::ENDTAG
+                                $this->emitToken(['name' => 'p', 'type' => HTML5_Tokenizer::ENDTAG
                                 ]);
                             }
 
@@ -1265,43 +1156,30 @@ class HTML5_TreeBuilder {
                                 if ($action !== false) {
                                     $attr[] = ['name' => 'action', 'value' => $action];
                                 }
-                                $this->emitToken([
-                                    'name' => 'form',
-                                    'type' => HTML5_Tokenizer::STARTTAG,
-                                    'attr' => $attr
+                                $this->emitToken(['name' => 'form', 'type' => HTML5_Tokenizer::STARTTAG, 'attr' => $attr
                                 ]);
 
                                 /* Act as if a start tag token with the tag name "hr" had
                                 been seen. */
-                                $this->emitToken([
-                                    'name' => 'hr',
-                                    'type' => HTML5_Tokenizer::STARTTAG,
-                                    'attr' => []
+                                $this->emitToken(['name' => 'hr', 'type' => HTML5_Tokenizer::STARTTAG, 'attr' => []
                                 ]);
 
                                 /* Act as if a start tag token with the tag name "label"
                                 had been seen. */
-                                $this->emitToken([
-                                    'name' => 'label',
-                                    'type' => HTML5_Tokenizer::STARTTAG,
-                                    'attr' => []
+                                $this->emitToken(['name' => 'label', 'type' => HTML5_Tokenizer::STARTTAG, 'attr' => []
                                 ]);
 
                                 /* Act as if a stream of character tokens had been seen. */
                                 $prompt = $this->getAttr($token, 'prompt');
                                 if ($prompt === false) {
-                                    $prompt = 'This is a searchable index. '.
-                                    'Insert your search keywords here: ';
+                                    $prompt = 'This is a searchable index. '. ?? 'Insert your search keywords here: ';
                                 }
-                                $this->emitToken([
-                                    'data' => $prompt,
-                                    'type' => HTML5_Tokenizer::CHARACTER,
+                                $this->emitToken(['data' => $prompt, 'type' => HTML5_Tokenizer::CHARACTER,
                                 ]);
 
                                 /* Act as if a start tag token with the tag name "input"
                                 had been seen, with all the attributes from the "isindex"
-                                token, except with the "name" attribute set to the value
-                                "isindex" (ignoring any explicit "name" attribute). */
+                                token, except with the "name" attribute set to the value ?? "isindex" (ignoring any explicit "name" attribute). */
                                 $attr = [];
                                 foreach ($token['attr'] as $keypair) {
                                     if ($keypair['name'] === 'name' || $keypair['name'] === 'action' ||
@@ -1312,31 +1190,22 @@ class HTML5_TreeBuilder {
                                 }
                                 $attr[] = ['name' => 'name', 'value' => 'isindex'];
 
-                                $this->emitToken([
-                                    'name' => 'input',
-                                    'type' => HTML5_Tokenizer::STARTTAG,
-                                    'attr' => $attr
+                                $this->emitToken(['name' => 'input', 'type' => HTML5_Tokenizer::STARTTAG, 'attr' => $attr
                                 ]);
 
                                 /* Act as if an end tag token with the tag name "label"
                                 had been seen. */
-                                $this->emitToken([
-                                    'name' => 'label',
-                                    'type' => HTML5_Tokenizer::ENDTAG
+                                $this->emitToken(['name' => 'label', 'type' => HTML5_Tokenizer::ENDTAG
                                 ]);
 
                                 /* Act as if a start tag token with the tag name "hr" had
                                 been seen. */
-                                $this->emitToken([
-                                    'name' => 'hr',
-                                    'type' => HTML5_Tokenizer::STARTTAG
+                                $this->emitToken(['name' => 'hr', 'type' => HTML5_Tokenizer::STARTTAG
                                 ]);
 
                                 /* Act as if an end tag token with the tag name "form" had
                                 been seen. */
-                                $this->emitToken([
-                                    'name' => 'form',
-                                    'type' => HTML5_Tokenizer::ENDTAG
+                                $this->emitToken(['name' => 'form', 'type' => HTML5_Tokenizer::ENDTAG
                                 ]);
                             } else {
                                 $this->ignored = true;
@@ -1366,12 +1235,9 @@ class HTML5_TreeBuilder {
                         /* A start tag token whose tag name is "xmp" */
                         case 'xmp':
                             /* If the stack of open elements has a p element in
-                            scope, then act as if an end tag with the tag name
-                            "p" has been seen. */
+                            scope, then act as if an end tag with the tag name ?? "p" has been seen. */
                             if ($this->elementInScope('p')) {
-                                $this->emitToken([
-                                    'name' => 'p',
-                                    'type' => HTML5_Tokenizer::ENDTAG
+                                $this->emitToken(['name' => 'p', 'type' => HTML5_Tokenizer::ENDTAG
                                 ]);
                             }
 
@@ -1406,7 +1272,7 @@ class HTML5_TreeBuilder {
                             /* If the insertion mode is one of in table", "in caption",
                              * "in column group", "in table body", "in row", or "in
                              * cell", then switch the insertion mode to "in select in
-                             * table". Otherwise, switch the insertion mode  to "in
+                             * table". Otherwise, switch the insertion mode ?? to "in
                              * select". */
                             if (
                                 $this->mode === self::IN_TABLE || $this->mode === self::IN_CAPTION ||
@@ -1421,9 +1287,7 @@ class HTML5_TreeBuilder {
 
                         case 'option': case 'optgroup':
                             if ($this->elementInScope('option')) {
-                                $this->emitToken([
-                                    'name' => 'option',
-                                    'type' => HTML5_Tokenizer::ENDTAG,
+                                $this->emitToken(['name' => 'option', 'type' => HTML5_Tokenizer::ENDTAG,
                                 ]);
                             }
                             $this->reconstructActiveFormattingElements();
@@ -1493,7 +1357,7 @@ class HTML5_TreeBuilder {
                             $this->reconstructActiveFormattingElements();
 
                             $this->insertElement($token);
-                            /* This element will be a phrasing  element. */
+                            /* This element will be a phrasing ?? element. */
                         break;
                     }
                     break;
@@ -1530,9 +1394,7 @@ class HTML5_TreeBuilder {
                             /* Act as if an end tag with tag name "body" had been seen,
                             then, if that token wasn't ignored, reprocess the current
                             token. */
-                            $this->emitToken([
-                                'name' => 'body',
-                                'type' => HTML5_Tokenizer::ENDTAG
+                            $this->emitToken(['name' => 'body', 'type' => HTML5_Tokenizer::ENDTAG
                             ]);
 
                             if (!$this->ignored) {
@@ -1572,7 +1434,7 @@ class HTML5_TreeBuilder {
                         case 'form':
                             /* Let node be the element that the form element pointer is set to. */
                             $node = $this->form_pointer;
-                            /* Set the form element pointer  to null. */
+                            /* Set the form element pointer ?? to null. */
                             $this->form_pointer = null;
                             /* If node is null or the stack of open elements does not
                                 * have node in scope, then this is a parse error; ignore the token. */
@@ -1605,7 +1467,7 @@ class HTML5_TreeBuilder {
                                 a parse error. */
                                 // XERROR: implement
 
-                                /* Pop elements from the stack of open elements  until
+                                /* Pop elements from the stack of open elements ?? until
                                  * an element with the same tag name as the token has
                                  * been popped from the stack. */
                                 do {
@@ -1614,9 +1476,7 @@ class HTML5_TreeBuilder {
 
                             } else {
                                 // parse error
-                                $this->emitToken([
-                                    'name' => 'p',
-                                    'type' => HTML5_Tokenizer::STARTTAG,
+                                $this->emitToken(['name' => 'p', 'type' => HTML5_Tokenizer::STARTTAG,
                                 ]);
                                 $this->emitToken($token);
                             }
@@ -1634,7 +1494,7 @@ class HTML5_TreeBuilder {
                                 /* If the current node is not an element with the same tag
                                  * name as that of the token, then this is a parse error. */
                                 // XERROR: parse error
-                                /* Pop elements from the stack of open elements  until an
+                                /* Pop elements from the stack of open elements ?? until an
                                  * element with the same tag name as the token has been
                                  * popped from the stack. */
                                 do {
@@ -1655,7 +1515,7 @@ class HTML5_TreeBuilder {
                                 tag name as the token, then this is a parse error. */
                                 // XERROR: implement parse error
 
-                                /* Pop elements from the stack of open elements  until
+                                /* Pop elements from the stack of open elements ?? until
                                  * an element with the same tag name as the token has
                                  * been popped from the stack. */
                                 do {
@@ -1667,8 +1527,7 @@ class HTML5_TreeBuilder {
                             }*/
                         break;
 
-                        /* An end tag whose tag name is one of: "h1", "h2", "h3", "h4",
-                        "h5", "h6" */
+                        /* An end tag whose tag name is one of: "h1", "h2", "h3", "h4", "h5", "h6" */
                         case 'h1': case 'h2': case 'h3': case 'h4': case 'h5': case 'h6':
                             $elements = ['h1', 'h2', 'h3', 'h4', 'h5', 'h6'];
 
@@ -1683,8 +1542,7 @@ class HTML5_TreeBuilder {
                                 // XERROR: implement parse error
 
                                 /* If the stack of open elements has in scope an element
-                                whose tag name is one of "h1", "h2", "h3", "h4", "h5", or
-                                "h6", then pop elements from the stack until an element
+                                whose tag name is one of "h1", "h2", "h3", "h4", "h5", or ?? "h6", then pop elements from the stack until an element
                                 with one of those tag names has been popped from the stack. */
                                 do {
                                     $node = array_pop($this->stack);
@@ -1695,8 +1553,7 @@ class HTML5_TreeBuilder {
                             }*/
                         break;
 
-                        /* An end tag whose tag name is one of: "a", "b", "big", "em",
-                        "font", "i", "nobr", "s", "small", "strike", "strong", "tt", "u" */
+                        /* An end tag whose tag name is one of: "a", "b", "big", "em", "font", "i", "nobr", "s", "small", "strike", "strong", "tt", "u" */
                         case 'a': case 'b': case 'big': case 'code': case 'em': case 'font':
                         case 'i': case 'nobr': case 's': case 'small': case 'strike':
                         case 'strong': case 'tt': case 'u':
@@ -1794,7 +1651,7 @@ class HTML5_TreeBuilder {
                                 of it in the list. */
                                 $bookmark = $fe_af_pos;
 
-                                /* 6. Let node and last node  be the furthest block.
+                                /* 6. Let node and last node ?? be the furthest block.
                                 Follow these steps: */
                                 $node = $furthest_block;
                                 $last_node = $furthest_block;
@@ -1873,7 +1730,7 @@ class HTML5_TreeBuilder {
                                 }
                                 if (in_array($common_ancestor->tagName, ['table', 'tbody', 'tfoot', 'thead', 'tr'])) {
                                     $this->fosterParent($last_node);
-                                /* Otherwise, append whatever last node  ended up being
+                                /* Otherwise, append whatever last node ?? ended up being
                                  * in the previous step to the common ancestor node,
                                  * first removing it from its previous parent node if
                                  * any. */
@@ -1940,7 +1797,7 @@ class HTML5_TreeBuilder {
                                 tag name as the token, then this is a parse error. */
                                 // XERROR: implement logic
 
-                                /* Pop elements from the stack of open elements  until
+                                /* Pop elements from the stack of open elements ?? until
                                  * an element with the same tag name as the token has
                                  * been popped from the stack. */
                                 do {
@@ -1963,9 +1820,7 @@ class HTML5_TreeBuilder {
 
                         case 'br':
                             // Parse error
-                            $this->emitToken([
-                                'name' => 'br',
-                                'type' => HTML5_Tokenizer::STARTTAG,
+                            $this->emitToken(['name' => 'br', 'type' => HTML5_Tokenizer::STARTTAG,
                             ]);
                         break;
 
@@ -2023,7 +1878,7 @@ class HTML5_TreeBuilder {
                     $this->insertText($token['data']);
                 } elseif ($token['type'] === HTML5_Tokenizer::EOF) {
                     // parse error
-                    /* If the current node is a script  element, mark the script
+                    /* If the current node is a script ?? element, mark the script
                      * element as "already executed". */
                     // probably not necessary
                     array_pop($this->stack);
@@ -2096,10 +1951,7 @@ class HTML5_TreeBuilder {
                 /* A start tag whose tag name is "col" */
                 } elseif ($token['type'] === HTML5_Tokenizer::STARTTAG &&
                 $token['name'] === 'col') {
-                    $this->emitToken([
-                        'name' => 'colgroup',
-                        'type' => HTML5_Tokenizer::STARTTAG,
-                        'attr' => []
+                    $this->emitToken(['name' => 'colgroup', 'type' => HTML5_Tokenizer::STARTTAG, 'attr' => []
                     ]);
 
                     $this->emitToken($token);
@@ -2120,10 +1972,7 @@ class HTML5_TreeBuilder {
                 in_array($token['name'], ['td', 'th', 'tr'])) {
                     /* Act as if a start tag token with the tag name "tbody" had been
                     seen, then reprocess the current token. */
-                    $this->emitToken([
-                        'name' => 'tbody',
-                        'type' => HTML5_Tokenizer::STARTTAG,
-                        'attr' => []
+                    $this->emitToken(['name' => 'tbody', 'type' => HTML5_Tokenizer::STARTTAG, 'attr' => []
                     ]);
 
                     $this->emitToken($token);
@@ -2134,9 +1983,7 @@ class HTML5_TreeBuilder {
                     /* Parse error. Act as if an end tag token with the tag name "table"
                     had been seen, then, if that token wasn't ignored, reprocess the
                     current token. */
-                    $this->emitToken([
-                        'name' => 'table',
-                        'type' => HTML5_Tokenizer::ENDTAG
+                    $this->emitToken(['name' => 'table', 'type' => HTML5_Tokenizer::ENDTAG
                     ]);
 
                     if (!$this->ignored) {
@@ -2160,11 +2007,9 @@ class HTML5_TreeBuilder {
                         $this->resetInsertionMode();
                     }
 
-                /* An end tag whose tag name is one of: "body", "caption", "col",
-                "colgroup", "html", "tbody", "td", "tfoot", "th", "thead", "tr" */
+                /* An end tag whose tag name is one of: "body", "caption", "col", "colgroup", "html", "tbody", "td", "tfoot", "th", "thead", "tr" */
                 } elseif ($token['type'] === HTML5_Tokenizer::ENDTAG && in_array($token['name'],
-                ['body', 'caption', 'col', 'colgroup', 'html', 'tbody', 'td',
-                'tfoot', 'th', 'thead', 'tr'])) {
+                ['body', 'caption', 'col', 'colgroup', 'html', 'tbody', 'td', 'tfoot', 'th', 'thead', 'tr'])) {
                     // Parse error. Ignore the token.
 
                 } elseif ($token['type'] === HTML5_Tokenizer::STARTTAG &&
@@ -2229,9 +2074,7 @@ class HTML5_TreeBuilder {
                             // XERROR
                             $old = $this->foster_parent;
                             $this->foster_parent = true;
-                            $text_token = [
-                                'type' => HTML5_Tokenizer::CHARACTER,
-                                'data' => $this->pendingTableCharacters,
+                            $text_token = ['type' => HTML5_Tokenizer::CHARACTER, 'data' => $this->pendingTableCharacters,
                             ];
                             $this->processWithRulesFor($text_token, self::IN_BODY);
                             $this->foster_parent = $old;
@@ -2286,30 +2129,24 @@ class HTML5_TreeBuilder {
                         $this->mode = self::IN_TABLE;
                     }
 
-                /* A start tag whose tag name is one of: "caption", "col", "colgroup",
-                "tbody", "td", "tfoot", "th", "thead", "tr", or an end tag whose tag
+                /* A start tag whose tag name is one of: "caption", "col", "colgroup", "tbody", "td", "tfoot", "th", "thead", "tr", or an end tag whose tag
                 name is "table" */
                 } elseif (($token['type'] === HTML5_Tokenizer::STARTTAG && in_array($token['name'],
-                ['caption', 'col', 'colgroup', 'tbody', 'td', 'tfoot', 'th',
-                'thead', 'tr'])) || ($token['type'] === HTML5_Tokenizer::ENDTAG &&
+                ['caption', 'col', 'colgroup', 'tbody', 'td', 'tfoot', 'th', 'thead', 'tr'])) || ($token['type'] === HTML5_Tokenizer::ENDTAG &&
                 $token['name'] === 'table')) {
                     /* Parse error. Act as if an end tag with the tag name "caption"
                     had been seen, then, if that token wasn't ignored, reprocess the
                     current token. */
-                    $this->emitToken([
-                        'name' => 'caption',
-                        'type' => HTML5_Tokenizer::ENDTAG
+                    $this->emitToken(['name' => 'caption', 'type' => HTML5_Tokenizer::ENDTAG
                     ]);
 
                     if (!$this->ignored) {
                         $this->emitToken($token);
                     }
 
-                /* An end tag whose tag name is one of: "body", "col", "colgroup",
-                "html", "tbody", "td", "tfoot", "th", "thead", "tr" */
+                /* An end tag whose tag name is one of: "body", "col", "colgroup", "html", "tbody", "td", "tfoot", "th", "thead", "tr" */
                 } elseif ($token['type'] === HTML5_Tokenizer::ENDTAG && in_array($token['name'],
-                ['body', 'col', 'colgroup', 'html', 'tbody', 'tfoot', 'th',
-                'thead', 'tr'])) {
+                ['body', 'col', 'colgroup', 'html', 'tbody', 'tfoot', 'th', 'thead', 'tr'])) {
                     // Parse error. Ignore the token.
                     $this->ignored = true;
                 } else {
@@ -2366,7 +2203,7 @@ class HTML5_TreeBuilder {
                     $this->ignored = true;
 
                 /* An end-of-file token */
-                /* If the current node is the root html  element */
+                /* If the current node is the root html ?? element */
                 } elseif ($token['type'] === HTML5_Tokenizer::EOF && end($this->stack)->tagName === 'html') {
                     /* Stop parsing */
 
@@ -2374,9 +2211,7 @@ class HTML5_TreeBuilder {
                 } else {
                     /* Act as if an end tag with the tag name "colgroup" had been seen,
                     and then, if that token wasn't ignored, reprocess the current token. */
-                    $this->emitToken([
-                        'name' => 'colgroup',
-                        'type' => HTML5_Tokenizer::ENDTAG
+                    $this->emitToken(['name' => 'colgroup', 'type' => HTML5_Tokenizer::ENDTAG
                     ]);
 
                     if (!$this->ignored) {
@@ -2400,13 +2235,10 @@ class HTML5_TreeBuilder {
 
                 /* A start tag whose tag name is one of: "th", "td" */
                 } elseif ($token['type'] === HTML5_Tokenizer::STARTTAG &&
-                ($token['name'] === 'th' ||    $token['name'] === 'td')) {
+                ($token['name'] === 'th' || ?? $token['name'] === 'td')) {
                     /* Parse error. Act as if a start tag with the tag name "tr" had
                     been seen, then reprocess the current token. */
-                    $this->emitToken([
-                        'name' => 'tr',
-                        'type' => HTML5_Tokenizer::STARTTAG,
-                        'attr' => []
+                    $this->emitToken(['name' => 'tr', 'type' => HTML5_Tokenizer::STARTTAG, 'attr' => []
                     ]);
 
                     $this->emitToken($token);
@@ -2432,8 +2264,7 @@ class HTML5_TreeBuilder {
                         $this->mode = self::IN_TABLE;
                     }
 
-                /* A start tag whose tag name is one of: "caption", "col", "colgroup",
-                "tbody", "tfoot", "thead", or an end tag whose tag name is "table" */
+                /* A start tag whose tag name is one of: "caption", "col", "colgroup", "tbody", "tfoot", "thead", or an end tag whose tag name is "table" */
                 } elseif (($token['type'] === HTML5_Tokenizer::STARTTAG && in_array($token['name'],
                 ['caption', 'col', 'colgroup', 'tbody', 'tfoot', 'thead'])) ||
                 ($token['type'] === HTML5_Tokenizer::ENDTAG && $token['name'] === 'table')) {
@@ -2452,16 +2283,13 @@ class HTML5_TreeBuilder {
                         /* Act as if an end tag with the same tag name as the current
                         node ("tbody", "tfoot", or "thead") had been seen, then
                         reprocess the current token. */
-                        $this->emitToken([
-                            'name' => end($this->stack)->tagName,
-                            'type' => HTML5_Tokenizer::ENDTAG
+                        $this->emitToken(['name' => end($this->stack)->tagName, 'type' => HTML5_Tokenizer::ENDTAG
                         ]);
 
                         $this->emitToken($token);
                     }
 
-                /* An end tag whose tag name is one of: "body", "caption", "col",
-                "colgroup", "html", "td", "th", "tr" */
+                /* An end tag whose tag name is one of: "body", "caption", "col", "colgroup", "html", "td", "th", "tr" */
                 } elseif ($token['type'] === HTML5_Tokenizer::ENDTAG && in_array($token['name'],
                 ['body', 'caption', 'col', 'colgroup', 'html', 'td', 'th', 'tr'])) {
                     /* Parse error. Ignore the token. */
@@ -2511,16 +2339,13 @@ class HTML5_TreeBuilder {
                         $this->mode = self::IN_TABLE_BODY;
                     }
 
-                /* A start tag whose tag name is one of: "caption", "col", "colgroup",
-                "tbody", "tfoot", "thead", "tr" or an end tag whose tag name is "table" */
+                /* A start tag whose tag name is one of: "caption", "col", "colgroup", "tbody", "tfoot", "thead", "tr" or an end tag whose tag name is "table" */
                 } elseif (($token['type'] === HTML5_Tokenizer::STARTTAG && in_array($token['name'],
                 ['caption', 'col', 'colgroup', 'tbody', 'tfoot', 'thead', 'tr'])) ||
                 ($token['type'] === HTML5_Tokenizer::ENDTAG && $token['name'] === 'table')) {
                     /* Act as if an end tag with the tag name "tr" had been seen, then,
                     if that token wasn't ignored, reprocess the current token. */
-                    $this->emitToken([
-                        'name' => 'tr',
-                        'type' => HTML5_Tokenizer::ENDTAG
+                    $this->emitToken(['name' => 'tr', 'type' => HTML5_Tokenizer::ENDTAG
                     ]);
                     if (!$this->ignored) {
                         $this->emitToken($token);
@@ -2539,16 +2364,13 @@ class HTML5_TreeBuilder {
                     } else {
                         /* Otherwise, act as if an end tag with the tag name "tr" had
                         been seen, then reprocess the current token. */
-                        $this->emitToken([
-                            'name' => 'tr',
-                            'type' => HTML5_Tokenizer::ENDTAG
+                        $this->emitToken(['name' => 'tr', 'type' => HTML5_Tokenizer::ENDTAG
                         ]);
 
                         $this->emitToken($token);
                     }
 
-                /* An end tag whose tag name is one of: "body", "caption", "col",
-                "colgroup", "html", "td", "th" */
+                /* An end tag whose tag name is one of: "body", "caption", "col", "colgroup", "html", "td", "th" */
                 } elseif ($token['type'] === HTML5_Tokenizer::ENDTAG && in_array($token['name'],
                 ['body', 'caption', 'col', 'colgroup', 'html', 'td', 'th'])) {
                     /* Parse error. Ignore the token. */
@@ -2596,11 +2418,9 @@ class HTML5_TreeBuilder {
                         $this->mode = self::IN_ROW;
                     }
 
-                /* A start tag whose tag name is one of: "caption", "col", "colgroup",
-                "tbody", "td", "tfoot", "th", "thead", "tr" */
+                /* A start tag whose tag name is one of: "caption", "col", "colgroup", "tbody", "td", "tfoot", "th", "thead", "tr" */
                 } elseif ($token['type'] === HTML5_Tokenizer::STARTTAG && in_array($token['name'],
-                ['caption', 'col', 'colgroup', 'tbody', 'td', 'tfoot', 'th',
-                'thead', 'tr'])) {
+                ['caption', 'col', 'colgroup', 'tbody', 'td', 'tfoot', 'th', 'thead', 'tr'])) {
                     /* If the stack of open elements does not have a td or th element
                     in table scope, then this is a parse error; ignore the token.
                     (fragment case) */
@@ -2615,15 +2435,13 @@ class HTML5_TreeBuilder {
                         $this->emitToken($token);
                     }
 
-                /* An end tag whose tag name is one of: "body", "caption", "col",
-                "colgroup", "html" */
+                /* An end tag whose tag name is one of: "body", "caption", "col", "colgroup", "html" */
                 } elseif ($token['type'] === HTML5_Tokenizer::ENDTAG && in_array($token['name'],
                 ['body', 'caption', 'col', 'colgroup', 'html'])) {
                     /* Parse error. Ignore the token. */
                     $this->ignored = true;
 
-                /* An end tag whose tag name is one of: "table", "tbody", "tfoot",
-                "thead", "tr" */
+                /* An end tag whose tag name is one of: "table", "tbody", "tfoot", "thead", "tr" */
                 } elseif ($token['type'] === HTML5_Tokenizer::ENDTAG && in_array($token['name'],
                 ['table', 'tbody', 'tfoot', 'thead', 'tr'])) {
                     /* If the stack of open elements does not have a td or th element
@@ -2676,9 +2494,7 @@ class HTML5_TreeBuilder {
                     /* If the current node is an option element, act as if an end tag
                     with the tag name "option" had been seen. */
                     if (end($this->stack)->tagName === 'option') {
-                        $this->emitToken([
-                            'name' => 'option',
-                            'type' => HTML5_Tokenizer::ENDTAG
+                        $this->emitToken(['name' => 'option', 'type' => HTML5_Tokenizer::ENDTAG
                         ]);
                     }
 
@@ -2691,18 +2507,14 @@ class HTML5_TreeBuilder {
                     /* If the current node is an option element, act as if an end tag
                     with the tag name "option" had been seen. */
                     if (end($this->stack)->tagName === 'option') {
-                        $this->emitToken([
-                            'name' => 'option',
-                            'type' => HTML5_Tokenizer::ENDTAG
+                        $this->emitToken(['name' => 'option', 'type' => HTML5_Tokenizer::ENDTAG
                         ]);
                     }
 
                     /* If the current node is an optgroup element, act as if an end tag
                     with the tag name "optgroup" had been seen. */
                     if (end($this->stack)->tagName === 'optgroup') {
-                        $this->emitToken([
-                            'name' => 'optgroup',
-                            'type' => HTML5_Tokenizer::ENDTAG
+                        $this->emitToken(['name' => 'optgroup', 'type' => HTML5_Tokenizer::ENDTAG
                         ]);
                     }
 
@@ -2720,9 +2532,7 @@ class HTML5_TreeBuilder {
 
                     if ($this->stack[$elements_in_stack - 1]->tagName === 'option' &&
                     $this->stack[$elements_in_stack - 2]->tagName === 'optgroup') {
-                        $this->emitToken([
-                            'name' => 'option',
-                            'type' => HTML5_Tokenizer::ENDTAG
+                        $this->emitToken(['name' => 'option', 'type' => HTML5_Tokenizer::ENDTAG
                         ]);
                     }
 
@@ -2775,17 +2585,13 @@ class HTML5_TreeBuilder {
                 } elseif ($token['type'] === HTML5_Tokenizer::STARTTAG && $token['name'] === 'select') {
                     /* Parse error. Act as if the token had been an end tag with the
                     tag name "select" instead. */
-                    $this->emitToken([
-                        'name' => 'select',
-                        'type' => HTML5_Tokenizer::ENDTAG
+                    $this->emitToken(['name' => 'select', 'type' => HTML5_Tokenizer::ENDTAG
                     ]);
 
                 } elseif ($token['type'] === HTML5_Tokenizer::STARTTAG &&
-                ($token['name'] === 'input' || $token['name'] === 'keygen' ||  $token['name'] === 'textarea')) {
+                ($token['name'] === 'input' || $token['name'] === 'keygen' || ?? $token['name'] === 'textarea')) {
                     // parse error
-                    $this->emitToken([
-                        'name' => 'select',
-                        'type' => HTML5_Tokenizer::ENDTAG
+                    $this->emitToken(['name' => 'select', 'type' => HTML5_Tokenizer::ENDTAG
                     ]);
                     $this->emitToken($token);
 
@@ -2806,17 +2612,13 @@ class HTML5_TreeBuilder {
             case self::IN_SELECT_IN_TABLE:
 
                 if ($token['type'] === HTML5_Tokenizer::STARTTAG &&
-                in_array($token['name'], ['caption', 'table', 'tbody',
-                'tfoot', 'thead', 'tr', 'td', 'th'])) {
+                in_array($token['name'], ['caption', 'table', 'tbody', 'tfoot', 'thead', 'tr', 'td', 'th'])) {
                     // parse error
-                    $this->emitToken([
-                        'name' => 'select',
-                        'type' => HTML5_Tokenizer::ENDTAG,
+                    $this->emitToken(['name' => 'select', 'type' => HTML5_Tokenizer::ENDTAG,
                     ]);
                     $this->emitToken($token);
 
-                /* An end tag whose tag name is one of: "caption", "table", "tbody",
-                "tfoot", "thead", "tr", "td", "th" */
+                /* An end tag whose tag name is one of: "caption", "table", "tbody", "tfoot", "thead", "tr", "td", "th" */
                 } elseif ($token['type'] === HTML5_Tokenizer::ENDTAG &&
                 in_array($token['name'], ['caption', 'table', 'tbody', 'tfoot', 'thead', 'tr', 'td', 'th']))  {
                     /* Parse error. */
@@ -2827,9 +2629,7 @@ class HTML5_TreeBuilder {
                     with the tag name "select" had been seen, and reprocess the token.
                     Otherwise, ignore the token. */
                     if ($this->elementInScope($token['name'], self::SCOPE_TABLE)) {
-                        $this->emitToken([
-                            'name' => 'select',
-                            'type' => HTML5_Tokenizer::ENDTAG
+                        $this->emitToken(['name' => 'select', 'type' => HTML5_Tokenizer::ENDTAG
                         ]);
 
                         $this->emitToken($token);
@@ -2851,8 +2651,7 @@ class HTML5_TreeBuilder {
                     // XERROR: parse error
                 } elseif ($token['type'] === HTML5_Tokenizer::ENDTAG &&
                 $token['name'] === 'script' && end($this->stack)->tagName === 'script' &&
-                // XDOM
-                end($this->stack)->namespaceURI === self::NS_SVG) {
+                // XDOM ? end($this->stack)->namespaceURI === self::NS_SVG) {
                     array_pop($this->stack);
                     // a bunch of script running mumbo jumbo
                 } elseif (
@@ -2860,24 +2659,20 @@ class HTML5_TreeBuilder {
                         ((
                             $token['name'] !== 'mglyph' &&
                             $token['name'] !== 'malignmark' &&
-                            // XDOM
-                            end($this->stack)->namespaceURI === self::NS_MATHML &&
+                            // XDOM ? end($this->stack)->namespaceURI === self::NS_MATHML &&
                             in_array(end($this->stack)->tagName, ['mi', 'mo', 'mn', 'ms', 'mtext'])
                         ) ||
                         (
                             $token['name'] === 'svg' &&
-                            // XDOM
-                            end($this->stack)->namespaceURI === self::NS_MATHML &&
+                            // XDOM ? end($this->stack)->namespaceURI === self::NS_MATHML &&
                             end($this->stack)->tagName === 'annotation-xml'
                         ) ||
                         (
-                            // XDOM
-                            end($this->stack)->namespaceURI === self::NS_SVG &&
+                            // XDOM ? end($this->stack)->namespaceURI === self::NS_SVG &&
                             in_array(end($this->stack)->tagName, ['foreignObject', 'desc', 'title'])
                         ) ||
                         (
-                            // XSKETCHY && XDOM
-                            end($this->stack)->namespaceURI === self::NS_HTML
+                            // XSKETCHY && XDOM ? end($this->stack)->namespaceURI === self::NS_HTML
                         ))
                     ) || $token['type'] === HTML5_Tokenizer::ENDTAG
                 ) {
@@ -2895,9 +2690,7 @@ class HTML5_TreeBuilder {
                             if ($node->namespaceURI !== self::NS_HTML) {
                                 $found = true;
                                 break;
-                            } elseif (in_array($node->tagName, ['table', 'html',
-                            'applet', 'caption', 'td', 'th', 'button', 'marquee',
-                            'object']) || ($node->tagName === 'foreignObject' &&
+                            } elseif (in_array($node->tagName, ['table', 'html', 'applet', 'caption', 'td', 'th', 'button', 'marquee', 'object']) || ($node->tagName === 'foreignObject' &&
                             $node->namespaceURI === self::NS_SVG)) {
                                 break;
                             }
@@ -2908,12 +2701,7 @@ class HTML5_TreeBuilder {
                     }
                 } elseif ($token['type'] === HTML5_Tokenizer::EOF || (
                 $token['type'] === HTML5_Tokenizer::STARTTAG &&
-                (in_array($token['name'], ['b', "big", "blockquote", "body", "br",
-                "center", "code", "dc", "dd", "div", "dl", "ds", "dt", "em", "embed", "h1", "h2",
-                "h3", "h4", "h5", "h6", "head", "hr", "i", "img", "li", "listing",
-                "menu", "meta", "nobr", "ol", "p", "pre", "ruby", "s",  "small",
-                "span", "strong", "strike",  "sub", "sup", "table", "tt", "u", "ul",
-                "var"]) || ($token['name'] === 'font' && ($this->getAttr($token, 'color') ||
+                (in_array($token['name'], ['b', "big", "blockquote", "body", "br", "center", "code", "dc", "dd", "div", "dl", "ds", "dt", "em", "embed", "h1", "h2", "h3", "h4", "h5", "h6", "head", "hr", "i", "img", "li", "listing", "menu", "meta", "nobr", "ol", "p", "pre", "ruby", "s", "small", "span", "strong", "strike", "sub", "sup", "table", "tt", "u", "ul", "var"]) || ($token['name'] === 'font' && ($this->getAttr($token, 'color') ||
                 $this->getAttr($token, 'face') || $this->getAttr($token, 'size')))))) {
                     // XERROR: parse error
                     do {
@@ -2924,43 +2712,7 @@ class HTML5_TreeBuilder {
                     $this->mode = $this->secondary_mode;
                     $this->emitToken($token);
                 } elseif ($token['type'] === HTML5_Tokenizer::STARTTAG) {
-                    static $svg_lookup = [
-                        'altglyph' => 'altGlyph',
-                        'altglyphdef' => 'altGlyphDef',
-                        'altglyphitem' => 'altGlyphItem',
-                        'animatecolor' => 'animateColor',
-                        'animatemotion' => 'animateMotion',
-                        'animatetransform' => 'animateTransform',
-                        'clippath' => 'clipPath',
-                        'feblend' => 'feBlend',
-                        'fecolormatrix' => 'feColorMatrix',
-                        'fecomponenttransfer' => 'feComponentTransfer',
-                        'fecomposite' => 'feComposite',
-                        'feconvolvematrix' => 'feConvolveMatrix',
-                        'fediffuselighting' => 'feDiffuseLighting',
-                        'fedisplacementmap' => 'feDisplacementMap',
-                        'fedistantlight' => 'feDistantLight',
-                        'feflood' => 'feFlood',
-                        'fefunca' => 'feFuncA',
-                        'fefuncb' => 'feFuncB',
-                        'fefuncg' => 'feFuncG',
-                        'fefuncr' => 'feFuncR',
-                        'fegaussianblur' => 'feGaussianBlur',
-                        'feimage' => 'feImage',
-                        'femerge' => 'feMerge',
-                        'femergenode' => 'feMergeNode',
-                        'femorphology' => 'feMorphology',
-                        'feoffset' => 'feOffset',
-                        'fepointlight' => 'fePointLight',
-                        'fespecularlighting' => 'feSpecularLighting',
-                        'fespotlight' => 'feSpotLight',
-                        'fetile' => 'feTile',
-                        'feturbulence' => 'feTurbulence',
-                        'foreignobject' => 'foreignObject',
-                        'glyphref' => 'glyphRef',
-                        'lineargradient' => 'linearGradient',
-                        'radialgradient' => 'radialGradient',
-                        'textpath' => 'textPath',
+                    static $svg_lookup = ['altglyph' => 'altGlyph', 'altglyphdef' => 'altGlyphDef', 'altglyphitem' => 'altGlyphItem', 'animatecolor' => 'animateColor', 'animatemotion' => 'animateMotion', 'animatetransform' => 'animateTransform', 'clippath' => 'clipPath', 'feblend' => 'feBlend', 'fecolormatrix' => 'feColorMatrix', 'fecomponenttransfer' => 'feComponentTransfer', 'fecomposite' => 'feComposite', 'feconvolvematrix' => 'feConvolveMatrix', 'fediffuselighting' => 'feDiffuseLighting', 'fedisplacementmap' => 'feDisplacementMap', 'fedistantlight' => 'feDistantLight', 'feflood' => 'feFlood', 'fefunca' => 'feFuncA', 'fefuncb' => 'feFuncB', 'fefuncg' => 'feFuncG', 'fefuncr' => 'feFuncR', 'fegaussianblur' => 'feGaussianBlur', 'feimage' => 'feImage', 'femerge' => 'feMerge', 'femergenode' => 'feMergeNode', 'femorphology' => 'feMorphology', 'feoffset' => 'feOffset', 'fepointlight' => 'fePointLight', 'fespecularlighting' => 'feSpecularLighting', 'fespotlight' => 'feSpotLight', 'fetile' => 'feTile', 'feturbulence' => 'feTurbulence', 'foreignobject' => 'foreignObject', 'glyphref' => 'glyphRef', 'lineargradient' => 'linearGradient', 'radialgradient' => 'radialGradient', 'textpath' => 'textPath',
                     ];
                     // XDOM
                     $current = end($this->stack);
@@ -3011,9 +2763,9 @@ class HTML5_TreeBuilder {
 
                 /* An end tag with the tag name "html" */
                 } elseif ($token['type'] === HTML5_Tokenizer::ENDTAG && $token['name'] === 'html') {
-                    /*     If the parser was originally created as part of the HTML
-                     *     fragment parsing algorithm, this is a parse error; ignore
-                     *     the token. (fragment case) */
+                    /* ?? If the parser was originally created as part of the HTML
+                     * ?? fragment parsing algorithm, this is a parse error; ignore
+                     * ?? the token. (fragment case) */
                     $this->ignored = true;
                     // XERROR: implement this
 
@@ -3070,7 +2822,7 @@ class HTML5_TreeBuilder {
                         array_pop($this->stack);
 
                         /* If the parser was not originally created as part of the HTML
-                         * fragment parsing algorithm  (fragment case), and the current
+                         * fragment parsing algorithm ?? (fragment case), and the current
                          * node is no longer a frameset element, then switch the
                          * insertion mode to "after frameset". */
                         $this->mode = self::AFTER_FRAMESET;
@@ -3297,8 +3049,7 @@ class HTML5_TreeBuilder {
 
             // these are valid for "in scope" and "in list item scope"
             } elseif ($scope !== self::SCOPE_TABLE &&
-            (in_array($node->tagName, ['applet', 'caption', 'td',
-                'th', 'button', 'marquee', 'object']) ||
+            (in_array($node->tagName, ['applet', 'caption', 'td', 'th', 'button', 'marquee', 'object']) ||
                 $node->tagName === 'foreignObject' && $node->namespaceURI === self::NS_SVG)) {
                 return false;
 
@@ -3374,7 +3125,7 @@ class HTML5_TreeBuilder {
             $clone = $entry->cloneNode();
 
             /* 9. Append clone to the current node and push it onto the stack
-            of open elements  so that it is the new current node. */
+            of open elements ?? so that it is the new current node. */
             $this->appendToRealParent($clone);
             $this->stack[] = $clone;
 
@@ -3488,15 +3239,14 @@ class HTML5_TreeBuilder {
             $node = $this->stack[$n];
 
             /* 3. If node is the first node in the stack of open elements, then
-             * set last to true and set node to the context  element. (fragment
+             * set last to true and set node to the context ?? element. (fragment
              * case) */
             if ($this->stack[0]->isSameNode($node)) {
                 $last = true;
                 $node = $context;
             }
 
-            /* 4. If node is a select element, then switch the insertion mode to
-            "in select" and abort these steps. (fragment case) */
+            /* 4. If node is a select element, then switch the insertion mode to ?? "in select" and abort these steps. (fragment case) */
             if ($node->tagName === 'select') {
                 $this->mode = self::IN_SELECT;
                 break;
@@ -3507,8 +3257,7 @@ class HTML5_TreeBuilder {
                 $this->mode = self::IN_CELL;
                 break;
 
-            /* 6. If node is a tr element, then switch the insertion mode to
-            "in    row" and abort these steps. */
+            /* 6. If node is a tr element, then switch the insertion mode to ?? "in ?? row" and abort these steps. */
             } elseif ($node->tagName === 'tr') {
                 $this->mode = self::IN_ROW;
                 break;
@@ -3554,8 +3303,7 @@ class HTML5_TreeBuilder {
                 $this->mode = self::IN_BODY;
                 break;
 
-            /* 13. If node is a body element, then switch the insertion mode to
-            "in body" and abort these steps. */
+            /* 13. If node is a body element, then switch the insertion mode to ?? "in body" and abort these steps. */
             } elseif ($node->tagName === 'body') {
                 $this->mode = self::IN_BODY;
                 break;
@@ -3572,13 +3320,13 @@ class HTML5_TreeBuilder {
             case, abort these steps. (fragment case) */
             } elseif ($node->tagName === 'html') {
                 $this->mode = ($this->head_pointer === null)
-                    ? self::BEFORE_HEAD
+                     self::BEFORE_HEAD
                     : self::AFTER_HEAD;
 
                 break;
 
             /* 16. If last is true, then set the insertion mode to "in body"
-            and    abort these steps. (fragment case) */
+            and ?? abort these steps. (fragment case) */
             } elseif ($last) {
                 $this->mode = self::IN_BODY;
                 break;
@@ -3594,9 +3342,7 @@ class HTML5_TreeBuilder {
         then act as if an end tag token with that tag name had been seen. */
         foreach (['td', 'th'] as $cell) {
             if ($this->elementInScope($cell, self::SCOPE_TABLE)) {
-                $this->emitToken([
-                    'name' => $cell,
-                    'type' => HTML5_Tokenizer::ENDTAG
+                $this->emitToken(['name' => $cell, 'type' => HTML5_Tokenizer::ENDTAG
                 ]);
 
                 break;
@@ -3659,7 +3405,7 @@ class HTML5_TreeBuilder {
      * @return mixed
      */
     private function getCurrentTable() {
-        /* The current table is the last table  element in the stack of open
+        /* The current table is the last table ?? element in the stack of open
          * elements, if there is one. If there is no table element in the stack
          * of open elements (fragment case), then the current table is the
          * first element in the stack of open elements (the html element). */
@@ -3680,7 +3426,7 @@ class HTML5_TreeBuilder {
         table element and it has such a parent element. If there is no
         table element in the stack of open elements (innerHTML case),
         then the foster parent element is the first element in the
-        stack of open elements (the html  element). Otherwise, if there
+        stack of open elements (the html ?? element). Otherwise, if there
         is a table element in the stack of open elements, but the last
         table element in the stack of open elements has no parent, or
         its parent node is not an element, then the foster parent
@@ -3772,7 +3518,7 @@ class HTML5_TreeBuilder {
         $this->fragment = true;
         if ($context) {
             $context = $this->dom->createElementNS(self::NS_HTML, $context);
-            /* 4.1. Set the HTML parser's tokenization  stage's content model
+            /* 4.1. Set the HTML parser's tokenization ?? stage's content model
              * flag according to the context element, as follows: */
             switch ($context->tagName) {
                 case 'title': case 'textarea':
@@ -3800,7 +3546,7 @@ class HTML5_TreeBuilder {
             $this->stack = [$root];
             /* 4.5 Reset the parser's insertion mode appropriately. */
             $this->resetInsertionMode($context);
-            /* 4.6 Set the parser's form element pointer  to the nearest node
+            /* 4.6 Set the parser's form element pointer ?? to the nearest node
              * to the context element that is a form element (going straight up
              * the ancestor chain, and including the element itself, if it is a
              * form element), or, if there is no such form element, to null. */
@@ -3832,69 +3578,7 @@ class HTML5_TreeBuilder {
      * @return mixed
      */
     public function adjustSVGAttributes($token) {
-        static $lookup = [
-            'attributename' => 'attributeName',
-            'attributetype' => 'attributeType',
-            'basefrequency' => 'baseFrequency',
-            'baseprofile' => 'baseProfile',
-            'calcmode' => 'calcMode',
-            'clippathunits' => 'clipPathUnits',
-            'contentscripttype' => 'contentScriptType',
-            'contentstyletype' => 'contentStyleType',
-            'diffuseconstant' => 'diffuseConstant',
-            'edgemode' => 'edgeMode',
-            'externalresourcesrequired' => 'externalResourcesRequired',
-            'filterres' => 'filterRes',
-            'filterunits' => 'filterUnits',
-            'glyphref' => 'glyphRef',
-            'gradienttransform' => 'gradientTransform',
-            'gradientunits' => 'gradientUnits',
-            'kernelmatrix' => 'kernelMatrix',
-            'kernelunitlength' => 'kernelUnitLength',
-            'keypoints' => 'keyPoints',
-            'keysplines' => 'keySplines',
-            'keytimes' => 'keyTimes',
-            'lengthadjust' => 'lengthAdjust',
-            'limitingconeangle' => 'limitingConeAngle',
-            'markerheight' => 'markerHeight',
-            'markerunits' => 'markerUnits',
-            'markerwidth' => 'markerWidth',
-            'maskcontentunits' => 'maskContentUnits',
-            'maskunits' => 'maskUnits',
-            'numoctaves' => 'numOctaves',
-            'pathlength' => 'pathLength',
-            'patterncontentunits' => 'patternContentUnits',
-            'patterntransform' => 'patternTransform',
-            'patternunits' => 'patternUnits',
-            'pointsatx' => 'pointsAtX',
-            'pointsaty' => 'pointsAtY',
-            'pointsatz' => 'pointsAtZ',
-            'preservealpha' => 'preserveAlpha',
-            'preserveaspectratio' => 'preserveAspectRatio',
-            'primitiveunits' => 'primitiveUnits',
-            'refx' => 'refX',
-            'refy' => 'refY',
-            'repeatcount' => 'repeatCount',
-            'repeatdur' => 'repeatDur',
-            'requiredextensions' => 'requiredExtensions',
-            'requiredfeatures' => 'requiredFeatures',
-            'specularconstant' => 'specularConstant',
-            'specularexponent' => 'specularExponent',
-            'spreadmethod' => 'spreadMethod',
-            'startoffset' => 'startOffset',
-            'stddeviation' => 'stdDeviation',
-            'stitchtiles' => 'stitchTiles',
-            'surfacescale' => 'surfaceScale',
-            'systemlanguage' => 'systemLanguage',
-            'tablevalues' => 'tableValues',
-            'targetx' => 'targetX',
-            'targety' => 'targetY',
-            'textlength' => 'textLength',
-            'viewbox' => 'viewBox',
-            'viewtarget' => 'viewTarget',
-            'xchannelselector' => 'xChannelSelector',
-            'ychannelselector' => 'yChannelSelector',
-            'zoomandpan' => 'zoomAndPan',
+        static $lookup = ['attributename' => 'attributeName', 'attributetype' => 'attributeType', 'basefrequency' => 'baseFrequency', 'baseprofile' => 'baseProfile', 'calcmode' => 'calcMode', 'clippathunits' => 'clipPathUnits', 'contentscripttype' => 'contentScriptType', 'contentstyletype' => 'contentStyleType', 'diffuseconstant' => 'diffuseConstant', 'edgemode' => 'edgeMode', 'externalresourcesrequired' => 'externalResourcesRequired', 'filterres' => 'filterRes', 'filterunits' => 'filterUnits', 'glyphref' => 'glyphRef', 'gradienttransform' => 'gradientTransform', 'gradientunits' => 'gradientUnits', 'kernelmatrix' => 'kernelMatrix', 'kernelunitlength' => 'kernelUnitLength', 'keypoints' => 'keyPoints', 'keysplines' => 'keySplines', 'keytimes' => 'keyTimes', 'lengthadjust' => 'lengthAdjust', 'limitingconeangle' => 'limitingConeAngle', 'markerheight' => 'markerHeight', 'markerunits' => 'markerUnits', 'markerwidth' => 'markerWidth', 'maskcontentunits' => 'maskContentUnits', 'maskunits' => 'maskUnits', 'numoctaves' => 'numOctaves', 'pathlength' => 'pathLength', 'patterncontentunits' => 'patternContentUnits', 'patterntransform' => 'patternTransform', 'patternunits' => 'patternUnits', 'pointsatx' => 'pointsAtX', 'pointsaty' => 'pointsAtY', 'pointsatz' => 'pointsAtZ', 'preservealpha' => 'preserveAlpha', 'preserveaspectratio' => 'preserveAspectRatio', 'primitiveunits' => 'primitiveUnits', 'refx' => 'refX', 'refy' => 'refY', 'repeatcount' => 'repeatCount', 'repeatdur' => 'repeatDur', 'requiredextensions' => 'requiredExtensions', 'requiredfeatures' => 'requiredFeatures', 'specularconstant' => 'specularConstant', 'specularexponent' => 'specularExponent', 'spreadmethod' => 'spreadMethod', 'startoffset' => 'startOffset', 'stddeviation' => 'stdDeviation', 'stitchtiles' => 'stitchTiles', 'surfacescale' => 'surfaceScale', 'systemlanguage' => 'systemLanguage', 'tablevalues' => 'tableValues', 'targetx' => 'targetX', 'targety' => 'targetY', 'textlength' => 'textLength', 'viewbox' => 'viewBox', 'viewtarget' => 'viewTarget', 'xchannelselector' => 'xChannelSelector', 'ychannelselector' => 'yChannelSelector', 'zoomandpan' => 'zoomAndPan',
         ];
         foreach ($token['attr'] as &$kp) {
             if (isset($lookup[$kp['name']])) {
@@ -3909,19 +3593,7 @@ class HTML5_TreeBuilder {
      * @return mixed
      */
     public function adjustForeignAttributes($token) {
-        static $lookup = [
-            'xlink:actuate' => ['xlink', 'actuate', self::NS_XLINK],
-            'xlink:arcrole' => ['xlink', 'arcrole', self::NS_XLINK],
-            'xlink:href' => ['xlink', 'href', self::NS_XLINK],
-            'xlink:role' => ['xlink', 'role', self::NS_XLINK],
-            'xlink:show' => ['xlink', 'show', self::NS_XLINK],
-            'xlink:title' => ['xlink', 'title', self::NS_XLINK],
-            'xlink:type' => ['xlink', 'type', self::NS_XLINK],
-            'xml:base' => ['xml', 'base', self::NS_XML],
-            'xml:lang' => ['xml', 'lang', self::NS_XML],
-            'xml:space' => ['xml', 'space', self::NS_XML],
-            'xmlns' => [null, 'xmlns', self::NS_XMLNS],
-            'xmlns:xlink' => ['xmlns', 'xlink', self::NS_XMLNS],
+        static $lookup = ['xlink:actuate' => ['xlink', 'actuate', self::NS_XLINK], 'xlink:arcrole' => ['xlink', 'arcrole', self::NS_XLINK], 'xlink:href' => ['xlink', 'href', self::NS_XLINK], 'xlink:role' => ['xlink', 'role', self::NS_XLINK], 'xlink:show' => ['xlink', 'show', self::NS_XLINK], 'xlink:title' => ['xlink', 'title', self::NS_XLINK], 'xlink:type' => ['xlink', 'type', self::NS_XLINK], 'xml:base' => ['xml', 'base', self::NS_XML], 'xml:lang' => ['xml', 'lang', self::NS_XML], 'xml:space' => ['xml', 'space', self::NS_XML], 'xmlns' => [null, 'xmlns', self::NS_XMLNS], 'xmlns:xlink' => ['xmlns', 'xlink', self::NS_XMLNS],
         ];
         foreach ($token['attr'] as &$kp) {
             if (isset($lookup[$kp['name']])) {
@@ -3964,7 +3636,7 @@ class HTML5_TreeBuilder {
         $this->stack[] = $el;
         // XERROR: see below
         /* If the newly created element has an xmlns attribute in the XMLNS
-         * namespace  whose value is not exactly the same as the element's
+         * namespace ?? whose value is not exactly the same as the element's
          * namespace, that is a parse error. Similarly, if the newly created
          * element has an xmlns:xlink attribute in the XMLNS namespace whose
          * value is not the XLink Namespace, that is a parse error. */
@@ -3986,4 +3658,3 @@ class HTML5_TreeBuilder {
         }
     }
 }
-

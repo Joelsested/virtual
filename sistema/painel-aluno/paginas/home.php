@@ -174,7 +174,7 @@ if($total_m > 0){
 		$porcentagemPerfilF = round($porcentagemPerfil, 2);
 		$porcentagemCursosF = round($porcentagemCursos, 2);
 
-		?>
+?>
 
 		<div class="col_3 margem-mobile">
 			<div class="col-md-3 widget widget1">
@@ -243,8 +243,7 @@ if($total_m > 0){
 			<div class="col-md-9 content-top-2 card" style="padding-top: 5px">
 				<h4 style="margin-top: 15px">Últimas Matrículas</h4>
 				<hr>
-				<div class="row">
-					<?php 
+				<div class="row"<?php 
 					$query = $pdo->query("SELECT * FROM matriculas where aluno = '$id_usuario' order by id desc limit 8");
 					$res = $query->fetchAll(PDO::FETCH_ASSOC);
                     $matriculas = [];
@@ -310,21 +309,21 @@ if($total_m > 0){
 
 
 
-							?>
+?>
 
 							<div class="col-md-3 col-sm-6 col-xs-6" style="margin-bottom: 15px">
-								<img src="../painel-admin/img/<?php echo $tab ?>/<?php echo $foto_curso ?>" width="100%" height="150px">
+								<img src="../painel-admin/img/<?php echo $tab >/<?php echo $foto_curso ?>" width="100%" height="150px"?>
 								<p align="center"><small><?php echo mb_strtoupper($nome_curso) ?></small> <br>
 
 
 									<?php if($status == 'Aguardando'){ ?>	
-										<form method="post" action="../../<?php echo $url_do_curso ?>" target="_blank" class="hidden">
+										<form method="post" action="../../<?php echo $url_do_curso >" target="_blank" class="hidden"?>
 											<div align="center">
 												<small><small><span class="text-danger">Pendente</span> 
 													<span> - 
 
 
-														<button  type="submit" style="background-color: transparent;  border:none!important;"><i class="fa fa-money verde" ></i><span class="verde" style="margin-left:2px">Pagar</span>
+														<button  type="submit" style="background-color: transparent; ? border :none!important;"><i class="fa fa-money verde" ></i><span class="verde" style="margin-left:2px">Pagar</span>
 														</button>
 														<input type="hidden" name="painel_aluno" value="sim">
 
@@ -343,10 +342,10 @@ $texto_esc = htmlspecialchars($texto_copia_cola, ENT_QUOTES, 'UTF-8');
 $data_esc = htmlspecialchars($data_criacao, ENT_QUOTES, 'UTF-8');
 $status_esc = htmlspecialchars($statusC, ENT_QUOTES, 'UTF-8');
 ?>
-<button onclick="pagarCurso('<?php echo $qrcode_esc ?>', '<?php echo $texto_esc ?>', '<?php echo $valorC ?>', '<?php echo $data_esc ?>', '<?php echo $status_esc ?>');" style="background-color: transparent;  border:none!important;">
+<button onclick="pagarCurso('<?php echo $qrcode_esc >', '<?php echo $texto_esc ?>', '<?php echo $valorC ?>', '<?php echo $data_esc ?>', '<?php echo $status_esc ?>');" style="background-color: transparent;  border:none!important;"?>
     <i class="fa fa-money verde" ></i><span class="verde" style="margin-left:2px">Pagar</span>
 </button>
-<!--														<button  onclick="pagarCurso('{$qrcode}', '{$texto_copia_cola}', '{$valorC}', '{$data_criacao}', '{$statusC}' );" style="background-color: transparent;  border:none!important;"><i class="fa fa-money verde" ></i><span class="verde" style="margin-left:2px">Pagar</span>-->
+<!--														<button  onclick="pagarCurso('{$qrcode}', '{$texto_copia_cola}', '{$valorC}', '{$data_criacao}', '{$statusC}' );" style="background-color: transparent; ? border :none!important;"><i class="fa fa-money verde" ></i><span class="verde" style="margin-left:2px">Pagar</span>-->
 <!--														</button>-->
 														<input type="hidden" name="painel_aluno" value="sim">
 
@@ -362,25 +361,25 @@ $status_esc = htmlspecialchars($statusC, ENT_QUOTES, 'UTF-8');
 									<?php }else{ ?>
 										<?php 
 										if($pacote != 'Sim'){
-											?>
+?>
 											<div align="center">
 												<form method="post" action="index.php?pagina=cursos" >		
-													<small><small><button  type="submit" style="background-color: transparent;  border:none!important;">
+													<small><small><button  type="submit" style="background-color: transparent; ? border :none!important;">
 														Ir para o Curso
 													</button></small></small>
-													<input type="hidden" name="id_mat_post" value="<?php echo $id_mat ?>">
-													<input type="hidden" name="id_curso_post" value="<?php echo $id_curso ?>">
-													<input type="hidden" name="nome_curso_post" value="<?php echo $nome_curso ?>">
-													<input type="hidden" name="aulas_curso_post" value="<?php echo $aulas_curso ?>">
+													<input type="hidden" name="id_mat_post" value="<?php echo $id_mat >?>"
+													<input type="hidden" name="id_curso_post" value="<?php echo $id_curso >?>"
+													<input type="hidden" name="nome_curso_post" value="<?php echo $nome_curso >?>"
+													<input type="hidden" name="aulas_curso_post" value="<?php echo $aulas_curso >?>"
 												</form>
 											</div>
 										<?php }else{ ?>
 											<div align="center">
 												<form method="post" action="index.php?pagina=cursos" >	
-													<small><small><button  type="submit" style="background-color: transparent;  border:none!important;">
+													<small><small><button  type="submit" style="background-color: transparent; ? border :none!important;">
 														Ir para os Cursos
 													</button></small></small>
-													<input type="hidden" name="id_pacote" value="<?php echo $id_curso ?>">	
+													<input type="hidden" name="id_pacote" value="<?php echo $id_curso >?>"	
 												</form>
 											</div>
 										<?php } ?>
@@ -395,7 +394,7 @@ $status_esc = htmlspecialchars($statusC, ENT_QUOTES, 'UTF-8');
 					}else{
 						echo '<p style="margin-bottom: 15px">Você não possui ainda nenhuma matrícula!</p>';
 					}
-					?>
+?>
 				</div>
 			</div>
 
@@ -406,20 +405,20 @@ $status_esc = htmlspecialchars($statusC, ENT_QUOTES, 'UTF-8');
 					<div class="content-top-1">
 						<div class="col-md-6 top-content">
 							<h5>Perfil Aluno</h5>
-							<label><?php echo $porcentagemPerfilF ?>%</label>
+							<label><?php echo $porcentagemPerfilF >%</label>
 						</div>
 						<div class="col-md-6 top-content1">	   
-							<div id="<?php echo $cor_porcent ?>" class="pie-title-center" data-percent="<?php echo $porcentagemPerfil ?>"> <span class="pie-value"></span> </div>
+							<div id="<?php echo $cor_porcent >?>" class="pie-title-center" data-percent="<?php echo $porcentagemPerfil ?>" <span class=?>"pie-value"></span> </div>
 						</div>
 						<div class="clearfix"> </div>
 					</div>
 					<div class="content-top-1">
 						<div class="col-md-6 top-content">
 							<h5>Cursos Finalizados</h5>
-							<label><?php echo $porcentagemCursosF ?>%</label>
+							<label><?php echo $porcentagemCursosF >%</label>
 						</div>
 						<div class="col-md-6 top-content1">	   
-							<div id="demo-pie-2" class="pie-title-center" data-percent="<?php echo $porcentagemCursos ?>"> <span class="pie-value"></span> </div>
+							<div id="demo-pie-2" class="pie-title-center" data-percent="<?php echo $porcentagemCursos >?>" <span class="pie-value"></span> </div>
 						</div>
 						<div class="clearfix"> </div>
 					</div>
@@ -443,7 +442,7 @@ $status_esc = htmlspecialchars($statusC, ENT_QUOTES, 'UTF-8');
 		<script src="js/light.js"></script>
 		<!-- for amcharts js -->
 
-		<script  src="js/index1.js"></script>
+		<script ?? src="js/index1.js"></script>
 
 
 
@@ -754,7 +753,7 @@ $status_esc = htmlspecialchars($statusC, ENT_QUOTES, 'UTF-8');
         <i class="fas fa-money-bill-wave icon"></i>
         <div class="label">COPIA E COLA</div>
     <input type="text" id="pix-code" value="${texto_copia_cola}" readonly style="border: none; color: #000; font-size: 10pt;" />
-        <button onclick="copiarCodigo()"  class="status-badge ${badgeClass} mt-3">Copiar</button>
+        <button onclick="copiarCodigo()" ?? class="status-badge ${badgeClass} mt-3">Copiar</button>
 <br>
 
 <div class="info-card animate-fadeInUp delay-3">
@@ -804,4 +803,3 @@ $status_esc = htmlspecialchars($statusC, ENT_QUOTES, 'UTF-8');
         });
     }
 </script>
-

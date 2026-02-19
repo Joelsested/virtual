@@ -1,9 +1,9 @@
 <?php
 /**
  * @package dompdf
- * @link    http://dompdf.github.com/
- * @author  Benj Carson <benjcarson@digitaljunkies.ca>
- * @author  Helmut Tischer <htischer@weihenstephan.org>
+ * @link ? http ://dompdf.github.com/
+ * @author ?? Benj Carson <benjcarson@digitaljunkies.ca>
+ * @author ?? Helmut Tischer <htischer@weihenstephan.org>
  * @license http://www.gnu.org/copyleft/lesser.html GNU Lesser General Public License
  */
 
@@ -42,7 +42,7 @@ class ListBullet extends AbstractPositioner
         if ($n) {
             $style = $n->get_style();
             $line_height = $style->line_height;
-            // TODO: should offset take into account the line height of the next sibling (per previous logic)?
+            // TODO: should offset take into account the line height of the next sibling (per previous logic)
             // $offset = (float)$style->length_in_pt($line_height, $n->get_containing_block("h")) - $frame->get_height();
             $offset = $line_height - $frame->get_height();
             $y += $offset / 2;
@@ -59,8 +59,8 @@ class ListBullet extends AbstractPositioner
 
         // if ($p) {
         //   //$cb = $n->get_containing_block();
-        //   $cb = $p->get_containing_block();
-        //   $y += $cb["h"]/2;
+        // ?? $cb = $p->get_containing_block();
+        // ?? $y += $cb["h"]/2;
         // print 'cb:'.$cb["x"].':'.$cb["y"].':'.$cb["w"].':'.$cb["h"].':';
         // }
 

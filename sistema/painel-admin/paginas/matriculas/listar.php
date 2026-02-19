@@ -92,7 +92,7 @@ echo <<<HTML
 		<ul class="dropdown-menu" style="margin-left:-230px;">
 		<li>
 		<div class="notification_desc2">
-		<p>Confirmar Exclusão? <a href="#" onclick="excluir('{$id}')"><span class="text-danger">Sim</span></a></p>
+		<p>Confirmar Exclusão <a href="#" onclick="excluir('{$id}')"><span class="text-danger">Sim</span></a></p>
 		</div>
 		</li>										
 		</ul>
@@ -129,9 +129,7 @@ HTML;
 <script type="text/javascript">
 
 	$(document).ready( function () {
-		$('#tabela').DataTable({
-			"ordering": false,
-			"stateSave": true,
+		$('#tabela').DataTable({ ? "ordering" : false, ? "stateSave" : true,
 		});
 		$('#tabela_filter label input').focus();
 	} );
@@ -154,4 +152,3 @@ HTML;
 
 
 </script>
-

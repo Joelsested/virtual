@@ -73,7 +73,7 @@ if (@$_SESSION['nivel'] != 'Administrador' and @$_SESSION['nivel'] != 'Secretari
 								<div class="col-md-2">
 							<div class="form-group">
 								<label> Telefone:</label>
-								<input type="text" class="form-control" name="telefone" id="telefone">
+								<input type="text" class="form-control" name="telefone" id="telefone" required>
 
 							
 
@@ -104,7 +104,7 @@ if (@$_SESSION['nivel'] != 'Administrador' and @$_SESSION['nivel'] != 'Secretari
 						<div class="col-md-2">
 							<div class="form-group">
 								<label>Data de Nascimento:</label>
-								<input type="text" class="form-control" name="nascimento" id="nascimento">
+								<input type="text" class="form-control" name="nascimento" id="nascimento" required>
 
 							</div>
 						</div>
@@ -427,11 +427,6 @@ if (@$_SESSION['nivel'] != 'Administrador' and @$_SESSION['nivel'] != 'Secretari
 						<span><b>Ativo: </b></span>
 						<span id="ativo_mostrar"></span>
 					</div>
-
-					<div class="col-md-3">
-						<span><b>Senha: </b></span>
-						<span id="senha_mostrar"></span>
-					</div>
 				</div>
 
 
@@ -455,7 +450,7 @@ if (@$_SESSION['nivel'] != 'Administrador' and @$_SESSION['nivel'] != 'Secretari
 
 
 <script type="text/javascript">
-	var pag = "<?= $pag ?>"
+	var pag = "<= $pag >"
 </script>
 <script src="js/ajax.js"></script>
 
@@ -513,8 +508,7 @@ function formatarCPF(input) {
 }
 
 // --- Lista dos campos obrigatórios ---
-const camposObrigatorios = [
-    'nome', 'cpf', 'email', 'telefone'
+const camposObrigatorios = ['nome', 'cpf', 'email', 'telefone', 'nascimento'
 ];
 
 
@@ -524,10 +518,12 @@ function verificarCampos() {
     const mensagem = document.getElementById('mensagem');
     let todosPreenchidos = true;
 
+    let campoFaltando = '';
     for (let id of camposObrigatorios) {
         const campo = document.getElementById(id);
         if (!campo.value.trim()) {
             todosPreenchidos = false;
+            campoFaltando = id;
             break;
         }
     }
@@ -544,6 +540,20 @@ function verificarCampos() {
         mensagem.innerHTML = '';
     } else {
         botao.setAttribute('disabled', true);
+        if (campoFaltando) {
+            var labelMap = {
+                nome: 'Informe o nome.',
+                cpf: 'Informe o CPF.',
+                email: 'Informe o email.',
+                telefone: 'Informe o telefone.',
+                nascimento: 'Informe a data de nascimento.'
+            };
+            mensagem.innerHTML = labelMap[campoFaltando] || 'Preencha os campos obrigatorios.';
+        } else if (!cpfValido) {
+            mensagem.innerHTML = 'CPF invalido.';
+        } else if (!emailValido) {
+            mensagem.innerHTML = 'Email invalido.';
+        }
     }
 }
 
@@ -586,6 +596,29 @@ inputCPF.addEventListener('blur', function() {
 verificarCampos();
 </script>
 
+<script type="text/javascript">
+	document.getElementById('form').addEventListener('submit', function (event) {
+		var mensagem = document.getElementById('mensagem');
+		var campos = ['nome', 'cpf', 'email', 'telefone', 'nascimento'];
+		for (var i = 0; i < campos.length; i++) {
+			var campo = document.getElementById(campos[i]);
+			if (campo && !campo.value.trim()) {
+				event.preventDefault();
+				var labelMap = {
+					nome: 'Informe o nome.',
+					cpf: 'Informe o CPF.',
+					email: 'Informe o email.',
+					telefone: 'Informe o telefone.',
+					nascimento: 'Informe a data de nascimento.'
+				};
+				mensagem.classList.add('text-danger');
+				mensagem.textContent = labelMap[campos[i]] || 'Preencha os campos obrigatorios.';
+				return;
+			}
+		}
+	});
+</script>
+
 
 
 <script type="text/javascript">
@@ -614,8 +647,7 @@ verificarCampos();
 	document.getElementById('cep').addEventListener('input', function() {
 		let cep = this.value.replace(/\D/g, ''); // Remove caracteres não numéricos
 
-	if (cep.length === 8) { // Verifica se o CEP tem 8 dígitos
-		fetch(`https://viacep.com.br/ws/${cep}/json/`)
+	if (cep.length === 8) { // Verifica se o CEP tem 8 dígitos ? fetch(`https://viacep.com.br/ws/${cep}/json/`)
 			.then(response => response.json())
 			.then(data => {
 				if (!data.erro) {

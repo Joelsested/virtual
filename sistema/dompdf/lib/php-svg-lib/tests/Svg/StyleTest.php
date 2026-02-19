@@ -34,10 +34,7 @@ class StyleTest extends TestCase
     {
         $style = new Style();
 
-        $attributes = array(
-            "color" => "blue",
-            "fill" => "#fff",
-            "stroke" => "none",
+        $attributes = array( ?? "color" => "blue", "fill" => "#fff", "stroke" => "none",
         );
 
         $style->fromAttributes($attributes);

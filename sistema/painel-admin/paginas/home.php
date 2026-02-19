@@ -304,7 +304,7 @@ for ($i = 1; $i <= 12; $i++) {
 </head>
 
 <body>
-	<input type="hidden" id="dados_grafico" value="<?= $dados_meses ?>">
+	<input type="hidden" id="dados_grafico" value="<= $dados_meses >">
 
 	<div class="dashboard-container">
 		<!-- <div class="dashboard-header">
@@ -319,7 +319,7 @@ for ($i = 1; $i <= 12; $i++) {
 						<i class="fa fa-graduation-cap"></i>
 					</div>
 				</div>
-				<div class="stat-card-value"><?php echo $total_alunos ?></div>
+				<div class="stat-card-value"<?php echo $total_alunos?></div>
 				<div class="stat-card-title">Total de Alunos</div>
 			</a>
 
@@ -329,7 +329,7 @@ for ($i = 1; $i <= 12; $i++) {
 						<i class="fa fa-clock-o"></i>
 					</div>
 				</div>
-				<div class="stat-card-value"><?php echo $total_mat_pendentes ?></div>
+				<div class="stat-card-value"<?php echo $total_mat_pendentes?></div>
 				<div class="stat-card-title">Matrículas Pendentes</div>
 			</a>
 
@@ -339,7 +339,7 @@ for ($i = 1; $i <= 12; $i++) {
 						<i class="fa fa-check-circle"></i>
 					</div>
 				</div>
-				<div class="stat-card-value"><?php echo $total_mat_aprovadas ?></div>
+				<div class="stat-card-value"<?php echo $total_mat_aprovadas?></div>
 				<div class="stat-card-title">Mat Aprovadas Mês</div>
 			</a>
 
@@ -349,7 +349,7 @@ for ($i = 1; $i <= 12; $i++) {
 						<i class="fa fa-shopping-cart"></i>
 					</div>
 				</div>
-				<div class="stat-card-value"><?php echo $total_vendas_diaF ?></div>
+				<div class="stat-card-value"<?php echo $total_vendas_diaF?></div>
 				<div class="stat-card-title">Vendas do Dia</div>
 			</a>
 
@@ -359,7 +359,7 @@ for ($i = 1; $i <= 12; $i++) {
 						<i class="fa fa-book"></i>
 					</div>
 				</div>
-				<div class="stat-card-value"><?php echo $total_cursos ?></div>
+				<div class="stat-card-value"<?php echo $total_cursos?></div>
 				<div class="stat-card-title">Total de Cursos</div>
 			</a>
 		</div>

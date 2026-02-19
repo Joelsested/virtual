@@ -156,9 +156,9 @@ $data_hoje = utf8_encode(strftime('%A, %d de %B de %Y', strtotime('today')));
 
 
 <div class="titulo_cab titulo_img"><u>GABARITO <?php echo $nome  ?>  </u></div>	
-	<div class="data_img"><?php echo mb_strtoupper($data_hoje) ?></div>
+	<div class="data_img"<?php echo mb_strtoupper($data_hoje) ></div>
 
-	<img class="imagem" src="<?php echo $url_sistema ?>/sistema/img/logo_rel.jpg" width="200px" height="47">
+	<img class="imagem" src="<?php echo $url_sistema >/sistema/img/logo_rel.jpg?>" width=?>"200px" height="47"?>
 
 	
 	<br><br><br>
@@ -174,11 +174,11 @@ $data_hoje = utf8_encode(strftime('%A, %d de %B de %Y', strtotime('today')));
 		<?php 
 		
 
-		$query = $pdo->query("SELECT * from matriculas where aluno = '$id_aluno'  and id_curso = '$curso'  order by id desc ");
+		$query = $pdo->query("SELECT * from matriculas where aluno = '$id_aluno' ?? and id_curso = '$curso' ?? order by id desc ");
 		$res = $query->fetchAll(PDO::FETCH_ASSOC);
 		$total_reg = count($res);
 		if($total_reg > 0){
-			?>
+?>
 
 				<?php 
 					for($i=0; $i < $total_reg; $i++){
@@ -211,16 +211,16 @@ $queryPacote = $pdo->query("SELECT * FROM pacotes WHERE id = '$pacote' ORDER BY 
 
 
 
-				 ?>
+?>
 
 
 		
 						
 						<div class="linha-cab">				
 							
-								<div  style="text-align: center; font-size: 20px;"><?php echo @$nome_curso ?></div>
+								<div  style="text-align: center; font-size: 20px;"<?php echo @$nome_curso ></div>
 							
-		<?php $query9 = $pdo->query("SELECT * from perguntas_respostas where id_curso = '$curso' and id_aluno = '$id_aluno'  ORDER BY numeracao ASC");
+		<?php $query9 = $pdo->query("SELECT * from perguntas_respostas where id_curso = '$curso' and id_aluno = '$id_aluno' ?? ORDER BY numeracao ASC");
 	$res9 = $query9->fetchAll(PDO::FETCH_ASSOC);
 
 
@@ -239,12 +239,12 @@ if ($correta == 'Sim') {
 }
    
 
-	 ?>							<div style="text-align:center">
+	 >							<div style="text-align:center">
 							<table style="border-collapse: collapse; border: 1px solid black; width:50px;margin: auto; ">
 }
     <tr>
         <td style="border: 1px solid black; text-align: left;" >0<?php echo$numeracao?></td>
-        <td style="border: 1px solid black; text-align: left; "><?php echo $letra?></td>
+        <td style="border: 1px solid black; text-align: left; "<?php echo $letra></td>
     </tr>
 
 </table>
@@ -254,9 +254,9 @@ if ($correta == 'Sim') {
 							
 							<?php } ?>
 
-			<table style="border-collapse: collapse; border: 1px solid black; width:50px;margin: auto;  ">
+			<table style="border-collapse: collapse; border: 1px solid black; width:50px;margin: auto; ?? ">
     <tr>
-        <td style="border: 1px solid black; text-align: left;" ><?php echo$nota?></td>
+        <td style="border: 1px solid black; text-align: left;"<?php echo$nota></td>
        
     </tr>
     
@@ -281,7 +281,7 @@ if ($correta == 'Sim') {
 
 	<?php }else{
 		echo '<div style="margin:8px"><small><small>Ainda Não a Gabarito!</small></small></div>';
-	} ?>
+	} >
 
 
 
@@ -291,8 +291,8 @@ if ($correta == 'Sim') {
 
 
 
-	<div class="footer"  align="center">
-		<span style="font-size:10px"><?php echo $nome_sistema ?> Whatsapp: <?php echo $tel_sistema ?></span> 
+	<div class="footer" ?? align="center">
+		<span style="font-size:10px"<?php echo $nome_sistema > Whatsapp: <?php echo $tel_sistema ?></span> 
 	</div>
 
 

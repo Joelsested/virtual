@@ -46,13 +46,13 @@
             var that = this,
            config = that.options;
             var graph = $(that.element).addClass("SimpleChart").addClass(config.ChartType).append("<canvas class='SimpleChartcanvas'></canvas>").find('canvas').css({
-                float: (config.legendposition == 'right' || config.legendposition == 'left') ? 'left' : '',
+                float: (config.legendposition == 'right' || config.legendposition == 'left')  'left' : '',
                 'margin-top': config.topmargin,
                 'margin-right': config.rightmargin
             });
             var ctx = graph[0].getContext("2d");
-            graph[0].width = $(that.element).width() - (config.showlegends ? ((config.legendposition == 'right' || config.legendposition == 'left') ? parseInt(config.legendsize) + parseInt(config.xPadding) : 0) : 0) - config.rightmargin;
-            graph[0].height = $(that.element).height() - (config.showlegends ? ((config.legendposition == 'bottom' || config.legendposition == 'top') ? config.legendsize : 0) : 0) - config.topmargin;
+            graph[0].width = $(that.element).width() - (config.showlegends  ((config.legendposition == 'right' || config.legendposition == 'left')  parseInt(config.legendsize) + parseInt(config.xPadding) : 0) : 0) - config.rightmargin;
+            graph[0].height = $(that.element).height() - (config.showlegends  ((config.legendposition == 'bottom' || config.legendposition == 'top')  config.legendsize : 0) : 0) - config.topmargin;
             var c = graph[0].getContext('2d');
             switch (config.ChartType) {
                 case "Line":
@@ -204,16 +204,16 @@
             c.clearRect(0, 0, graph.width(), graph.height());
             var totalVal = 0, lastend = 0;
             for (var j = 0; j < config.data[0].values.length; j++) {
-                totalVal += (typeof config.data[0].values[j].Y == 'number') ? config.data[0].values[j].Y : 0;
+                totalVal += (typeof config.data[0].values[j].Y == 'number')  config.data[0].values[j].Y : 0;
             }
 
             for (var i = 0; i < config.data[0].values.length; i++) {
-                c.fillStyle = config.data[0].linecolor == "Random" ? config.data[0].values[i].color = randomcolor = that.getRandomColor() : config.data[0].linecolor;
+                c.fillStyle = config.data[0].linecolor == "Random"  config.data[0].values[i].color = randomcolor = that.getRandomColor() : config.data[0].linecolor;
                 c.beginPath();
                 var centerx = graph.width() / 2.2;
                 var centery = graph.height() / 2.2;
                 c.moveTo(centerx, centery);
-                c.arc(centerx, centery, (config.legendposition == 'right' || config.legendposition == 'left') ? centerx : centery, lastend, lastend +
+                c.arc(centerx, centery, (config.legendposition == 'right' || config.legendposition == 'left')  centerx : centery, lastend, lastend +
                   (Math.PI * 2 * (config.data[0].values[i].Y / totalVal)), false);
                 c.lineTo(centerx, centery);
                 c.fill();
@@ -260,8 +260,8 @@
             config = this.options;
             for (var i = 0; i < config.data[0].values.length; i++) {
                 var randomcolor;
-                c.strokeStyle = config.data[0].linecolor == "Random" ? config.data[0].values[i].color = randomcolor = that.getRandomColor() : config.data[0].linecolor;
-                c.fillStyle = config.data[0].linecolor == "Random" ? randomcolor : config.data[0].linecolor;
+                c.strokeStyle = config.data[0].linecolor == "Random"  config.data[0].values[i].color = randomcolor = that.getRandomColor() : config.data[0].linecolor;
+                c.fillStyle = config.data[0].linecolor == "Random"  randomcolor : config.data[0].linecolor;
                 c.beginPath();
                 c.rect(that.pixelX(i, 0) - config.yPadding / 4, that.pixelY(config.data[0].values[i].Y), config.yPadding / 2, graph.height() - that.pixelY(config.data[0].values[i].Y) - config.xPadding + 8);
                 c.closePath();
@@ -279,8 +279,8 @@
             for (var i = 0; i < config.data.length; i++) {
                 for (var j = 0; j < config.data[i].values.length; j++) {
                     var randomcolor;
-                    c.strokeStyle = config.data[i].linecolor == "Random" ? config.data[i].values[j].color = randomcolor = that.getRandomColor() : config.data[i].linecolor;
-                    c.fillStyle = config.data[i].linecolor == "Random" ? randomcolor : config.data[i].linecolor;
+                    c.strokeStyle = config.data[i].linecolor == "Random"  config.data[i].values[j].color = randomcolor = that.getRandomColor() : config.data[i].linecolor;
+                    c.fillStyle = config.data[i].linecolor == "Random"  randomcolor : config.data[i].linecolor;
                     c.beginPath();
                     c.rect(that.pixelX(j, 0) - config.yPadding / 4, that.pixelY(config.data[i].values[j].Y), config.yPadding / 2, graph.height() - that.pixelY(config.data[i].values[j].Y) - config.xPadding + 8);
                     c.closePath();
@@ -297,14 +297,14 @@
             var that = this,
             config = this.options;
             var randomcolor;
-            c.strokeStyle = config.data[0].linecolor == "Random" ? randomcolor = that.getRandomColor() : config.data[0].linecolor;
+            c.strokeStyle = config.data[0].linecolor == "Random"  randomcolor = that.getRandomColor() : config.data[0].linecolor;
             c.beginPath();
             c.moveTo(that.pixelX(0, 0), that.pixelY(config.data[0].values[0].Y));
             for (var j = 1; j < config.data[0].values.length; j++) {
                 c.lineTo(that.pixelX(j, 0), that.pixelY(config.data[0].values[j].Y));
             }
             c.stroke();
-            c.fillStyle = config.data[0].linecolor == "Random" ? randomcolor : config.data[0].linecolor;
+            c.fillStyle = config.data[0].linecolor == "Random"  randomcolor : config.data[0].linecolor;
             for (var j = 0; j < config.data[0].values.length; j++) {
                 c.beginPath();
                 c.arc(that.pixelX(j, 0), that.pixelY(config.data[0].values[j].Y), 4, 0, Math.PI * 2, true);
@@ -327,7 +327,7 @@
             });
 
             for (var i = 0; i < config.data.length; i++) {
-                c.strokeStyle = config.data[i].linecolor == "Random" ? config.data[i].Randomlinecolor = that.getRandomColor() : config.data[i].linecolor;
+                c.strokeStyle = config.data[i].linecolor == "Random"  config.data[i].Randomlinecolor = that.getRandomColor() : config.data[i].linecolor;
                 c.beginPath();
                 c.moveTo(that.pixelX(0, i), that.pixelY(config.data[i].values[0].Y));
                 if (config.ChartType !== "Scattered" && config.ChartType !== "Hybrid") {
@@ -336,7 +336,7 @@
                     }
                     c.stroke();
                 }
-                c.fillStyle = config.data[i].linecolor == "Random" ? config.data[i].Randomlinecolor : config.data[i].linecolor;
+                c.fillStyle = config.data[i].linecolor == "Random"  config.data[i].Randomlinecolor : config.data[i].linecolor;
                 if (config.ChartType == "Area") {
                     c.lineTo(that.pixelX(config.data[i].values.length - 1, i), that.pixelY(0));
                     c.lineTo(that.pixelX(0, 0), that.pixelY(0));
@@ -361,7 +361,7 @@
                         r: 4,
                         rXr: 16,
                         tip: config.data[i].values[j].Y,
-                        color: config.data[i].linecolor == "Random" ? config.data[i].Randomlinecolor : config.data[i].linecolor
+                        color: config.data[i].linecolor == "Random"  config.data[i].Randomlinecolor : config.data[i].linecolor
                     });
                 }
             }
@@ -406,13 +406,13 @@
             config = this.options;
             if (config.ChartType == "Line" || config.ChartType == "Area" || config.ChartType == "Scattered" || config.ChartType == "Stacked" || config.ChartType == "StackedHybrid") {
                 var _legends = $("<div class='simple-chart-legends' />", { id: "legendsdiv" }).css({
-                    width: (config.legendposition == 'right' || config.legendposition == 'left') ? (config.legendsize - 5) : graph.width(),
-                    height: (config.legendposition == 'top' || config.legendposition == 'bottom') ? (config.legendsize - 5) : graph.height(),
-                    float: (config.legendposition == 'right' || config.legendposition == 'left') ? 'left' : ''
+                    width: (config.legendposition == 'right' || config.legendposition == 'left')  (config.legendsize - 5) : graph.width(),
+                    height: (config.legendposition == 'top' || config.legendposition == 'bottom')  (config.legendsize - 5) : graph.height(),
+                    float: (config.legendposition == 'right' || config.legendposition == 'left')  'left' : ''
                 }).appendTo($(that.element));
                 var _ul = $(_legends).append("<span>" + config.LegendTitle + "</span>").append("<ul />").find("ul")
                 for (var i = 0; i < config.data.length; i++) {
-                    $("<li />", { class: "legendsli" }).append("<span />").find('span').addClass("legendindicator").append('<span class="line" style="background: ' + (config.data[i].linecolor == "Random" ? config.data[i].Randomlinecolor : config.data[i].linecolor) + '"></span><span class="circle" style="background: ' + (config.data[i].linecolor == "Random" ? config.data[i].Randomlinecolor : config.data[i].linecolor) + '"></span>').parent().append("<span>" + config.data[i].title + "</span>").appendTo(_ul);
+                    $("<li />", { class: "legendsli" }).append("<span />").find('span').addClass("legendindicator").append('<span class="line" style="background: ' + (config.data[i].linecolor == "Random"  config.data[i].Randomlinecolor : config.data[i].linecolor) + '"></span><span class="circle" style="background: ' + (config.data[i].linecolor == "Random"  config.data[i].Randomlinecolor : config.data[i].linecolor) + '"></span>').parent().append("<span>" + config.data[i].title + "</span>").appendTo(_ul);
                 }
                 if (config.legendposition == 'top' || config.legendposition == 'left') {
                     $(_legends).insertBefore($(that.element).find('.SimpleChartcanvas'));
@@ -426,14 +426,14 @@
             }
             if (config.ChartType == "Bar" || config.ChartType == "Hybrid" || config.ChartType == "Pie") {
                 var _legends = $("<div class='simple-chart-legends' />", { id: "legendsdiv" }).css({
-                    width: (config.legendposition == 'right' || config.legendposition == 'left') ? (config.legendsize - 5) : graph.width(),
-                    height: (config.legendposition == 'top' || config.legendposition == 'bottom') ? (config.legendsize - 5) : graph.height(),
-                    float: (config.legendposition == 'right' || config.legendposition == 'left') ? 'left' : ''
+                    width: (config.legendposition == 'right' || config.legendposition == 'left')  (config.legendsize - 5) : graph.width(),
+                    height: (config.legendposition == 'top' || config.legendposition == 'bottom')  (config.legendsize - 5) : graph.height(),
+                    float: (config.legendposition == 'right' || config.legendposition == 'left')  'left' : ''
                 }).appendTo($(that.element));
                 var _ul = $(_legends).append("<span>" + config.LegendTitle + "</span>").append("<ul />").find("ul")
                 for (var i = 0; i < config.data[0].values.length; i++) {
 
-                    $("<li />", { class: "legendsli" }).append("<span />").find('span').addClass("legendindicator").append('<span class="line" style="background: ' + (config.data[0].linecolor == "Random" ? config.data[0].values[i].color : config.data[0].linecolor) + '"></span><span class="circle" style="background: ' + (config.data[0].linecolor == "Random" ? config.data[0].values[i].color : config.data[0].linecolor) + '"></span>').parent().append("<span>" + config.data[0].values[i].X + "</span><span class='legendvalue'>" + (config.ChartType == 'Pie' ? config.data[0].values[i].Y : '') + "</span>").appendTo(_ul);
+                    $("<li />", { class: "legendsli" }).append("<span />").find('span').addClass("legendindicator").append('<span class="line" style="background: ' + (config.data[0].linecolor == "Random"  config.data[0].values[i].color : config.data[0].linecolor) + '"></span><span class="circle" style="background: ' + (config.data[0].linecolor == "Random"  config.data[0].values[i].color : config.data[0].linecolor) + '"></span>').parent().append("<span>" + config.data[0].values[i].X + "</span><span class='legendvalue'>" + (config.ChartType == 'Pie'  config.data[0].values[i].Y : '') + "</span>").appendTo(_ul);
                 }
                 if (config.legendposition == 'top' || config.legendposition == 'left') {
                     $(_legends).insertBefore($(that.element).find('.SimpleChartcanvas'));

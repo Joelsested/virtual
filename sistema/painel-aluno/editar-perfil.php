@@ -1,52 +1,87 @@
 <?php 
 require_once("../conexao.php");
+require_once(__DIR__ . "/../../config/upload.php");
+require_once(__DIR__ . "/../../helpers.php");
 
-$nome = $_POST['nome_usu'];
-$cpf = $_POST['cpf_usu'];
-$email = $_POST['email_usu'];
-$senha = $_POST['senha_usu'];
+$nome = trim($_POST['nome_usu'] ?? '');
+$cpf = trim($_POST['cpf_usu'] ?? '');
+$email = trim($_POST['email_usu'] ?? '');
+$id = (int) ($_POST['id_usu'] ?? 0);
+$foto = $_POST['foto_usu'] ?? '';
+
+$rg = trim($_POST['rg_usu'] ?? '');
+$orgao_expedidor = trim($_POST['expedidor_usu'] ?? '');
+$expedicao = trim($_POST['expedicao_usu'] ?? '');
+$nascimento = trim($_POST['nascimento_usu'] ?? '');
+$telefone = trim($_POST['telefone_usu'] ?? '');
+$cep = trim($_POST['cep_usu'] ?? '');
+$sexo = trim($_POST['sexo_usu'] ?? '');
+$endereco = trim($_POST['endereco_usu'] ?? '');
+$numero = trim($_POST['numero_usu'] ?? '');
+$bairro = trim($_POST['bairro_usu'] ?? '');
+$cidade = trim($_POST['cidade_usu'] ?? '');
+$estado = trim($_POST['estado_usu'] ?? '');
+$mae = trim($_POST['mae_usu'] ?? '');
+$pai = trim($_POST['pai_usu'] ?? '');
+$naturalidade = trim($_POST['naturalidade_usu'] ?? '');
+
+if ($nome === '') {
+	echo 'Informe o nome.';
+	exit();
+}
+if ($cpf === '') {
+	echo 'Informe o CPF.';
+	exit();
+}
+if ($email === '') {
+	echo 'Informe o email.';
+	exit();
+}
+if ($telefone === '') {
+	echo 'Informe o telefone.';
+	exit();
+}
+if ($nascimento === '') {
+	echo 'Informe a data de nascimento.';
+	exit();
+}
+$cpfDigits = digitsOnly($cpf);
+if ($cpfDigits === '') {
+	echo 'CPF invalido!';
+	exit();
+}
+
+$senha = birthDigits($nascimento);
+if ($senha === '') {
+	echo 'Data de nascimento invalida!';
+	exit();
+}
 $senha_crip = md5($senha);
-$id = $_POST['id_usu'];
-$foto = $_POST['foto_usu'];
-
-$rg = $_POST['rg_usu'];
-$expedicao = $_POST['expedicao_usu'];
-$nascimento = $_POST['nascimento_usu'];
-$telefone = $_POST['telefone_usu'];
-$cep = $_POST['cep_usu'];
-$sexo = $_POST['sexo_usu'];
-$endereco = $_POST['endereco_usu'];
-$numero = $_POST['numero_usu'];
-$bairro = $_POST['bairro_usu'];
-$cidade = $_POST['cidade_usu'];
-$estado = $_POST['estado_usu'];
-$mae = $_POST['mae_usu'];
-$pai = $_POST['pai_usu'];
-$naturalidade = $_POST['naturalidade_usu'];
 
 
 
-$query = $pdo->query("SELECT * FROM usuarios where id = '$id'");
+$query = $pdo->prepare("SELECT * FROM usuarios where id = :id");
+$query->execute([':id' => $id]);
 $res = $query->fetchAll(PDO::FETCH_ASSOC);
 $id_pessoa = $res[0]['id_pessoa'];
 
 //validar email duplicado
-$query = $pdo->query("SELECT * FROM usuarios where usuario = '$email'");
-$res = $query->fetchAll(PDO::FETCH_ASSOC);
-$total_reg = @count($res);
-if($total_reg > 0 and $res[0]['id'] != $id){
-	echo 'Email já Cadastrado, escolha Outro!';
+$stmtEmail = $pdo->prepare("SELECT id FROM usuarios WHERE usuario = :usuario AND id <> :id LIMIT 1");
+$stmtEmail->execute([':usuario' => $email, ':id' => $id]);
+if ($stmtEmail->fetchColumn()) {
+	echo 'Email ja Cadastrado, escolha Outro!';
 	exit();
 }
 
-
 //validar cpf duplicado
-$query = $pdo->query("SELECT * FROM usuarios where cpf = '$cpf'");
-$res = $query->fetchAll(PDO::FETCH_ASSOC);
-$total_reg = @count($res);
-if($total_reg > 0 and $res[0]['id'] != $id){
-	echo 'CPF já Cadastrado, escolha Outro!';
-	exit();
+if ($cpfDigits !== '') {
+	$cpfColumn = cleanCpfColumn('cpf');
+	$stmtCpf = $pdo->prepare("SELECT id FROM usuarios WHERE $cpfColumn = :cpf_digits AND id <> :id LIMIT 1");
+	$stmtCpf->execute([':cpf_digits' => $cpfDigits, ':id' => $id]);
+	if ($stmtCpf->fetchColumn()) {
+		echo 'CPF ja Cadastrado, escolha Outro!';
+		exit();
+	}
 }
 
 
@@ -54,96 +89,43 @@ if($total_reg > 0 and $res[0]['id'] != $id){
 
 
 //SCRIPT PARA SUBIR FOTO NO SERVIDOR
-$nome_img = date('d-m-Y H:i:s') .'-'.@$_FILES['foto']['name'];
-$nome_img = preg_replace('/[ :]+/' , '-' , $nome_img);
-
-$caminho = 'img/perfil/' .$nome_img;
-
-$imagem_temp = @$_FILES['foto']['tmp_name']; 
-
-if(@$_FILES['foto']['name'] != ""){
-	$ext = pathinfo($nome_img, PATHINFO_EXTENSION);   
-	if($ext == 'png' or $ext == 'jpg' or $ext == 'jpeg' or $ext == 'gif'){ 
-	
-			//EXCLUO A FOTO ANTERIOR
-			if($foto != "sem-perfil.jpg"){
-				@unlink('img/perfil/'.$foto);
-			}
-
-			$foto = $nome_img;
-		
-		move_uploaded_file($imagem_temp, $caminho);
-	}else{
-		echo 'Extensão de Imagem não permitida!';
-		exit();
+$destDir = __DIR__ . '/img/perfil';
+$allowedExt = ['png', 'jpg', 'jpeg', 'gif', 'webp'];
+$allowedMime = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+$upload = upload_handle($_FILES['foto'] ?? [], $destDir, $allowedExt, $allowedMime, 5 * 1024 * 1024, date('Y-m-d-H-i-s') . '-', true);
+if (!$upload['ok']) {
+	echo $upload['error'];
+	exit();
+}
+if (empty($upload['skipped'])) {
+	if ($foto != 'sem-perfil.jpg') {
+		@unlink($destDir . '/' . $foto);
 	}
+	$foto = $upload['filename'];
 }
-
-
-
-
-$query = $pdo->query("SELECT * FROM alunos where id = '$id'");
-$res = $query->fetchAll(PDO::FETCH_ASSOC);
-$total_reg = @count($res);
-if($total_reg > 0){
-	$foto2 = $res[0]['arquivo'];
-}else{
-	$foto2 = '';
-}
-
-
-
-
-
-//SCRIPT PARA SUBIR arquivo NO SERVIDOR
-$nome_img = date('d-m-Y H:i:s') .'-'.@$_FILES['arquivo_2']['name'];
-$nome_img = preg_replace('/[ :]+/' , '-' , $nome_img);
-
-$caminho = 'img/arquivos/' .$nome_img;
-
-$imagem_temp = @$_FILES['arquivo_2']['tmp_name']; 
-
-if(@$_FILES['arquivo_2']['name'] != ""){
-	$ext = pathinfo($nome_img, PATHINFO_EXTENSION);   
-	if($ext == 'zip' or  $ext == 'pdf' or $ext == 'PDF' or $ext == 'rar'){ 
-						
-			//EXCLUO A FOTO ANTERIOR
-			if($foto2 != "sem-arquivo"){
-				@unlink('img/arquivos/'.$foto);
-			}
-
-			$foto2 = $nome_img;
-		
-		move_uploaded_file($imagem_temp, $caminho);
-	}else{
-		echo 'Extensão de Imagem não permitida!';
-		exit();
-	}
-}
-
-
-
-
-
 
 
 //atualizar os dados do usuário
-$query = $pdo->prepare("UPDATE usuarios SET nome = :nome, cpf = :cpf, usuario = :usuario, senha = :senha, senha_crip = '$senha_crip', foto = '$foto' where id = '$id'");
+$query = $pdo->prepare("UPDATE usuarios SET nome = :nome, cpf = :cpf, usuario = :usuario, senha = :senha, senha_crip = :senha_crip, foto = :foto where id = :id");
 
 $query->bindValue(":nome", "$nome");
 $query->bindValue(":usuario", "$email");
 $query->bindValue(":cpf", "$cpf");
-$query->bindValue(":senha", "$senha");
+$query->bindValue(":senha", "");
+$query->bindValue(":senha_crip", "$senha_crip");
+$query->bindValue(":foto", "$foto");
+$query->bindValue(":id", $id, PDO::PARAM_INT);
 $query->execute();
 
 
-$query = $pdo->prepare("UPDATE alunos SET nome = :nome, cpf = :cpf, email = :email, telefone = :telefone, rg = :rg, expedicao = :expedicao,  nascimento = :nascimento, cep = :cep, sexo = :sexo, endereco = :endereco, numero = :numero, bairro = :bairro, cidade = :cidade, estado = :estado, mae = :mae, pai = :pai, naturalidade = :naturalidade where id = '$id_pessoa'");
+$query = $pdo->prepare("UPDATE alunos SET nome = :nome, cpf = :cpf, email = :email, telefone = :telefone, rg = :rg, orgao_expedidor = :orgao_expedidor, expedicao = :expedicao,  nascimento = :nascimento, cep = :cep, sexo = :sexo, endereco = :endereco, numero = :numero, bairro = :bairro, cidade = :cidade, estado = :estado, mae = :mae, pai = :pai, naturalidade = :naturalidade where id = :id");
 
 $query->bindValue(":nome", "$nome");
 $query->bindValue(":cpf", "$cpf");
 $query->bindValue(":email", "$email");
 $query->bindValue(":telefone", "$telefone");
 $query->bindValue(":rg", "$rg");
+$query->bindValue(":orgao_expedidor", "$orgao_expedidor");
 $query->bindValue(":expedicao", "$expedicao");
 $query->bindValue(":nascimento", "$nascimento");
 $query->bindValue(":cep", "$cep");
@@ -156,8 +138,9 @@ $query->bindValue(":estado", "$estado");
 $query->bindValue(":mae", "$mae");
 $query->bindValue(":pai", "$pai");
 $query->bindValue(":naturalidade", "$naturalidade");
+$query->bindValue(":id", $id_pessoa, PDO::PARAM_INT);
 $query->execute();
 
 echo 'Editado com Sucesso';
 
- ?>
+?>

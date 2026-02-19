@@ -4,7 +4,9 @@
 require_once('../conexao.php');
 require_once('verificar.php');
 
-$pagina = isset($_GET['pagina']) ? $_GET['pagina'] : '';
+$csrf_token = csrf_token();
+
+$pagina = isset($_GET['pagina']) ?? $_GET['pagina'] ?: '';
 
 $data_atual = date('Y-m-d');
 $mes_atual = Date('m');
@@ -36,7 +38,7 @@ if (@$_SESSION['nivel'] == 'Secretario') {
 }
 
 
-//RECUPERAR DADOS DO USUÁRIO
+//RECUPERAR DADOS DO USU?RIO
 $query = $pdo->query("SELECT * FROM usuarios where id = '$id_usuario'");
 $res = $query->fetchAll(PDO::FETCH_ASSOC);
 $nome_usuario = $res[0]['nome'];
@@ -44,7 +46,6 @@ $email_usuario = $res[0]['usuario'];
 $nivel_usuario = $res[0]['nivel'];
 $foto_usuario = $res[0]['foto'];
 $cpf_usuario = $res[0]['cpf'];
-$senha_usuario = $res[0]['senha'];
 
 
 
@@ -54,23 +55,47 @@ if (@$_SESSION['nivel'] == 'Tutor' || @$_SESSION['nivel'] == 'Parceiro' || @$_SE
   $classe_f = '';
 }
 
+$mostrarEntrarComoAluno = false;
+if ($nivel_usuario === 'Vendedor') {
+  try {
+    $stmtCol = $pdo->query("SHOW COLUMNS FROM vendedores LIKE 'pode_login_como_aluno'");
+    $hasCol = (bool) ($stmtCol && $stmtCol->fetch(PDO::FETCH_ASSOC));
+    if (!$hasCol) {
+      $pdo->exec("ALTER TABLE vendedores ADD COLUMN pode_login_como_aluno TINYINT(1) NOT NULL DEFAULT 0");
+    }
+    $idPessoaVendedor = (int) ($res[0]['id_pessoa'] ?? 0);
+    if ($idPessoaVendedor <= 0) {
+      $cpfDigits = preg_replace('/\D/', '', (string) ($res[0]['cpf'] ?? ''));
+      $emailVendedor = strtolower(trim((string) ($res[0]['usuario'] ?? '')));
+      if ($cpfDigits !== '') {
+        $stmtV = $pdo->prepare("SELECT id FROM vendedores WHERE REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(cpf, '.', ''), '-', ''), ' ', ''), '/', ''), '(', ''), ')', '') = :cpf LIMIT 1");
+        $stmtV->execute([':cpf' => $cpfDigits]);
+        $idPessoaVendedor = (int) ($stmtV->fetchColumn() : 0);
+      }
+      if ($idPessoaVendedor <= 0 && $emailVendedor !== '') {
+        $stmtV = $pdo->prepare("SELECT id FROM vendedores WHERE LOWER(email) = :email LIMIT 1");
+        $stmtV->execute([':email' => $emailVendedor]);
+        $idPessoaVendedor = (int) ($stmtV->fetchColumn() : 0);
+      }
+      if ($idPessoaVendedor > 0) {
+        $stmtAtualiza = $pdo->prepare("UPDATE usuarios SET id_pessoa = :id_pessoa WHERE id = :id LIMIT 1");
+        $stmtAtualiza->execute([':id_pessoa' => $idPessoaVendedor, ':id' => (int)$id_usuario]);
+      }
+    }
+    if ($idPessoaVendedor > 0) {
+      $stmtPerm = $pdo->prepare("SELECT pode_login_como_aluno FROM vendedores WHERE id = :id LIMIT 1");
+      $stmtPerm->execute([':id' => $idPessoaVendedor]);
+      $mostrarEntrarComoAluno = ((int) ($stmtPerm->fetchColumn() : 0) === 1);
+    }
+  } catch (Exception $e) {
+    $mostrarEntrarComoAluno = false;
+  }
+}
+
+$mostrar_relatorios_responsavel = in_array($nivel_usuario, ['Vendedor', 'Tutor', 'Parceiro', 'Secretario', 'Tesoureiro'], true);
+
 $stmt = $pdo->query("SELECT * FROM cores_sistema ORDER BY nome_classe");
 $cores = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-$queryConfig = $pdo->query("SELECT * FROM config");
-$resConfig = $queryConfig->fetchAll(PDO::FETCH_ASSOC);
-
-$efi_client_id_prod = $resConfig[0]['efi_client_id_prod'];
-$efi_client_secret_prod = $resConfig[0]['efi_client_secret_prod'];
-$efi_client_id_homo = $resConfig[0]['efi_client_id_homo'];
-$efi_client_secret_homo = $resConfig[0]['efi_client_secret_homo'];
-$efi_sandbox = $resConfig[0]['efi_sandbox'];
-$efi_notification_url = $resConfig[0]['efi_notification_url'];
-$efi_pix_key = $resConfig[0]['efi_pix_key'];
-
-
-
-$is_sandbox = $efi_sandbox == 1 ? true : false;
 
 
 $classeDesejada = 'topo_pagina';
@@ -85,8 +110,97 @@ $topo_pagina = $coress['topo_pagina'];
 $texto_menu = $coress['texto_menu'];
 $texto_submenu = $coress['texto_submenu'];
 $bg_menu_hover = $coress['bg_menu_hover'];
-
 $_SESSION['last_activity'] = time();
+
+$env_values = [];
+$base_ecossistema = dirname(__DIR__, 3);
+$slug_env = '';
+$id_sessao_env = isset($_SESSION['sistema_id'])  (int) $_SESSION['sistema_id'] ?: 0;
+if ($id_sessao_env > 0) {
+  try {
+    $stmtSlugEnv = $pdo->prepare("SELECT slug FROM sistemas WHERE id = :id LIMIT 1");
+    $stmtSlugEnv->execute([':id' => $id_sessao_env]);
+    $slug_db = $stmtSlugEnv->fetchColumn();
+    if (!empty($slug_db)) {
+      $slug_env = (string) $slug_db;
+    }
+  } catch (Exception $e) {
+    $slug_env = '';
+  }
+}
+if ($slug_env === '' && $id_sessao_env > 0) {
+  $mapa_slug_env = [1 => 'virtual', 2 => 'provao', 3 => 'sestedcursos'];
+  $slug_env = $mapa_slug_env[$id_sessao_env] ?? '';
+}
+if ($slug_env === '' && isset($sistema_slug_atual) && $sistema_slug_atual !== '') {
+  $slug_env = $sistema_slug_atual;
+}
+if ($slug_env === '') {
+  $slug_env = basename(dirname(__DIR__, 3));
+}
+$slug_env = strtolower(trim((string)$slug_env));
+$slug_alias = ['capacitacoes' => 'sestedcursos', 'sestedcursos' => 'sestedcursos', 'provao' => 'provao', 'virtual' => 'virtual', 'sested-virtual' => 'virtual', 'sested_virtual' => 'virtual',
+];
+if (isset($slug_alias[$slug_env])) {
+  $slug_env = $slug_alias[$slug_env];
+}
+$env_path = $base_ecossistema . '/' . $slug_env . '/.env';
+if (!is_file($env_path)) {
+  $env_path = dirname(__DIR__, 2) . '/.env';
+}
+if (is_file($env_path)) {
+  $env_lines = file($env_path, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+  foreach ($env_lines as $line) {
+    if (strpos(trim($line), '#') === 0) {
+      continue;
+    }
+    if (strpos($line, '=') !== false) {
+      list($key, $value) = explode('=', $line, 2);
+      $env_values[trim($key)] = trim($value);
+    }
+  }
+}
+$efi_sandbox_env = $env_values['EFI_SANDBOX'] ?? 'false';
+$efi_client_id_prod_env = $env_values['EFI_CLIENT_ID_PROD'] ?? '';
+$efi_client_secret_prod_env = $env_values['EFI_CLIENT_SECRET_PROD'] ?? '';
+$efi_cert_path_prod_env = $env_values['EFI_CERT_PATH_PROD'] ?? '';
+$efi_cert_name_prod_env = $env_values['EFI_CERT_NAME_PROD'] ?? '';
+$efi_cert_name_homolog_env = $env_values['EFI_CERT_NAME_HOMOLOG'] ?? '';
+$efi_client_id_homolog_env = $env_values['EFI_CLIENT_ID_HOMOLOG'] ?? '';
+$efi_client_secret_homolog_env = $env_values['EFI_CLIENT_SECRET_HOMOLOG'] ?? '';
+$efi_cert_path_homolog_env = $env_values['EFI_CERT_PATH_HOMOLOG'] ?? '';
+$efi_webhook_base_env = $env_values['EFI_WEBHOOK_BASE_URL'] ?? '';
+$efi_webhook_url_prod_env = '';
+$efi_webhook_path_prod_env = '';
+$efi_webhook_url_homolog_env = '';
+$efi_webhook_path_homolog_env = '';
+try {
+  $qEfy = $pdo->query("SELECT nome, webhook_url, webhook_path FROM gateways WHERE UPPER(nome) IN ('EFY', 'EFI', 'EFY_PRODUCAO', 'EFI_PRODUCAO', 'EFY_HOMOLOG', 'EFI_HOMOLOG') ORDER BY id ASC");
+  $rowsEfy = $qEfy->fetchAll(PDO::FETCH_ASSOC);
+  foreach ($rowsEfy as $rowEfy) {
+    $nomeEfy = strtoupper((string)($rowEfy['nome'] ?? ''));
+    if (strpos($nomeEfy, 'HOMOLOG') !== false) {
+      $efi_webhook_url_homolog_env = (string)($rowEfy['webhook_url'] ?? '');
+      $efi_webhook_path_homolog_env = (string)($rowEfy['webhook_path'] ?? '');
+      continue;
+    }
+    if (strpos($nomeEfy, 'PRODUCAO') !== false) {
+      $efi_webhook_url_prod_env = (string)($rowEfy['webhook_url'] ?? '');
+      $efi_webhook_path_prod_env = (string)($rowEfy['webhook_path'] ?? '');
+      continue;
+    }
+    if ($efi_webhook_url_prod_env === '' && $efi_webhook_path_prod_env === '') {
+      $efi_webhook_url_prod_env = (string)($rowEfy['webhook_url'] ?? '');
+      $efi_webhook_path_prod_env = (string)($rowEfy['webhook_path'] ?? '');
+    } else {
+      $efi_webhook_url_homolog_env = (string)($rowEfy['webhook_url'] ?? '');
+      $efi_webhook_path_homolog_env = (string)($rowEfy['webhook_path'] ?? '');
+    }
+  }
+} catch (Exception $e) {
+  // Mantem tela funcional sem bloquear configuracoes.
+}
+
 
 ?>
 <!DOCTYPE HTML>
@@ -98,6 +212,7 @@ $_SESSION['last_activity'] = time();
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta name="csrf-token" content="<?php echo htmlspecialchars($csrf_token, ENT_QUOTES, 'UTF-8'); >?>"
 
 
   <script
@@ -118,10 +233,75 @@ $_SESSION['last_activity'] = time();
   <!-- //side nav css file -->
   <!-- js-->
   <script src="js/jquery-1.11.1.min.js"></script>
+    <script>
+      window.CSRF_TOKEN = "<?php echo htmlspecialchars($csrf_token, ENT_QUOTES, 'UTF-8'); ?>";
+    (function () {
+      function getToken() {
+        return window.CSRF_TOKEN || '';
+      }
+      if (window.fetch) {
+        var originalFetch = window.fetch;
+        window.fetch = function (resource, init) {
+          init = init || {};
+          var headers = new Headers(init.headers || {});
+          if (!headers.has('X-CSRF-Token')) {
+            headers.set('X-CSRF-Token', getToken());
+          }
+          init.headers = headers;
+          return originalFetch(resource, init);
+        };
+      }
+      if (window.jQuery) {
+        window.jQuery.ajaxSetup({
+          beforeSend: function (xhr) {
+            if (getToken()) {
+              xhr.setRequestHeader('X-CSRF-Token', getToken());
+            }
+          }
+        });
+      }
+      document.addEventListener('submit', function (e) {
+        var form = e.target;
+        if (!form || form.tagName !== 'FORM') {
+          return;
+        }
+        if (form.querySelector('input[name=\"csrf_token\"]')) {
+          return;
+        }
+        var input = document.createElement('input');
+        input.type = 'hidden';
+        input.name = 'csrf_token';
+        input.value = getToken();
+        form.appendChild(input);
+      }, true);
+      })();
+    </script>
+    <script>
+      (function () {
+        var sessionUserId = "<?php echo (int) ($_SESSION['id'] ?? 0); ?>";
+        var key = 'active_user_id';
+        try {
+          var activeId = localStorage.getItem(key);
+          if (!activeId) {
+            localStorage.setItem(key, sessionUserId);
+          } else if (activeId !== sessionUserId) {
+            window.location.reload();
+            return;
+          }
+          window.addEventListener('storage', function (e) {
+            if (e.key === key && e.newValue && e.newValue !== sessionUserId) {
+              window.location.reload();
+            }
+          });
+        } catch (err) {
+          // localStorage blocked or unavailable
+        }
+      })();
+    </script>
   <script src="js/modernizr.custom.js"></script>
 
   <!--webfonts-->
-  <link href="//fonts.googleapis.com/css?family=PT+Sans:400,400i,700,700i&amp;subset=cyrillic,cyrillic-ext,latin-ext"
+  <link href="//fonts.googleapis.com/cssfamily=PT+Sans:400,400i,700,700i&amp;subset=cyrillic,cyrillic-ext,latin-ext"
     rel="stylesheet">
   <!--//webfonts-->
 
@@ -206,13 +386,13 @@ $_SESSION['last_activity'] = time();
 
     .treeview li {
       background-color:
-        <?= $bg_menu ?>
+        <= $bg_menu >
         !important;
     }
 
     .treeview li a {
       color:
-        <?= $texto_submenu ?>
+        <= $texto_submenu >
         !important;
     }
   </style>
@@ -288,7 +468,7 @@ $_SESSION['last_activity'] = time();
       <!--left-fixed -navigation-->
       <aside class="sidebar-left">
         <nav class="navbar navbar-inverse"
-          style="overflow: scroll; height:100%; scrollbar-width: thin; background-color: <?php echo $bg_menu ?>;">
+          style="overflow: scroll; height:100%; scrollbar-width: thin; background-color: <?php echo $bg_menu >;"?>
           <div class="navbar-header">
             <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target=".collapse"
               aria-expanded="false">
@@ -304,7 +484,7 @@ $_SESSION['last_activity'] = time();
           <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
             <ul class="sidebar-menu">
 
-              <li class="treeview li-menu <?= empty($pagina) ? 'active' : '' ?>">
+              <li class="treeview li-menu <= empty($pagina) ? 'active' : '' >">
                 <a href="index.php">
                   <i class="fa fa-home"></i> <span class="text-menu">Home</span>
                 </a>
@@ -312,10 +492,10 @@ $_SESSION['last_activity'] = time();
 
 
               <li
-                class="treeview li-menu <?php echo $ocultar ?> <?= in_array($pagina, ['matriculas', 'matriculas_aprovadas']) ? 'active' : '' ?>">
+                class="treeview li-menu <?php echo $ocultar ?> <= in_array($pagina, ['matriculas', 'matriculas_aprovadas']) ? 'active' : '' >"
                 <a href="#">
                   <i class="fa fa-envelope-o"></i>
-                  <span class="text-menu">Matrículas</span>
+                  <span class="text-menu">MatrÃƒÂ­culas</span>
                   <i class="fa fa-angle-left pull-right"></i>
                 </a>
                 <ul class="treeview-menu ">
@@ -331,7 +511,7 @@ $_SESSION['last_activity'] = time();
               </li>
 
               <li
-                class="treeview li-menu <?= in_array($pagina, ['alunos', 'administradores', 'assessores', 'secretarios', 'parceiros', 'professores', 'vendedores', 'tutores', 'tesoureiros', 'usuarios']) ? 'active' : '' ?>">
+                class="treeview li-menu <= in_array($pagina, ['alunos', 'administradores', 'assessores', 'secretarios', 'parceiros', 'professores', 'vendedores', 'tutores', 'tesoureiros', 'usuarios']) ? 'active' : '' >">
                 <a href="#">
                   <i class="fa fa-users"></i>
                   <span class="text-menu">Pessoas</span>
@@ -341,48 +521,55 @@ $_SESSION['last_activity'] = time();
                   <li><a href="index.php?pagina=alunos"><i class="fa fa-angle-right "></i> Alunos</a>
                   </li>
 
-
-
                   <?php if ($nivel_usuario == 'Tutor') { ?>
                     <li><a href="index.php?pagina=atendimentos_alunos"><i class="fa fa-angle-right "></i>Outros Alunos</a>
                     </li>
                   <?php } ?>
+                  <?php if ($nivel_usuario == 'Secretario' || $nivel_usuario == 'Tesoureiro') { ?>
+                    <li><a href="index.php?pagina=atendimentos_novo"><i class="fa fa-angle-right "></i>Meus Alunos</a>
+                    </li>
+                  <?php } ?>
 
-                  <li class=" <?php echo $ocultar2 ?><?php echo $classe_f ?>"><a
+                  <!--<?php if ($nivel_usuario == 'Tutor') { >--?>
+                    <!--  <li><a href="index.php?pagina=atendimentos_alunos"><i class="fa fa-angle-right "></i>Outros Alunos</a>-->
+                    <!--  </li>-->
+                    <!--<?php } >--?>
+
+                  <li class="<?php echo $ocultar2 ><?php echo $classe_f ?>"<a
                       href="index.php?pagina=administradores"><i class="fa fa-angle-right"></i>
                       Administradores</a></li>
-                  <li class=" <?php echo $classe_f ?>"><a href="index.php?pagina=assessores"><i
+                  <li class="<?php echo $classe_f >?>"<a href="index.php?pagina=assessores"><i
                         class="fa fa-angle-right"></i>Assessores</a></li>
 
-                  <li class=" <?php echo $ocultar2 ?><?php echo $classe_f ?>"><a href="index.php?pagina=secretarios"><i
+                  <li class="<?php echo $ocultar2 ><?php echo $classe_f ?>"<a href=?>"index.php?pagina=secretarios"><i
                         class="fa fa-angle-right"></i>
                       Secretarios</a></li>
 
-                  <li class=" <?php echo $classe_f ?>"><a href="index.php?pagina=parceiros"><i
+                  <li class="<?php echo $classe_f >?>"<a href="index.php?pagina=parceiros"><i
                         class="fa fa-angle-right"></i>Parceiros</a></li>
 
-                  <li class=" <?php echo $classe_f ?>"><a href="index.php?pagina=professores"><i
+                  <li class="<?php echo $classe_f >?>"<a href="index.php?pagina=professores"><i
                         class="fa fa-angle-right "></i>Professores</a></li>
 
-                  <li class=" <?php echo $classe_f ?>"><a href="index.php?pagina=vendedores"><i
+                  <li class="<?php echo $classe_f >?>"<a href="index.php?pagina=vendedores"><i
                         class="fa fa-angle-right "></i>Vendedores</a></li>
 
-                  <li class=" <?php echo $classe_f ?>"><a href="index.php?pagina=tutores"><i
+                  <li class="<?php echo $classe_f >?>"<a href="index.php?pagina=tutores"><i
                         class="fa fa-angle-right"></i>Tutores</a></li>
 
-                  <li class=" <?php echo $ocultar2 ?><?php echo $classe_f ?>"><a href="index.php?pagina=tesoureiros"><i
+                  <li class="<?php echo $ocultar2 ><?php echo $classe_f ?>"<a href=?>"index.php?pagina=tesoureiros"><i
                         class="fa fa-angle-right"></i>
                       Tesoureiros</a></li>
 
-                  <li class=" <?php echo $ocultar2 ?><?php echo $classe_f ?>"><a href="index.php?pagina=usuarios"><i
+                  <li class="<?php echo $ocultar2 ><?php echo $classe_f ?>"<a href=?>"index.php?pagina=usuarios"><i
                         class="fa fa-angle-right"></i>
-                      Usuários</a></li>
+                      Usu?rios</a></li>
                 </ul>
               </li>
 
 
               <li
-                class="treeview li-menu <?php echo $ocultar2 ?><?php echo $classe_f ?> <?= in_array($pagina, ['cursos', 'categorias', 'grupos', 'linguagens', 'pacotes']) ? 'active' : '' ?>">
+                class="treeview li-menu <?php echo $ocultar2 ?><?php echo $classe_f ?> <= in_array($pagina, ['cursos', 'categorias', 'grupos', 'linguagens', 'pacotes']) ? 'active' : '' >"
                 <a href="#">
                   <i class="fa fa-book"></i>
                   <span class="text-menu">Cursos / Pacotes</span>
@@ -392,11 +579,11 @@ $_SESSION['last_activity'] = time();
                   <li><a href="index.php?pagina=cursos"><i class="fa fa-angle-right"></i> Cursos</a>
                   </li>
 
-                  <li class="<?php echo $ocultar ?>"><a href="index.php?pagina=categorias"><i
+                  <li class="<?php echo $ocultar >?>"<a href="index.php?pagina=categorias"><i
                         class="fa fa-angle-right"></i> Categorias</a></li>
-                  <li class="<?php echo $ocultar ?>"><a href="index.php?pagina=grupos"><i class="fa fa-angle-right"></i>
+                  <li class="<?php echo $ocultar >?>"<a href="index.php?pagina=grupos"><i class="fa fa-angle-right"></i>
                       Grupos</a></li>
-                  <li class="<?php echo $ocultar ?>"><a href="index.php?pagina=linguagens"><i
+                  <li class="<?php echo $ocultar >?>"<a href="index.php?pagina=linguagens"><i
                         class="fa fa-angle-right"></i> Linguagens</a></li>
                   <li><a href="index.php?pagina=pacotes"><i class="fa fa-angle-right"></i> Pacotes</a>
                   </li>
@@ -406,14 +593,14 @@ $_SESSION['last_activity'] = time();
                 </ul>
               </li>
 
-               <li class="treeview <?php echo $ocultar ?>">
+              <li class="treeview <?php echo $ocultar >"
                 <a href="index.php?pagina=cupons">
                   <i class="fa fa-money"></i> <span class="text-menu">Cupom de Desconto</span>
                 </a>
               </li>
 
 
-              <li class="treeview li-menu <?php echo $ocultar ?> <?php echo $ocultar2 ?>">
+              <li class="treeview li-menu <?php echo $ocultar > <?php echo $ocultar2 ?>"
                 <a href="#">
                   <i class="fa fa-cog"></i>
                   <span class="text-menu">Recursos / Ferramentas</span>
@@ -443,7 +630,7 @@ $_SESSION['last_activity'] = time();
 
 
 
-              <li class="treeview li-menu <?php echo $ocultar ?> <?php echo $ocultar2 ?>">
+              <li class="treeview li-menu <?php echo $ocultar > <?php echo $ocultar2 ?>"
                 <a href="#">
                   <i class="fa fa-usd"></i>
                   <span class="text-menu">Financeiro</span>
@@ -453,28 +640,43 @@ $_SESSION['last_activity'] = time();
                   <li><a href="index.php?pagina=vendas"><i class="fa fa-angle-right"></i> Vendas</a>
                   </li>
 
-                  <li><a href="index.php?pagina=pagar"><i class="fa fa-angle-right"></i> Contas à
+                  <li><a href="index.php?pagina=pagar"><i class="fa fa-angle-right"></i> Contas a
                       Pagar</a></li>
 
-                  <li><a href="index.php?pagina=receber"><i class="fa fa-angle-right"></i> Contas à
+                  <li><a href="index.php?pagina=receber"><i class="fa fa-angle-right"></i> Contas a
                       Receber</a></li>
 
                   <li><a href="index.php?pagina=movimentacoes"><i class="fa fa-angle-right"></i>
-                      Movimentações</a></li>
+                      MovimentaÃƒÂ§ÃƒÂµes</a></li>
 
 
                   <li><a href="index.php?pagina=asaas_comissoes"><i class="fa fa-angle-right"></i>
-                      Comissões</a></li>
-
+                      ComissÃƒÂµes</a></li>
 
                 </ul>
               </li>
 
 
-              <li class="treeview li-menu <?php echo $ocultar ?> <?php echo $ocultar2 ?>">
+                            <?php if ($mostrar_relatorios_responsavel) { ?>
+                <li class="treeview li-menu <= in_array($pagina, ['relatorio_alunos_responsavel', 'relatorio_financeiro_aluno']) ? 'active' : '' >">
+                  <a href="#">
+                    <i class="fa fa-file-text-o"></i>
+                    <span class="text-menu">Relatorios</span>
+                    <i class="fa fa-angle-left pull-right"></i>
+                  </a>
+                  <ul class="treeview-menu">
+                    <li><a href="index.php?pagina=relatorio_alunos_responsavel"><i class="fa fa-angle-right"></i>
+                        Relatorio de Alunos por Responsavel</a></li>
+                    <li><a href="index.php?pagina=relatorio_financeiro_aluno"><i class="fa fa-angle-right"></i>
+                        Relatorio Financeiro de Aluno</a></li>
+                  </ul>
+                </li>
+              <?php } ?>
+
+<li class="treeview li-menu <?php echo $ocultar > <?php echo $ocultar2 ?>"
                 <a href="#">
                   <i class="fa fa-file-pdf-o"></i>
-                  <span class="text-menu">Relatórios Financeiros</span>
+                  <span class="text-menu">RelatÃƒÂ³rios Financeiros</span>
                   <i class="fa fa-angle-left pull-right"></i>
                 </a>
                 <ul class="treeview-menu">
@@ -487,8 +689,16 @@ $_SESSION['last_activity'] = time();
                   <li><a href="#" data-toggle="modal" data-target="#RelLucro"><i class="fa fa-angle-right"></i>
                       Detalhamento de Lucro</a></li>
 
-                  <li><a href="#" data-toggle="modal" data-target="#RelComissoes"><i class="fa fa-angle-right"></i>
-                      Comissões</a></li>
+                  <li><a href="index.php?pagina=relatorio_comissoes"><i class="fa fa-angle-right"></i> Comissoes</a></li>
+                      
+                  <li><a href="index.php?pagina=relatorio_alunos"><i class="fa fa-angle-right"></i>
+                  RelatÃƒÂ³rios de Alunos</a></li>
+                  
+                  <li><a href="index.php?pagina=relatorio_alunos_responsavel"><i class="fa fa-angle-right"></i>
+                  Relatorio de Alunos por Responsavel</a></li>
+
+                   <li><a href="index.php?pagina=relatorio_alunos_efi"><i class="fa fa-angle-right"></i>
+                RelatÃƒÂ³rio de Alunos EFI</a></li>
 
 
                 </ul>
@@ -496,29 +706,47 @@ $_SESSION['last_activity'] = time();
 
 
 
-              <li class="treeview li-menu <?php echo $ocultar2 ?> <?php echo $classe_f ?>">
+              <li class="treeview li-menu <?php echo $ocultar2 > <?php echo $classe_f ?>"
                 <a href="index.php?pagina=perguntas">
                   <i class="fa fa-question"></i> <span class="text-menu">Perguntas Pendentes</span>
                 </a>
               </li>
+              
+               <li class="treeview li-menu <?php echo $classe_f >"
 
+                <a href="index.php?pagina=certificados">
+
+                  <i class="fa fa-graduation-cap"></i> <span class="text-menu">Certificados</span>
+
+                </a>
+
+              </li>
+
+
+              <?php if ($nivel_usuario == 'Vendedor' || $nivel_usuario == 'Tutor' || $nivel_usuario == 'Parceiro') { ?>
+                <li class="treeview <= $pagina === 'simulado' ? 'active' : '' >">
+                  <a href="index.php?pagina=simulado">
+                    <i class="fa fa-calculator"></i> <span class="text-menu">Simulado</span>
+                  </a>
+                </li>
+              <?php } ?>
 
               <?php if ($nivel_usuario == 'Professor' || $nivel_usuario == 'Tutor' || $nivel_usuario == 'Parceiro' || $nivel_usuario == 'Assessor' || $nivel_usuario == 'Vendedor') { ?>
                 <li class="treeview">
                   <a href="index.php?pagina=minhas_comissoes">
-                    <i class="fa fa-usd"></i> <span class="text-menu">Minhas Comissões</span>
+                    <i class="fa fa-usd"></i> <span class="text-menu">Minhas ComissÃƒÂµes</span>
                   </a>
                 </li>
               <?php } ?>
 
 
-              <li class="treeview li-menu <?php echo $ocultar ?> <?php echo $ocultar2 ?>">
+              <li class="treeview li-menu <?php echo $ocultar > <?php echo $ocultar2 ?>"
                 <a href="backup/backup.php" target="_blank">
                   <i class="fa fa-database"></i> <span class="text-menu">Backup</span>
                 </a>
               </li>
 
-              <li class="treeview li-menu <?php echo $ocultar ?> <?php echo $ocultar2 ?>">
+              <li class="treeview li-menu <?php echo $ocultar > <?php echo $ocultar2 ?>"
                 <a href="index.php?pagina=gateway">
                   <i class="fa fa-money"></i> <span class="text-menu">Gateway</span>
                 </a>
@@ -543,11 +771,9 @@ $_SESSION['last_activity'] = time();
     <!-- header-starts -->
     <div class="sticky-header header-section">
 
-      <div class="header-left">
-
-        <?php
+      <div class="header-left"<?php
         $total_respondidas = 0;
-        //listar notificações das perguntas que os cursos pertencem ao professor
+        //listar notificaÃƒÂ§ÃƒÂµes das perguntas que os cursos pertencem ao professor
         $query = $pdo->query("SELECT * FROM perguntas where respondida != 'Sim'");
         $res = $query->fetchAll(PDO::FETCH_ASSOC);
         for ($i = 0; $i < @count($res); $i++) {
@@ -576,7 +802,7 @@ $_SESSION['last_activity'] = time();
 
 
 
-        ?>
+?>
 
         <div class="openCloseMenu" id="newToggleMenu">
 
@@ -587,7 +813,7 @@ $_SESSION['last_activity'] = time();
               <li class="dropdown head-dpdn">
                 <a title="Perguntas Pendentes" href="index.php?pagina=perguntas" class="dropdown-toggle"><i
                     class="fa fa-bell"></i><span
-                    class="badge <?php echo $classe_badge ?>"><?php echo $total_respondidas ?></span></a>
+                    class="badge <?php echo $classe_badge ?>"<?php echo $total_respondidas ?></span></a>
 
               </li>
 
@@ -610,7 +836,7 @@ $_SESSION['last_activity'] = time();
 
               <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
                 <div class="profile_img">
-                  <span class="prfil-img"><img src="img/perfil/<?php echo $foto_usuario ?>" alt="" width="50px"
+                  <span class="prfil-img"><img src="img/perfil/<?php echo $foto_usuario >" alt="" width="50px"
                       height="50px"> </span>
                   <div class="user-name">
                     <p><?php echo $nome_usuario ?></p>
@@ -630,11 +856,21 @@ $_SESSION['last_activity'] = time();
                   </a>
                 </li>
 
+                <?php if ($mostrarEntrarComoAluno)  : ?>
+                <li>
+                  <form method="POST" action="entrar-como-aluno.php" style="margin:0;">
+                    <button type="submit" class="btn btn-link" style="display:block;width:100%;text-align:left;padding:8px 20px;">
+                      <i class="fa fa-exchange"></i> Entrar como aluno
+                    </button>
+                  </form>
+                </li>
+                <?php endif; ?>
 
 
-                <li class="treeview li-menu <?php echo $ocultar2 ?> <?php echo $classe_f ?>">
+
+                <li class="treeview li-menu <?php echo $ocultar2 > <?php echo $classe_f ?>"
                   <a href="" data-toggle="modal" data-target="#modalConfig">
-                    <i class="fa fa-cog"></i> Configurações</a>
+                    <i class="fa fa-cog"></i> ConfiguraÃƒÂ§ÃƒÂµes</a>
                 </li>
 
                 <li> <a href="../logout.php"><i class="fa fa-sign-out"></i> Logout</a> </li>
@@ -654,10 +890,9 @@ $_SESSION['last_activity'] = time();
 
     <!-- main content start-->
     <div id="page-wrapper">
-      <div class="main-page">
-        <?php
+      <div class="main-page"<?php
         require_once('paginas/' . $menu . '.php');
-        ?>
+?>
 
       </div>
     </div>
@@ -748,13 +983,13 @@ $_SESSION['last_activity'] = time();
             <div class="col-md-6">
               <div class="form-group">
                 <label>Nome Completo</label>
-                <input type="text" class="form-control" name="nome_usu" value="<?php echo $nome_usuario ?>" required>
+                <input type="text" class="form-control" name="nome_usu" value="<?php echo $nome_usuario >?>" required?>
               </div>
             </div>
             <div class="col-md-6">
               <div class="form-group">
                 <label>CPF</label>
-                <input type="text" class="form-control" id="cpf_usu" name="cpf_usu" value="<?php echo $cpf_usuario ?>"
+                <input type="text" class="form-control" id="cpf_usu" name="cpf_usu" value="<?php echo $cpf_usuario >?>"
                   required>
               </div>
             </div>
@@ -766,14 +1001,7 @@ $_SESSION['last_activity'] = time();
             <div class="col-md-6">
               <div class="form-group">
                 <label>Email</label>
-                <input type="email" class="form-control" name="email_usu" value="<?php echo $email_usuario ?>" required>
-              </div>
-            </div>
-            <div class="col-md-6">
-              <div class="form-group">
-                <label>Senha</label>
-                <input type="password" class="form-control" name="senha_usu" value="<?php echo $senha_usuario ?>"
-                  required>
+                <input type="email" class="form-control" name="email_usu" value="<?php echo $email_usuario >?>" required?>
               </div>
             </div>
 
@@ -789,14 +1017,14 @@ $_SESSION['last_activity'] = time();
             </div>
             <div class="col-md-4">
               <div id="divImg">
-                <img src="img/perfil/<?php echo $foto_usuario ?>" width="100px" id="target-usu">
+                <img src="img/perfil/<?php echo $foto_usuario >" width="100px" id="target-usu"?>
               </div>
             </div>
 
           </div>
 
-          <input type="hidden" name="id_usu" value="<?php echo $id_usuario ?>">
-          <input type="hidden" name="foto_usu" value="<?php echo $foto_usuario ?>">
+          <input type="hidden" name="id_usu" value="<?php echo $id_usuario >?>"
+          <input type="hidden" name="foto_usu" value="<?php echo $foto_usuario >?>"
 
           <small>
             <div id="mensagem-usu" align="center" class="mt-3"></div>
@@ -832,13 +1060,13 @@ $_SESSION['last_activity'] = time();
             <div class="col-md-6">
               <div class="form-group">
                 <label>Nome Completo</label>
-                <input type="text" class="form-control" name="nome_usu" value="<?php echo $nome_usuario ?>" required>
+                <input type="text" class="form-control" name="nome_usu" value="<?php echo $nome_usuario >?>" required?>
               </div>
             </div>
             <div class="col-md-6">
               <div class="form-group">
                 <label>CPF</label>
-                <input type="text" class="form-control" id="cpf_usu" name="cpf_usu" value="<?php echo $cpf_usuario ?>"
+                <input type="text" class="form-control" id="cpf_usu" name="cpf_usu" value="<?php echo $cpf_usuario >?>"
                   required>
               </div>
             </div>
@@ -850,13 +1078,11 @@ $_SESSION['last_activity'] = time();
             <div class="col-md-6">
               <div class="form-group">
                 <label>Email</label>
-                <input type="email" class="form-control" name="email_usu" value="<?php echo $email_usuario ?>" required>
+                <input type="email" class="form-control" name="email_usu" value="<?php echo $email_usuario >?>" required?>
               </div>
             </div>
             <div class="col-md-6">
               <div class="form-group">
-                <label>Senha</label>
-                <input type="password" class="form-control" name="senha_usu" value="<?php echo $senha_usuario ?>"
                   required>
               </div>
             </div>
@@ -873,14 +1099,14 @@ $_SESSION['last_activity'] = time();
             </div>
             <div class="col-md-4">
               <div id="divImg">
-                <img src="img/perfil/<?php echo $foto_usuario ?>" width="100px" id="target-usu">
+                <img src="img/perfil/<?php echo $foto_usuario >" width="100px" id="target-usu"?>
               </div>
             </div>
 
           </div>
 
-          <input type="hidden" name="id_usu" value="<?php echo $id_usuario ?>">
-          <input type="hidden" name="foto_usu" value="<?php echo $foto_usuario ?>">
+          <input type="hidden" name="id_usu" value="<?php echo $id_usuario >?>"
+          <input type="hidden" name="foto_usu" value="<?php echo $foto_usuario >?>"
 
           <small>
             <div id="mensagem-usu" align="center" class="mt-3"></div>
@@ -924,7 +1150,7 @@ $_SESSION['last_activity'] = time();
 
             <div class="col-md-6">
               <div class="form-group">
-                <label for="codigo_cor">Código da Cor</label>
+                <label for="codigo_cor">C?digo da Cor</label>
                 <div class="color-input-group">
                   <input type="text" class="form-control" name="codigo_cor" id="codigo_cor" placeholder="#FF5733"
                     required>
@@ -970,29 +1196,28 @@ $_SESSION['last_activity'] = time();
       <form method="post" id="form-cores">
         <div class="modal-body">
           <div id="cores-container">
-            <div id="campos-cores">
-              <?php foreach ($cores as $index => $cor): ?>
+            <div id="campos-cores"<?php foreach ($cores as $index => $cor)  : ?>
                 <div class="row mb-3 cor-item">
                   <div class="col-md-6">
                     <div class="form-group">
-                      <label><?= htmlspecialchars($cor['nome_item']) ?></label>
+                      <label><= htmlspecialchars($cor['nome_item']) ></label>
                       <input type="text" class="form-control" name="nome_classe[]"
-                        value="<?= htmlspecialchars($cor['nome_classe']) ?>" required>
+                        value="<= htmlspecialchars($cor['nome_classe']) >" required>
                     </div>
                   </div>
 
                   <div class="col-md-6">
                     <div class="form-group">
-                      <label>Código da Cor</label>
+                      <label>CÃƒÂ³digo da Cor</label>
                       <div class="color-input-group d-flex align-items-center gap-2">
                         <input type="text" class="form-control" name="valor_cor[]"
-                          value="<?= htmlspecialchars($cor['valor_cor']) ?>" required>
-                        <input type="color" class="color-picker" value="<?= htmlspecialchars($cor['valor_cor']) ?>"
+                          value="<= htmlspecialchars($cor['valor_cor']) >" required>
+                        <input type="color" class="color-picker" value="<= htmlspecialchars($cor['valor_cor']) >"
                           onchange="this.previousElementSibling.value = this.value">
                       </div>
                     </div>
                   </div>
-                  <input type="hidden" name="id_cor[]" value="<?= $cor['id'] ?>">
+                  <input type="hidden" name="id_cor[]" value="<= $cor['id'] >">
                   <input type="hidden" name="id_cor[]" value="">
 
                   <!-- <div class="col-md-2 d-flex align-items-end">
@@ -1032,38 +1257,40 @@ $_SESSION['last_activity'] = time();
 
 <div class="modal fade" id="modalConfig" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
   aria-hidden="true">
-  <div class="modal-dialog modal-lg" role="document">
+  <div class="modal-dialog modal-lg" role="document" style="width:95%; max-width:1280px;">
     <div class="modal-content">
       <div class="modal-header btn-primary text-white">
-        <h4 class="modal-title" id="exampleModalLabel">Editar Configurações</h4>
+        <h4 class="modal-title" id="exampleModalLabel">Editar ConfiguraÃƒÂ§ÃƒÂµes</h4>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"
-          style="color: white;  margin-top: -20px;">
+          style="color: white; ? margin-top : -20px;">
           <span style="font-size: x-large;" aria-hidden="true">&times;</span>
         </button>
       </div>
-      <form method="post" id="form-config">
-        <div class="modal-body">
+      <form method="post" id="form-config" action="editar-config.php" enctype="multipart/form-data">
+        <input type="hidden" name="sistema_id_alvo" value="<?php echo (int) $sistema_id_atual; >?>"
+        <input type="hidden" name="sistema_slug_alvo" value="<?php echo htmlspecialchars((string)$sistema_slug_atual, ENT_QUOTES, 'UTF-8'); >?>"
+        <div class="modal-body" style="max-height:72vh; overflow-y:auto;">
           <!-- Nav tabs -->
           <ul class="nav nav-tabs" id="configTabs" role="tablist">
             <li class="nav-item">
               <a class="nav-link active" id="config-tab" data-toggle="tab" href="#config" role="tab"
-                aria-controls="config" aria-selected="true">Configurações</a>
+                aria-controls="config" aria-selected="true">ConfiguraÃƒÂ§ÃƒÂµes</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link active" id="basic-tab" data-toggle="tab" href="#basic" role="tab" aria-controls="basic"
-                aria-selected="false">🛠 Dados Básicos</a>
+              <a class="nav-link" id="basic-tab" data-toggle="tab" href="#basic" role="tab" aria-controls="basic"
+                aria-selected="false">Dados BÃƒÂ¡sicos</a>
             </li>
             <li class="nav-item">
               <a class="nav-link" id="numeric-tab" data-toggle="tab" href="#numeric" role="tab" aria-controls="numeric"
-                aria-selected="false">📈 Valores e Porcentagens</a>
+                aria-selected="false">Valores e Porcentagens</a>
             </li>
             <li class="nav-item">
               <a class="nav-link" id="uploads-tab" data-toggle="tab" href="#uploads" role="tab" aria-controls="uploads"
-                aria-selected="false">📤 Uploads</a>
+                aria-selected="false">Uploads</a>
             </li>
             <li class="nav-item">
               <a class="nav-link" id="security-tab" data-toggle="tab" href="#security" role="tab"
-                aria-controls="security" aria-selected="false">🔒 Segurança</a>
+                aria-controls="security" aria-selected="false">SeguranÃƒÂ§a</a>
             </li>
             <li class="nav-item">
 
@@ -1075,109 +1302,203 @@ $_SESSION['last_activity'] = time();
           <!-- Tab panes -->
           <div class="tab-content p-3 border-left border-right border-bottom mb-3">
 
+
+
             <!-- Tab 4: Security -->
             <div class="tab-pane fade" id="security" role="tabpanel" aria-labelledby="security-tab">
-
-
-
               <div class="card-body">
-                <div class="row">
-                  <div class="col-md-6">
-                    <div class="card mb-4">
-                      <div class="card-header bg-light">
-                        <div style="display: flex; flex-direction: row; align-items: center; gap: 6px;">
-                          <img src="https://sejaefi.com.br/images/favicon/apple-touch-icon.png" width="30px" />
-                          <h3>EFI Pagamentos</h3>
+                  
+                  <div class="row">
+                    <div class="col-md-6">
+                      <div class="card mb-4">
+                        <div class="card-header bg-light">
+                          <div style="display: flex; flex-direction: row; align-items: center; gap: 6px;">
+                            <img src="https://sejaefi.com.br/favicon.ico" width="20px" />
+                            <h3>EFI (Gerencianet)</h3>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div id="efy-security-form" style="margin-top: 22px; padding: 22px; width: 100%;">
+                      <input type="hidden" name="efi_client_id_prod" id="efi_client_id_prod" value="<?php echo htmlspecialchars($efi_client_id_prod_env, ENT_QUOTES, 'UTF-8'); >?>"
+                      <input type="hidden" name="efi_client_secret_prod" id="efi_client_secret_prod" value="<?php echo htmlspecialchars($efi_client_secret_prod_env, ENT_QUOTES, 'UTF-8'); >?>"
+                      <input type="hidden" name="efi_webhook_url_prod" id="efi_webhook_url_prod" value="<?php echo htmlspecialchars($efi_webhook_url_prod_env, ENT_QUOTES, 'UTF-8'); >?>"
+                      <input type="hidden" name="efi_webhook_path_prod" id="efi_webhook_path_prod" value="<?php echo htmlspecialchars($efi_webhook_path_prod_env, ENT_QUOTES, 'UTF-8'); >?>"
+                      <input type="hidden" name="efi_client_id_homolog" id="efi_client_id_homolog" value="<?php echo htmlspecialchars($efi_client_id_homolog_env, ENT_QUOTES, 'UTF-8'); >?>"
+                      <input type="hidden" name="efi_client_secret_homolog" id="efi_client_secret_homolog" value="<?php echo htmlspecialchars($efi_client_secret_homolog_env, ENT_QUOTES, 'UTF-8'); >?>"
+                      <input type="hidden" name="efi_webhook_url_homolog" id="efi_webhook_url_homolog" value="<?php echo htmlspecialchars($efi_webhook_url_homolog_env, ENT_QUOTES, 'UTF-8'); >?>"
+                      <input type="hidden" name="efi_webhook_path_homolog" id="efi_webhook_path_homolog" value="<?php echo htmlspecialchars($efi_webhook_path_homolog_env, ENT_QUOTES, 'UTF-8'); >?>"
+                      <input type="hidden" name="efi_webhook_base_url" value="<?php echo htmlspecialchars($efi_webhook_base_env, ENT_QUOTES, 'UTF-8'); >?>"
+
+                      <div class="row">
+                        <div class="col-md-3">
+                          <div class="form-group">
+                            <label>Ambiente ativo</label>
+                            <select class="form-control" id="efi_sandbox" name="efi_sandbox">
+                              <option value="false" <?php if ($efi_sandbox_env === 'false') { > selected <?php } >>ProduÃƒÂ§ÃƒÂ£o</option>
+                              <option value="true" <?php if ($efi_sandbox_env === 'true') { > selected <?php } >>HomologaÃƒÂ§ÃƒÂ£o</option>
+                            </select>
+                          </div>
+                        </div>
+                        <div class="col-md-4">
+                          <div class="form-group">
+                            <label>Client ID (ambiente selecionado)</label>
+                            <input type="text" class="form-control" id="efi_client_id_selected" name="efi_client_id_selected">
+                          </div>
+                        </div>
+                        <div class="col-md-5">
+                          <div class="form-group">
+                            <label>Client Secret (ambiente selecionado)</label>
+                            <input type="text" class="form-control" id="efi_client_secret_selected" name="efi_client_secret_selected">
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="row">
+                        <div class="col-md-6">
+                          <div class="form-group">
+                            <label>Webhook URL (ambiente selecionado)</label>
+                            <input type="text" class="form-control" id="efi_webhook_url_selected" name="efi_webhook_url_selected">
+                            <small>Use URL publica (http/https). Em localhost, deixe em branco e use o Webhook Path.</small>
+                          </div>
+                        </div>
+                        <div class="col-md-6">
+                          <div class="form-group">
+                            <label>Webhook Path interno (ambiente selecionado)</label>
+                            <input type="text" class="form-control" id="efi_webhook_path_selected" name="efi_webhook_path_selected">
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="row">
+                        <div class="col-md-12">
+                          <div class="alert alert-info" style="margin-bottom:10px;">
+                            Certificado do ambiente selecionado: <strong id="cert-atual-label"></strong>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="row">
+                        <div class="col-md-6">
+                          <div class="form-group">
+                            <label>Certificado HomologaÃƒÂ§ÃƒÂ£o (.p12)</label>
+                            <input type="file" class="form-control" name="cert_p12_sandbox" accept=".p12">
+                            <small>Certificado atual: <strong><?php echo htmlspecialchars(($efi_cert_name_homolog_env !== ''  $efi_cert_name_homolog_env : ($efi_cert_path_homolog_env ? basename((string)$efi_cert_path_homolog_env) : 'nenhum')), ENT_QUOTES, 'UTF-8'); ?></strong></small>
+                          </div>
+                        </div>
+                        <div class="col-md-6">
+                          <div class="form-group">
+                            <label>Certificado ProduÃƒÂ§ÃƒÂ£o (.p12)</label>
+                            <input type="file" class="form-control" name="cert_p12_producao" accept=".p12">
+                            <small>Certificado atual: <strong><?php echo htmlspecialchars(($efi_cert_name_prod_env !== ''  $efi_cert_name_prod_env : ($efi_cert_path_prod_env ? basename((string)$efi_cert_path_prod_env) : 'nenhum')), ENT_QUOTES, 'UTF-8'); ?></strong></small>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="row">
+                        <div class="col-md-6">
+                          <div class="form-group">
+                            <label>Senha .p12 HomologaÃƒÂ§ÃƒÂ£o</label>
+                            <input type="text" class="form-control" name="cert_password_sandbox">
+                          </div>
+                        </div>
+                        <div class="col-md-6">
+                          <div class="form-group">
+                            <label>Senha .p12 ProduÃƒÂ§ÃƒÂ£o</label>
+                            <input type="text" class="form-control" name="cert_password_producao">
+                          </div>
                         </div>
                       </div>
                     </div>
                   </div>
-
-                  <div style="margin-top: 22px; padding: 22px;">
-                    <div class="col-md-12">
-                      <div class="form-group">
-                        <label>MODO DE PAGAMENTO | PRODUÇÃO / HOMOLOGAÇÃO</label>
-                        <select class="form-control" id="efi_sandbox" name="efi_sandbox">
-                          <option value="1" <?php if ($efi_sandbox == 1)
-                            echo 'selected'; ?>>PRODUÇÃO</option>
-                          <option value="0" <?php if ($efi_sandbox == 0)
-                            echo 'selected'; ?>>HOMOLOGAÇÃO</option>
-                        </select>
-                      </div>
-                    </div>
-                  </div>
-
-                  <!-- Campos PROD -->
-                  <div id="prod_fields"
-                    style="margin-top: 22px; padding: 22px; display: <?php echo $efi_sandbox == 1 ? 'block' : 'none'; ?>;">
-                    <div class="col-md-12">
-                      <div class="form-group">
-                        <label>EFI CLIENTE_ID PROD</label>
-                        <input style="margin-top: 6px;" type="text" class="form-control" id="efi_client_id_prod"
-                          name="efi_client_id_prod" value="<?php echo $efi_client_id_prod ?>"
-                          placeholder="Client_Id_XXXXXXXXXXXXXXX">
-                      </div>
-                    </div>
-
-                    <div class="col-md-12">
-                      <div class="form-group">
-                        <label>EFI CLIENTE_SECRET PROD</label>
-                        <input style="margin-top: 6px;" type="text" class="form-control" id="efi_client_secret_prod"
-                          name="efi_client_secret_prod" value="<?php echo $efi_client_secret_prod ?>"
-                          placeholder="Client_Secret_XXXXXXXXXXXXXXX">
-                      </div>
-                    </div>
-                  </div>
-
-                  <!-- Campos HOMO -->
-                  <div id="homo_fields"
-                    style="margin-top: 22px; padding: 22px; display: <?php echo $efi_sandbox == 0 ? 'block' : 'none'; ?>;">
-                    <div class="col-md-12">
-                      <div class="form-group">
-                        <label>EFI CLIENTE_ID HOMO</label>
-                        <input style="margin-top: 6px;" type="text" class="form-control" id="efi_client_id_homo"
-                          name="efi_client_id_homo" value="<?php echo $efi_client_id_homo ?>"
-                          placeholder="Client_Id_XXXXXXXXXXXXXXX">
-                      </div>
-                    </div>
-
-                    <div class="col-md-12">
-                      <div class="form-group">
-                        <label>EFI CLIENTE_SECRET HOMO</label>
-                        <input style="margin-top: 6px;" type="text" class="form-control" id="efi_client_secret_homo"
-                          name="efi_client_secret_homo" value="<?php echo $efi_client_secret_homo ?>"
-                          placeholder="Client_Secret_XXXXXXXXXXXXXXX">
-                      </div>
-                    </div>
-                  </div>
-
-                  <div style="margin-top: 22px; padding: 22px;">
-                    <div class="col-md-12">
-                      <div class="form-group">
-                        <label>EFI NOTIFICATION_URL</label>
-                        <input style="margin-top: 6px;" type="text" class="form-control" id="efi_notification_url"
-                          name="efi_notification_url" value="<?php echo $efi_notification_url ?>"
-                          placeholder="https://example.com/webhook_url.php">
-                      </div>
-                    </div>
-
-                    <div class="col-md-12">
-                      <div class="form-group">
-                        <label>EFI PIX_KEY</label>
-                        <input style="margin-top: 6px;" type="text" class="form-control" id="efi_pix_key"
-                          name="efi_pix_key" value="<?php echo $efi_pix_key ?>" placeholder="XXXXXXXXXXXXXXX">
-                      </div>
-                    </div>
-                  </div>
-
-
                 </div>
-
 
               </div>
             </div>
 
             <!-- Tab 3: Uploads -->
+            <script>
+              (function () {
+                var root = document.getElementById('efy-security-form');
+                if (!root) return;
+                var ambienteSel = document.getElementById('efi_sandbox');
+                var clientIdInput = document.getElementById('efi_client_id_selected');
+                var clientSecretInput = document.getElementById('efi_client_secret_selected');
+                var webhookUrlInput = document.getElementById('efi_webhook_url_selected');
+                var webhookPathInput = document.getElementById('efi_webhook_path_selected');
+                var certLabel = document.getElementById('cert-atual-label');
+
+                var envData = <?php echo json_encode(['prod' => ['client_id' =?> (string)($efi_client_id_prod_env ?? ''), 'client_secret' => (string)($efi_client_secret_prod_env ?? ''), 'webhook_url' => (string)($efi_webhook_url_prod_env ?? ''), 'webhook_path' => (string)($efi_webhook_path_prod_env ?? ''), 'cert_name' => ($efi_cert_path_prod_env ? basename((string)$efi_cert_path_prod_env) : 'nenhum'),
+                  ], 'homolog' => ['client_id' => (string)($efi_client_id_homolog_env ?? ''), 'client_secret' => (string)($efi_client_secret_homolog_env ?? ''), 'webhook_url' => (string)($efi_webhook_url_homolog_env ?? ''), 'webhook_path' => (string)($efi_webhook_path_homolog_env ?? ''), 'cert_name' => ($efi_cert_path_homolog_env ? basename((string)$efi_cert_path_homolog_env) : 'nenhum'),
+                  ],
+                ], JSON_UNESCAPED_UNICODE); >;
+
+                function currentEnvKey() {
+                  return ambienteSel && ambienteSel.value === 'true' ? 'homolog' : 'prod';
+                }
+
+                var lastEnvKey = currentEnvKey();
+
+                function persistCurrent(key) {
+                  var targetKey = key || currentEnvKey();
+                  if (!envData[targetKey]) envData[targetKey] = {};
+                  envData[targetKey].client_id = clientIdInput.value || '';
+                  envData[targetKey].client_secret = clientSecretInput.value || '';
+                  envData[targetKey].webhook_url = webhookUrlInput.value || '';
+                  envData[targetKey].webhook_path = webhookPathInput.value || '';
+                }
+
+                function applyEnv(key) {
+                  var env = envData[key] || {};
+                  clientIdInput.value = env.client_id || '';
+                  clientSecretInput.value = env.client_secret || '';
+                  webhookUrlInput.value = env.webhook_url || '';
+                  webhookPathInput.value = env.webhook_path || '';
+                }
+
+                function syncHidden() {
+                  var prod = envData.prod || {};
+                  var homolog = envData.homolog || {};
+                  document.getElementById('efi_client_id_prod').value = prod.client_id || '';
+                  document.getElementById('efi_client_secret_prod').value = prod.client_secret || '';
+                  document.getElementById('efi_webhook_url_prod').value = prod.webhook_url || '';
+                  document.getElementById('efi_webhook_path_prod').value = prod.webhook_path || '';
+                  document.getElementById('efi_client_id_homolog').value = homolog.client_id || '';
+                  document.getElementById('efi_client_secret_homolog').value = homolog.client_secret || '';
+                  document.getElementById('efi_webhook_url_homolog').value = homolog.webhook_url || '';
+                  document.getElementById('efi_webhook_path_homolog').value = homolog.webhook_path || '';
+                }
+
+                if (ambienteSel) {
+                  ambienteSel.addEventListener('change', function () {
+                    persistCurrent(lastEnvKey);
+                    applyEnv(currentEnvKey());
+                    lastEnvKey = currentEnvKey();
+                  });
+                }
+
+                var form = document.getElementById('form-config');
+                if (form) {
+                  form.addEventListener('submit', function () {
+                    persistCurrent(lastEnvKey);
+                    syncHidden();
+                  });
+                }
+
+                [clientIdInput, clientSecretInput, webhookUrlInput, webhookPathInput].forEach(function (el) {
+                  if (!el) return;
+                  el.addEventListener('input', function () {
+                    persistCurrent(lastEnvKey);
+                  });
+                });
+
+                if (certLabel) {
+                  certLabel.textContent = 'Certificados configurados abaixo.';
+                }
+                applyEnv(currentEnvKey());
+              })();
+            </script>
             <div class="tab-pane fade" id="uploads" role="tabpanel" aria-labelledby="uploads-tab">
               <div class="card-body">
                 <div class="row">
@@ -1225,7 +1546,7 @@ $_SESSION['last_activity'] = time();
                   <div class="col-md-6">
                     <div class="card mb-4">
                       <div class="card-header bg-light">
-                        <h5 class="mb-0"><i class="fa fa-file-image mr-2"></i>Imagem Relatório
+                        <h5 class="mb-0"><i class="fa fa-file-image mr-2"></i>Imagem Relat?rio
                           (*jpg)</h5>
                       </div>
                       <div class="card-body text-center">
@@ -1274,108 +1595,104 @@ $_SESSION['last_activity'] = time();
                 <div class="row">
                   <div class="col-md-3">
                     <div class="form-group">
-                      <label><i class="fa fa-list mr-1"></i> Itens Paginação</label>
+                      <label><i class="fa fa-list mr-1"></i> Itens PaginaÃƒÂ§ÃƒÂ£o</label>
                       <input type="number" class="form-control" id="itens_pag" name="itens_pag"
-                        value="<?php echo $itens_pag ?>">
+                        value="<?php echo $itens_pag ?>"
                     </div>
                   </div>
                   <div class="col-md-3">
                     <div class="form-group">
                       <label><i class="fa fa-th mr-1"></i> Itens Relacionados</label>
                       <input type="number" class="form-control" id="itens_rel" name="itens_rel"
-                        value="<?php echo $itens_rel ?>">
+                        value="<?php echo $itens_rel ?>"
                     </div>
                   </div>
                   <div class="col-md-3">
                     <div class="form-group">
-                      <label><i class="fa fa-unlock mr-1"></i> Aulas Disponíveis</label>
+                      <label><i class="fa fa-unlock mr-1"></i> Aulas Dispon?veis</label>
                       <input type="number" class="form-control" id="aulas_lib" name="aulas_lib"
-                        value="<?php echo $aulas_lib ?>">
+                        value="<?php echo $aulas_lib ?>"
                     </div>
                   </div>
                   <div class="col-md-3">
                     <div class="form-group">
-                      <label><i class="fa fa-star mr-1"></i> Cartões Fidelidade</label>
+                      <label><i class="fa fa-star mr-1"></i> CartÃƒÂµes Fidelidade</label>
                       <input type="number" class="form-control" id="cartoes_fidelidade" name="cartoes_fidelidade"
-                        value="<?php echo $cartoes_fidelidade ?>">
+                        value="<?php echo $cartoes_fidelidade ?>"
                     </div>
                   </div>
                 </div>
 
-                <h5 class="border-bottom pb-2 mb-3 mt-4">Configurações de Pagamento</h5>
+                <h5 class="border-bottom pb-2 mb-3 mt-4">ConfiguraÃƒÂ§ÃƒÂµes de Pagamento</h5>
                 <div class="row">
                   <div class="col-md-3">
                     <div class="form-group">
                       <label><i class="fa fa-percentage mr-1"></i> Desconto Pix %</label>
                       <input type="number" class="form-control" id="desconto_pix" name="desconto_pix"
-                        value="<?php echo $desconto_pix ?>">
+                        value="<?php echo $desconto_pix ?>"
                     </div>
                   </div>
+
                   <div class="col-md-3">
                     <div class="form-group">
-                      <label><i class="fa fa-percentage mr-1"></i> Taxa MP %</label>
-                      <input type="text" class="form-control" id="taxa_mp" name="taxa_mp"
-                        value="<?php echo $taxa_mp ?>">
+                      <label><i class="fa fa-percentage mr-1"></i> AcrÃƒÂ©scimo CartÃƒÂ£o %</label>
+                      <input type="number" class="form-control" id="acrescimo_cartao_credito" name="acrescimo_cartao_credito"
+                        value="<?php echo $acrescimo_cartao_credito ?>"
                     </div>
                   </div>
-                  <div class="col-md-3">
-                    <div class="form-group">
-                      <label><i class="fa fa-percentage mr-1"></i> Taxa Paypal %</label>
-                      <input type="text" class="form-control" id="taxa_paypal" name="taxa_paypal"
-                        value="<?php echo $taxa_paypal ?>">
-                    </div>
-                  </div>
+
+                  
                   <div class="col-md-3">
                     <div class="form-group">
                       <label><i class="fa fa-dollar-sign mr-1"></i> Taxa Boleto R$</label>
                       <input type="text" class="form-control" id="taxa_boleto" name="taxa_boleto"
-                        value="<?php echo $taxa_boleto ?>">
+                        value="<?php echo $taxa_boleto ?>"
                     </div>
                   </div>
                 </div>
 
-                <h5 class="border-bottom pb-2 mb-3 mt-4">Configurações de Comissões</h5>
+                <h5 class="border-bottom pb-2 mb-3 mt-4">ConfiguraÃƒÂ§ÃƒÂµes de ComissÃƒÂµes</h5>
                 <div class="row">
                   <div class="col-md-2">
                     <div class="form-group">
                       <label><i class="fa fa-percentage mr-1"></i> Professor %</label>
                       <input type="number" class="form-control" id="comissao_professor" name="comissao_professor"
-                        value="<?php echo $comissao_professor ?>">
+                        value="<?php echo $comissao_professor ?>"
                     </div>
                   </div>
                   <div class="col-md-2">
                     <div class="form-group">
                       <label><i class="fa fa-percentage mr-1"></i> Tesoureiro %</label>
-                      <input type="number" class="form-control" id="comissao_tesoureiro" name="comissao_tesoureiro"
-                        value="<?php echo $comissao_tesoureiro ?>">
+                      <input type="number" class="form-control" id="comissao_tesoureiro" name="comissao_tesoureiro" min="0" max="100" step="0.01"
+                        value="<?php echo $comissao_tesoureiro ?>"
                     </div>
                   </div>
                   <div class="col-md-2">
                     <div class="form-group">
-                      <label><i class="fa fa-percentage mr-1"></i> Secretário %</label>
-                      <input type="number" class="form-control" id="comissao_secretario" name="comissao_secretario"
-                        value="<?php echo $comissao_secretario ?>">
+                      <label><i class="fa fa-percentage mr-1"></i> Secret?rio %</label>
+                      <input type="number" class="form-control" id="comissao_secretario" name="comissao_secretario" min="0" max="100" step="0.01"
+                        value="<?php echo $comissao_secretario ?>"
                     </div>
                   </div>
                   <div class="col-md-2">
                     <div class="form-group">
                       <label><i class="fa fa-percentage mr-1"></i> Tutor %</label>
-                      <input type="number" class="form-control" id="comissao_tutor" name="comissao_tutor"
-                        value="<?php echo $comissao_tutor ?>">
+                      <input type="number" class="form-control" id="comissao_tutor" name="comissao_tutor" min="0" max="100" step="0.01"
+                        value="<?php echo $comissao_tutor ?>"
                     </div>
                   </div>
                   <div class="col-md-2">
                     <div class="form-group">
                       <label><i class="fa fa-percentage mr-1"></i> Parceiro %</label>
-                      <input type="number" class="form-control" id="comissao_parceiro" name="comissao_parceiro"
-                        value="<?php echo $comissao_parceiro ?>">
+                      <input type="number" class="form-control" id="comissao_parceiro" name="comissao_parceiro" min="0" max="100" step="0.01"
+                        value="<?php echo $comissao_parceiro ?>"
                     </div>
                   </div>
                   <div class="col-md-2">
                     <div class="form-group">
                       <label><i class="fa fa-percentage mr-1"></i> Assessor %</label>
-                      <input type="number" class="form-control" id="comissao_assessor" name="comissao_assessor"
-                        value="<?php echo $comissao_assessor ?>">
+                      <input type="number" class="form-control" id="comissao_assessor" name="comissao_assessor" min="0" max="100" step="0.01"
+                        value="<?php echo $comissao_assessor ?>"
                     </div>
                   </div>
                 </div>
@@ -1384,85 +1701,85 @@ $_SESSION['last_activity'] = time();
                   <div class="col-md-3">
                     <div class="form-group">
                       <label><i class="fa fa-percentage mr-1"></i> Vendedor %</label>
-                      <input type="number" class="form-control" id="comissao_vendedor" name="comissao_vendedor"
-                        value="<?php echo $comissao_vendedor ?>">
+                      <input type="number" class="form-control" id="comissao_vendedor" name="comissao_vendedor" min="0" max="100" step="0.01"
+                        value="<?php echo $comissao_vendedor ?>"
                     </div>
                   </div>
                   <div class="col-md-3">
                     <div class="form-group">
-                      <label><i class="fa fa-calendar-day mr-1"></i> Dia PGTO Comissão</label>
+                      <label><i class="fa fa-calendar-day mr-1"></i> Dia PGTO ComissÃƒÂ£o</label>
                       <input type="number" class="form-control" id="dia_pgto_comissao" name="dia_pgto_comissao"
-                        value="<?php echo $dia_pgto_comissao ?>">
+                        value="<?php echo $dia_pgto_comissao ?>"
                     </div>
                   </div>
                   <div class="col-md-3">
                     <div class="form-group">
-                      <label><i class="fa fa-dollar-sign mr-1"></i> R$ Valor Max Cartão</label>
+                      <label><i class="fa fa-dollar-sign mr-1"></i> R$ Valor Max CartÃƒÂ£o</label>
                       <input type="text" class="form-control" id="valor_max_cartao" name="valor_max_cartao"
-                        value="<?php echo $valor_max_cartao ?>">
+                        value="<?php echo $valor_max_cartao ?>"
                     </div>
                   </div>
                 </div>
 
-                <h5 class="border-bottom pb-2 mb-3 mt-4">Configurações de Email e Matrículas</h5>
+                <h5 class="border-bottom pb-2 mb-3 mt-4">ConfiguraÃƒÂ§ÃƒÂµes de Email e MatrÃƒÂ­culas</h5>
                 <div class="row">
                   <div class="col-md-3">
                     <div class="form-group">
                       <label><i class="fa fa-envelope-open mr-1"></i> Total Emails/Envio</label>
                       <input type="number" class="form-control" id="total_emails_por_envio"
-                        name="total_emails_por_envio" value="<?php echo $total_emails_por_envio ?>">
+                        name="total_emails_por_envio" value="<?php echo $total_emails_por_envio ?>"
                     </div>
                   </div>
                   <div class="col-md-3">
                     <div class="form-group">
                       <label><i class="fa fa-clock mr-1"></i> Intervalo Envio (min)</label>
                       <input type="number" class="form-control" id="intervalo_envio_email" name="intervalo_envio_email"
-                        value="<?php echo $intervalo_envio_email ?>">
+                        value="<?php echo $intervalo_envio_email ?>"
                     </div>
                   </div>
                   <div class="col-md-3">
                     <div class="form-group">
-                      <label><i class="fa fa-calendar-alt mr-1"></i> Dias Email Matrícula</label>
+                      <label><i class="fa fa-calendar-alt mr-1"></i> Dias Email MatrÃƒÂ­cula</label>
                       <input type="number" class="form-control" id="dias_email_matricula" name="dias_email_matricula"
-                        value="<?php echo $dias_email_matricula ?>">
+                        value="<?php echo $dias_email_matricula ?>"
                     </div>
                   </div>
                   <div class="col-md-3">
                     <div class="form-group">
-                      <label><i class="fa fa-trash-alt mr-1"></i> Dias Excluir Matrícula</label>
+                      <label><i class="fa fa-trash-alt mr-1"></i> Dias Excluir MatrÃƒÂ­cula</label>
                       <input type="number" class="form-control" id="dias_excluir_matricula"
-                        name="dias_excluir_matricula" value="<?php echo $dias_excluir_matricula ?>">
+                        name="dias_excluir_matricula" value="<?php echo $dias_excluir_matricula ?>"
                     </div>
                   </div>
                 </div>
 
-                <h5 class="border-bottom pb-2 mb-3 mt-4">Configurações Acadêmicas</h5>
+                <h5 class="border-bottom pb-2 mb-3 mt-4">ConfiguraÃƒÂ§ÃƒÂµes Acad?micas</h5>
                 <div class="row">
                   <div class="col-md-3">
                     <div class="form-group">
-                      <label><i class="fa fa-question-circle mr-1"></i> Questionário</label>
+                      <label><i class="fa fa-question-circle mr-1"></i> Question?rio</label>
                       <select class="form-control" name="questionario" id="questionario_config"
-                        value="<?php echo $questionario_config ?>">
-                        <option value="Sim" <?php if ($questionario_config == 'Sim') { ?> selected <?php } ?>>Sim</option>
-                        <option value="Não" <?php if ($questionario_config == 'Não') { ?> selected <?php } ?>>Não</option>
+                        value="<?php echo $questionario_config ?>"
+                        <option value="Sim" <?php if ($questionario_config == 'Sim') { > selected <?php } >>Sim</option>
+                        <option value="NÃƒÂ£o" <?php if ($questionario_config == 'NÃƒÂ£o') { > selected <?php } >>NÃƒÂ£o</option>
                       </select>
                     </div>
                   </div>
                   <div class="col-md-3">
                     <div class="form-group">
-                      <label><i class="fa fa-percentage mr-1"></i> Média Aprovação %</label>
+                      <label><i class="fa fa-percentage mr-1"></i> MÃƒÂ©dia AprovaÃƒÂ§ÃƒÂ£o %</label>
                       <input type="number" class="form-control" id="media_config" name="media"
-                        value="<?php echo $media_config ?>">
+                        value="<?php echo $media_config ?>"
                     </div>
                   </div>
                   <div class="col-md-3">
                     <div class="form-group">
                       <label><i class="fa fa-award mr-1"></i> Verso Certificado</label>
-                      <select class="form-control" name="verso" id="verso" value="<?php echo $verso ?>">
-                        <option value="Sim" <?php if ($verso == 'Sim') { ?> selected <?php } ?>>
+                      <select class="form-control" name="verso" id="verso" value="<?php echo $verso >?>"
+                        <option value="Sim" <?php if ($verso == 'Sim') { > selected <?php } ?>
                           Sim</option>
-                        <option value="Não" <?php if ($verso == 'Não') { ?> selected <?php } ?>>
-                          Não</option>
+                        <option value="NÃƒÂ£o" <?php if ($verso == 'NÃƒÂ£o') { > selected <?php } ?>
+                          NÃƒÂ£o</option>
                       </select>
                     </div>
                   </div>
@@ -1470,9 +1787,9 @@ $_SESSION['last_activity'] = time();
                     <div class="form-group">
                       <label><i class="fa fa-envelope mr-1"></i> Email ADM Matriculas</label>
                       <select class="form-control" name="email_adm_mat" id="email_adm_mat"
-                        value="<?php echo $email_adm_mat ?>">
-                        <option value="Sim" <?php if ($email_adm_mat == 'Sim') { ?> selected <?php } ?>>Sim</option>
-                        <option value="Não" <?php if ($email_adm_mat == 'Não') { ?> selected <?php } ?>>Não</option>
+                        value="<?php echo $email_adm_mat ?>"
+                        <option value="Sim" <?php if ($email_adm_mat == 'Sim') { > selected <?php } >>Sim</option>
+                        <option value="NÃƒÂ£o" <?php if ($email_adm_mat == 'NÃƒÂ£o') { > selected <?php } >>NÃƒÂ£o</option>
                       </select>
                     </div>
                   </div>
@@ -1480,14 +1797,14 @@ $_SESSION['last_activity'] = time();
               </div>
             </div>
 
-            <!-- Tab 1: Dados Básicos -->
-            <div class="tab-pane fade  " id="basic" role="tabpanel" aria-labelledby="basic-tab">
+            <!-- Tab 1: Dados B?sicos -->
+            <div class="tab-pane fade ?? " id="basic" role="tabpanel" aria-labelledby="basic-tab">
               <div class="card-body">
                 <div class="row">
                   <div class="col-md-4">
                     <div class="form-group">
                       <label><i class="fa fa-building mr-1"></i> Nome Sistema</label>
-                      <input type="text" class="form-control" name="nome_sistema" value="<?php echo $nome_sistema ?>"
+                      <input type="text" class="form-control" name="nome_sistema" value="<?php echo $nome_sistema >?>"
                         required>
                     </div>
                   </div>
@@ -1495,14 +1812,14 @@ $_SESSION['last_activity'] = time();
                     <div class="form-group">
                       <label><i class="fa fa-phone mr-1"></i> Telefone Sistema</label>
                       <input type="text" class="form-control" id="tel_sistema" name="tel_sistema"
-                        value="<?php echo $tel_sistema ?>" required>
+                        value="<?php echo $tel_sistema ?>" required?>
                     </div>
                   </div>
                   <div class="col-md-4">
                     <div class="form-group">
                       <label><i class="fa fa-envelope mr-1"></i> Email Sistema</label>
                       <input type="text" class="form-control" id="email_sistema" name="email_sistema"
-                        value="<?php echo $email_sistema ?>" required>
+                        value="<?php echo $email_sistema ?>" required?>
                     </div>
                   </div>
                 </div>
@@ -1512,21 +1829,21 @@ $_SESSION['last_activity'] = time();
                     <div class="form-group">
                       <label><i class="fa fa-id-card mr-1"></i> CNPJ Sistema</label>
                       <input type="text" class="form-control" id="cnpj_sistema" name="cnpj_sistema"
-                        value="<?php echo $cnpj_sistema ?>">
+                        value="<?php echo $cnpj_sistema ?>"
                     </div>
                   </div>
                   <div class="col-md-4">
                     <div class="form-group">
                       <label><i class="fa fa-qrcode mr-1"></i> Tipo Chave Pix</label>
                       <select class="form-control" name="tipo_chave_pix_sistema" id="tipo_chave_pix_sistema"
-                        value="<?php echo $tipo_chave_pix ?>">
-                        <option value="CNPJ" <?php if ($tipo_chave_pix == 'CNPJ') { ?> selected <?php } ?>>CNPJ</option>
-                        <option value="CPF" <?php if ($tipo_chave_pix == 'CPF') { ?> selected <?php } ?>>CPF</option>
-                        <option value="E-mail" <?php if ($tipo_chave_pix == 'E-mail') { ?> selected <?php } ?>>E-mail
+                        value="<?php echo $tipo_chave_pix ?>"
+                        <option value="CNPJ" <?php if ($tipo_chave_pix == 'CNPJ') { > selected <?php } >>CNPJ</option>
+                        <option value="CPF" <?php if ($tipo_chave_pix == 'CPF') { > selected <?php } >>CPF</option>
+                        <option value="E-mail" <?php if ($tipo_chave_pix == 'E-mail') { > selected <?php } >>E-mail
                         </option>
-                        <option value="Telefone" <?php if ($tipo_chave_pix == 'Telefone') { ?> selected <?php } ?>>
+                        <option value="Telefone" <?php if ($tipo_chave_pix == 'Telefone') { > selected <?php } ?>
                           Telefone</option>
-                        <option value="Código" <?php if ($tipo_chave_pix == 'Código') { ?> selected <?php } ?>>Código
+                        <option value="C?digo" <?php if ($tipo_chave_pix == 'C?digo') { > selected <?php } >>C?digo
                         </option>
                       </select>
                     </div>
@@ -1535,7 +1852,7 @@ $_SESSION['last_activity'] = time();
                     <div class="form-group">
                       <label><i class="fa fa-key mr-1"></i> Chave Pix</label>
                       <input type="text" class="form-control" id="chave_pix" name="chave_pix"
-                        value="<?php echo $chave_pix ?>">
+                        value="<?php echo $chave_pix ?>"
                     </div>
                   </div>
                 </div>
@@ -1546,7 +1863,7 @@ $_SESSION['last_activity'] = time();
                       <label><i class="fa fa-facebook mr-1" style="color: blue;"></i>
                         Facebook</label>
                       <input type="text" class="form-control" id="facebook_sistema" name="facebook_sistema"
-                        value="<?php echo $facebook_sistema ?>">
+                        value="<?php echo $facebook_sistema ?>"
                     </div>
                   </div>
                   <div class="col-md-4">
@@ -1554,7 +1871,7 @@ $_SESSION['last_activity'] = time();
                       <label><i class="fa fa-instagram mr-1" style="color: #cc2366;"></i>
                         Instagram</label>
                       <input type="text" class="form-control" id="instagram_sistema" name="instagram_sistema"
-                        value="<?php echo $instagram_sistema ?>">
+                        value="<?php echo $instagram_sistema ?>"
                     </div>
                   </div>
                   <div class="col-md-4">
@@ -1562,7 +1879,7 @@ $_SESSION['last_activity'] = time();
                       <label><i class="fa fa-youtube mr-1" style="color: red;"></i>
                         Youtube</label>
                       <input type="text" class="form-control" id="youtube_sistema" name="youtube_sistema"
-                        value="<?php echo $youtube_sistema ?>">
+                        value="<?php echo $youtube_sistema ?>"
                     </div>
                   </div>
                 </div>
@@ -1570,9 +1887,9 @@ $_SESSION['last_activity'] = time();
                 <div class="row">
                   <div class="col-md-6">
                     <div class="form-group">
-                      <label><i class="fa fa-film mr-1"></i> Url Vídeo Página Sobre</label>
+                      <label><i class="fa fa-film mr-1"></i> Url V?deo P?gina Sobre</label>
                       <input type="text" class="form-control" id="video_sobre" name="video_sobre"
-                        value="<?php echo $video_sobre ?>">
+                        value="<?php echo $video_sobre ?>"
                     </div>
                   </div>
                   <div class="col-md-3">
@@ -1580,19 +1897,19 @@ $_SESSION['last_activity'] = time();
                       <label><i class="fa fa-graduation-cap mr-1"></i> Professor se
                         Cadastrar</label>
                       <select class="form-control" name="professor_cad" id="professor_cad"
-                        value="<?php echo $professor_cad ?>">
-                        <option value="Não" <?php if ($professor_cad == 'Não') { ?> selected <?php } ?>>Não</option>
-                        <option value="Sim" <?php if ($professor_cad == 'Sim') { ?> selected <?php } ?>>Sim</option>
+                        value="<?php echo $professor_cad ?>"
+                        <option value="NÃƒÂ£o" <?php if ($professor_cad == 'NÃƒÂ£o') { > selected <?php } >>NÃƒÂ£o</option>
+                        <option value="Sim" <?php if ($professor_cad == 'Sim') { > selected <?php } >>Sim</option>
                       </select>
                     </div>
                   </div>
                   <div class="col-md-3">
                     <div class="form-group">
-                      <label><i class="fa fa-credit-card mr-1"></i> Api Cartão</label>
-                      <select class="form-control" name="api_cartao" id="api_cartao" value="<?php echo $api_cartao ?>">
-                        <option value="Api" <?php if ($api_cartao == 'Api') { ?> selected <?php } ?>>Api Site (Seguro)
+                      <label><i class="fa fa-credit-card mr-1"></i> Api CartÃƒÂ£o</label>
+                      <select class="form-control" name="api_cartao" id="api_cartao" value="<?php echo $api_cartao >?>"
+                        <option value="Api" <?php if ($api_cartao == 'Api') { > selected <?php } >>Api Site (Seguro)
                         </option>
-                        <option value="Direta" <?php if ($api_cartao == 'Direta') { ?> selected <?php } ?>>Api
+                        <option value="Direta" <?php if ($api_cartao == 'Direta') { > selected <?php } >>Api
                           Transparente</option>
                       </select>
                     </div>
@@ -1601,56 +1918,51 @@ $_SESSION['last_activity'] = time();
               </div>
             </div>
 
-            <!-- Tab 0: Informações -->
-            <div class="tab-pane fade" id="config" role="tabpanel" aria-labelledby="config-tab">
+            <!-- Tab 0: InformaÃƒÂ§ÃƒÂµes -->
+            <div class="tab-pane fade show active" id="config" role="tabpanel" aria-labelledby="config-tab">
               <div class="card-body">
 
                 <div
                   style="padding: 10px; margin-top: 22px; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; color: #4A4A4A;">
                   <h2 style="font-size: 24px; font-weight: 600; margin-bottom: 12px; color: #2C3E50;">
-                    Informações do Sistema
+                    InformaÃƒÂ§ÃƒÂµes do Sistema
                   </h2>
                   <p style="font-size: 15px; margin-bottom: 24px; line-height: 1.6;">
-                    Personalize e ajuste as principais configurações do seu sistema. Utilize as abas
+                    Personalize e ajuste as principais configuraÃƒÂ§ÃƒÂµes do seu sistema. Utilize as abas
                     acima para navegar
-                    entre as categorias disponíveis:
+                    entre as categorias disponÃƒÂ­veis:
                   </p>
 
                   <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; margin-bottom: 24px;">
                     <div style="background: #F7F9FA; border: 1px solid #E1E8ED; border-radius: 8px; padding: 16px;">
-                      <strong style="display: block; font-size: 16px; margin-bottom: 6px;">🛠
-                        Dados Básicos</strong>
-                      <span style="font-size: 14px; color: #6B7C93;">Configure informações gerais
+                      <strong style="display: block; font-size: 16px; margin-bottom: 6px;">Dados BÃƒÂ¡sicos</strong>
+                      <span style="font-size: 14px; color: #6B7C93;">Configure informaÃƒÂ§ÃƒÂµes gerais
                         essenciais para o
                         funcionamento do sistema.</span>
                     </div>
                     <div style="background: #F7F9FA; border: 1px solid #E1E8ED; border-radius: 8px; padding: 16px;">
-                      <strong style="display: block; font-size: 16px; margin-bottom: 6px;">📈
-                        Valores e
-                        Porcentagens</strong>
-                      <span style="font-size: 14px; color: #6B7C93;">Defina taxas, comissões de
+                      <strong style="display: block; font-size: 16px; margin-bottom: 6px;">Valores e Porcentagens</strong>
+                      <span style="font-size: 14px; color: #6B7C93;">Defina taxas, comissÃƒÂµes de
                         venda e outros
                         percentuais.</span>
                     </div>
                     <div style="background: #F7F9FA; border: 1px solid #E1E8ED; border-radius: 8px; padding: 16px;">
-                      <strong style="display: block; font-size: 16px; margin-bottom: 6px;">📤
-                        Uploads</strong>
-                      <span style="font-size: 14px; color: #6B7C93;">Gerencie parâmetros para
+                      <strong style="display: block; font-size: 16px; margin-bottom: 6px;">Uploads</strong>
+                      <span style="font-size: 14px; color: #6B7C93;">Gerencie parÃƒÂ¢metros para
                         envio e armazenamento seguro
                         de arquivos.</span>
                     </div>
                     <div style="background: #F7F9FA; border: 1px solid #E1E8ED; border-radius: 8px; padding: 16px;">
-                      <strong style="display: block; font-size: 16px; margin-bottom: 6px;">🔒
-                        Segurança</strong>
-                      <span style="font-size: 14px; color: #6B7C93;">Ajuste regras de segurança
-                        para proteger a aplicação
+                      <strong style="display: block; font-size: 16px; margin-bottom: 6px;">SeguranÃƒÂ§a</strong>
+                      <span style="font-size: 14px; color: #6B7C93;">Ajuste regras de seguranÃƒÂ§a
+                        para proteger a aplicaÃƒÂ§ÃƒÂ£o
                         e os dados.</span>
                     </div>
                   </div>
 
                   <p style="font-size: 14px; color: #7B8A99;">
-                    Lembre-se de revisar cuidadosamente e salvar as alterações após finalizar a
-                    configuração.
+                    Lembre-se de revisar cuidadosamente e salvar as alteraÃƒÂ§ÃƒÂµes apÃƒÂ³s finalizar a
+                    configuraÃƒÂ§ÃƒÂ£o.
                   </p>
                 </div>
 
@@ -1662,56 +1974,54 @@ $_SESSION['last_activity'] = time();
 
         </div>
 
-        <div id="configTutorial" class="card-body " style="display: none;">
+        <div id="configTutorial" class="card-body ">
           <div style="padding: 24px; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; color: #4A4A4A;">
-            <h2 style="font-size: 24px; font-weight: 600; margin-bottom: 12px; color: #2C3E50;">Informações
+            <h2 style="font-size: 24px; font-weight: 600; margin-bottom: 12px; color: #2C3E50;">InformaÃƒÂ§ÃƒÂµes
               do Sistema
             </h2>
             <p style="font-size: 15px; margin-bottom: 24px; line-height: 1.6;">
-              Personalize e ajuste as principais configurações do seu sistema. Utilize as abas acima para
+              Personalize e ajuste as principais configuraÃƒÂ§ÃƒÂµes do seu sistema. Utilize as abas acima para
               navegar
-              entre as categorias disponíveis:
+              entre as categorias disponÃƒÂ­veis:
             </p>
 
             <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; margin-bottom: 24px;">
               <div style="background: #F7F9FA; border: 1px solid #E1E8ED; border-radius: 8px; padding: 16px;">
-                <strong style="display: block; font-size: 16px; margin-bottom: 6px;">🛠 Dados
-                  Básicos</strong>
-                <span style="font-size: 14px; color: #6B7C93;">Configure informações gerais essenciais
+                <strong style="display: block; font-size: 16px; margin-bottom: 6px;">Dados BÃƒÂ¡sicos</strong>
+                <span style="font-size: 14px; color: #6B7C93;">Configure informaÃƒÂ§ÃƒÂµes gerais essenciais
                   para o
                   funcionamento do sistema.</span>
               </div>
               <div style="background: #F7F9FA; border: 1px solid #E1E8ED; border-radius: 8px; padding: 16px;">
-                <strong style="display: block; font-size: 16px; margin-bottom: 6px;">📈 Valores e
-                  Porcentagens</strong>
-                <span style="font-size: 14px; color: #6B7C93;">Defina taxas, comissões de venda e outros
+                <strong style="display: block; font-size: 16px; margin-bottom: 6px;">Valores e Porcentagens</strong>
+                <span style="font-size: 14px; color: #6B7C93;">Defina taxas, comissÃƒÂµes de venda e outros
                   percentuais.</span>
               </div>
               <div style="background: #F7F9FA; border: 1px solid #E1E8ED; border-radius: 8px; padding: 16px;">
-                <strong style="display: block; font-size: 16px; margin-bottom: 6px;">📤 Uploads</strong>
-                <span style="font-size: 14px; color: #6B7C93;">Gerencie parâmetros para envio e
+                <strong style="display: block; font-size: 16px; margin-bottom: 6px;">Uploads</strong>
+                <span style="font-size: 14px; color: #6B7C93;">Gerencie parÃƒÂ¢metros para envio e
                   armazenamento seguro
                   de arquivos.</span>
               </div>
               <div style="background: #F7F9FA; border: 1px solid #E1E8ED; border-radius: 8px; padding: 16px;">
-                <strong style="display: block; font-size: 16px; margin-bottom: 6px;">🔒
-                  Segurança</strong>
-                <span style="font-size: 14px; color: #6B7C93;">Ajuste regras de segurança para proteger
-                  a aplicação
+                <strong style="display: block; font-size: 16px; margin-bottom: 6px;">SeguranÃƒÂ§a</strong>
+                <span style="font-size: 14px; color: #6B7C93;">Ajuste regras de seguranÃƒÂ§a para proteger
+                  a aplicaÃƒÂ§ÃƒÂ£o
                   e os dados.</span>
               </div>
             </div>
 
             <p style="font-size: 14px; color: #7B8A99;">
-              Lembre-se de revisar cuidadosamente e salvar as alterações após finalizar a configuração.
+              Lembre-se de revisar cuidadosamente e salvar as alteraÃƒÂ§ÃƒÂµes apÃƒÂ³s finalizar a configuraÃƒÂ§ÃƒÂ£o.
             </p>
           </div>
         </div>
 
         <div class="modal-footer">
+          <small id="mensagem-config" class="mr-auto text-danger"></small>
           <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
           <button type="submit" class="btn btn-primary"><i class="fa fa-save mr-1"></i>Salvar
-            Alterações</button>
+            AlteraÃƒÂ§ÃƒÂµes</button>
         </div>
       </form>
     </div>
@@ -1722,24 +2032,23 @@ $_SESSION['last_activity'] = time();
 
 
 
-
 <!-- Modal Rel Vendas -->
 <div class="modal fade" id="RelVen" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h4 class="modal-title" id="exampleModalLabel">Relatório de Vendas
+        <h4 class="modal-title" id="exampleModalLabel">Relat?rio de Vendas
           <small>(
             <a href="#" onclick="datas('1980-01-01', 'tudo-Ven', 'Ven')">
               <span style="color:#000" id="tudo-Ven">Tudo</span>
             </a> /
-            <a href="#" onclick="datas('<?php echo $data_atual ?>', 'hoje-Ven', 'Ven')">
+            <a href="#" onclick="datas('<?php echo $data_atual >', 'hoje-Ven', 'Ven')"?>
               <span id="hoje-Ven">Hoje</span>
             </a> /
-            <a href="#" onclick="datas('<?php echo $data_mes ?>', 'mes-Ven', 'Ven')">
-              <span style="color:#000" id="mes-Ven">Mês</span>
+            <a href="#" onclick="datas('<?php echo $data_mes >', 'mes-Ven', 'Ven')"?>
+              <span style="color:#000" id="mes-Ven">M?s</span>
             </a> /
-            <a href="#" onclick="datas('<?php echo $data_ano ?>', 'ano-Ven', 'Ven')">
+            <a href="#" onclick="datas('<?php echo $data_ano >', 'ano-Ven', 'Ven')"?>
               <span style="color:#000" id="ano-Ven">Ano</span>
             </a>
             )</small>
@@ -1759,14 +2068,14 @@ $_SESSION['last_activity'] = time();
               <div class="form-group">
                 <label>Data Inicial</label>
                 <input type="date" class="form-control" name="dataInicial" id="dataInicialRel-Ven"
-                  value="<?php echo date('Y-m-d') ?>" required>
+                  value="<?php echo date('Y-m-d') ?>" required?>
               </div>
             </div>
             <div class="col-md-4">
               <div class="form-group">
                 <label>Data Final</label>
                 <input type="date" class="form-control" name="dataFinal" id="dataFinalRel-Ven"
-                  value="<?php echo date('Y-m-d') ?>" required>
+                  value="<?php echo date('Y-m-d') ?>" required?>
               </div>
             </div>
 
@@ -1791,7 +2100,7 @@ $_SESSION['last_activity'] = time();
         </div>
 
         <div class="modal-footer">
-          <button type="submit" class="btn btn-primary">Gerar Relatório</button>
+          <button type="submit" class="btn btn-primary">Gerar Relat?rio</button>
         </div>
       </form>
 
@@ -1813,18 +2122,18 @@ $_SESSION['last_activity'] = time();
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h4 class="modal-title" id="exampleModalLabel">Relatório de Contas
+        <h4 class="modal-title" id="exampleModalLabel">Relat?rio de Contas
           <small>(
             <a href="#" onclick="datas('1980-01-01', 'tudo-Con', 'Con')">
               <span style="color:#000" id="tudo-Con">Tudo</span>
             </a> /
-            <a href="#" onclick="datas('<?php echo $data_atual ?>', 'hoje-Con', 'Con')">
+            <a href="#" onclick="datas('<?php echo $data_atual >', 'hoje-Con', 'Con')"?>
               <span id="hoje-Con">Hoje</span>
             </a> /
-            <a href="#" onclick="datas('<?php echo $data_mes ?>', 'mes-Con', 'Con')">
-              <span style="color:#000" id="mes-Con">Mês</span>
+            <a href="#" onclick="datas('<?php echo $data_mes >', 'mes-Con', 'Con')"?>
+              <span style="color:#000" id="mes-Con">M?s</span>
             </a> /
-            <a href="#" onclick="datas('<?php echo $data_ano ?>', 'ano-Con', 'Con')">
+            <a href="#" onclick="datas('<?php echo $data_ano >', 'ano-Con', 'Con')"?>
               <span style="color:#000" id="ano-Con">Ano</span>
             </a>
             )</small>
@@ -1844,14 +2153,14 @@ $_SESSION['last_activity'] = time();
               <div class="form-group">
                 <label>Data Inicial</label>
                 <input type="date" class="form-control" name="dataInicial" id="dataInicialRel-Con"
-                  value="<?php echo date('Y-m-d') ?>" required>
+                  value="<?php echo date('Y-m-d') ?>" required?>
               </div>
             </div>
             <div class="col-md-4">
               <div class="form-group">
                 <label>Data Final</label>
                 <input type="date" class="form-control" name="dataFinal" id="dataFinalRel-Con"
-                  value="<?php echo date('Y-m-d') ?>" required>
+                  value="<?php echo date('Y-m-d') ?>" required?>
               </div>
             </div>
 
@@ -1861,7 +2170,7 @@ $_SESSION['last_activity'] = time();
                 <select class="form-control sel13" name="pago" style="width:100%;">
                   <option value="">Todas</option>
                   <option value="Sim">Somente Pagas</option>
-                  <option value="Não">Pendentes</option>
+                  <option value="NÃƒÂ£o">Pendentes</option>
 
                 </select>
               </div>
@@ -1876,8 +2185,8 @@ $_SESSION['last_activity'] = time();
               <div class="form-group">
                 <label>Pagar / Receber</label>
                 <select class="form-control sel13" name="tabela" style="width:100%;">
-                  <option value="pagar">Contas à Pagar</option>
-                  <option value="receber">Contas à Receber</option>
+                  <option value="pagar">Contas ?? Pagar</option>
+                  <option value="receber">Contas ?? Receber</option>
 
                 </select>
               </div>
@@ -1903,7 +2212,7 @@ $_SESSION['last_activity'] = time();
         </div>
 
         <div class="modal-footer">
-          <button type="submit" class="btn btn-primary">Gerar Relatório</button>
+          <button type="submit" class="btn btn-primary">Gerar Relat?rio</button>
         </div>
       </form>
 
@@ -1924,18 +2233,18 @@ $_SESSION['last_activity'] = time();
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h4 class="modal-title" id="exampleModalLabel">Relatório de Lucro
+        <h4 class="modal-title" id="exampleModalLabel">Relat?rio de Lucro
           <small>(
             <a href="#" onclick="datas('1980-01-01', 'tudo-Luc', 'Luc')">
               <span style="color:#000" id="tudo-Luc">Tudo</span>
             </a> /
-            <a href="#" onclick="datas('<?php echo $data_atual ?>', 'hoje-Luc', 'Luc')">
+            <a href="#" onclick="datas('<?php echo $data_atual >', 'hoje-Luc', 'Luc')"?>
               <span id="hoje-Luc">Hoje</span>
             </a> /
-            <a href="#" onclick="datas('<?php echo $data_mes ?>', 'mes-Luc', 'Luc')">
-              <span style="color:#000" id="mes-Luc">Mês</span>
+            <a href="#" onclick="datas('<?php echo $data_mes >', 'mes-Luc', 'Luc')"?>
+              <span style="color:#000" id="mes-Luc">M?s</span>
             </a> /
-            <a href="#" onclick="datas('<?php echo $data_ano ?>', 'ano-Luc', 'Luc')">
+            <a href="#" onclick="datas('<?php echo $data_ano >', 'ano-Luc', 'Luc')"?>
               <span style="color:#000" id="ano-Luc">Ano</span>
             </a>
             )</small>
@@ -1955,14 +2264,14 @@ $_SESSION['last_activity'] = time();
               <div class="form-group">
                 <label>Data Inicial</label>
                 <input type="date" class="form-control" name="dataInicial" id="dataInicialRel-Luc"
-                  value="<?php echo date('Y-m-d') ?>" required>
+                  value="<?php echo date('Y-m-d') ?>" required?>
               </div>
             </div>
             <div class="col-md-4">
               <div class="form-group">
                 <label>Data Final</label>
                 <input type="date" class="form-control" name="dataFinal" id="dataFinalRel-Luc"
-                  value="<?php echo date('Y-m-d') ?>" required>
+                  value="<?php echo date('Y-m-d') ?>" required?>
               </div>
             </div>
 
@@ -1975,7 +2284,7 @@ $_SESSION['last_activity'] = time();
         </div>
 
         <div class="modal-footer">
-          <button type="submit" class="btn btn-primary">Gerar Relatório</button>
+          <button type="submit" class="btn btn-primary">Gerar Relat?rio</button>
         </div>
       </form>
 
@@ -1995,18 +2304,18 @@ $_SESSION['last_activity'] = time();
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h4 class="modal-title" id="exampleModalLabel">Relatório de Comissões
+        <h4 class="modal-title" id="exampleModalLabel">Relat?rio de ComissÃƒÂµes
           <small>(
             <a href="#" onclick="datas('1980-01-01', 'tudo-Com', 'Com')">
               <span style="color:#000" id="tudo-Com">Tudo</span>
             </a> /
-            <a href="#" onclick="datas('<?php echo $data_atual ?>', 'hoje-Com', 'Com')">
+            <a href="#" onclick="datas('<?php echo $data_atual >', 'hoje-Com', 'Com')"?>
               <span id="hoje-Com">Hoje</span>
             </a> /
-            <a href="#" onclick="datas('<?php echo $data_mes ?>', 'mes-Com', 'Com')">
-              <span style="color:#000" id="mes-Com">Mês</span>
+            <a href="#" onclick="datas('<?php echo $data_mes >', 'mes-Com', 'Com')"?>
+              <span style="color:#000" id="mes-Com">M?s</span>
             </a> /
-            <a href="#" onclick="datas('<?php echo $data_ano ?>', 'ano-Com', 'Com')">
+            <a href="#" onclick="datas('<?php echo $data_ano >', 'ano-Com', 'Com')"?>
               <span style="color:#000" id="ano-Com">Ano</span>
             </a>
             )</small>
@@ -2026,14 +2335,14 @@ $_SESSION['last_activity'] = time();
               <div class="form-group">
                 <label>Data Inicial</label>
                 <input type="date" class="form-control" name="dataInicial" id="dataInicialRel-Com"
-                  value="<?php echo date('Y-m-d') ?>" required>
+                  value="<?php echo date('Y-m-d') ?>" required?>
               </div>
             </div>
             <div class="col-md-4">
               <div class="form-group">
                 <label>Data Final</label>
                 <input type="date" class="form-control" name="dataFinal" id="dataFinalRel-Com"
-                  value="<?php echo date('Y-m-d') ?>" required>
+                  value="<?php echo date('Y-m-d') ?>" required?>
               </div>
             </div>
 
@@ -2043,7 +2352,7 @@ $_SESSION['last_activity'] = time();
                 <select class="form-control sel13" name="pago" style="width:100%;">
                   <option value="">Todas</option>
                   <option value="Sim">Somente Pagas</option>
-                  <option value="Não">Pendentes</option>
+                  <option value="NÃƒÂ£o">Pendentes</option>
 
                 </select>
               </div>
@@ -2066,8 +2375,8 @@ $_SESSION['last_activity'] = time();
                     foreach ($res[$i] as $key => $value) {
                     }
 
-                    ?>
-                    <option value="<?php echo $res[$i]['id'] ?>">(<?php echo $res[$i]['nivel'] ?>)
+?>
+                    <option value="<?php echo $res[$i]['id'] >?>">(<?php echo $res[$i]['nivel'] ?>)
                       <?php echo $res[$i]['nome'] ?>
                     </option>
 
@@ -2088,7 +2397,7 @@ $_SESSION['last_activity'] = time();
         </div>
 
         <div class="modal-footer">
-          <button type="submit" class="btn btn-primary">Gerar Relatório</button>
+          <button type="submit" class="btn btn-primary">Gerar Relat?rio</button>
         </div>
       </form>
 
@@ -2104,32 +2413,6 @@ $_SESSION['last_activity'] = time();
 <link rel="stylesheet" type="text/css" href="../DataTables/datatables.min.css" />
 <script type="text/javascript" src="../DataTables/datatables.min.js"></script>
 
-
-<script>
-  $(document).ready(function () {
-    // Quando o modal for aberto
-    $('#modalConfig').on('shown.bs.modal', function () {
-      // Simula o clique na aba "Configurações"
-      $('#config-tab').tab('show');
-    });
-  });
-</script>
-
-<script>
-  const select = document.getElementById('efi_sandbox');
-  const prodFields = document.getElementById('prod_fields');
-  const homoFields = document.getElementById('homo_fields');
-
-  select.addEventListener('change', function () {
-    if (this.value === '0') { // Sandbox ativo
-      homoFields.style.display = 'block';
-      prodFields.style.display = 'none';
-    } else { // Sandbox inativo
-      homoFields.style.display = 'none';
-      prodFields.style.display = 'block';
-    }
-  });
-</script>
 
 <script type="text/javascript">
   $("#form-usu").submit(function () {
@@ -2150,8 +2433,7 @@ $_SESSION['last_activity'] = time();
 
         } else {
 
-          $('#mensagem-usu').addClass('text-danger')
-          $('#mensagem-usu').text(mensagem)
+          $('#mensagem-usu').addClass('text-danger') ?? $('#mensagem-usu').text(mensagem)
         }
 
 
@@ -2170,8 +2452,16 @@ $_SESSION['last_activity'] = time();
 
 
 <script type="text/javascript">
-  $("#form-config").submit(function () {
-    event.preventDefault();
+  $("#form-config").submit(function (e) {
+    e.preventDefault();
+    var sel = document.getElementById('sistemaSelector');
+    if (sel) {
+      var opt = sel.options[sel.selectedIndex] || null;
+      if (opt) {
+        $('input[name="sistema_id_alvo"]').val(opt.value);
+        $('input[name="sistema_slug_alvo"]').val(opt.getAttribute('data-slug') || '');
+      }
+    }
     var formData = new FormData(this);
 
     $.ajax({
@@ -2189,8 +2479,7 @@ $_SESSION['last_activity'] = time();
 
         } else {
 
-          $('#mensagem-config').addClass('text-danger')
-          $('#mensagem-config').text(mensagem)
+          $('#mensagem-config').addClass('text-danger') ?? $('#mensagem-config').text(mensagem)
         }
 
 
@@ -2355,7 +2644,7 @@ $_SESSION['last_activity'] = time();
 <script type="text/javascript">
   function datas(data, id, campo) {
 
-    var data_atual = "<?= $data_atual ?>";
+    var data_atual = "<= $data_atual >";
     var separarData = data_atual.split("-");
     var mes = separarData[1];
     var ano = separarData[0];
@@ -2409,12 +2698,12 @@ function isActiveMenu($href)
 {
   $currentUrl = $_SERVER['REQUEST_URI'];
 
-  // Remove domínio e parâmetros extras da URL atual
+  // Remove domÃƒÂ­nio e parÃƒÂ¢metros extras da URL atual
   $currentPath = parse_url($currentUrl, PHP_URL_PATH);
   $currentPage = basename($currentPath); // ex: index.php
   $currentQuery = $_SERVER['QUERY_STRING']; // ex: pagina=matriculas
 
-  // Checa se href é exatamente igual a URI
+  // Checa se href ? exatamente igual a URI
   if ($href === $currentPage || strpos($currentUrl, $href) !== false) {
     return 'active';
   }
@@ -2475,47 +2764,4 @@ function isActiveMenu($href)
 
 
 
-// <script>
-//   document.addEventListener("DOMContentLoaded", function () {
-//     // Seleciona botões, links e submit
-//     const elementos = document.querySelectorAll("button, a, input[type='submit']");
 
-//     elementos.forEach(function (el) {
-//       el.addEventListener("click", function (e) {
-//         e.preventDefault(); // impede ação imediata
-
-//         fetch('check-session.php', { method: 'POST' })
-//           .then(res => res.json())
-//           .then(data => {
-//             if (data.expired) {
-//               Swal.fire({
-//                 icon: 'error',
-//                 title: 'Sessão expirada',
-//                 text: 'Sua sessão expirou! Faça login novamente.',
-//                 showConfirmButton: true,
-//                 confirmButtonText: 'Fazer Login',
-//               }).then(() => {
-//                 window.location.href = "/sistema";
-//               });
-//             } else {
-//               console.log("Sessão OK, pode prosseguir!");
-
-//               // Se for <a>, redireciona
-//               if (el.tagName === "A") {
-//                 window.location.href = el.href;
-//               }
-
-//               // Se for botão dentro de form, envia o form
-//               if (el.tagName === "BUTTON" || el.type === "submit") {
-//                 const form = el.closest("form");
-//                 if (form) form.submit();
-//               }
-//             }
-//           })
-//           .catch(() => {
-//             console.log('Erro ao verificar sessão');
-//           });
-//       });
-//     });
-//   });
-// </script>

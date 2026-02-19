@@ -99,7 +99,7 @@ if(@$_SESSION['nivel'] != 'Administrador' and @$_SESSION['nivel'] != 'Professor'
 
 
 					<hr>
-				<div  class="modal-footer">
+				<div ?? class="modal-footer">
 					
 				</div>
 					
@@ -119,7 +119,7 @@ if(@$_SESSION['nivel'] != 'Administrador' and @$_SESSION['nivel'] != 'Professor'
 
 
 
-<script type="text/javascript">var pag = "<?=$pag?>"</script>
+<script type="text/javascript">var pag = "<=$pag>"</script>
 <script src="js/ajax.js"></script>
 
 
@@ -197,8 +197,7 @@ function excluirPergunta(id){
                 listarPerguntas(id_curso);
                 listarCursos();                
             } else {
-                    $('#mensagem-excluir').addClass('text-danger')
-                    $('#mensagem-excluir').text(mensagem)
+                    $('#mensagem-excluir').addClass('text-danger') $('#mensagem-excluir').text(mensagem)
                 }
 
         },      
@@ -240,15 +239,13 @@ $("#form-respostas").submit(function () {
             $('#mensagem-resposta').text('');
             $('#mensagem-resposta').removeClass()
             if (mensagem.trim() == "Salvo com Sucesso") { 
-            		 $('#resposta').val('')            		                 
-                     $('#btn-fechar-resposta').click();
+            		 $('#resposta').val('') $('#btn-fechar-resposta').click();
                      listarRespostas(id_pergunta)
                      listarPerguntas(id_curso)
                      listarCursos();
                     
                 } else {
-                	$('#mensagem-resposta').addClass('text-danger')
-                    $('#mensagem-resposta').text(mensagem)
+                	$('#mensagem-resposta').addClass('text-danger') $('#mensagem-resposta').text(mensagem)
                 }
 
             },
@@ -303,8 +300,7 @@ function excluirResposta(id){
                 listarPerguntas(id_curso); 
                 listarCursos()              
             } else {
-                    $('#mensagem-resposta').addClass('text-danger')
-                    $('#mensagem-resposta').text(mensagem)
+                    $('#mensagem-resposta').addClass('text-danger') $('#mensagem-resposta').text(mensagem)
                 }
 
         },      
@@ -332,8 +328,7 @@ function respondida(id){
                 listarPerguntas(id_curso);
                 listarCursos();                
             } else {
-                    $('#mensagem-excluir').addClass('text-danger')
-                    $('#mensagem-excluir').text(mensagem)
+                    $('#mensagem-excluir').addClass('text-danger') $('#mensagem-excluir').text(mensagem)
                 }
 
         },      

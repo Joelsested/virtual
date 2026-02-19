@@ -1,9 +1,9 @@
 <?php
 /**
  * @package dompdf
- * @link    http://dompdf.github.com/
- * @author  Benj Carson <benjcarson@digitaljunkies.ca>
- * @author  Fabien Ménager <fabien.menager@gmail.com>
+ * @link ? http ://dompdf.github.com/
+ * @author ?? Benj Carson <benjcarson@digitaljunkies.ca>
+ * @author ?? Fabien Ménager <fabien.menager@gmail.com>
  * @license http://www.gnu.org/copyleft/lesser.html GNU Lesser General Public License
  */
 namespace Dompdf\FrameReflower;
@@ -175,7 +175,7 @@ class Page extends AbstractFrameReflower
      * gets triggered on a page
      *
      * @param string $event the type of event
-     * @param Frame $frame  the frame that event is triggered on
+     * @param Frame $frame ?? the frame that event is triggered on
      */
     protected function _check_callbacks($event, $frame)
     {
@@ -186,9 +186,7 @@ class Page extends AbstractFrameReflower
         }
 
         if (is_array($this->_callbacks) && isset($this->_callbacks[$event])) {
-            $info = [
-                0 => $this->_canvas, "canvas" => $this->_canvas,
-                1 => $frame,         "frame"  => $frame,
+            $info = [0 => $this->_canvas, "canvas" => $this->_canvas, 1 => $frame, "frame"  => $frame,
             ];
             $fs = $this->_callbacks[$event];
             foreach ($fs as $f) {

@@ -1,10 +1,10 @@
 <?php
 /**
  * @package dompdf
- * @link    http://dompdf.github.com/
- * @author  Benj Carson <benjcarson@digitaljunkies.ca>
- * @author  Brian Sweeney <eclecticgeek@gmail.com>
- * @author  Fabien Ménager <fabien.menager@gmail.com>
+ * @link ? http ://dompdf.github.com/
+ * @author ?? Benj Carson <benjcarson@digitaljunkies.ca>
+ * @author ?? Brian Sweeney <eclecticgeek@gmail.com>
+ * @author ?? Fabien Ménager <fabien.menager@gmail.com>
  * @license http://www.gnu.org/copyleft/lesser.html GNU Lesser General Public License
  */
 namespace Dompdf\FrameDecorator;
@@ -16,7 +16,7 @@ use Dompdf\Exception;
 /**
  * Decorates Frame objects for text layout
  *
- * @access  private
+ * @access ?? private
  * @package dompdf
  */
 class Text extends AbstractFrameDecorator
@@ -63,18 +63,18 @@ class Text extends AbstractFrameDecorator
     function get_text()
     {
         // FIXME: this should be in a child class (and is incorrect)
-//    if ( $this->_frame->get_style()->content !== "normal" ) {
-//      $this->_frame->get_node()->data = $this->_frame->get_style()->content;
-//      $this->_frame->get_style()->content = "normal";
+// ?? if ( $this->_frame->get_style()->content !== "normal" ) {
+// ?? $this->_frame->get_node()->data = $this->_frame->get_style()->content;
+// ?? $this->_frame->get_style()->content = "normal";
 //    }
 
-//      Helpers::pre_r("---");
-//      $style = $this->_frame->get_style();
-//      var_dump($text = $this->_frame->get_node()->data);
-//      var_dump($asc = utf8_decode($text));
-//      for ($i = 0; $i < strlen($asc); $i++)
-//        Helpers::pre_r("$i: " . $asc[$i] . " - " . ord($asc[$i]));
-//      Helpers::pre_r("width: " . $this->_dompdf->getFontMetrics()->getTextWidth($text, $style->font_family, $style->font_size));
+// ? Helpers ::pre_r("---");
+// ?? $style = $this->_frame->get_style();
+// ?? var_dump($text = $this->_frame->get_node()->data);
+// ?? var_dump($asc = utf8_decode($text));
+// ?? for ($i = 0; $i < strlen($asc); $i++)
+// ? Helpers ::pre_r("$i: " . $asc[$i] . " - " . ord($asc[$i]));
+// ? Helpers ::pre_r("width: " . $this->_dompdf->getFontMetrics()->getTextWidth($text, $style->font_family, $style->font_size));
 
         return $this->_frame->get_node()->data;
     }
@@ -139,7 +139,7 @@ class Text extends AbstractFrameDecorator
     }
 
     /**
-     *  Recalculate the text width
+     * ?? Recalculate the text width
      *
      * @return float
      */
@@ -158,7 +158,7 @@ class Text extends AbstractFrameDecorator
     // Text manipulation methods
 
     /**
-     * split the text in this frame at the offset specified.  The remaining
+     * split the text in this frame at the offset specified. ?? The remaining
      * text is added a sibling frame following this one and is returned.
      *
      * @param $offset

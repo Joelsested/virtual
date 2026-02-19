@@ -67,9 +67,9 @@ Monthly 2.0.5 by Kevin Thornbloom is licensed under a Creative Commons Attributi
 		// Add Header & event list markup
 		$('#' + uniqueId).prepend('<div class="monthly-header"><div class="monthly-header-title"></div><a href="#" class="monthly-prev"></a><a href="#" class="monthly-next"></a></div>').append('<div class="monthly-event-list"></div>');
 
-		// How many days are in this month?
+		// How many days are in this month
 		function daysInMonth(m, y){
-			return m===2?y&3||!(y%25)&&y&15?28:29:30+(m+(m>>3)&1);
+			return m===2y&3||!(y%25)&&y&1528:29:30+(m+(m>>3)&1);
 		}
 
 		// Massive function to build the month
@@ -356,7 +356,7 @@ Monthly 2.0.5 by Kevin Thornbloom is licensed under a Creative Commons Attributi
 				setMonth = $('#' + uniqueId).data('setMonth'),
 				setYear = $('#' + uniqueId).data('setYear');
 
-				// Should days in the past be disabled?
+				// Should days in the past be disabled
 				if($(this).hasClass('monthly-past-day') && options.disablePast == true) {
 					// If so, don't do anything.
 					e.preventDefault();

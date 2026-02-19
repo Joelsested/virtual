@@ -41,7 +41,7 @@ echo <<<HTML
 		<ul class="dropdown-menu" style="margin-left:-230px;">
 		<li>
 		<div class="notification_desc2">
-		<p>Confirmar Exclusão? <a href="#" onclick="excluirSessao('{$id}')"><span class="text-danger">Sim</span></a></p>
+		<p>Confirmar Exclusão <a href="#" onclick="excluirSessao('{$id}')"><span class="text-danger">Sim</span></a></p>
 		</div>
 		</li>										
 		</ul>
@@ -90,8 +90,7 @@ function excluirSessao(id){
             if (mensagem.trim() == "Excluído com Sucesso") {                
                 listarSessao();                
             } else {
-                    $('#mensagem-excluir-sessao').addClass('text-danger')
-                    $('#mensagem-excluir-sessao').text(mensagem)
+                    $('#mensagem-excluir-sessao').addClass('text-danger') $('#mensagem-excluir-sessao').text(mensagem)
                 }
 
         },      
@@ -104,4 +103,3 @@ function excluirSessao(id){
 
 
 </script>
-

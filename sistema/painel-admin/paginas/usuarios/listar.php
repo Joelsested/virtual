@@ -16,11 +16,10 @@ if ($total_reg > 0) {
 	<tr> 
 	<th>Nome</th>	
 	<th class="">Email</th> 
-	<th class="">Senha</th>	
 	<th class="esc">CPF</th>
-	<th class="esc">Nível</th>
+	<th class="esc">N?vel</th>
 	<th class="esc">Data</th>	
-	<th class="esc">Ações</th>	
+	<th class="esc">AÃ§Ãµes</th>	
 	
 	
 	</tr> 
@@ -35,15 +34,11 @@ HTML;
 		$nome = $res[$i]['nome'];
 		$cpf = $res[$i]['cpf'];
 		$email = $res[$i]['usuario'];
-		$senha = $res[$i]['senha'];
 		$nivel = $res[$i]['nivel'];
 		$data = $res[$i]['data'];
 		$foto = $res[$i]['foto'];
 		$ativo = $res[$i]['ativo'];
 
-		if ($nivel == 'Administrador') {
-			$senha = '*********';
-		}
 
 		$dataF = implode('/', array_reverse(explode('-', $data)));
 
@@ -69,14 +64,13 @@ HTML;
 		{$nome}	
 		</td> 		
 		<td class="">{$email}</td>
-		<td class="">{$senha}</td>
 		<td class="esc">{$cpf}</td>	
 		<td class="esc">{$nivel}</td>		
 		<td class="esc">{$dataF}</td>
 		<td>
 		<button type="button" class="btn btn-sm btn-primary" 
 		onclick="mostrar('{$nome}', '{$email}','{$cpf}','{$nivel}', '{$dataF}', '{$caminho}')"
-		>
+?>
            Visualizar
         </button>
 
@@ -95,7 +89,7 @@ HTML;
 HTML;
 
 } else {
-	echo 'Não possui nenhum registro cadastrado!';
+	echo 'NÃ£o possui nenhum registro cadastrado!';
 }
 echo <<<HTML
 </small>
@@ -108,9 +102,7 @@ HTML;
 <script type="text/javascript">
 
 	$(document).ready(function () {
-		$('#tabela').DataTable({
-			"ordering": false,
-			"stateSave": true,
+		$('#tabela').DataTable({ ? "ordering" : false, ? "stateSave" : true,
 		});
 		$('#tabela_filter label input').focus();
 	});
@@ -118,7 +110,7 @@ HTML;
 
 
 	function mostrar(nome, email, cpf, nivel, dataF, foto) {
-		// Animações e estilos herdados do design original
+		// AnimaÃ§Ãµes e estilos herdados do design original
 		const animationStyles = `
 	<style>
 		@keyframes fadeIn {
@@ -126,10 +118,7 @@ HTML;
 			to { opacity: 1; transform: translateY(0); }
 		}
 		
-		@keyframes pulse {
-			0% { transform: scale(1); }
-			50% { transform: scale(1.05); }
-			100% { transform: scale(1); }
+		@keyframes pulse { ?? 0% { transform: scale(1); } 50% { transform: scale(1.05); } 100% { transform: scale(1); }
 		}
 
 		.profile-card {
@@ -263,7 +252,7 @@ HTML;
 			</div>
 			<div class="profile-body">
 				<div class="info-card">
-					<h5>Informações Pessoais</h5>
+					<h5>InformaÃ§Ãµes Pessoais</h5>
 					<div class="info-item">
 						<span class="info-label">CPF</span>
 						<span class="info-value">${cpf}</span>

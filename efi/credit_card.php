@@ -13,19 +13,43 @@ $id = $_GET['id'];
 $nome_curso = $_GET['nome_curso'];
 
 
+//BUSCA VALOR ACRESCIMO CARTAO
+$queryAcrescimoCartao = $pdo->query("SELECT acrescimo_cartao_credito FROM config");
+$resAcrescimoCartao = $queryAcrescimoCartao->fetchColumn();
+
+
 
 //BUSCA DADOS DA MATRICULA
-$query = $pdo->query("SELECT * FROM matriculas where id = '$id' and aluno = '$id_aluno' ");
+$query = $pdo->prepare("SELECT * FROM matriculas where id = :id and aluno = :aluno");
+$query->execute([':id' => $id, ':aluno' => $id_aluno]);
 $res = $query->fetchAll(PDO::FETCH_ASSOC);
 
 $response = $res[0];
 
 
+// aplica desconto caso exista
+$valor = (float)$response['valor'];
+$desconto = !empty($response['valor_cupom']) ? (float)$response['valor_cupom'] : 0;
+$response['valor'] = $valor - $desconto;
 
-// echo '<pre>';
-// echo json_encode($res[0], JSON_PRETTY_PRINT);
-// echo '</pre>';
-// return;
+
+
+
+$valor = (int) $response['valor']; 
+$percentual = isset($resAcrescimoCartao) ? (float) $resAcrescimoCartao : 0; 
+
+
+
+if ($percentual > 0) {
+    
+    $valor += ceil($valor * ($percentual / 100));
+
+}
+
+$response['valor'] = $valor;
+
+
+
 
 ?>
 
@@ -74,7 +98,7 @@ $response = $res[0];
 <body class="bg-gray-100 min-h-screen py-8">
     <div class="max-w-6xl mx-auto px-4">
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            <button onclick="getInstallments()">Testar</button>
+            
             <!-- Progress Bar -->
             <div class="lg:col-span-3 mb-4">
                 <div class="bg-white rounded-lg shadow-md p-6">
@@ -202,7 +226,7 @@ $response = $res[0];
                                     </div>
                                     <div class="flex-1">
                                         <div class="font-medium text-gray-900">Pagamento Recorrente</div>
-                                        <div class="text-sm text-gray-500">Pagamento recorrente • Aprovação imediata
+                                        <div class="text-sm text-gray-500">Pagamento recorrente em ate 6x - Aprovacao imediata
                                         </div>
 
                                     </div>
@@ -694,6 +718,14 @@ $response = $res[0];
 
         let cardBrand = null;
 
+        function getMaxInstallments() {
+            const selected = document.querySelector('input[name="payment_method"]:checked');
+            if (selected && selected.value === 'debit_card') {
+                return 6;
+            }
+            return 12;
+        }
+
         // Função para identificar a bandeira
         async function identifyBrand(cardNumber) {
             const brandIcon = document.getElementById('cardIcon');
@@ -771,7 +803,11 @@ $response = $res[0];
                 const select = document.getElementById('installments');
                 select.innerHTML = '';
 
+                const maxInstallments = getMaxInstallments();
                 installmentsResponse.installments.forEach(installment => {
+                    if (installment.installment > maxInstallments) {
+                        return;
+                    }
                     const valorReais = (installment.value / 100).toFixed(2).replace('.', ',');
                     const option = document.createElement('option');
                     option.value = installment.installment;
@@ -1068,7 +1104,7 @@ $response = $res[0];
 
                 const methods = {
                     'credit_card': { text: 'Cartão de Crédito', detail: 'À vista ou parcelado em até 12x' },
-                    'debit_card': { text: 'Pagamento Recorrente', detail: ' Pagamento recorrente' },
+                    'debit_card': { text: 'Pagamento Recorrente', detail: 'Pagamento recorrente em ate 6x' },
                 };
 
                 const method = methods[formData.payment_method];
@@ -1258,6 +1294,7 @@ $response = $res[0];
                 method.addEventListener('change', function () {
                     formData.payment_method = this.value;
                     updatePaymentSummary();
+                    getInstallments();
 
                     // Adicionar efeito visual
                     document.querySelectorAll('.payment-method-option').forEach(option => {
@@ -1416,7 +1453,7 @@ $response = $res[0];
                 // });
 
                 $.ajax({
-                    url: '/efi/card_payment.php',
+                    url: '<?php echo $url_sistema ?>efi/card_payment.php',
                     type: 'POST',
                     contentType: 'application/json; charset=utf-8',
                     data: JSON.stringify(formData),

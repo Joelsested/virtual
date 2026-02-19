@@ -1,8 +1,47 @@
 <?php
-$id = $_GET['id'];
-$data_certificado = $_GET['data'];
-$ano_certificado = $_GET['ano'];
-include('../conexao.php');
+$id = $_POST['id'] ?? $_GET['id'] ?? '';
+$data_certificado = $_POST['data'] ?? $_GET['data'];
+$ano_certificado = $_POST['ano'] ?? $_GET['ano'];
+$id_mat = $_POST['id_mat'] ?? $_GET['id_mat'] ?? '';
+if (!isset($pdo)) {
+	include('../conexao.php');
+}
+
+$nome_curso = '';
+$conteudo_programatico = '';
+$carga_curso = '';
+
+if ($id_mat !== '') {
+	$stmtMatricula = $pdo->prepare("SELECT * FROM matriculas WHERE id = :id LIMIT 1");
+	$stmtMatricula->bindValue(':id', $id_mat);
+	$stmtMatricula->execute();
+	$dados_matricula = $stmtMatricula->fetch(PDO::FETCH_ASSOC);
+
+	if ($dados_matricula) {
+		if ($id === '' && !empty($dados_matricula['aluno'])) {
+			$id = $dados_matricula['aluno'];
+		}
+
+		$id_curso = $dados_matricula['id_curso'] ?? '';
+		if ($id_curso !== '') {
+			$stmtCurso = $pdo->prepare("SELECT nome, desc_longa, carga FROM cursos WHERE id = :id LIMIT 1");
+			$stmtCurso->bindValue(':id', $id_curso);
+			$stmtCurso->execute();
+			$dados_curso = $stmtCurso->fetch(PDO::FETCH_ASSOC);
+
+			if ($dados_curso) {
+				$nome_curso = $dados_curso['nome'] ?? '';
+				$carga_curso = $dados_curso['carga'] ?? '';
+				$conteudo_programatico = $dados_curso['desc_longa'] ?? '';
+			}
+		}
+	}
+}
+
+$conteudo_programatico = trim($conteudo_programatico);
+if ($id_mat !== '' && trim(strip_tags($conteudo_programatico)) === '') {
+	$conteudo_programatico = 'Conte\u00fado program\u00e1tico n\u00e3o dispon\u00edvel.';
+}
 
 setlocale(LC_TIME, 'pt_BR', 'pt_BR.utf-8', 'pt_BR.utf-8', 'portuguese');
 date_default_timezone_set('America/Porto_Velho');
@@ -110,6 +149,16 @@ $data_hoje = utf8_encode(strftime('%A, %d de %B de %Y', strtotime('today')));
 		position: absolute;
 	}
 
+	.conteudo {
+		position: absolute;
+		margin-top: 210px;
+		text-align: left;
+		color: #454545;
+		font-size: 13px;
+		width: 730px;
+		margin-left: 230px;
+	}
+
 	.nome-aluno {
 		position: absolute;
 		margin-top: 345px;
@@ -142,24 +191,25 @@ $data_hoje = utf8_encode(strftime('%A, %d de %B de %Y', strtotime('today')));
 
 
 <body>
-	<div class="id"> <?php echo $id_mat; ?></div>
+	<div class="id"<?php echo $id_mat; ></div>
 	<div class="nome-aluno"> <b><br><br><?php echo mb_strtoupper($nome_aluno); ?></b></div>
 
 	<div class="descricao"><br><br> Identidade, <?php echo $rg ?>, expedida em <?php echo $expedicao ?>, Nacionalidade
 		Brasileiro(a), Natural de <?php echo $naturalidade ?>, Nascido em, <?php echo $nascimento ?>, o presente
-		CERTIFICADO por haver concluído no ano de <?php echo $ano_certificado; ?> o Ensino Médio, nos Exames de Finalização de Etapas – EJA –
+		CERTIFICADO por haver concluído no ano de <?php echo $ano_certificado; > o Ensino Médio, nos Exames de Finalização de Etapas – EJA –
 		Educação e Jovens e Adultos. </div>
 
 
 	<div class="data"> <br><br> Buritis <?php echo $data_formatada ?></div>
 
-	<img class="imagem" src="<?php echo $url_sistema ?>sistema/img/certificado-fundo.jpg">
+	<img class="imagem" src="<?php echo $url_sistema >sistema/img/certificado-fundo.jpg?>"?>
 
 	<div class="verso">
-		<img class="imagem2" src="<?php echo $url_sistema ?>sistema/img/certificado-verso.jpg">
-		<div class="conteudo">zzzzzzzzzzzzz
-
-
+		<img class="imagem2" src="<?php echo $url_sistema >sistema/img/certificado-verso.jpg?>"?>
+		<div class="conteudo"<?php if ($nome_curso !== '') { >
+				<div style="font-weight:600;margin-bottom:8px;"<?php echo mb_strtoupper($nome_curso); ></div>
+			<?php } ?>
+			<?php echo $conteudo_programatico; ?>
 		</div>
 		<div class="data2"> Buritis <?php echo ($data_formatada); ?>
 		</div>

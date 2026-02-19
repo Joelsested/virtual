@@ -1,5 +1,6 @@
 <?php
-require_once("../../../conexao.php");
+require_once(__DIR__ . "/../../../conexao.php");
+require_once(__DIR__ . "/../../../../helpers.php");
 $tabela = 'tesoureiros';
 
 $nome = $_POST['nome'];
@@ -10,12 +11,18 @@ $endereco = $_POST['endereco'];
 $cidade = $_POST['cidade'];
 $estado = $_POST['estado'];
 $sexo = $_POST['sexo'];
+$nascimento = trim($_POST['nascimento'] ?? '');
 $id = $_POST['id'];
 
 $wallet_id = $_POST['wallet_id'];
 
-$senha = '123456';
+ $senha = birthDigits($nascimento);
+if ($senha === '') {
+    echo 'Informe uma data de nascimento valida!';
+    exit();
+}
 $senha_crip = md5($senha);
+$nascimentoBr = formatDateBr($nascimento);
 
 //validar email duplicado
 $query = $pdo->query("SELECT * FROM $tabela where email = '$email'");
@@ -76,10 +83,11 @@ if (@$_FILES['foto']['name'] != "") {
 
 if ($id == "") {
 
-    $query = $pdo->prepare("INSERT INTO $tabela SET nome = :nome, email = :email, cpf = :cpf, telefone = :telefone, endereco = :endereco,  cidade = :cidade, estado = :estado, sexo = :sexo, foto = '$foto', ativo = 'Sim', data = curDate()");
+    $query = $pdo->prepare("INSERT INTO $tabela SET nome = :nome, email = :email, cpf = :cpf, telefone = :telefone, nascimento = :nascimento, endereco = :endereco,  cidade = :cidade, estado = :estado, sexo = :sexo, foto = '$foto', ativo = 'Sim', data = curDate()");
     $query->bindValue(":nome", "$nome");
     $query->bindValue(":email", "$email");
     $query->bindValue(":telefone", "$telefone");
+    $query->bindValue(":nascimento", "$nascimentoBr");
     $query->bindValue(":cpf", "$cpf");
     $query->bindValue(":endereco", "$endereco");
     $query->bindValue(":cidade", "$cidade");
@@ -88,19 +96,21 @@ if ($id == "") {
     $query->execute();
     $ult_id = $pdo->lastInsertId();
 
-    $query = $pdo->prepare("INSERT INTO usuarios SET wallet_id = :wallet_id, nome = :nome, usuario = :email, senha = '$senha', cpf = :cpf, senha_crip = '$senha_crip', nivel = 'Tesoureiro',  foto = '$foto', id_pessoa = '$ult_id', ativo = 'Sim', data = curDate()");
+    $query = $pdo->prepare("INSERT INTO usuarios SET wallet_id = :wallet_id, nome = :nome, usuario = :email, senha = '', cpf = :cpf, senha_crip = :senha_crip, nivel = 'Tesoureiro',  foto = '$foto', id_pessoa = '$ult_id', ativo = 'Sim', data = curDate()");
 
     $query->bindValue(":nome", "$nome");
     $query->bindValue(":email", "$email");
     $query->bindValue(":cpf", "$cpf");
     $query->bindValue(":wallet_id", "$wallet_id");
+    $query->bindValue(":senha_crip", "$senha_crip");
     $query->execute();
 
 } else {
-    $query = $pdo->prepare("UPDATE $tabela SET nome = :nome, email = :email, cpf = :cpf, telefone = :telefone, endereco = :endereco,  cidade = :cidade, estado = :estado, sexo = :sexo, foto = '$foto' WHERE id = '$id'");
+    $query = $pdo->prepare("UPDATE $tabela SET nome = :nome, email = :email, cpf = :cpf, telefone = :telefone, nascimento = :nascimento, endereco = :endereco,  cidade = :cidade, estado = :estado, sexo = :sexo, foto = '$foto' WHERE id = '$id'");
     $query->bindValue(":nome", "$nome");
     $query->bindValue(":email", "$email");
     $query->bindValue(":telefone", "$telefone");
+    $query->bindValue(":nascimento", "$nascimentoBr");
     $query->bindValue(":cpf", "$cpf");
     $query->bindValue(":endereco", "$endereco");
     $query->bindValue(":cidade", "$cidade");
@@ -109,12 +119,13 @@ if ($id == "") {
     $query->execute();
     $ult_id = $pdo->lastInsertId();
 
-    $query = $pdo->prepare("UPDATE usuarios SET wallet_id = :wallet_id, nome = :nome, usuario = :email, cpf = :cpf, foto = '$foto' WHERE id_pessoa = '$id' and nivel = 'tesoureiro'");
+    $query = $pdo->prepare("UPDATE usuarios SET wallet_id = :wallet_id, nome = :nome, usuario = :email, cpf = :cpf, senha = '', senha_crip = :senha_crip, foto = '$foto' WHERE id_pessoa = '$id' and nivel = 'tesoureiro'");
 
     $query->bindValue(":nome", "$nome");
     $query->bindValue(":email", "$email");
     $query->bindValue(":cpf", "$cpf");
     $query->bindValue(":wallet_id", "$wallet_id");
+    $query->bindValue(":senha_crip", "$senha_crip");
     $query->execute();
 }
 

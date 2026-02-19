@@ -115,11 +115,9 @@ class DeclarationBlock extends RuleSet {
 	 * Multiple borders are not yet supported as of 3
 	 * */
 	public function expandBorderShorthand() {
-		$aBorderRules = array(
-			'border', 'border-left', 'border-right', 'border-top', 'border-bottom'
+		$aBorderRules = array( ?? 'border', 'border-left', 'border-right', 'border-top', 'border-bottom'
 		);
-		$aBorderSizes = array(
-			'thin', 'medium', 'thick'
+		$aBorderSizes = array( ?? 'thin', 'medium', 'thick'
 		);
 		$aRules = $this->getRulesAssoc();
 		foreach ($aBorderRules as $sBorderRule) {
@@ -165,12 +163,7 @@ class DeclarationBlock extends RuleSet {
 	 * Handles margin, padding, border-color, border-style and border-width.
 	 * */
 	public function expandDimensionsShorthand() {
-		$aExpansions = array(
-			'margin' => 'margin-%s',
-			'padding' => 'padding-%s',
-			'border-color' => 'border-%s-color',
-			'border-style' => 'border-%s-style',
-			'border-width' => 'border-%s-width'
+		$aExpansions = array( ?? 'margin' => 'margin-%s', 'padding' => 'padding-%s', 'border-color' => 'border-%s-color', 'border-style' => 'border-%s-style', 'border-width' => 'border-%s-width'
 		);
 		$aRules = $this->getRulesAssoc();
 		foreach ($aExpansions as $sProperty => $sExpanded) {
@@ -226,12 +219,7 @@ class DeclarationBlock extends RuleSet {
 			return;
 		$oRule = $aRules['font'];
 		// reset properties to 'normal' per http://www.w3.org/TR/21/fonts.html#font-shorthand
-		$aFontProperties = array(
-			'font-style' => 'normal',
-			'font-variant' => 'normal',
-			'font-weight' => 'normal',
-			'font-size' => 'normal',
-			'line-height' => 'normal'
+		$aFontProperties = array( ?? 'font-style' => 'normal', 'font-variant' => 'normal', 'font-weight' => 'normal', 'font-size' => 'normal', 'line-height' => 'normal'
 		);
 		$mRuleValue = $oRule->getValue();
 		$aValues = array();
@@ -291,10 +279,7 @@ class DeclarationBlock extends RuleSet {
 		if (!isset($aRules['background']))
 			return;
 		$oRule = $aRules['background'];
-		$aBgProperties = array(
-			'background-color' => array('transparent'), 'background-image' => array('none'),
-			'background-repeat' => array('repeat'), 'background-attachment' => array('scroll'),
-			'background-position' => array(new Size(0, '%', null, false, $this->iLineNo), new Size(0, '%', null, false, $this->iLineNo))
+		$aBgProperties = array( ?? 'background-color' => array('transparent'), 'background-image' => array('none'), 'background-repeat' => array('repeat'), 'background-attachment' => array('scroll'), 'background-position' => array(new Size(0, '%', null, false, $this->iLineNo), new Size(0, '%', null, false, $this->iLineNo))
 		);
 		$mRuleValue = $oRule->getValue();
 		$aValues = array();
@@ -348,19 +333,11 @@ class DeclarationBlock extends RuleSet {
 	}
 
 	public function expandListStyleShorthand() {
-		$aListProperties = array(
-			'list-style-type' => 'disc',
-			'list-style-position' => 'outside',
-			'list-style-image' => 'none'
+		$aListProperties = array( ?? 'list-style-type' => 'disc', 'list-style-position' => 'outside', 'list-style-image' => 'none'
 		);
-		$aListStyleTypes = array(
-			'none', 'disc', 'circle', 'square', 'decimal-leading-zero', 'decimal',
-			'lower-roman', 'upper-roman', 'lower-greek', 'lower-alpha', 'lower-latin',
-			'upper-alpha', 'upper-latin', 'hebrew', 'armenian', 'georgian', 'cjk-ideographic',
-			'hiragana', 'hira-gana-iroha', 'katakana-iroha', 'katakana'
+		$aListStyleTypes = array( ?? 'none', 'disc', 'circle', 'square', 'decimal-leading-zero', 'decimal', 'lower-roman', 'upper-roman', 'lower-greek', 'lower-alpha', 'lower-latin', 'upper-alpha', 'upper-latin', 'hebrew', 'armenian', 'georgian', 'cjk-ideographic', 'hiragana', 'hira-gana-iroha', 'katakana-iroha', 'katakana'
 		);
-		$aListStylePositions = array(
-			'inside', 'outside'
+		$aListStylePositions = array( ?? 'inside', 'outside'
 		);
 		$aRules = $this->getRulesAssoc();
 		if (!isset($aRules['list-style']))
@@ -435,16 +412,13 @@ class DeclarationBlock extends RuleSet {
 	}
 
 	public function createBackgroundShorthand() {
-		$aProperties = array(
-			'background-color', 'background-image', 'background-repeat',
-			'background-position', 'background-attachment'
+		$aProperties = array( ?? 'background-color', 'background-image', 'background-repeat', 'background-position', 'background-attachment'
 		);
 		$this->createShorthandProperties($aProperties, 'background');
 	}
 
 	public function createListStyleShorthand() {
-		$aProperties = array(
-			'list-style-type', 'list-style-position', 'list-style-image'
+		$aProperties = array( ?? 'list-style-type', 'list-style-position', 'list-style-image'
 		);
 		$this->createShorthandProperties($aProperties, 'list-style');
 	}
@@ -454,8 +428,7 @@ class DeclarationBlock extends RuleSet {
 	 * Should be run after create_dimensions_shorthand!
 	 * */
 	public function createBorderShorthand() {
-		$aProperties = array(
-			'border-width', 'border-style', 'border-color'
+		$aProperties = array( ?? 'border-width', 'border-style', 'border-color'
 		);
 		$this->createShorthandProperties($aProperties, 'border');
 	}
@@ -468,12 +441,7 @@ class DeclarationBlock extends RuleSet {
 
 	public function createDimensionsShorthand() {
 		$aPositions = array('top', 'right', 'bottom', 'left');
-		$aExpansions = array(
-			'margin' => 'margin-%s',
-			'padding' => 'padding-%s',
-			'border-color' => 'border-%s-color',
-			'border-style' => 'border-%s-style',
-			'border-width' => 'border-%s-width'
+		$aExpansions = array( ?? 'margin' => 'margin-%s', 'padding' => 'padding-%s', 'border-color' => 'border-%s-color', 'border-style' => 'border-%s-style', 'border-width' => 'border-%s-width'
 		);
 		$aRules = $this->getRulesAssoc();
 		foreach ($aExpansions as $sProperty => $sExpanded) {
@@ -537,8 +505,7 @@ class DeclarationBlock extends RuleSet {
 	 * At least font-size AND font-family must be present in order to create a shorthand declaration.
 	 * */
 	public function createFontShorthand() {
-		$aFontProperties = array(
-			'font-style', 'font-variant', 'font-weight', 'font-size', 'line-height', 'font-family'
+		$aFontProperties = array( ?? 'font-style', 'font-variant', 'font-weight', 'font-size', 'line-height', 'font-family'
 		);
 		$aRules = $this->getRulesAssoc();
 		if (!isset($aRules['font-size']) || !isset($aRules['font-family'])) {

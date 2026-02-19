@@ -1,9 +1,9 @@
 <?php
 /**
  * @package dompdf
- * @link    http://dompdf.github.com/
- * @author  Benj Carson <benjcarson@digitaljunkies.ca>
- * @author  Fabien Ménager <fabien.menager@gmail.com>
+ * @link ? http ://dompdf.github.com/
+ * @author ?? Benj Carson <benjcarson@digitaljunkies.ca>
+ * @author ?? Fabien MÃ©nager <fabien.menager@gmail.com>
  * @license http://www.gnu.org/copyleft/lesser.html GNU Lesser General Public License
  */
 namespace Dompdf\Css;
@@ -23,163 +23,47 @@ class AttributeTranslator
     // http://www.w3.org/TR/REC-html40/index/attributes.html
     // http://www.cs.tut.fi/~jkorpela/html2css.html
     private static $__ATTRIBUTE_LOOKUP = [
-        //'caption' => array ( 'align' => '', ),
-        'img' => [
-            'align' => [
-                'bottom' => 'vertical-align: baseline;',
-                'middle' => 'vertical-align: middle;',
-                'top' => 'vertical-align: top;',
-                'left' => 'float: left;',
-                'right' => 'float: right;'
-            ],
-            'border' => 'border: %0.2Fpx solid;',
-            'height' => 'height: %spx;',
-            'hspace' => 'padding-left: %1$0.2Fpx; padding-right: %1$0.2Fpx;',
-            'vspace' => 'padding-top: %1$0.2Fpx; padding-bottom: %1$0.2Fpx;',
-            'width' => 'width: %spx;',
+        //'caption' => array ( 'align' => '', ), 'img' => ['align' => ['bottom' => 'vertical-align: baseline;', 'middle' => 'vertical-align: middle;', 'top' => 'vertical-align: top;', 'left' => 'float: left;', 'right' => 'float: right;'
+            ], 'border' => 'border: %0.2Fpx solid;', 'height' => 'height: %spx;', 'hspace' => 'padding-left: %1$0.2Fpx; padding-right: %1$0.2Fpx;', 'vspace' => 'padding-top: %1$0.2Fpx; padding-bottom: %1$0.2Fpx;', 'width' => 'width: %spx;',
+        ], 'table' => ['align' => ['left' => 'margin-left: 0; margin-right: auto;', 'center' => 'margin-left: auto; margin-right: auto;', 'right' => 'margin-left: auto; margin-right: 0;'
+            ], 'bgcolor' => 'background-color: %s;', 'border' => '!set_table_border', 'cellpadding' => '!set_table_cellpadding', //'border-spacing: %0.2F; border-collapse: separate;', 'cellspacing' => '!set_table_cellspacing', 'frame' => ['void' => 'border-style: none;', 'above' => 'border-top-style: solid;', 'below' => 'border-bottom-style: solid;', 'hsides' => 'border-left-style: solid; border-right-style: solid;', 'vsides' => 'border-top-style: solid; border-bottom-style: solid;', 'lhs' => 'border-left-style: solid;', 'rhs' => 'border-right-style: solid;', 'box' => 'border-style: solid;', 'border' => 'border-style: solid;'
+            ], 'rules' => '!set_table_rules', 'width' => 'width: %s;',
+        ], 'hr' => ['align' => '!set_hr_align', // Need to grab width to set 'left' & 'right' correctly ?? 'noshade' => 'border-style: solid;', 'size' => '!set_hr_size', //'border-width: %0.2F px;', 'width' => 'width: %s;',
+        ], 'div' => ['align' => 'text-align: %s;',
+        ], 'h1' => ['align' => 'text-align: %s;',
+        ], 'h2' => ['align' => 'text-align: %s;',
+        ], 'h3' => ['align' => 'text-align: %s;',
+        ], 'h4' => ['align' => 'text-align: %s;',
+        ], 'h5' => ['align' => 'text-align: %s;',
+        ], 'h6' => ['align' => 'text-align: %s;',
         ],
-        'table' => [
-            'align' => [
-                'left' => 'margin-left: 0; margin-right: auto;',
-                'center' => 'margin-left: auto; margin-right: auto;',
-                'right' => 'margin-left: auto; margin-right: 0;'
-            ],
-            'bgcolor' => 'background-color: %s;',
-            'border' => '!set_table_border',
-            'cellpadding' => '!set_table_cellpadding', //'border-spacing: %0.2F; border-collapse: separate;',
-            'cellspacing' => '!set_table_cellspacing',
-            'frame' => [
-                'void' => 'border-style: none;',
-                'above' => 'border-top-style: solid;',
-                'below' => 'border-bottom-style: solid;',
-                'hsides' => 'border-left-style: solid; border-right-style: solid;',
-                'vsides' => 'border-top-style: solid; border-bottom-style: solid;',
-                'lhs' => 'border-left-style: solid;',
-                'rhs' => 'border-right-style: solid;',
-                'box' => 'border-style: solid;',
-                'border' => 'border-style: solid;'
-            ],
-            'rules' => '!set_table_rules',
-            'width' => 'width: %s;',
+        //TODO: translate more form element attributes ?? 'input' => ['size' => '!set_input_width'
+        ], 'p' => ['align' => 'text-align: %s;',
         ],
-        'hr' => [
-            'align' => '!set_hr_align', // Need to grab width to set 'left' & 'right' correctly
-            'noshade' => 'border-style: solid;',
-            'size' => '!set_hr_size', //'border-width: %0.2F px;',
-            'width' => 'width: %s;',
-        ],
-        'div' => [
-            'align' => 'text-align: %s;',
-        ],
-        'h1' => [
-            'align' => 'text-align: %s;',
-        ],
-        'h2' => [
-            'align' => 'text-align: %s;',
-        ],
-        'h3' => [
-            'align' => 'text-align: %s;',
-        ],
-        'h4' => [
-            'align' => 'text-align: %s;',
-        ],
-        'h5' => [
-            'align' => 'text-align: %s;',
-        ],
-        'h6' => [
-            'align' => 'text-align: %s;',
-        ],
-        //TODO: translate more form element attributes
-        'input' => [
-            'size' => '!set_input_width'
-        ],
-        'p' => [
-            'align' => 'text-align: %s;',
-        ],
-//    'col' => array(
-//      'align'  => '',
-//      'valign' => '',
-//    ),
-//    'colgroup' => array(
-//      'align'  => '',
-//      'valign' => '',
-//    ),
-        'tbody' => [
-            'align' => '!set_table_row_align',
-            'valign' => '!set_table_row_valign',
-        ],
-        'td' => [
-            'align' => 'text-align: %s;',
-            'bgcolor' => '!set_background_color',
-            'height' => 'height: %s;',
-            'nowrap' => 'white-space: nowrap;',
-            'valign' => 'vertical-align: %s;',
-            'width' => 'width: %s;',
-        ],
-        'tfoot' => [
-            'align' => '!set_table_row_align',
-            'valign' => '!set_table_row_valign',
-        ],
-        'th' => [
-            'align' => 'text-align: %s;',
-            'bgcolor' => '!set_background_color',
-            'height' => 'height: %s;',
-            'nowrap' => 'white-space: nowrap;',
-            'valign' => 'vertical-align: %s;',
-            'width' => 'width: %s;',
-        ],
-        'thead' => [
-            'align' => '!set_table_row_align',
-            'valign' => '!set_table_row_valign',
-        ],
-        'tr' => [
-            'align' => '!set_table_row_align',
-            'bgcolor' => '!set_table_row_bgcolor',
-            'valign' => '!set_table_row_valign',
-        ],
-        'body' => [
-            'background' => 'background-image: url(%s);',
-            'bgcolor' => '!set_background_color',
-            'link' => '!set_body_link',
-            'text' => '!set_color',
-        ],
-        'br' => [
-            'clear' => 'clear: %s;',
-        ],
-        'basefont' => [
-            'color' => '!set_color',
-            'face' => 'font-family: %s;',
-            'size' => '!set_basefont_size',
-        ],
-        'font' => [
-            'color' => '!set_color',
-            'face' => 'font-family: %s;',
-            'size' => '!set_font_size',
-        ],
-        'dir' => [
-            'compact' => 'margin: 0.5em 0;',
-        ],
-        'dl' => [
-            'compact' => 'margin: 0.5em 0;',
-        ],
-        'menu' => [
-            'compact' => 'margin: 0.5em 0;',
-        ],
-        'ol' => [
-            'compact' => 'margin: 0.5em 0;',
-            'start' => 'counter-reset: -dompdf-default-counter %d;',
-            'type' => 'list-style-type: %s;',
-        ],
-        'ul' => [
-            'compact' => 'margin: 0.5em 0;',
-            'type' => 'list-style-type: %s;',
-        ],
-        'li' => [
-            'type' => 'list-style-type: %s;',
-            'value' => 'counter-reset: -dompdf-default-counter %d;',
-        ],
-        'pre' => [
-            'width' => 'width: %s;',
+// ?? 'col' => array(
+// ?? 'align'  => '',
+// ?? 'valign' => '',
+// ?? ),
+// ?? 'colgroup' => array(
+// ?? 'align'  => '',
+// ?? 'valign' => '',
+// ?? ), 'tbody' => ['align' => '!set_table_row_align', 'valign' => '!set_table_row_valign',
+        ], 'td' => ['align' => 'text-align: %s;', 'bgcolor' => '!set_background_color', 'height' => 'height: %s;', 'nowrap' => 'white-space: nowrap;', 'valign' => 'vertical-align: %s;', 'width' => 'width: %s;',
+        ], 'tfoot' => ['align' => '!set_table_row_align', 'valign' => '!set_table_row_valign',
+        ], 'th' => ['align' => 'text-align: %s;', 'bgcolor' => '!set_background_color', 'height' => 'height: %s;', 'nowrap' => 'white-space: nowrap;', 'valign' => 'vertical-align: %s;', 'width' => 'width: %s;',
+        ], 'thead' => ['align' => '!set_table_row_align', 'valign' => '!set_table_row_valign',
+        ], 'tr' => ['align' => '!set_table_row_align', 'bgcolor' => '!set_table_row_bgcolor', 'valign' => '!set_table_row_valign',
+        ], 'body' => ['background' => 'background-image: url(%s);', 'bgcolor' => '!set_background_color', 'link' => '!set_body_link', 'text' => '!set_color',
+        ], 'br' => ['clear' => 'clear: %s;',
+        ], 'basefont' => ['color' => '!set_color', 'face' => 'font-family: %s;', 'size' => '!set_basefont_size',
+        ], 'font' => ['color' => '!set_color', 'face' => 'font-family: %s;', 'size' => '!set_font_size',
+        ], 'dir' => ['compact' => 'margin: 0.5em 0;',
+        ], 'dl' => ['compact' => 'margin: 0.5em 0;',
+        ], 'menu' => ['compact' => 'margin: 0.5em 0;',
+        ], 'ol' => ['compact' => 'margin: 0.5em 0;', 'start' => 'counter-reset: -dompdf-default-counter %d;', 'type' => 'list-style-type: %s;',
+        ], 'ul' => ['compact' => 'margin: 0.5em 0;', 'type' => 'list-style-type: %s;',
+        ], 'li' => ['type' => 'list-style-type: %s;', 'value' => 'counter-reset: -dompdf-default-counter %d;',
+        ], 'pre' => ['width' => 'width: %s;',
         ],
     ];
 
@@ -188,22 +72,9 @@ class AttributeTranslator
         // For basefont support
         -3 => "4pt",
         -2 => "5pt",
-        -1 => "6pt",
-        0 => "7pt",
+        -1 => "6pt", 0 => "7pt", 1 => "8pt", 2 => "10pt", 3 => "12pt", 4 => "14pt", 5 => "18pt", 6 => "24pt", 7 => "34pt",
 
-        1 => "8pt",
-        2 => "10pt",
-        3 => "12pt",
-        4 => "14pt",
-        5 => "18pt",
-        6 => "24pt",
-        7 => "34pt",
-
-        // For basefont support
-        8 => "48pt",
-        9 => "44pt",
-        10 => "52pt",
-        11 => "60pt",
+        // For basefont support ?? 8 => "48pt", 9 => "44pt", 10 => "52pt", 11 => "60pt",
     ];
 
     /**
@@ -318,7 +189,7 @@ class AttributeTranslator
      */
     protected static function _get_valid_color($value)
     {
-        if (preg_match('/^#?([0-9A-F]{6})$/i', $value, $matches)) {
+        if (preg_match('/^#([0-9A-F]{6})$/i', $value, $matches)) {
             $value = "#$matches[1]";
         }
 
@@ -606,7 +477,7 @@ class AttributeTranslator
      */
     protected static function _set_basefont_size(\DOMElement $node, $value)
     {
-        // FIXME: ? we don't actually set the font size of anything here, just
+        // FIXME:  we don't actually set the font size of anything here, just
         // the base size for later modification by <font> tags.
         self::$_last_basefont_size = $value;
 

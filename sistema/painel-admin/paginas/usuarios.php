@@ -7,7 +7,7 @@ if(@$_SESSION['nivel'] != 'Administrador' and @$_SESSION['nivel'] != 'Tesoureiro
 	echo "<script>window.location='../index.php'</script>";
 	exit();
 }
- ?>
+?>
 
  
 
@@ -16,6 +16,5 @@ if(@$_SESSION['nivel'] != 'Administrador' and @$_SESSION['nivel'] != 'Tesoureiro
 </div>
 
 
-<script type="text/javascript">var pag = "<?=$pag?>"</script>
+<script type="text/javascript">var pag = "<=$pag>"</script>
 <script src="js/ajax.js"></script>
-

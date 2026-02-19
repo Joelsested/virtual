@@ -1,9 +1,9 @@
 <?php
 /**
  * @package dompdf
- * @link    http://dompdf.github.com/
- * @author  Benj Carson <benjcarson@digitaljunkies.ca>
- * @author  Fabien Ménager <fabien.menager@gmail.com>
+ * @link ? http ://dompdf.github.com/
+ * @author ?? Benj Carson <benjcarson@digitaljunkies.ca>
+ * @author ?? Fabien Ménager <fabien.menager@gmail.com>
  * @license http://www.gnu.org/copyleft/lesser.html GNU Lesser General Public License
  */
 namespace Dompdf\FrameReflower;
@@ -37,7 +37,7 @@ class Block extends AbstractFrameReflower
 
     /**
      *  Calculate the ideal used value for the width property as per:
-     *  http://www.w3.org/TR/CSS21/visudet.html#Computing_widths_and_margins
+     * ? http ://www.w3.org/TR/CSS21/visudet.html#Computing_widths_and_margins
      *
      * @param float $width
      *
@@ -96,7 +96,7 @@ class Block extends AbstractFrameReflower
                     }
 
                     // Technically, the width should be "shrink-to-fit" i.e. based on the
-                    // preferred width of the content...  a little too costly here as a
+                    // preferred width of the content... ?? a little too costly here as a
                     // special case.  Just get the width to take up the slack:
                     $left = 0;
                     $right = 0;
@@ -156,12 +156,7 @@ class Block extends AbstractFrameReflower
             $rm = $diff;
         }
 
-        return [
-            "width" => $width,
-            "margin_left" => $lm,
-            "margin_right" => $rm,
-            "left" => $left,
-            "right" => $right,
+        return ["width" => $width, "margin_left" => $lm, "margin_right" => $rm, "left" => $left, "right" => $right,
         ];
     }
 
@@ -182,7 +177,7 @@ class Block extends AbstractFrameReflower
         }
 
         //if ( $style->position === "absolute" )
-        //  $cb = $frame->find_positionned_parent()->get_containing_block();
+        // ?? $cb = $frame->find_positionned_parent()->get_containing_block();
 
         if (!isset($cb["w"])) {
             throw new Exception("Box property calculation requires containing block width");
@@ -198,9 +193,9 @@ class Block extends AbstractFrameReflower
         $calculate_width = $this->_calculate_width($width);
         $margin_left = $calculate_width['margin_left'];
         $margin_right = $calculate_width['margin_right'];
-        $width =  $calculate_width['width'];
-        $left =  $calculate_width['left'];
-        $right =  $calculate_width['right'];
+        $width = ?? $calculate_width['width'];
+        $left = ?? $calculate_width['left'];
+        $right = ?? $calculate_width['right'];
 
         // Handle min/max width
         $min_width = $style->length_in_pt($style->min_width, $cb["w"]);
@@ -218,9 +213,9 @@ class Block extends AbstractFrameReflower
             $calculate_width = $this->_calculate_width($min_width);
             $margin_left = $calculate_width['margin_left'];
             $margin_right = $calculate_width['margin_right'];
-            $width =  $calculate_width['width'];
-            $left =  $calculate_width['left'];
-            $right =  $calculate_width['right'];
+            $width = ?? $calculate_width['width'];
+            $left = ?? $calculate_width['left'];
+            $right = ?? $calculate_width['right'];
         }
 
         return [$width, $margin_left, $margin_right, $left, $right];
@@ -467,8 +462,7 @@ class Block extends AbstractFrameReflower
 
             case "justify":
                 // We justify all lines except the last one
-                $lines = $this->_frame->get_line_boxes(); // needs to be a variable (strict standards)
-                $last_line = array_pop($lines);
+                $lines = $this->_frame->get_line_boxes(); // needs to be a variable (strict standards) ?? $last_line = array_pop($lines);
 
                 foreach ($lines as $i => $line) {
                     if ($line->br) {
@@ -563,8 +557,7 @@ class Block extends AbstractFrameReflower
 
             foreach ($line->get_frames() as $frame) {
                 $style = $frame->get_style();
-                $isInlineBlock = (
-                    '-dompdf-image' === $style->display
+                $isInlineBlock = ( ?? '-dompdf-image' === $style->display
                     || 'inline-block' === $style->display
                     || 'inline-table' === $style->display
                 );
@@ -579,7 +572,7 @@ class Block extends AbstractFrameReflower
                 $baseline = $canvas->get_font_baseline($style->font_family, $style->font_size);
                 $y_offset = 0;
 
-                //FIXME: The 0.8 ratio applied to the height is arbitrary (used to accommodate descenders?)
+                //FIXME: The 0.8 ratio applied to the height is arbitrary (used to accommodate descenders)
                 if($isInlineBlock) {
                     $lineFrames = $line->get_frames();
                     if (count($lineFrames) == 1) {
@@ -610,7 +603,7 @@ class Block extends AbstractFrameReflower
                             case "top":
                                 break;
 
-                            case "text-bottom": // FIXME: align bottom of image with the descender?
+                            case "text-bottom": // FIXME: align bottom of image with the descender
                             case "bottom":
                                 $y_offset = 0.3 * $height + $imageHeightDiff;
                                 break;

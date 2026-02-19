@@ -74,6 +74,15 @@ if (@$_SESSION['nivel'] != 'Administrador' and @$_SESSION['nivel'] != 'Secretari
                         </div>
                     </div>
 
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Data de Nascimento</label>
+                                <input type="text" class="form-control" name="nascimento" id="nascimento" placeholder="DD/MM/AAAA" required>
+                            </div>
+                        </div>
+                    </div>
+
                     <div class="col-md-12">
                         <div class="form-group">
                             <label>Indentificador Banco</label>
@@ -93,6 +102,13 @@ if (@$_SESSION['nivel'] != 'Administrador' and @$_SESSION['nivel'] != 'Secretari
                         <div class="form-group">
                             <input type="checkbox" name="professor" id="professor" class="mr-2">
                             <label for="professor">Professor</label>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6 d-flex align-items-center" style="margin-top: 30px;">
+                        <div class="form-group">
+                            <input type="checkbox" name="pode_login_como_aluno" id="pode_login_como_aluno" class="mr-2">
+                            <label for="pode_login_como_aluno">Permitir login como aluno</label>
                         </div>
                     </div>
 
@@ -154,16 +170,20 @@ if (@$_SESSION['nivel'] != 'Administrador' and @$_SESSION['nivel'] != 'Secretari
             <div class="modal-body">
 
 
-                <div class="row" style="border-bottom: 1px solid #cac7c7;">
-                    <div class="col-md-6">
-                        <span><b>CPF: </b></span>
-                        <span id="cpf_mostrar"></span>
+                    <div class="row" style="border-bottom: 1px solid #cac7c7;">
+                        <div class="col-md-4">
+                            <span><b>CPF: </b></span>
+                            <span id="cpf_mostrar"></span>
+                        </div>
+                        <div class="col-md-4">
+                            <span><b>Telefone: </b></span>
+                            <span id="telefone_mostrar"></span>
+                        </div>
+                        <div class="col-md-4">
+                            <span><b>Nascimento: </b></span>
+                            <span id="nascimento_mostrar"></span>
+                        </div>
                     </div>
-                    <div class="col-md-6">
-                        <span><b>Telefone: </b></span>
-                        <span id="telefone_mostrar"></span>
-                    </div>
-                </div>
 
 
                 <div class="row" style="border-bottom: 1px solid #cac7c7;">
@@ -266,7 +286,7 @@ function formatarCPF(input) {
 }
 
 // --- Campos obrigatórios do formulário ---
-const camposObrigatorios = ['nome', 'cpf', 'email', 'wallet_id', 'comissao'];
+const camposObrigatorios = ['nome', 'cpf', 'email', 'wallet_id', 'comissao', 'nascimento'];
 
 // --- Função para verificar se todos os campos estão preenchidos e válidos ---
 function verificarCampos() {

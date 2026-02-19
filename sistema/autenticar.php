@@ -1,83 +1,174 @@
 <?php
+$host = $_SERVER['HTTP_HOST'] ?? '';
+$scheme = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') || ($_SERVER['SERVER_PORT'] ?? 0) == 443 ? 'https' : 'http';
+$scriptDir = dirname($_SERVER['SCRIPT_NAME'] ?? '');
+$basePath = preg_replace('#/(virtual|sestedcursos)/sistema$#', '', $scriptDir);
+$basePath = rtrim($basePath, '/');
+$loginUrl = "{$scheme}://{$host}{$basePath}/provao/sistema/index.php";
+if (!headers_sent()) { ? header('Location: ' . $loginUrl);
+}
+exit();
+
 session_cache_limiter('private');
 $cache_limiter = session_cache_limiter();
 
 /* define o prazo do cache em 120 minutos */
 session_cache_expire(120);
 $cache_expire = session_cache_expire();
-/* inicia a sessão */
+/* inicia a sessÃ£o */
+$cookieParams = session_get_cookie_params();
+$isSecure = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') || ($_SERVER['SERVER_PORT'] ?? 0) == 443;
+session_set_cookie_params(['lifetime' => 0, 'path' => $cookieParams['path'], 'domain' => $cookieParams['domain'], 'secure' => $isSecure, 'httponly' => true, 'samesite' => 'Lax',
+]);
 @session_start();
 
 require_once('conexao.php');
+require_once(__DIR__ . '/../helpers.php');
 
-$usuario = $_POST['usuario'];
-$senha = $_POST['senha'];
-$senha_crip = md5($senha);
+$usuario = trim($_POST['usuario'] ?? '');
+$senha = trim($_POST['senha'] ?? '');
 
-$query = $pdo->prepare("SELECT * FROM usuarios where (cpf = :usuario or usuario = :usuario) and senha_crip = :senha");
-$query->bindValue(":usuario", "$usuario");
-$query->bindValue(":senha", "$senha_crip");
-$query->execute();
-$res = $query->fetchAll(PDO::FETCH_ASSOC);
-if(@count($res) > 0){
-
-	if($res[0]['ativo'] == 'Não'){
-		echo "<script>window.alert('Seu Acesso foi desativado pelo Administrador!')</script>";
+if ($usuario === '' || $senha === '') {
+	echo "<script>window.alert('Informe o CPF/usuÃ¡rio e a data de nascimento!')</script>";
 	echo "<script>window.location='index.php'</script>";
 	exit();
-	}
-
-	//recuperar o nível do usuário
-	$_SESSION['nivel'] = $res[0]['nivel'];
-	$_SESSION['cpf'] = $res[0]['cpf'];
-	$_SESSION['id'] = $res[0]['id'];
-	$_SESSION['nome'] = $res[0]['nome'];
-
-
-	
-	$id = $res[0]['id'];
-	echo "<script>localStorage.setItem('id_usu', '$id')</script>";
-
-	if($_SESSION['nivel'] == 'Administrador'){
-		echo "<script>window.location='painel-admin'</script>";
-	}
-
-	if($_SESSION['nivel'] == 'Tesoureiro'){
-		echo "<script>window.location='painel-admin'</script>";
-	}
-
-
-	if($_SESSION['nivel'] == 'Secretario'){
-		echo "<script>window.location='painel-admin'</script>";
-	}
-
-	if($_SESSION['nivel'] == 'Professor'){
-		echo "<script>window.location='painel-admin'</script>";
-	}
-
-	if($_SESSION['nivel'] == 'Aluno'){
-		echo "<script>window.location='painel-aluno'</script>";
-	}
-
-	if($_SESSION['nivel'] == 'Tutor'){
-		echo "<script>window.location='painel-admin'</script>";
-	}
-
-	if($_SESSION['nivel'] == 'Parceiro'){
-		echo "<script>window.location='painel-admin'</script>";
-	}
-	
-	if($_SESSION['nivel'] == 'Assessor'){
-		echo "<script>window.location='painel-admin'</script>";
-	}
-	
-	if($_SESSION['nivel'] == 'Vendedor'){
-		echo "<script>window.location='painel-admin'</script>";
-	}
-		 
-}else{
-	echo "<script>window.alert('Dados Incorretos!')</script>";
-	echo "<script>window.location='index.php'</script>";
 }
 
- ?>
+function fetchBirth(PDO $pdo, string $nivel, $idPessoa) : string {
+	if (empty($idPessoa)) {
+		return '';
+	}
+	$map = ['Aluno' => 'alunos', 'Vendedor' => 'vendedores', 'Tutor' => 'tutores', 'Parceiro' => 'parceiros', 'Secretario' => 'secretarios', 'Tesoureiro' => 'tesoureiros', 'Professor' => 'professores',
+	];
+	if (!isset($map[$nivel])) {
+		return '';
+	}
+	$tabela = $map[$nivel];
+	$stmt = $pdo->prepare("SELECT nascimento FROM {$tabela} WHERE id = :id");
+	$stmt->bindValue(":id", "$idPessoa");
+	$stmt->execute();
+	$row = $stmt->fetch(PDO::FETCH_ASSOC);
+	return $row['nascimento'] ?? '';
+}
+
+$cpfDigits = digitsOnly($usuario);
+
+$query = $pdo->prepare("SELECT * FROM usuarios where (cpf = :usuario or usuario = :usuario)");
+$query->bindValue(":usuario", "$usuario");
+$query->execute();
+$res = $query->fetchAll(PDO::FETCH_ASSOC);
+if (@count($res) === 0 && $cpfDigits !== '') {
+	$cpfColumn = cleanCpfColumn('cpf');
+	$query = $pdo->prepare("SELECT * FROM usuarios WHERE $cpfColumn = :cpf_digits");
+	$query->bindValue(":cpf_digits", "$cpfDigits");
+	$query->execute();
+	$res = $query->fetchAll(PDO::FETCH_ASSOC);
+}
+if (@count($res) === 0) {
+	echo "<script>window.alert('Dados Incorretos!')</script>";
+	echo "<script>window.location='index.php'</script>";
+	exit();
+}
+
+$user = $res[0];
+
+if ($user['ativo'] === 'NÃ£o') {
+	echo "<script>window.alert('Seu Acesso foi desativado pelo Administrador!')</script>";
+	echo "<script>window.location='index.php'</script>";
+	exit();
+}
+
+if ($user['nivel'] === 'Administrador') {
+    $storedHash = $user['senha_crip'] ?? '';
+    $plainStored = $user['senha'] ?? '';
+    $validPassword = false;
+    $needsUpgrade = false;
+
+    if ($storedHash !== '' && preg_match('/^\$(2y|argon2)/', $storedHash)) {
+        $validPassword = password_verify($senha, $storedHash);
+        $needsUpgrade = $validPassword && password_needs_rehash($storedHash, PASSWORD_DEFAULT);
+    } else {
+        if ($storedHash !== '' && hash_equals($storedHash, md5($senha))) {
+            $validPassword = true;
+        } elseif ($plainStored !== '' && hash_equals($plainStored, $senha)) {
+            $validPassword = true;
+        }
+        $needsUpgrade = $validPassword;
+    }
+
+    if (!$validPassword) {
+        echo "<script>window.alert('Dados Incorretos!')</script>";
+        echo "<script>window.location='index.php'</script>";
+        exit();
+    }
+
+    if ($needsUpgrade) {
+        $novoHash = password_hash($senha, PASSWORD_DEFAULT);
+        $stmt = $pdo->prepare("UPDATE usuarios SET senha_crip = :hash, senha = '' WHERE id = :id");
+        $stmt->execute([':hash' => $novoHash, ':id' => $user['id']]);
+        $user['senha_crip'] = $novoHash;
+    }
+} else {
+	$storedBirth = normalizeDate(fetchBirth($pdo, $user['nivel'], $user['id_pessoa']));
+	$inputBirth = normalizeDate($senha);
+	if ($storedBirth === '' || $inputBirth === '' || $storedBirth !== $inputBirth) {
+		echo "<script>window.alert('Dados Incorretos!')</script>";
+		echo "<script>window.location='index.php'</script>";
+		exit();
+	}
+}
+
+session_regenerate_id(true);
+
+//recuperar o nÃ­vel do usuÃ¡rio
+$_SESSION['nivel'] = $user['nivel'];
+$_SESSION['cpf'] = $user['cpf'];
+$_SESSION['id'] = $user['id'];
+$_SESSION['nome'] = $user['nome'];
+
+$id = $user['id'];
+$nivel = $user['nivel'];
+echo "<script>
+localStorage.setItem('id_usu', '$id');
+localStorage.setItem('active_user_id', '$id');
+localStorage.setItem('active_user_level', '$nivel');
+localStorage.setItem('active_user_at', String(Date.now()));
+</script>";
+
+if ($_SESSION['nivel'] == 'Administrador') {
+	echo "<script>window.location='painel-admin'</script>";
+}
+
+if ($_SESSION['nivel'] == 'Tesoureiro') {
+	echo "<script>window.location='painel-admin'</script>";
+}
+
+
+if ($_SESSION['nivel'] == 'Secretario') {
+	echo "<script>window.location='painel-admin'</script>";
+}
+
+if ($_SESSION['nivel'] == 'Professor') {
+	echo "<script>window.location='painel-admin'</script>";
+}
+
+if ($_SESSION['nivel'] == 'Aluno') {
+	echo "<script>window.location='painel-aluno'</script>";
+}
+
+if ($_SESSION['nivel'] == 'Tutor') {
+	echo "<script>window.location='painel-admin'</script>";
+}
+
+if ($_SESSION['nivel'] == 'Parceiro') {
+	echo "<script>window.location='painel-admin'</script>";
+}
+
+if ($_SESSION['nivel'] == 'Assessor') {
+	echo "<script>window.location='painel-admin'</script>";
+}
+
+if ($_SESSION['nivel'] == 'Vendedor') {
+	echo "<script>window.location='painel-admin'</script>";
+}
+?>

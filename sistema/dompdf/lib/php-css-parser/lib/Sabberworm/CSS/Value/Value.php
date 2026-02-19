@@ -32,8 +32,7 @@ abstract class Value implements Renderable {
 					//Whitespace was the list delimiter
 					array_push($aStack, ' ');
 				}
-			}
-			array_push($aStack, self::parsePrimitiveValue($oParserState));
+			} ? array_push($aStack, self::parsePrimitiveValue($oParserState));
 			$oParserState->consumeWhiteSpace();
 		}
 		//Convert the list to list objects
@@ -114,7 +113,7 @@ abstract class Value implements Renderable {
 		do {
 			if ($oParserState->comes('-')) $iCodepointMaxLenth = 13; // Max length is 2 six digit code points + the dash(-) between them
 			$sRange .= $oParserState->consume(1);
-		} while (strlen($sRange) < $iCodepointMaxLenth && preg_match("/[A-Fa-f0-9\?-]/", $oParserState->peek()));
+		} while (strlen($sRange) < $iCodepointMaxLenth && preg_match("/[A-Fa-f0-9\-]/", $oParserState->peek()));
 		return "U+{$sRange}";
 	}
 	

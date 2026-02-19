@@ -14,9 +14,21 @@ $data = json_decode($json, true);
 
 
 // Parâmetros recebidos via GET
-$forma_de_pagamento = $data['payment_method'];
-$billingType = strtoupper($forma_de_pagamento);
-$quantidadeParcelas = $data['installments'] ?? 1;
+$forma_de_pagamento = $data['payment_method'] ?? '';
+$billingType = strtoupper((string) $forma_de_pagamento);
+$quantidadeParcelas = isset($data['installments']) ? (int) $data['installments'] : 1;
+if ($quantidadeParcelas < 1) {
+    $quantidadeParcelas = 1;
+}
+$maxParcelas = 1;
+if ($billingType === 'DEBIT_CARD') {
+    $maxParcelas = 6;
+} elseif ($billingType === 'CREDIT_CARD') {
+    $maxParcelas = 12;
+}
+if ($quantidadeParcelas > $maxParcelas) {
+    $quantidadeParcelas = $maxParcelas;
+}
 
 //Busca dados para atualização da situação da matricula
 $id_do_aluno = @$_SESSION['id'];
@@ -41,22 +53,32 @@ $config = [
     'client_id' => $options['clientId'],
     'client_secret' => $options['clientSecret'],
     'certificate_path' => $options['certificate'], // Apenas para PIX
-    'chave_pix' => '21e09baa-ccd9-447a-bc31-fcd760cef68c', // Sua chave PIX
+    'chave_pix' => $options['pixKey'] ?? '', // Sua chave PIX
     'sandbox' => $options['sandbox'] // true para teste, false para produção
 ];
 
+$notificationBase = env('EFI_WEBHOOK_BASE_URL', '');
+if ($notificationBase === '') {
+    $notificationBase = $url_sistema;
+}
+$notificationBase = rtrim($notificationBase, '/') . '/';
+if (stripos($notificationBase, 'https://') !== 0) {
+    $notificationBase = 'https://sestedcursosvirtual.com/';
+}
 
 $queryPix = $pdo->query("SELECT desconto_pix FROM config");
 $resPix = $queryPix->fetchAll(PDO::FETCH_ASSOC);
 
 $descontoPix = json_encode($resPix[0]['desconto_pix']);
 
-$query2 = $pdo->query("SELECT * FROM usuarios where id = '$id_do_aluno'");
+$query2 = $pdo->prepare("SELECT * FROM usuarios where id = :id");
+$query2->execute([':id' => $id_do_aluno]);
 $res2 = $query2->fetchAll(PDO::FETCH_ASSOC);
 
 if (@count($res2) > 0) {
     $id_pessoa = $res2[0]['id_pessoa'];
-    $query3 = $pdo->query("SELECT * FROM alunos where id = '$id_pessoa'");
+    $query3 = $pdo->prepare("SELECT * FROM alunos where id = :id");
+    $query3->execute([':id' => $id_pessoa]);
     $res3 = $query3->fetchAll(PDO::FETCH_ASSOC);
 
     if (@count($res3) > 0) {
@@ -70,7 +92,8 @@ if (@count($res2) > 0) {
 
 
 //BUSCA DADOS DA MATRICULA
-$query = $pdo->query("SELECT * FROM matriculas where id_curso = '$id_do_curso_pag' and aluno = '$id_do_aluno' ");
+$query = $pdo->prepare("SELECT * FROM matriculas where id_curso = :id_curso and aluno = :aluno");
+$query->execute([':id_curso' => $id_do_curso_pag, ':aluno' => $id_do_aluno]);
 $res = $query->fetchAll(PDO::FETCH_ASSOC);
 
 if (@count($res) > 0) {
@@ -93,14 +116,16 @@ if (@count($res) > 0) {
 
 
 //encontra o usuario comum do professor
-$consulta_usuario = $pdo->query("SELECT * FROM usuarios where id = '$id_usuario_professor' ");
+$consulta_usuario = $pdo->prepare("SELECT * FROM usuarios where id = :id");
+$consulta_usuario->execute([':id' => $id_usuario_professor]);
 $reposta_cosulta_usuario = $consulta_usuario->fetchAll(PDO::FETCH_ASSOC);
 
 $nivel_do_vendedor_do_curso = isset($reposta_cosulta_usuario[0]['nivel']) ? $reposta_cosulta_usuario[0]['nivel'] : 'sem nível';
 $wallet_id_do_vendedor_do_curso = isset($reposta_cosulta_usuario[0]['wallet_id']) ? $reposta_cosulta_usuario[0]['wallet_id'] : '0';
 
 //encontra porcentagem para split para o vendedor
-$consulta_comissoes = $pdo->query("SELECT * from comissoes where nivel = '$nivel_do_vendedor_do_curso' ");
+$consulta_comissoes = $pdo->prepare("SELECT * from comissoes where nivel = :nivel");
+$consulta_comissoes->execute([':nivel' => $nivel_do_vendedor_do_curso]);
 $resposta_comissoes = $consulta_comissoes->fetchAll(PDO::FETCH_ASSOC);
 $porcentagem_vendedor = isset($resposta_comissoes[0]['porcentagem']) ? $resposta_comissoes[0]['porcentagem'] : 0;
 
@@ -145,7 +170,8 @@ if ($wallet_id_do_vendedor_do_curso)
     ]);
 
 //VERIFICA SE O NIVEL RESPONSAVEL PELO CADASTRO DO ALUNO POSSUI OS DADOS DE COMISSÃO REGISTRADO
-$consulta_comissao_nivel_responsavel = $pdo->query("SELECT * FROM usuarios where id = '$nivel_responsavel_pelo_cadastro_do_aluno'");
+$consulta_comissao_nivel_responsavel = $pdo->prepare("SELECT * FROM usuarios where id = :id");
+$consulta_comissao_nivel_responsavel->execute([':id' => $nivel_responsavel_pelo_cadastro_do_aluno]);
 $resposta_comissao_nivel_responsavel = $consulta_comissao_nivel_responsavel->fetchAll(PDO::FETCH_ASSOC);
 $wallet_id_nivel_responsavel_pelo_cadastro = isset($resposta_comissao_nivel_responsavel[0]['wallet_id']) ? $resposta_comissao_nivel_responsavel[0]['wallet_id'] : 0;
 
@@ -166,7 +192,8 @@ if ($nivel_responsavel == 'Vendedor') {
 
 // Se a tabela foi definida, faz a consulta
 if ($tabela_comissao) {
-    $consulta_comissao_nivel_responsavel = $pdo->query("SELECT comissao FROM $tabela_comissao WHERE id = '$vendedor_id'");
+    $consulta_comissao_nivel_responsavel = $pdo->prepare("SELECT comissao FROM {$tabela_comissao} WHERE id = :id");
+    $consulta_comissao_nivel_responsavel->execute([':id' => $vendedor_id]);
     $resposta_comissao_nivel_responsavel = $consulta_comissao_nivel_responsavel->fetchAll(PDO::FETCH_ASSOC);
     // Agora você pode acessar os dados de comissão
     $comissao_vendedor = $resposta_comissao_nivel_responsavel[0]['comissao'];
@@ -176,43 +203,46 @@ if ($tabela_comissao) {
 }
 
 //OBTER COMISSAO DO TUTOR
-$consulta_comissao_tutor = $pdo->query("SELECT * FROM tutores");
-$resposta_consulta_comissao_tutor = $consulta_comissao_tutor->fetchAll(PDO::FETCH_ASSOC);
-
-$consulta_vendedor_e_professor = $pdo->query("SELECT professor FROM vendedores where id = '$vendedor_id'");
-$resposta_consulta_vendedor_e_professor = $consulta_vendedor_e_professor->fetchAll(PDO::FETCH_ASSOC);
-
-$valor_comissao_vendedor = $resposta_comissao_nivel_vendedor[0]['comissao'] ?? 0;
-$valor_comissao_vendedor = (int) ($resposta_comissao_nivel_vendedor[0]['comissao'] ?? 0);
-
 $consulta_vendedor_professor = $pdo->query("SELECT comissao_tutor FROM config");
 $resposta_consulta_vendedor_professor = $consulta_vendedor_professor->fetch(PDO::FETCH_ASSOC)['comissao_tutor'];
-$vendedor_e_professor = $resposta_consulta_vendedor_e_professor[0]['professor'];
 
-$tutor_usuario = $resposta_consulta_comissao_tutor[0]['email'];
-$comissao_tutor = $resposta_consulta_comissao_tutor[0]['comissao'];
-
-$consulta_tutor = $pdo->query("SELECT * FROM usuarios where usuario = '$tutor_usuario'");
-$resposta_consulta_tutor = $consulta_tutor->fetchAll(PDO::FETCH_ASSOC);
-$wallet_id_tutor = $resposta_consulta_tutor[0]['wallet_id'];
-
-if ($nivel_responsavel == 'Tutor') {
-    array_push($fixos_wallet_ids, [
-        'payee_code' => $wallet_id_tutor,
-        'percentage' => $comissao_vendedor * 100
-    ]);
+$vendedor_e_professor = 0;
+$tutor_atendente_id = null;
+if ($nivel_responsavel == 'Vendedor' && !empty($vendedor_id)) {
+    $consulta_vendedor_e_professor = $pdo->prepare("SELECT professor, tutor_id FROM vendedores where id = :id");
+    $consulta_vendedor_e_professor->execute([':id' => $vendedor_id]);
+    $resposta_consulta_vendedor_e_professor = $consulta_vendedor_e_professor->fetch(PDO::FETCH_ASSOC) ?: [];
+    $vendedor_e_professor = $resposta_consulta_vendedor_e_professor['professor'] ?? 0;
+    $tutor_atendente_id = $resposta_consulta_vendedor_e_professor['tutor_id'] ?? null;
 }
 
-if ($vendedor_e_professor) {
+$tutor_wallet_id = null;
+if (!empty($tutor_atendente_id)) {
+    $consulta_tutor = $pdo->prepare("SELECT wallet_id FROM usuarios WHERE id_pessoa = :id_pessoa AND nivel = 'Tutor' LIMIT 1");
+    $consulta_tutor->execute([':id_pessoa' => $tutor_atendente_id]);
+    $tutor_wallet_id = $consulta_tutor->fetchColumn();
+}
+
+if ($nivel_responsavel == 'Tutor') {
+    if (!empty($wallet_id_nivel_responsavel_pelo_cadastro)) {
+        array_push($fixos_wallet_ids, [
+            'payee_code' => $wallet_id_nivel_responsavel_pelo_cadastro,
+            'percentage' => $comissao_vendedor * 100
+        ]);
+    }
+}
+
+if ($vendedor_e_professor && $tutor_wallet_id) {
     array_push($fixos_wallet_ids, [
-        'payee_code' => $wallet_id_tutor,
+        'payee_code' => $tutor_wallet_id,
         'percentage' => $resposta_consulta_vendedor_professor * 100
     ]);
 }
 
 //VERIFICA A PORCENTAGEM DE COMISSAO DO NIVEL RESPONSAVEL PELO CADASTRO DO ALUNO
 $nivel_do_responsavel_pelo_cadastro_do_aluno = isset($resposta_comissao_nivel_responsavel[0]['nivel']) ? $resposta_comissao_nivel_responsavel[0]['nivel'] : 'sem nível';
-$consulta_valor_da_comissao_do_responsavel = $pdo->query("SELECT * FROM comissoes where nivel = '$nivel_do_responsavel_pelo_cadastro_do_aluno'");
+$consulta_valor_da_comissao_do_responsavel = $pdo->prepare("SELECT * FROM comissoes where nivel = :nivel");
+$consulta_valor_da_comissao_do_responsavel->execute([':nivel' => $nivel_do_responsavel_pelo_cadastro_do_aluno]);
 $resposta_valor_da_comissao_do_responsavel = $consulta_valor_da_comissao_do_responsavel->fetchAll(PDO::FETCH_ASSOC);
 
 $porcentagem_de_pagamento_para_responsavel = isset($resposta_valor_da_comissao_do_responsavel[0]['porcentagem']) ? $resposta_valor_da_comissao_do_responsavel[0]['porcentagem'] : 0;
@@ -229,14 +259,14 @@ if ($wallet_id_nivel_responsavel_pelo_cadastro && $nivel_responsavel == 'Vendedo
 
 
 // Configurações da API da Efí (antiga GerenciaNet)
-$clientId = 'Client_Id_85303d1fb0ee3e438d371d08bacd19dfdbc9074a';
-$clientSecret = 'Client_Secret_8591be09d2f43bd0e99e43ae1dfa74201ead44eb';
+$clientId = env('EFI_CARD_CLIENT_ID', $options['clientId'] ?? '');
+$clientSecret = env('EFI_CARD_CLIENT_SECRET', $options['clientSecret'] ?? '');
 
 
-$sandbox = false; // true para ambiente de testes, false para produção
+$sandbox = filter_var(env('EFI_CARD_SANDBOX', !empty($options['sandbox']) ? 'true' : 'false'), FILTER_VALIDATE_BOOLEAN);
 $baseUrl = $sandbox ? 'https://api-pix-h.gerencianet.com.br' : 'https://api-pix.gerencianet.com.br';
 $baseUrlBoleto = $sandbox ? 'https://cobrancas-h.api.efipay.com.br' : 'https://cobrancas.api.efipay.com.br';
-$certificadoPath = __DIR__ . '/producao-290086-cursos_livres_cert.pem';
+$certificadoPath = env('EFI_CARD_CERT_PATH', $options['certificate'] ?? '');
 
 
 
@@ -262,14 +292,14 @@ try {
         'cpf' => $res2[0]['cpf'] ?? '',
         'telefone' => $res2[0]['telefone'] ?? '',
         'credit_card_token' => $data['payment_token'], // token gerado pelo SDK JS da Gerencianet
-        'installments' => $data['installments'] ?? 1,
+        'installments' => $quantidadeParcelas,
         'street' => $data['street'] ?? null,
         'number' => $data['number'] ?? null,
         'neighborhood' => $data['neighborhood'] ?? null,
         'zipcode' => $data['zipcode'] ?? null,
         'city' => $data['city'] ?? null,
         'state' => $data['state'] ?? null,
-        'notification_url' => 'https://sestedcursos.com/efi_webhook_boleto.php'
+        'notification_url' => $notificationBase . 'efi_webhook_boleto.php'
     ];
 
     // Validações básicas
@@ -325,3 +355,8 @@ try {
 }
 
 ?>
+
+
+
+
+

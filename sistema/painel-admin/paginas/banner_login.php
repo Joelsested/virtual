@@ -7,7 +7,7 @@ if(@$_SESSION['nivel'] != 'Administrador' and @$_SESSION['nivel'] != 'Tesoureiro
 	echo "<script>window.location='../index.php'</script>";
 	exit();
 }
- ?>
+?>
 
 
   <button onclick="inserir()" type="button" class="btn btn-primary btn-flat btn-pri"><i class="fa fa-plus" aria-hidden="true"></i> Novo Banner</button>
@@ -61,7 +61,7 @@ if(@$_SESSION['nivel'] != 'Administrador' and @$_SESSION['nivel'] != 'Tesoureiro
 						</div>
 						<div class="col-md-4">
 							<div id="divImg">
-								<img src="img/login/sem-foto.png"  width="80px" id="target">									
+								<img src="img/login/sem-foto.png" ?? width="80px" id="target">									
 							</div>
 						</div>
 
@@ -92,7 +92,7 @@ if(@$_SESSION['nivel'] != 'Administrador' and @$_SESSION['nivel'] != 'Tesoureiro
 
 
 
-<script type="text/javascript">var pag = "<?=$pag?>"</script>
+<script type="text/javascript">var pag = "<=$pag>"</script>
 <script src="js/ajax.js"></script>
 
 

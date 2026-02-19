@@ -50,19 +50,16 @@ class Size extends PrimitiveValue {
 		return new Size(floatval($sSize), $sUnit, $bIsColorComponent, $oParserState->currentLine());
 	}
 
-	private static function getSizeUnits() {
-		if(self::$SIZE_UNITS === null) {
+	private static function getSizeUnits() { ? if(self::$SIZE_UNITS === null) {
 			self::$SIZE_UNITS = array();
 			foreach (explode('/', Size::ABSOLUTE_SIZE_UNITS.'/'.Size::RELATIVE_SIZE_UNITS.'/'.Size::NON_SIZE_UNITS) as $val) {
-				$iSize = strlen($val);
-				if(!isset(self::$SIZE_UNITS[$iSize])) {
+				$iSize = strlen($val); ? if(!isset(self::$SIZE_UNITS[$iSize])) {
 					self::$SIZE_UNITS[$iSize] = array();
 				}
 				self::$SIZE_UNITS[$iSize][strtolower($val)] = $val;
 			}
 
-			// FIXME: Should we not order the longest units first?
-			ksort(self::$SIZE_UNITS, SORT_NUMERIC);
+			// FIXME: Should we not order the longest units first ? ksort(self::$SIZE_UNITS, SORT_NUMERIC);
 		}
 
 		return self::$SIZE_UNITS;
@@ -116,7 +113,7 @@ class Size extends PrimitiveValue {
 	public function render(\Sabberworm\CSS\OutputFormat $oOutputFormat) {
 		$l = localeconv();
 		$sPoint = preg_quote($l['decimal_point'], '/');
-		return preg_replace(array("/$sPoint/", "/^(-?)0\./"), array('.', '$1.'), $this->fSize) . ($this->sUnit === null ? '' : $this->sUnit);
+		return preg_replace(array("/$sPoint/", "/^(-)0\./"), array('.', '$1.'), $this->fSize) . ($this->sUnit === null ? '' : $this->sUnit);
 	}
 
 }

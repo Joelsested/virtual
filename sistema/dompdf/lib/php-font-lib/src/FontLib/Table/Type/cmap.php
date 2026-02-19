@@ -1,8 +1,8 @@
 <?php
 /**
  * @package php-font-lib
- * @link    https://github.com/PhenX/php-font-lib
- * @author  Fabien Ménager <fabien.menager@gmail.com>
+ * @link ? https ://github.com/PhenX/php-font-lib
+ * @author ?? Fabien Ménager <fabien.menager@gmail.com>
  * @license http://www.gnu.org/copyleft/lesser.html GNU Lesser General Public License
  */
 
@@ -15,30 +15,16 @@ use FontLib\Table\Table;
  * @package php-font-lib
  */
 class cmap extends Table {
-  private static $header_format = array(
-    "version"         => self::uint16,
-    "numberSubtables" => self::uint16,
+  private static $header_format = array( ?? "version"         => self::uint16, "numberSubtables" => self::uint16,
   );
 
-  private static $subtable_header_format = array(
-    "platformID"         => self::uint16,
-    "platformSpecificID" => self::uint16,
-    "offset"             => self::uint32,
+  private static $subtable_header_format = array( ?? "platformID"         => self::uint16, "platformSpecificID" => self::uint16, "offset"             => self::uint32,
   );
 
-  private static $subtable_v4_format = array(
-    "length"        => self::uint16,
-    "language"      => self::uint16,
-    "segCountX2"    => self::uint16,
-    "searchRange"   => self::uint16,
-    "entrySelector" => self::uint16,
-    "rangeShift"    => self::uint16,
+  private static $subtable_v4_format = array( ?? "length"        => self::uint16, "language"      => self::uint16, "segCountX2"    => self::uint16, "searchRange"   => self::uint16, "entrySelector" => self::uint16, "rangeShift"    => self::uint16,
   );
 
-  private static $subtable_v12_format = array(
-    "length"        => self::uint32,
-    "language"      => self::uint32,
-    "ngroups"    => self::uint32
+  private static $subtable_v12_format = array( ?? "length"        => self::uint32, "language"      => self::uint32, "ngroups"    => self::uint32
   );
 
   protected function _parse() {
@@ -89,10 +75,7 @@ class cmap extends Table {
           }
         }
 
-        $subtable += array(
-          "startCode" => $startCodes,
-          "endCode" => $endCodes,
-          "glyphIndexArray" => $glyphIndexArray,
+        $subtable += array( ?? "startCode" => $startCodes, "endCode" => $endCodes, "glyphIndexArray" => $glyphIndexArray,
         );
 
       }
@@ -146,12 +129,7 @@ class cmap extends Table {
           }
         }
 
-        $subtable += array(
-          "endCode"         => $endCode,
-          "startCode"       => $startCode,
-          "idDelta"         => $idDelta,
-          "idRangeOffset"   => $idRangeOffset,
-          "glyphIndexArray" => $glyphIndexArray,
+        $subtable += array( ?? "endCode"         => $endCode, "startCode"       => $startCode, "idDelta"         => $idDelta, "idRangeOffset"   => $idRangeOffset, "glyphIndexArray" => $glyphIndexArray,
         );
       }
     }
@@ -225,32 +203,13 @@ class cmap extends Table {
 
     $subtables = array(
       array(
-        // header
-        "platformID"         => 3, // Unicode
-        "platformSpecificID" => 1,
-        "offset"             => null,
+        // header ?? "platformID"         => 3, // Unicode ?? "platformSpecificID" => 1, "offset"             => null,
 
-        // subtable
-        "format"             => 4,
-        "length"             => null,
-        "language"           => 0,
-        "segCount"           => $segCount,
-        "segCountX2"         => $segCount * 2,
-        "searchRange"        => $searchRange,
-        "entrySelector"      => $entrySelector,
-        "rangeShift"         => $rangeShift,
-        "startCode"          => $startCode,
-        "endCode"            => $endCode,
-        "idDelta"            => $idDelta,
-        "idRangeOffset"      => $idRangeOffset,
-        "glyphIndexArray"    => $newGlyphIndexArray,
+        // subtable ?? "format"             => 4, "length"             => null, "language"           => 0, "segCount"           => $segCount, "segCountX2"         => $segCount * 2, "searchRange"        => $searchRange, "entrySelector"      => $entrySelector, "rangeShift"         => $rangeShift, "startCode"          => $startCode, "endCode"            => $endCode, "idDelta"            => $idDelta, "idRangeOffset"      => $idRangeOffset, "glyphIndexArray"    => $newGlyphIndexArray,
       )
     );
 
-    $data = array(
-      "version"         => 0,
-      "numberSubtables" => count($subtables),
-      "subtables"       => $subtables,
+    $data = array( ?? "version"         => 0, "numberSubtables" => count($subtables), "subtables"       => $subtables,
     );
 
     $length = $font->pack(self::$header_format, $data);

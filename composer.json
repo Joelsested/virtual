@@ -3,7 +3,10 @@
     "autoload": {
         "psr-4": {
             "User\\Sestedprof\\": "src/"
-        }
+        },
+        "classmap": [
+            "vendor/gerencianet/src"
+        ]
     },
     "require": {
         "guzzlehttp/guzzle": "^7.9"

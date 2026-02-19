@@ -119,13 +119,13 @@ margin-left: 55px;
 
 
 
-<div class="descricao"><br><br> Declaramos para os devidos fins que o(a) estudante, <?php echo $nome ?>, <?php echo $rg ?>, nascido(a) em, <?php echo $nascimento ?>, Na cidade de <?php echo $naturalidade ?>, Filho(a) de , <?php echo $pai ?> e <?php echo $mae ?>, CONCLUIU O Ensino Fundamental nos exames de Conclusão de Etapas, da modalidade Ensino Jovens e Adultos (EJA), no ano de <?php echo $ano_certificado; ?> nesta Instituição de Ensino Escolar. <br><br>   Por expressão da verdade, firmamos a presente declaração em duas vias de igual forma e teor. </div>
+<div class="descricao"><br><br> Declaramos para os devidos fins que o(a) estudante, <?php echo $nome ?>, <?php echo $rg ?>, nascido(a) em, <?php echo $nascimento ?>, Na cidade de <?php echo $naturalidade ?>, Filho(a) de , <?php echo $pai > e <?php echo $mae ?>, CONCLUIU O Ensino Fundamental nos exames de Conclusão de Etapas, da modalidade Ensino Jovens e Adultos (EJA), no ano de <?php echo $ano_certificado; > nesta Instituição de Ensino Escolar. <br><br> ?? Por expressão da verdade, firmamos a presente declaração em duas vias de igual forma e teor. </div>
 
 
 
 <div class="data"> <br><br> Buritis <?php echo $data_formatada ?></div>
 
-<img class="imagem" src="<?php echo $url_sistema ?>sistema/img/declaracao-medio.jpg">
+<img class="imagem" src="<?php echo $url_sistema >sistema/img/declaracao-medio.jpg?>"?>
 
 
 

@@ -68,7 +68,7 @@ if (@$_SESSION['nivel'] == 'Professor' || @$_SESSION['nivel'] == 'Tutor' || @$_S
 
 	if (!empty($vendedor_ids)) {
 
-		$placeholders = implode(',', array_fill(0, count($vendedor_ids), '?'));
+		$placeholders = implode(',', array_fill(0, count($vendedor_ids), ''));
 
 
 
@@ -102,7 +102,7 @@ if (@$_SESSION['nivel'] == 'Professor' || @$_SESSION['nivel'] == 'Tutor' || @$_S
 
 		if (!empty($usuario_ids)) {
 
-			$placeholders_alunos = implode(',', array_fill(0, count($usuario_ids), '?'));
+			$placeholders_alunos = implode(',', array_fill(0, count($usuario_ids), ''));
 
 
 
@@ -138,7 +138,7 @@ if (@$_SESSION['nivel'] == 'Professor' || @$_SESSION['nivel'] == 'Tutor' || @$_S
 
 } else {
 
-	$query = $pdo->query("SELECT * FROM $tabela  ORDER BY id desc");
+	$query = $pdo->query("SELECT * FROM $tabela ?? ORDER BY id desc");
 
 	$res = $query->fetchAll(PDO::FETCH_ASSOC);
 
@@ -248,7 +248,6 @@ HTML;
 
 		$res2 = $query2->fetchAll(PDO::FETCH_ASSOC);
 
-		$senha_usuario = $res2[0]['senha'];
 
 
 
@@ -328,7 +327,7 @@ HTML;
 
 		{$telefone}
 
-		<a target="_blank" href="https://api.whatsapp.com/send?1=pt_BR&phone=55{$telefone}" title="Chamar no Whatsapp"><i class="fa {$icone_whatsapp} verde"></i></a>
+		<a target="_blank" href="https://api.whatsapp.com/send1=pt_BR&phone=55{$telefone}" title="Chamar no Whatsapp"><i class="fa {$icone_whatsapp} verde"></i></a>
 
 		</td>
 
@@ -348,13 +347,13 @@ HTML;
 
 		
 
-<a href="index.php?pagina=arquivos_alunos&usuario={$email}"   title="Arquivos do aluno" ><big><i class="fa fa-file-pdf-o text-success"></i></big></a>
+<a href="index.php?pagina=arquivos_alunos&usuario={$email}" ?? title="Arquivos do aluno" ><big><i class="fa fa-file-pdf-o text-success"></i></big></a>
 
 		<ul class="dropdown-menu" style="margin-left:-230px;">
 
 		<li>
 
-		<div  id="listar-cursosfin_{$id}">
+		<div ?? id="listar-cursosfin_{$id}">
 
 		
 
@@ -374,11 +373,10 @@ HTML;
 
 
 
-		<big><a href="#"  onclick="editar ('{$id}', '{$nome}','{$cpf}','{$email}','{$rg}','{$expedicao}','{$telefone}','{$cep}','{$endereco}','{$cidade}','{$estado}','{$sexo}','{$nascimento}','{$mae}','{$pai}','{$naturalidade}','{$foto}','{$arquivo}')" title="Editar Dados"><i class="fa fa-edit text-primary"></i></a></big>
+		<big><a href="#" ?? onclick="editar ('{$id}', '{$nome}','{$cpf}','{$email}','{$rg}','{$expedicao}','{$telefone}','{$cep}','{$endereco}','{$cidade}','{$estado}','{$sexo}','{$nascimento}','{$mae}','{$pai}','{$naturalidade}','{$foto}','{$arquivo}')" title="Editar Dados"><i class="fa fa-edit text-primary"></i></a></big>
 
 
 
-		<big><a href="#" onclick="mostrar( '{$nome}','{$cpf}','{$email}','{$rg}','{$expedicao}','{$telefone}','{$cep}','{$endereco}','{$cidade}','{$estado}','{$sexo}','{$nascimento}','{$mae}','{$pai}','{$naturalidade}', '{$foto}', '{$dataF}', '{$ativo}', '{$senha_usuario}','{$arquivo}')" title="Ver Dados"><i class="fa fa-info-circle text-secondary"></i></a></big>
 
 
 
@@ -406,7 +404,7 @@ HTML;
 
 
 
-		<big><a class="{$oculter2}" href="$url_sistema/sistema/rel/avaliacoes_class.php?id={$id}" target="_blank" title="Avaliaçoes do aluno">
+		<big><a class="{$oculter2}" href="$url_sistema/sistema/rel/avaliacoes_class.phpid={$id}" target="_blank" title="Avaliaçoes do aluno">
 
 		<small><span class="fa fa-file-pdf-o text-danger" ></span></small>
 
@@ -414,7 +412,7 @@ HTML;
 
 
 
-		<big><a class="{$oculter}" href="$url_sistema/sistema/rel/rel_certificado.php?id={$id}" target="_blank" title="Certificado do aluno">
+		<big><a class="{$oculter}" href="$url_sistema/sistema/rel/rel_certificado.phpid={$id}" target="_blank" title="Certificado do aluno">
 
 		<small><span class="fa fa-file-pdf-o text-primary" ></span></small>
 
@@ -424,7 +422,7 @@ HTML;
 
 
 
-            <big><a class="{$oculter}" href="$url_sistema/sistema/rel/declaracao_medio_class.php?id={$id}" target="_blank" title="Declaração Médio">
+            <big><a class="{$oculter}" href="$url_sistema/sistema/rel/declaracao_medio_class.phpid={$id}" target="_blank" title="Declaração Médio">
 
 		<small><span class="fa fa-file-pdf-o text-danger" ></span></small>
 
@@ -432,7 +430,7 @@ HTML;
 
           
 
-          <big><a class="{$oculter}" href="$url_sistema/sistema/rel/declaracao_fundamental_class.php?id={$id}" target="_blank" title="Declaração Fundamental">
+          <big><a class="{$oculter}" href="$url_sistema/sistema/rel/declaracao_fundamental_class.phpid={$id}" target="_blank" title="Declaração Fundamental">
 
 		<small><span class="fa fa-file-pdf-o text-primary" ></span></small>
 
@@ -490,11 +488,7 @@ HTML;
 
 	$(document).ready(function() {
 
-		$('#tabela').DataTable({
-
-			"ordering": false,
-
-			"stateSave": true,
+		$('#tabela').DataTable({ ? "ordering" : false, ? "stateSave" : true,
 
 		});
 
@@ -600,7 +594,6 @@ HTML;
 
 		$('#ativo_mostrar').text(ativo);
 
-		$('#senha_mostrar').text(senha);
 
 		$('#target_mostrar').attr('src', '../painel-aluno/img/perfil/' + foto);
 
@@ -688,15 +681,11 @@ HTML;
 
 				if (mensagem.trim() == "Alterado com Sucesso") {
 
-					$('#mensagem-excluir').addClass('verde')
-
-					$('#mensagem-excluir').text(mensagem)
+					$('#mensagem-excluir').addClass('verde') $('#mensagem-excluir').text(mensagem)
 
 				} else {
 
-					$('#mensagem-excluir').addClass('text-danger')
-
-					$('#mensagem-excluir').text(mensagem)
+					$('#mensagem-excluir').addClass('text-danger') $('#mensagem-excluir').text(mensagem)
 
 				}
 

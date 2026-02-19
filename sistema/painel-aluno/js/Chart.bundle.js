@@ -7,7 +7,7 @@
  * Released under the MIT license
  * https://github.com/chartjs/Chart.js/blob/master/LICENSE.md
  */
-(function(f){if(typeof exports==="object"&&typeof module!=="undefined"){module.exports=f()}else if(typeof define==="function"&&define.amd){define([],f)}else{var g;if(typeof window!=="undefined"){g=window}else if(typeof global!=="undefined"){g=global}else if(typeof self!=="undefined"){g=self}else{g=this}g.Chart = f()}})(function(){var define,module,exports;return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
+(function(f){if(typeof exports==="object"&&typeof module!=="undefined"){module.exports=f()}else if(typeof define==="function"&&define.amd){define([],f)}else{var g;if(typeof window!=="undefined"){g=window}else if(typeof global!=="undefined"){g=global}else if(typeof self!=="undefined"){g=self}else{g=this}g.Chart = f()}})(function(){var define,module,exports;return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(nn:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 /* MIT license */
 var colorNames = require(5);
 
@@ -36,8 +36,8 @@ function getRgba(string) {
    }
    var abbr =  /^#([a-fA-F0-9]{3})$/i,
        hex =  /^#([a-fA-F0-9]{6})$/i,
-       rgba = /^rgba?\(\s*([+-]?\d+)\s*,\s*([+-]?\d+)\s*,\s*([+-]?\d+)\s*(?:,\s*([+-]?[\d\.]+)\s*)?\)$/i,
-       per = /^rgba?\(\s*([+-]?[\d\.]+)\%\s*,\s*([+-]?[\d\.]+)\%\s*,\s*([+-]?[\d\.]+)\%\s*(?:,\s*([+-]?[\d\.]+)\s*)?\)$/i,
+       rgba = /^rgba\(\s*([+-]\d+)\s*,\s*([+-]\d+)\s*,\s*([+-]\d+)\s*(:,\s*([+-][\d\.]+)\s*)\)$/i,
+       per = /^rgba\(\s*([+-][\d\.]+)\%\s*,\s*([+-][\d\.]+)\%\s*,\s*([+-][\d\.]+)\%\s*(:,\s*([+-][\d\.]+)\s*)\)$/i,
        keyword = /(\w+)/;
 
    var rgb = [0, 0, 0],
@@ -94,14 +94,14 @@ function getHsla(string) {
    if (!string) {
       return;
    }
-   var hsl = /^hsla?\(\s*([+-]?\d+)(?:deg)?\s*,\s*([+-]?[\d\.]+)%\s*,\s*([+-]?[\d\.]+)%\s*(?:,\s*([+-]?[\d\.]+)\s*)?\)/;
+   var hsl = /^hsla\(\s*([+-]\d+)(:deg)\s*,\s*([+-][\d\.]+)%\s*,\s*([+-][\d\.]+)%\s*(:,\s*([+-][\d\.]+)\s*)\)/;
    var match = string.match(hsl);
    if (match) {
       var alpha = parseFloat(match[4]);
       var h = scale(parseInt(match[1]), 0, 360),
           s = scale(parseFloat(match[2]), 0, 100),
           l = scale(parseFloat(match[3]), 0, 100),
-          a = scale(isNaN(alpha) ? 1 : alpha, 0, 1);
+          a = scale(isNaN(alpha)  1 : alpha, 0, 1);
       return [h, s, l, a];
    }
 }
@@ -110,14 +110,14 @@ function getHwb(string) {
    if (!string) {
       return;
    }
-   var hwb = /^hwb\(\s*([+-]?\d+)(?:deg)?\s*,\s*([+-]?[\d\.]+)%\s*,\s*([+-]?[\d\.]+)%\s*(?:,\s*([+-]?[\d\.]+)\s*)?\)/;
+   var hwb = /^hwb\(\s*([+-]\d+)(:deg)\s*,\s*([+-][\d\.]+)%\s*,\s*([+-][\d\.]+)%\s*(:,\s*([+-][\d\.]+)\s*)\)/;
    var match = string.match(hwb);
    if (match) {
     var alpha = parseFloat(match[4]);
       var h = scale(parseInt(match[1]), 0, 360),
           w = scale(parseFloat(match[2]), 0, 100),
           b = scale(parseFloat(match[3]), 0, 100),
-          a = scale(isNaN(alpha) ? 1 : alpha, 0, 1);
+          a = scale(isNaN(alpha)  1 : alpha, 0, 1);
       return [h, w, b, a];
    }
 }
@@ -160,7 +160,7 @@ function rgbString(rgba, alpha) {
 
 function rgbaString(rgba, alpha) {
    if (alpha === undefined) {
-      alpha = (rgba[3] !== undefined ? rgba[3] : 1);
+      alpha = (rgba[3] !== undefined  rgba[3] : 1);
    }
    return "rgba(" + rgba[0] + ", " + rgba[1] + ", " + rgba[2]
            + ", " + alpha + ")";
@@ -193,7 +193,7 @@ function hslString(hsla, alpha) {
 
 function hslaString(hsla, alpha) {
    if (alpha === undefined) {
-      alpha = (hsla[3] !== undefined ? hsla[3] : 1);
+      alpha = (hsla[3] !== undefined  hsla[3] : 1);
    }
    return "hsla(" + hsla[0] + ", " + hsla[1] + "%, " + hsla[2] + "%, "
            + alpha + ")";
@@ -203,10 +203,10 @@ function hslaString(hsla, alpha) {
 // (hwb have alpha optional & 1 is default value)
 function hwbString(hwb, alpha) {
    if (alpha === undefined) {
-      alpha = (hwb[3] !== undefined ? hwb[3] : 1);
+      alpha = (hwb[3] !== undefined  hwb[3] : 1);
    }
    return "hwb(" + hwb[0] + ", " + hwb[1] + "%, " + hwb[2] + "%"
-           + (alpha !== undefined && alpha !== 1 ? ", " + alpha : "") + ")";
+           + (alpha !== undefined && alpha !== 1  ", " + alpha : "") + ")";
 }
 
 function keyword(rgb) {
@@ -220,7 +220,7 @@ function scale(num, min, max) {
 
 function hexDouble(num) {
   var str = num.toString(16).toUpperCase();
-  return (str.length < 2) ? "0" + str : str;
+  return (str.length < 2)  "0" + str : str;
 }
 
 
@@ -347,7 +347,7 @@ Color.prototype = {
 	hue: function (val) {
 		if (val) {
 			val %= 360;
-			val = val < 0 ? 360 + val : val;
+			val = val < 0  360 + val : val;
 		}
 		return this.setChannel('hsl', 0, val);
 	},
@@ -418,7 +418,7 @@ Color.prototype = {
 		var lum = [];
 		for (var i = 0; i < rgb.length; i++) {
 			var chan = rgb[i] / 255;
-			lum[i] = (chan <= 0.03928) ? chan / 12.92 : Math.pow(((chan + 0.055) / 1.055), 2.4);
+			lum[i] = (chan <= 0.03928)  chan / 12.92 : Math.pow(((chan + 0.055) / 1.055), 2.4);
 		}
 		return 0.2126 * lum[0] + 0.7152 * lum[1] + 0.0722 * lum[2];
 	},
@@ -439,7 +439,7 @@ Color.prototype = {
 			return 'AAA';
 		}
 
-		return (contrastRatio >= 4.5) ? 'AA' : '';
+		return (contrastRatio >= 4.5)  'AA' : '';
 	},
 
 	dark: function () {
@@ -527,7 +527,7 @@ Color.prototype = {
 	rotate: function (degrees) {
 		var hsl = this.values.hsl;
 		var hue = (hsl[0] + degrees) % 360;
-		hsl[0] = hue < 0 ? 360 + hue : hue;
+		hsl[0] = hue < 0  360 + hue : hue;
 		this.setValues('hsl', hsl);
 		return this;
 	},
@@ -539,12 +539,12 @@ Color.prototype = {
 	mix: function (mixinColor, weight) {
 		var color1 = this;
 		var color2 = mixinColor;
-		var p = weight === undefined ? 0.5 : weight;
+		var p = weight === undefined  0.5 : weight;
 
 		var w = 2 * p - 1;
 		var a = color1.alpha() - color2.alpha();
 
-		var w1 = (((w * a === -1) ? w : (w + a) / (1 + w * a)) + 1) / 2.0;
+		var w1 = (((w * a === -1)  w : (w + a) / (1 + w * a)) + 1) / 2.0;
 		var w2 = 1 - w1;
 
 		return this
@@ -653,7 +653,7 @@ Color.prototype.setValues = function (space, vals) {
 		alpha = vals.alpha;
 	}
 
-	values.alpha = Math.max(0, Math.min(1, (alpha === undefined ? values.alpha : alpha)));
+	values.alpha = Math.max(0, Math.min(1, (alpha === undefined  values.alpha : alpha)));
 
 	if (space === 'alpha') {
 		return false;
@@ -878,9 +878,9 @@ function rgb2xyz(rgb) {
       b = rgb[2] / 255;
 
   // assume sRGB
-  r = r > 0.04045 ? Math.pow(((r + 0.055) / 1.055), 2.4) : (r / 12.92);
-  g = g > 0.04045 ? Math.pow(((g + 0.055) / 1.055), 2.4) : (g / 12.92);
-  b = b > 0.04045 ? Math.pow(((b + 0.055) / 1.055), 2.4) : (b / 12.92);
+  r = r > 0.04045  Math.pow(((r + 0.055) / 1.055), 2.4) : (r / 12.92);
+  g = g > 0.04045  Math.pow(((g + 0.055) / 1.055), 2.4) : (g / 12.92);
+  b = b > 0.04045  Math.pow(((b + 0.055) / 1.055), 2.4) : (b / 12.92);
 
   var x = (r * 0.4124) + (g * 0.3576) + (b * 0.1805);
   var y = (r * 0.2126) + (g * 0.7152) + (b * 0.0722);
@@ -900,9 +900,9 @@ function rgb2lab(rgb) {
   y /= 100;
   z /= 108.883;
 
-  x = x > 0.008856 ? Math.pow(x, 1/3) : (7.787 * x) + (16 / 116);
-  y = y > 0.008856 ? Math.pow(y, 1/3) : (7.787 * y) + (16 / 116);
-  z = z > 0.008856 ? Math.pow(z, 1/3) : (7.787 * z) + (16 / 116);
+  x = x > 0.008856  Math.pow(x, 1/3) : (7.787 * x) + (16 / 116);
+  y = y > 0.008856  Math.pow(y, 1/3) : (7.787 * y) + (16 / 116);
+  z = z > 0.008856  Math.pow(z, 1/3) : (7.787 * z) + (16 / 116);
 
   l = (116 * y) - 16;
   a = 500 * (x - y);
@@ -966,7 +966,7 @@ function hsl2hsv(hsl) {
   }
 
   l *= 2;
-  s *= (l <= 1) ? l : 2 - l;
+  s *= (l <= 1)  l : 2 - l;
   v = (l + s) / 2;
   sv = (2 * s) / (l + s);
   return [h, sv * 100, v * 100];
@@ -1021,7 +1021,7 @@ function hsv2hsl(hsv) {
 
   l = (2 - s) * v;
   sl = s * v;
-  sl /= (l <= 1) ? l : 2 - l;
+  sl /= (l <= 1)  l : 2 - l;
   sl = sl || 0;
   l /= 2;
   return [h, sl * 100, l * 100];
@@ -1132,13 +1132,13 @@ function xyz2rgb(xyz) {
   b = (x * 0.0557) + (y * -0.2040) + (z * 1.0570);
 
   // assume sRGB
-  r = r > 0.0031308 ? ((1.055 * Math.pow(r, 1.0 / 2.4)) - 0.055)
+  r = r > 0.0031308  ((1.055 * Math.pow(r, 1.0 / 2.4)) - 0.055)
     : r = (r * 12.92);
 
-  g = g > 0.0031308 ? ((1.055 * Math.pow(g, 1.0 / 2.4)) - 0.055)
+  g = g > 0.0031308  ((1.055 * Math.pow(g, 1.0 / 2.4)) - 0.055)
     : g = (g * 12.92);
 
-  b = b > 0.0031308 ? ((1.055 * Math.pow(b, 1.0 / 2.4)) - 0.055)
+  b = b > 0.0031308  ((1.055 * Math.pow(b, 1.0 / 2.4)) - 0.055)
     : b = (b * 12.92);
 
   r = Math.min(Math.max(0, r), 1);
@@ -1158,9 +1158,9 @@ function xyz2lab(xyz) {
   y /= 100;
   z /= 108.883;
 
-  x = x > 0.008856 ? Math.pow(x, 1/3) : (7.787 * x) + (16 / 116);
-  y = y > 0.008856 ? Math.pow(y, 1/3) : (7.787 * y) + (16 / 116);
-  z = z > 0.008856 ? Math.pow(z, 1/3) : (7.787 * z) + (16 / 116);
+  x = x > 0.008856  Math.pow(x, 1/3) : (7.787 * x) + (16 / 116);
+  y = y > 0.008856  Math.pow(y, 1/3) : (7.787 * y) + (16 / 116);
+  z = z > 0.008856  Math.pow(z, 1/3) : (7.787 * z) + (16 / 116);
 
   l = (116 * y) - 16;
   a = 500 * (x - y);
@@ -1187,9 +1187,9 @@ function lab2xyz(lab) {
     y2 = Math.pow(y / 100, 1/3);
   }
 
-  x = x / 95.047 <= 0.008856 ? x = (95.047 * ((a / 500) + y2 - (16 / 116))) / 7.787 : 95.047 * Math.pow((a / 500) + y2, 3);
+  x = x / 95.047 <= 0.008856  x = (95.047 * ((a / 500) + y2 - (16 / 116))) / 7.787 : 95.047 * Math.pow((a / 500) + y2, 3);
 
-  z = z / 108.883 <= 0.008859 ? z = (108.883 * (y2 - (b / 200) - (16 / 116))) / 7.787 : 108.883 * Math.pow(y2 - (b / 200), 3);
+  z = z / 108.883 <= 0.008859  z = (108.883 * (y2 - (b / 200) - (16 / 116))) / 7.787 : 108.883 * Math.pow(y2 - (b / 200), 3);
 
   return [x, y, z];
 }
@@ -1672,8 +1672,8 @@ module.exports = {
 //! momentjs.com
 
 ;(function (global, factory) {
-    typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
-    typeof define === 'function' && define.amd ? define(factory) :
+    typeof exports === 'object' && typeof module !== 'undefined'  module.exports = factory() :
+    typeof define === 'function' && define.amd  define(factory) :
     global.moment = factory()
 }(this, (function () { 'use strict';
 
@@ -1902,7 +1902,7 @@ var updateInProgress = false;
 // Moment prototype object
 function Moment(config) {
     copyConfig(this, config);
-    this._d = new Date(config._d != null ? config._d.getTime() : NaN);
+    this._d = new Date(config._d != null  config._d.getTime() : NaN);
     if (!this.isValid()) {
         this._d = new Date(NaN);
     }
@@ -2090,7 +2090,7 @@ var defaultCalendar = {
 
 function calendar (key, mom, now) {
     var output = this._calendar[key] || this._calendar['sameElse'];
-    return isFunction(output) ? output.call(mom, now) : output;
+    return isFunction(output)  output.call(mom, now) : output;
 }
 
 var defaultLongDateFormat = {
@@ -2149,14 +2149,14 @@ var defaultRelativeTime = {
 
 function relativeTime (number, withoutSuffix, string, isFuture) {
     var output = this._relativeTime[string];
-    return (isFunction(output)) ?
+    return (isFunction(output)) 
         output(number, withoutSuffix, string, isFuture) :
         output.replace(/%d/i, number);
 }
 
 function pastFuture (diff, output) {
-    var format = this._relativeTime[diff > 0 ? 'future' : 'past'];
-    return isFunction(format) ? format(output) : format.replace(/%s/i, output);
+    var format = this._relativeTime[diff > 0  'future' : 'past'];
+    return isFunction(format)  format(output) : format.replace(/%s/i, output);
 }
 
 var aliases = {};
@@ -2167,7 +2167,7 @@ function addUnitAlias (unit, shorthand) {
 }
 
 function normalizeUnits(units) {
-    return typeof units === 'string' ? aliases[units] || aliases[units.toLowerCase()] : undefined;
+    return typeof units === 'string'  aliases[units] || aliases[units.toLowerCase()] : undefined;
 }
 
 function normalizeObjectUnits(inputObject) {
@@ -2217,13 +2217,13 @@ function makeGetSet (unit, keepTime) {
 }
 
 function get (mom, unit) {
-    return mom.isValid() ?
-        mom._d['get' + (mom._isUTC ? 'UTC' : '') + unit]() : NaN;
+    return mom.isValid() 
+        mom._d['get' + (mom._isUTC  'UTC' : '') + unit]() : NaN;
 }
 
 function set$1 (mom, unit, value) {
     if (mom.isValid()) {
-        mom._d['set' + (mom._isUTC ? 'UTC' : '') + unit](value);
+        mom._d['set' + (mom._isUTC  'UTC' : '') + unit](value);
     }
 }
 
@@ -2258,13 +2258,13 @@ function zeroFill(number, targetLength, forceSign) {
     var absNumber = '' + Math.abs(number),
         zerosToFill = targetLength - absNumber.length,
         sign = number >= 0;
-    return (sign ? (forceSign ? '+' : '') : '-') +
+    return (sign  (forceSign  '+' : '') : '-') +
         Math.pow(10, Math.max(0, zerosToFill)).toString().substr(1) + absNumber;
 }
 
-var formattingTokens = /(\[[^\[]*\])|(\\)?([Hh]mm(ss)?|Mo|MM?M?M?|Do|DDDo|DD?D?D?|ddd?d?|do?|w[o|w]?|W[o|W]?|Qo?|YYYYYY|YYYYY|YYYY|YY|gg(ggg?)?|GG(GGG?)?|e|E|a|A|hh?|HH?|kk?|mm?|ss?|S{1,9}|x|X|zz?|ZZ?|.)/g;
+var formattingTokens = /(\[[^\[]*\])|(\\)([Hh]mm(ss)|Mo|MMMM|Do|DDDo|DDDD|dddd|do|w[o|w]|W[o|W]|Qo|YYYYYY|YYYYY|YYYY|YY|gg(ggg)|GG(GGG)|e|E|a|A|hh|HH|kk|mm|ss|S{1,9}|x|X|zz|ZZ|.)/g;
 
-var localFormattingTokens = /(\[[^\[]*\])|(\\)?(LTS|LT|LL?L?L?|l{1,4})/g;
+var localFormattingTokens = /(\[[^\[]*\])|(\\)(LTS|LT|LLLL|l{1,4})/g;
 
 var formatFunctions = {};
 
@@ -2317,7 +2317,7 @@ function makeFormatFunction(format) {
     return function (mom) {
         var output = '', i;
         for (i = 0; i < length; i++) {
-            output += isFunction(array[i]) ? array[i].call(mom, format) : array[i];
+            output += isFunction(array[i])  array[i].call(mom, format) : array[i];
         }
         return output;
     };
@@ -2356,32 +2356,32 @@ var match1         = /\d/;            //       0 - 9
 var match2         = /\d\d/;          //      00 - 99
 var match3         = /\d{3}/;         //     000 - 999
 var match4         = /\d{4}/;         //    0000 - 9999
-var match6         = /[+-]?\d{6}/;    // -999999 - 999999
-var match1to2      = /\d\d?/;         //       0 - 99
-var match3to4      = /\d\d\d\d?/;     //     999 - 9999
-var match5to6      = /\d\d\d\d\d\d?/; //   99999 - 999999
+var match6         = /[+-]\d{6}/;    // -999999 - 999999
+var match1to2      = /\d\d/;         //       0 - 99
+var match3to4      = /\d\d\d\d/;     //     999 - 9999
+var match5to6      = /\d\d\d\d\d\d/; //   99999 - 999999
 var match1to3      = /\d{1,3}/;       //       0 - 999
 var match1to4      = /\d{1,4}/;       //       0 - 9999
-var match1to6      = /[+-]?\d{1,6}/;  // -999999 - 999999
+var match1to6      = /[+-]\d{1,6}/;  // -999999 - 999999
 
 var matchUnsigned  = /\d+/;           //       0 - inf
-var matchSigned    = /[+-]?\d+/;      //    -inf - inf
+var matchSigned    = /[+-]\d+/;      //    -inf - inf
 
-var matchOffset    = /Z|[+-]\d\d:?\d\d/gi; // +00:00 -00:00 +0000 -0000 or Z
-var matchShortOffset = /Z|[+-]\d\d(?::?\d\d)?/gi; // +00 -00 +00:00 -00:00 +0000 -0000 or Z
+var matchOffset    = /Z|[+-]\d\d:\d\d/gi; // +00:00 -00:00 +0000 -0000 or Z
+var matchShortOffset = /Z|[+-]\d\d(::\d\d)/gi; // +00 -00 +00:00 -00:00 +0000 -0000 or Z
 
-var matchTimestamp = /[+-]?\d+(\.\d{1,3})?/; // 123456789 123456789.123
+var matchTimestamp = /[+-]\d+(\.\d{1,3})/; // 123456789 123456789.123
 
 // any word (or two) characters or numbers including two/three word month in arabic.
 // includes scottish gaelic two word and hyphenated months
-var matchWord = /[0-9]*['a-z\u00A0-\u05FF\u0700-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]+|[\u0600-\u06FF\/]+(\s*?[\u0600-\u06FF]+){1,2}/i;
+var matchWord = /[0-9]*['a-z\u00A0-\u05FF\u0700-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]+|[\u0600-\u06FF\/]+(\s*[\u0600-\u06FF]+){1,2}/i;
 
 
 var regexes = {};
 
 function addRegexToken (token, regex, strictRegex) {
-    regexes[token] = isFunction(regex) ? regex : function (isStrict, localeData) {
-        return (isStrict && strictRegex) ? strictRegex : regex;
+    regexes[token] = isFunction(regex)  regex : function (isStrict, localeData) {
+        return (isStrict && strictRegex)  strictRegex : regex;
     };
 }
 
@@ -2401,7 +2401,7 @@ function unescapeFormat(s) {
 }
 
 function regexEscape(s) {
-    return s.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
+    return s.replace(/[-\/\\^$*+.()|[\]{}]/g, '\\$&');
 }
 
 var tokens = {};
@@ -2516,25 +2516,25 @@ addParseToken(['MMM', 'MMMM'], function (input, array, config, token) {
 
 // LOCALES
 
-var MONTHS_IN_FORMAT = /D[oD]?(\[[^\[\]]*\]|\s)+MMMM?/;
+var MONTHS_IN_FORMAT = /D[oD](\[[^\[\]]*\]|\s)+MMMM/;
 var defaultLocaleMonths = 'January_February_March_April_May_June_July_August_September_October_November_December'.split('_');
 function localeMonths (m, format) {
     if (!m) {
-        return isArray(this._months) ? this._months :
+        return isArray(this._months)  this._months :
             this._months['standalone'];
     }
-    return isArray(this._months) ? this._months[m.month()] :
-        this._months[(this._months.isFormat || MONTHS_IN_FORMAT).test(format) ? 'format' : 'standalone'][m.month()];
+    return isArray(this._months)  this._months[m.month()] :
+        this._months[(this._months.isFormat || MONTHS_IN_FORMAT).test(format)  'format' : 'standalone'][m.month()];
 }
 
 var defaultLocaleMonthsShort = 'Jan_Feb_Mar_Apr_May_Jun_Jul_Aug_Sep_Oct_Nov_Dec'.split('_');
 function localeMonthsShort (m, format) {
     if (!m) {
-        return isArray(this._monthsShort) ? this._monthsShort :
+        return isArray(this._monthsShort)  this._monthsShort :
             this._monthsShort['standalone'];
     }
-    return isArray(this._monthsShort) ? this._monthsShort[m.month()] :
-        this._monthsShort[MONTHS_IN_FORMAT.test(format) ? 'format' : 'standalone'][m.month()];
+    return isArray(this._monthsShort)  this._monthsShort[m.month()] :
+        this._monthsShort[MONTHS_IN_FORMAT.test(format)  'format' : 'standalone'][m.month()];
 }
 
 function handleStrictParse(monthName, format, strict) {
@@ -2554,10 +2554,10 @@ function handleStrictParse(monthName, format, strict) {
     if (strict) {
         if (format === 'MMM') {
             ii = indexOf$1.call(this._shortMonthsParse, llc);
-            return ii !== -1 ? ii : null;
+            return ii !== -1  ii : null;
         } else {
             ii = indexOf$1.call(this._longMonthsParse, llc);
-            return ii !== -1 ? ii : null;
+            return ii !== -1  ii : null;
         }
     } else {
         if (format === 'MMM') {
@@ -2566,14 +2566,14 @@ function handleStrictParse(monthName, format, strict) {
                 return ii;
             }
             ii = indexOf$1.call(this._longMonthsParse, llc);
-            return ii !== -1 ? ii : null;
+            return ii !== -1  ii : null;
         } else {
             ii = indexOf$1.call(this._longMonthsParse, llc);
             if (ii !== -1) {
                 return ii;
             }
             ii = indexOf$1.call(this._shortMonthsParse, llc);
-            return ii !== -1 ? ii : null;
+            return ii !== -1  ii : null;
         }
     }
 }
@@ -2631,7 +2631,7 @@ function setMonth (mom, value) {
             value = toInt(value);
         } else {
             value = mom.localeData().monthsParse(value);
-            // TODO: Another silent failure?
+            // TODO: Another silent failure
             if (!isNumber(value)) {
                 return mom;
             }
@@ -2639,7 +2639,7 @@ function setMonth (mom, value) {
     }
 
     dayOfMonth = Math.min(mom.date(), daysInMonth(mom.year(), value));
-    mom._d['set' + (mom._isUTC ? 'UTC' : '') + 'Month'](value, dayOfMonth);
+    mom._d['set' + (mom._isUTC  'UTC' : '') + 'Month'](value, dayOfMonth);
     return mom;
 }
 
@@ -2672,7 +2672,7 @@ function monthsShortRegex (isStrict) {
         if (!hasOwnProp(this, '_monthsShortRegex')) {
             this._monthsShortRegex = defaultMonthsShortRegex;
         }
-        return this._monthsShortStrictRegex && isStrict ?
+        return this._monthsShortStrictRegex && isStrict 
             this._monthsShortStrictRegex : this._monthsShortRegex;
     }
 }
@@ -2692,7 +2692,7 @@ function monthsRegex (isStrict) {
         if (!hasOwnProp(this, '_monthsRegex')) {
             this._monthsRegex = defaultMonthsRegex;
         }
-        return this._monthsStrictRegex && isStrict ?
+        return this._monthsStrictRegex && isStrict 
             this._monthsStrictRegex : this._monthsRegex;
     }
 }
@@ -2735,7 +2735,7 @@ function computeMonthsParse () {
 
 addFormatToken('Y', 0, 0, function () {
     var y = this.year();
-    return y <= 9999 ? '' + y : '+' + y;
+    return y <= 9999  '' + y : '+' + y;
 });
 
 addFormatToken(0, ['YY', 2], 0, function () {
@@ -2764,7 +2764,7 @@ addRegexToken('YYYYYY', match1to6, match6);
 
 addParseToken(['YYYYY', 'YYYYYY'], YEAR);
 addParseToken('YYYY', function (input, array) {
-    array[YEAR] = input.length === 2 ? hooks.parseTwoDigitYear(input) : toInt(input);
+    array[YEAR] = input.length === 2  hooks.parseTwoDigitYear(input) : toInt(input);
 });
 addParseToken('YY', function (input, array) {
     array[YEAR] = hooks.parseTwoDigitYear(input);
@@ -2776,7 +2776,7 @@ addParseToken('Y', function (input, array) {
 // HELPERS
 
 function daysInYear(year) {
-    return isLeapYear(year) ? 366 : 365;
+    return isLeapYear(year)  366 : 365;
 }
 
 function isLeapYear(year) {
@@ -2786,7 +2786,7 @@ function isLeapYear(year) {
 // HOOKS
 
 hooks.parseTwoDigitYear = function (input) {
-    return toInt(input) + (toInt(input) > 68 ? 1900 : 2000);
+    return toInt(input) + (toInt(input) > 68  1900 : 2000);
 };
 
 // MOMENTS
@@ -2932,12 +2932,12 @@ function localeFirstDayOfYear () {
 
 function getSetWeek (input) {
     var week = this.localeData().week(this);
-    return input == null ? week : this.add((input - week) * 7, 'd');
+    return input == null  week : this.add((input - week) * 7, 'd');
 }
 
 function getSetISOWeek (input) {
     var week = weekOfYear(this, 1, 4).week;
-    return input == null ? week : this.add((input - week) * 7, 'd');
+    return input == null  week : this.add((input - week) * 7, 'd');
 }
 
 // FORMATTING
@@ -3022,7 +3022,7 @@ function parseIsoWeekday(input, locale) {
     if (typeof input === 'string') {
         return locale.weekdaysParse(input) % 7 || 7;
     }
-    return isNaN(input) ? null : input;
+    return isNaN(input)  null : input;
 }
 
 // LOCALES
@@ -3030,21 +3030,21 @@ function parseIsoWeekday(input, locale) {
 var defaultLocaleWeekdays = 'Sunday_Monday_Tuesday_Wednesday_Thursday_Friday_Saturday'.split('_');
 function localeWeekdays (m, format) {
     if (!m) {
-        return isArray(this._weekdays) ? this._weekdays :
+        return isArray(this._weekdays)  this._weekdays :
             this._weekdays['standalone'];
     }
-    return isArray(this._weekdays) ? this._weekdays[m.day()] :
-        this._weekdays[this._weekdays.isFormat.test(format) ? 'format' : 'standalone'][m.day()];
+    return isArray(this._weekdays)  this._weekdays[m.day()] :
+        this._weekdays[this._weekdays.isFormat.test(format)  'format' : 'standalone'][m.day()];
 }
 
 var defaultLocaleWeekdaysShort = 'Sun_Mon_Tue_Wed_Thu_Fri_Sat'.split('_');
 function localeWeekdaysShort (m) {
-    return (m) ? this._weekdaysShort[m.day()] : this._weekdaysShort;
+    return (m)  this._weekdaysShort[m.day()] : this._weekdaysShort;
 }
 
 var defaultLocaleWeekdaysMin = 'Su_Mo_Tu_We_Th_Fr_Sa'.split('_');
 function localeWeekdaysMin (m) {
-    return (m) ? this._weekdaysMin[m.day()] : this._weekdaysMin;
+    return (m)  this._weekdaysMin[m.day()] : this._weekdaysMin;
 }
 
 function handleStrictParse$1(weekdayName, format, strict) {
@@ -3065,13 +3065,13 @@ function handleStrictParse$1(weekdayName, format, strict) {
     if (strict) {
         if (format === 'dddd') {
             ii = indexOf$1.call(this._weekdaysParse, llc);
-            return ii !== -1 ? ii : null;
+            return ii !== -1  ii : null;
         } else if (format === 'ddd') {
             ii = indexOf$1.call(this._shortWeekdaysParse, llc);
-            return ii !== -1 ? ii : null;
+            return ii !== -1  ii : null;
         } else {
             ii = indexOf$1.call(this._minWeekdaysParse, llc);
-            return ii !== -1 ? ii : null;
+            return ii !== -1  ii : null;
         }
     } else {
         if (format === 'dddd') {
@@ -3084,7 +3084,7 @@ function handleStrictParse$1(weekdayName, format, strict) {
                 return ii;
             }
             ii = indexOf$1.call(this._minWeekdaysParse, llc);
-            return ii !== -1 ? ii : null;
+            return ii !== -1  ii : null;
         } else if (format === 'ddd') {
             ii = indexOf$1.call(this._shortWeekdaysParse, llc);
             if (ii !== -1) {
@@ -3095,7 +3095,7 @@ function handleStrictParse$1(weekdayName, format, strict) {
                 return ii;
             }
             ii = indexOf$1.call(this._minWeekdaysParse, llc);
-            return ii !== -1 ? ii : null;
+            return ii !== -1  ii : null;
         } else {
             ii = indexOf$1.call(this._minWeekdaysParse, llc);
             if (ii !== -1) {
@@ -3106,7 +3106,7 @@ function handleStrictParse$1(weekdayName, format, strict) {
                 return ii;
             }
             ii = indexOf$1.call(this._shortWeekdaysParse, llc);
-            return ii !== -1 ? ii : null;
+            return ii !== -1  ii : null;
         }
     }
 }
@@ -3130,9 +3130,9 @@ function localeWeekdaysParse (weekdayName, format, strict) {
 
         mom = createUTC([2000, 1]).day(i);
         if (strict && !this._fullWeekdaysParse[i]) {
-            this._fullWeekdaysParse[i] = new RegExp('^' + this.weekdays(mom, '').replace('.', '\.?') + '$', 'i');
-            this._shortWeekdaysParse[i] = new RegExp('^' + this.weekdaysShort(mom, '').replace('.', '\.?') + '$', 'i');
-            this._minWeekdaysParse[i] = new RegExp('^' + this.weekdaysMin(mom, '').replace('.', '\.?') + '$', 'i');
+            this._fullWeekdaysParse[i] = new RegExp('^' + this.weekdays(mom, '').replace('.', '\.') + '$', 'i');
+            this._shortWeekdaysParse[i] = new RegExp('^' + this.weekdaysShort(mom, '').replace('.', '\.') + '$', 'i');
+            this._minWeekdaysParse[i] = new RegExp('^' + this.weekdaysMin(mom, '').replace('.', '\.') + '$', 'i');
         }
         if (!this._weekdaysParse[i]) {
             regex = '^' + this.weekdays(mom, '') + '|^' + this.weekdaysShort(mom, '') + '|^' + this.weekdaysMin(mom, '');
@@ -3155,9 +3155,9 @@ function localeWeekdaysParse (weekdayName, format, strict) {
 
 function getSetDayOfWeek (input) {
     if (!this.isValid()) {
-        return input != null ? this : NaN;
+        return input != null  this : NaN;
     }
-    var day = this._isUTC ? this._d.getUTCDay() : this._d.getDay();
+    var day = this._isUTC  this._d.getUTCDay() : this._d.getDay();
     if (input != null) {
         input = parseWeekday(input, this.localeData());
         return this.add(input - day, 'd');
@@ -3168,15 +3168,15 @@ function getSetDayOfWeek (input) {
 
 function getSetLocaleDayOfWeek (input) {
     if (!this.isValid()) {
-        return input != null ? this : NaN;
+        return input != null  this : NaN;
     }
     var weekday = (this.day() + 7 - this.localeData()._week.dow) % 7;
-    return input == null ? weekday : this.add(input - weekday, 'd');
+    return input == null  weekday : this.add(input - weekday, 'd');
 }
 
 function getSetISODayOfWeek (input) {
     if (!this.isValid()) {
-        return input != null ? this : NaN;
+        return input != null  this : NaN;
     }
 
     // behaves the same as moment#day except
@@ -3185,7 +3185,7 @@ function getSetISODayOfWeek (input) {
 
     if (input != null) {
         var weekday = parseIsoWeekday(input, this.localeData());
-        return this.day(this.day() % 7 ? weekday : weekday - 7);
+        return this.day(this.day() % 7  weekday : weekday - 7);
     } else {
         return this.day() || 7;
     }
@@ -3206,7 +3206,7 @@ function weekdaysRegex (isStrict) {
         if (!hasOwnProp(this, '_weekdaysRegex')) {
             this._weekdaysRegex = defaultWeekdaysRegex;
         }
-        return this._weekdaysStrictRegex && isStrict ?
+        return this._weekdaysStrictRegex && isStrict 
             this._weekdaysStrictRegex : this._weekdaysRegex;
     }
 }
@@ -3226,7 +3226,7 @@ function weekdaysShortRegex (isStrict) {
         if (!hasOwnProp(this, '_weekdaysShortRegex')) {
             this._weekdaysShortRegex = defaultWeekdaysShortRegex;
         }
-        return this._weekdaysShortStrictRegex && isStrict ?
+        return this._weekdaysShortStrictRegex && isStrict 
             this._weekdaysShortStrictRegex : this._weekdaysShortRegex;
     }
 }
@@ -3246,7 +3246,7 @@ function weekdaysMinRegex (isStrict) {
         if (!hasOwnProp(this, '_weekdaysMinRegex')) {
             this._weekdaysMinRegex = defaultWeekdaysMinRegex;
         }
-        return this._weekdaysMinStrictRegex && isStrict ?
+        return this._weekdaysMinStrictRegex && isStrict 
             this._weekdaysMinStrictRegex : this._weekdaysMinRegex;
     }
 }
@@ -3364,7 +3364,7 @@ addRegexToken('Hmmss', match5to6);
 addParseToken(['H', 'HH'], HOUR);
 addParseToken(['k', 'kk'], function (input, array, config) {
     var kInput = toInt(input);
-    array[HOUR] = kInput === 24 ? 0 : kInput;
+    array[HOUR] = kInput === 24  0 : kInput;
 });
 addParseToken(['a', 'A'], function (input, array, config) {
     config._isPm = config._locale.isPM(input);
@@ -3409,12 +3409,12 @@ function localeIsPM (input) {
     return ((input + '').toLowerCase().charAt(0) === 'p');
 }
 
-var defaultLocaleMeridiemParse = /[ap]\.?m?\.?/i;
+var defaultLocaleMeridiemParse = /[ap]\.m\./i;
 function localeMeridiem (hours, minutes, isLower) {
     if (hours > 11) {
-        return isLower ? 'pm' : 'PM';
+        return isLower  'pm' : 'PM';
     } else {
-        return isLower ? 'am' : 'AM';
+        return isLower  'am' : 'AM';
     }
 }
 
@@ -3457,7 +3457,7 @@ var localeFamilies = {};
 var globalLocale;
 
 function normalizeLocale(key) {
-    return key ? key.toLowerCase().replace('_', '-') : key;
+    return key  key.toLowerCase().replace('_', '-') : key;
 }
 
 // pick the locale from the array
@@ -3470,7 +3470,7 @@ function chooseLocale(names) {
         split = normalizeLocale(names[i]).split('-');
         j = split.length;
         next = normalizeLocale(names[i + 1]);
-        next = next ? next.split('-') : null;
+        next = next  next.split('-') : null;
         while (j > 0) {
             locale = loadLocale(split.slice(0, j).join('-'));
             if (locale) {
@@ -3633,12 +3633,12 @@ function checkOverflow (m) {
 
     if (a && getParsingFlags(m).overflow === -2) {
         overflow =
-            a[MONTH]       < 0 || a[MONTH]       > 11  ? MONTH :
-            a[DATE]        < 1 || a[DATE]        > daysInMonth(a[YEAR], a[MONTH]) ? DATE :
-            a[HOUR]        < 0 || a[HOUR]        > 24 || (a[HOUR] === 24 && (a[MINUTE] !== 0 || a[SECOND] !== 0 || a[MILLISECOND] !== 0)) ? HOUR :
-            a[MINUTE]      < 0 || a[MINUTE]      > 59  ? MINUTE :
-            a[SECOND]      < 0 || a[SECOND]      > 59  ? SECOND :
-            a[MILLISECOND] < 0 || a[MILLISECOND] > 999 ? MILLISECOND :
+            a[MONTH]       < 0 || a[MONTH]       > 11   MONTH :
+            a[DATE]        < 1 || a[DATE]        > daysInMonth(a[YEAR], a[MONTH])  DATE :
+            a[HOUR]        < 0 || a[HOUR]        > 24 || (a[HOUR] === 24 && (a[MINUTE] !== 0 || a[SECOND] !== 0 || a[MILLISECOND] !== 0))  HOUR :
+            a[MINUTE]      < 0 || a[MINUTE]      > 59   MINUTE :
+            a[SECOND]      < 0 || a[SECOND]      > 59   SECOND :
+            a[MILLISECOND] < 0 || a[MILLISECOND] > 999  MILLISECOND :
             -1;
 
         if (getParsingFlags(m)._overflowDayOfYear && (overflow < YEAR || overflow > DATE)) {
@@ -3659,10 +3659,10 @@ function checkOverflow (m) {
 
 // iso 8601 regex
 // 0000-00-00 0000-W00 or 0000-W00-0 + T + 00 or 00:00 or 00:00:00 or 00:00:00.000 + +00:00 or +0000 or +00)
-var extendedIsoRegex = /^\s*((?:[+-]\d{6}|\d{4})-(?:\d\d-\d\d|W\d\d-\d|W\d\d|\d\d\d|\d\d))(?:(T| )(\d\d(?::\d\d(?::\d\d(?:[.,]\d+)?)?)?)([\+\-]\d\d(?::?\d\d)?|\s*Z)?)?$/;
-var basicIsoRegex = /^\s*((?:[+-]\d{6}|\d{4})(?:\d\d\d\d|W\d\d\d|W\d\d|\d\d\d|\d\d))(?:(T| )(\d\d(?:\d\d(?:\d\d(?:[.,]\d+)?)?)?)([\+\-]\d\d(?::?\d\d)?|\s*Z)?)?$/;
+var extendedIsoRegex = /^\s*((:[+-]\d{6}|\d{4})-(:\d\d-\d\d|W\d\d-\d|W\d\d|\d\d\d|\d\d))(:(T| )(\d\d(::\d\d(::\d\d(:[.,]\d+))))([\+\-]\d\d(::\d\d)|\s*Z))$/;
+var basicIsoRegex = /^\s*((:[+-]\d{6}|\d{4})(:\d\d\d\d|W\d\d\d|W\d\d|\d\d\d|\d\d))(:(T| )(\d\d(:\d\d(:\d\d(:[.,]\d+))))([\+\-]\d\d(::\d\d)|\s*Z))$/;
 
-var tzRegex = /Z|[+-]\d\d(?::?\d\d)?/;
+var tzRegex = /Z|[+-]\d\d(::\d\d)/;
 
 var isoDates = [
     ['YYYYYY-MM-DD', /[+-]\d{6}-\d\d-\d\d/],
@@ -3692,7 +3692,7 @@ var isoTimes = [
     ['HH', /\d\d/]
 ];
 
-var aspNetJsonRegex = /^\/?Date\((\-?\d+)/i;
+var aspNetJsonRegex = /^\/Date\((\-\d+)/i;
 
 // date from iso format
 function configFromISO(config) {
@@ -3748,7 +3748,7 @@ function configFromISO(config) {
 }
 
 // RFC 2822 regex: For details see https://tools.ietf.org/html/rfc2822#section-3.3
-var basicRfcRegex = /^((?:Mon|Tue|Wed|Thu|Fri|Sat|Sun),?\s)?(\d?\d\s(?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)\s(?:\d\d)?\d\d\s)(\d\d:\d\d)(\:\d\d)?(\s(?:UT|GMT|[ECMP][SD]T|[A-IK-Za-ik-z]|[+-]\d{4}))$/;
+var basicRfcRegex = /^((:Mon|Tue|Wed|Thu|Fri|Sat|Sun),\s)(\d\d\s(:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)\s(:\d\d)\d\d\s)(\d\d:\d\d)(\:\d\d)(\s(:UT|GMT|[ECMP][SD]T|[A-IK-Za-ik-z]|[+-]\d{4}))$/;
 
 // date and time from ref 2822 format
 function configFromRFC2822(config) {
@@ -3775,9 +3775,9 @@ function configFromRFC2822(config) {
     match = basicRfcRegex.exec(string);
 
     if (match) {
-        dayFormat = match[1] ? 'ddd' + ((match[1].length === 5) ? ', ' : ' ') : '';
-        dateFormat = 'D MMM ' + ((match[2].length > 10) ? 'YYYY ' : 'YY ');
-        timeFormat = 'HH:mm' + (match[4] ? ':ss' : '');
+        dayFormat = match[1]  'ddd' + ((match[1].length === 5)  ', ' : ' ') : '';
+        dateFormat = 'D MMM ' + ((match[2].length > 10)  'YYYY ' : 'YY ');
+        timeFormat = 'HH:mm' + (match[4]  ':ss' : '');
 
         // TODO: Replace the vanilla JS Date object with an indepentent day-of-week check.
         if (match[1]) { // day of week given
@@ -3797,8 +3797,8 @@ function configFromRFC2822(config) {
                     timezone = ' +0000';
                 } else {
                     timezoneIndex = military.indexOf(match[5][1].toUpperCase()) - 12;
-                    timezone = ((timezoneIndex < 0) ? ' -' : ' +') +
-                        (('' + timezoneIndex).replace(/^-?/, '0')).match(/..$/)[0] + '00';
+                    timezone = ((timezoneIndex < 0)  ' -' : ' +') +
+                        (('' + timezoneIndex).replace(/^-/, '0')).match(/..$/)[0] + '00';
                 }
                 break;
             case 4: // Zone
@@ -3851,7 +3851,7 @@ hooks.createFromInputFallback = deprecate(
     'discouraged and will be removed in an upcoming major release. Please refer to ' +
     'http://momentjs.com/guides/#/warnings/js-date/ for more info.',
     function (config) {
-        config._d = new Date(config._i + (config._useUTC ? ' UTC' : ''));
+        config._d = new Date(config._i + (config._useUTC  ' UTC' : ''));
     }
 );
 
@@ -3917,7 +3917,7 @@ function configFromArray (config) {
 
     // Zero out whatever was not defaulted, including time
     for (; i < 7; i++) {
-        config._a[i] = input[i] = (config._a[i] == null) ? (i === 2 ? 1 : 0) : config._a[i];
+        config._a[i] = input[i] = (config._a[i] == null)  (i === 2  1 : 0) : config._a[i];
     }
 
     // Check for 24:00:00.000
@@ -3929,7 +3929,7 @@ function configFromArray (config) {
         config._a[HOUR] = 0;
     }
 
-    config._d = (config._useUTC ? createUTCDate : createDate).apply(null, input);
+    config._d = (config._useUTC  createUTCDate : createDate).apply(null, input);
     // Apply timezone offset from input. The actual utcOffset can be changed
     // with parseZone.
     if (config._tzm != null) {
@@ -4260,7 +4260,7 @@ var prototypeMin = deprecate(
     function () {
         var other = createLocal.apply(null, arguments);
         if (this.isValid() && other.isValid()) {
-            return other < this ? this : other;
+            return other < this  this : other;
         } else {
             return createInvalid();
         }
@@ -4272,7 +4272,7 @@ var prototypeMax = deprecate(
     function () {
         var other = createLocal.apply(null, arguments);
         if (this.isValid() && other.isValid()) {
-            return other > this ? this : other;
+            return other > this  this : other;
         } else {
             return createInvalid();
         }
@@ -4301,7 +4301,7 @@ function pickBy(fn, moments) {
     return res;
 }
 
-// TODO: Use [].sort instead?
+// TODO: Use [].sort instead
 function min () {
     var args = [].slice.call(arguments, 0);
 
@@ -4315,7 +4315,7 @@ function max () {
 }
 
 var now = function () {
-    return Date.now ? Date.now() : +(new Date());
+    return Date.now  Date.now() : +(new Date());
 };
 
 var ordering = ['year', 'quarter', 'month', 'week', 'day', 'hour', 'minute', 'second', 'millisecond'];
@@ -4443,9 +4443,9 @@ function offsetFromString(matcher, string) {
     var parts   = (chunk + '').match(chunkOffset) || ['-', 0, 0];
     var minutes = +(parts[1] * 60) + toInt(parts[2]);
 
-    return minutes === 0 ?
+    return minutes === 0 
       0 :
-      parts[0] === '+' ? minutes : -minutes;
+      parts[0] === '+'  minutes : -minutes;
 }
 
 // Return a moment from input, that is local/utc/zone equivalent to model.
@@ -4453,7 +4453,7 @@ function cloneWithOffset(input, model) {
     var res, diff;
     if (model._isUTC) {
         res = model.clone();
-        diff = (isMoment(input) || isDate(input) ? input.valueOf() : createLocal(input).valueOf()) - res.valueOf();
+        diff = (isMoment(input) || isDate(input)  input.valueOf() : createLocal(input).valueOf()) - res.valueOf();
         // Use low-level api, because this fn is low-level api.
         res._d.setTime(res._d.valueOf() + diff);
         hooks.updateOffset(res, false);
@@ -4491,7 +4491,7 @@ function getSetOffset (input, keepLocalTime, keepMinutes) {
     var offset = this._offset || 0,
         localAdjust;
     if (!this.isValid()) {
-        return input != null ? this : NaN;
+        return input != null  this : NaN;
     }
     if (input != null) {
         if (typeof input === 'string') {
@@ -4521,7 +4521,7 @@ function getSetOffset (input, keepLocalTime, keepMinutes) {
         }
         return this;
     } else {
-        return this._isUTC ? offset : getDateOffset(this);
+        return this._isUTC  offset : getDateOffset(this);
     }
 }
 
@@ -4574,7 +4574,7 @@ function hasAlignedHourOffset (input) {
     if (!this.isValid()) {
         return false;
     }
-    input = input ? createLocal(input).utcOffset() : 0;
+    input = input  createLocal(input).utcOffset() : 0;
 
     return (this.utcOffset() - input) % 60 === 0;
 }
@@ -4597,7 +4597,7 @@ function isDaylightSavingTimeShifted () {
     c = prepareConfig(c);
 
     if (c._a) {
-        var other = c._isUTC ? createUTC(c._a) : createLocal(c._a);
+        var other = c._isUTC  createUTC(c._a) : createLocal(c._a);
         this._isDSTShifted = this.isValid() &&
             compareArrays(c._a, other.toArray()) > 0;
     } else {
@@ -4608,24 +4608,24 @@ function isDaylightSavingTimeShifted () {
 }
 
 function isLocal () {
-    return this.isValid() ? !this._isUTC : false;
+    return this.isValid()  !this._isUTC : false;
 }
 
 function isUtcOffset () {
-    return this.isValid() ? this._isUTC : false;
+    return this.isValid()  this._isUTC : false;
 }
 
 function isUtc () {
-    return this.isValid() ? this._isUTC && this._offset === 0 : false;
+    return this.isValid()  this._isUTC && this._offset === 0 : false;
 }
 
 // ASP.NET json date format regex
-var aspNetRegex = /^(\-)?(?:(\d*)[. ])?(\d+)\:(\d+)(?:\:(\d+)(\.\d*)?)?$/;
+var aspNetRegex = /^(\-)(:(\d*)[. ])(\d+)\:(\d+)(:\:(\d+)(\.\d*))$/;
 
 // from http://docs.closure-library.googlecode.com/git/closure_goog_date_date.js.source.html
 // somewhat more in line with 4.4.3.2 2004 spec, but allows decimal anywhere
 // and further modified to allow for strings containing both week and day
-var isoRegex = /^(-)?P(?:(-?[0-9,.]*)Y)?(?:(-?[0-9,.]*)M)?(?:(-?[0-9,.]*)W)?(?:(-?[0-9,.]*)D)?(?:T(?:(-?[0-9,.]*)H)?(?:(-?[0-9,.]*)M)?(?:(-?[0-9,.]*)S)?)?$/;
+var isoRegex = /^(-)P(:(-[0-9,.]*)Y)(:(-[0-9,.]*)M)(:(-[0-9,.]*)W)(:(-[0-9,.]*)D)(:T(:(-[0-9,.]*)H)(:(-[0-9,.]*)M)(:(-[0-9,.]*)S))$/;
 
 function createDuration (input, key) {
     var duration = input,
@@ -4649,7 +4649,7 @@ function createDuration (input, key) {
             duration.milliseconds = input;
         }
     } else if (!!(match = aspNetRegex.exec(input))) {
-        sign = (match[1] === '-') ? -1 : 1;
+        sign = (match[1] === '-')  -1 : 1;
         duration = {
             y  : 0,
             d  : toInt(match[DATE])                         * sign,
@@ -4659,7 +4659,7 @@ function createDuration (input, key) {
             ms : toInt(absRound(match[MILLISECOND] * 1000)) * sign // the millisecond decimal point is included in the match
         };
     } else if (!!(match = isoRegex.exec(input))) {
-        sign = (match[1] === '-') ? -1 : 1;
+        sign = (match[1] === '-')  -1 : 1;
         duration = {
             y : parseIso(match[2], sign),
             M : parseIso(match[3], sign),
@@ -4697,7 +4697,7 @@ function parseIso (inp, sign) {
     // inp may be undefined, so careful calling replace on it.
     var res = inp && parseFloat(inp.replace(',', '.'));
     // apply sign while we're at it
-    return (isNaN(res) ? 0 : res) * sign;
+    return (isNaN(res)  0 : res) * sign;
 }
 
 function positiveMomentsDifference(base, other) {
@@ -4743,7 +4743,7 @@ function createAdder(direction, name) {
             tmp = val; val = period; period = tmp;
         }
 
-        val = typeof val === 'string' ? +val : val;
+        val = typeof val === 'string'  +val : val;
         dur = createDuration(val, period);
         addSubtract(this, dur, direction);
         return this;
@@ -4760,7 +4760,7 @@ function addSubtract (mom, duration, isAdding, updateOffset) {
         return;
     }
 
-    updateOffset = updateOffset == null ? true : updateOffset;
+    updateOffset = updateOffset == null  true : updateOffset;
 
     if (milliseconds) {
         mom._d.setTime(mom._d.valueOf() + milliseconds * isAdding);
@@ -4781,12 +4781,12 @@ var subtract = createAdder(-1, 'subtract');
 
 function getCalendarFormat(myMoment, now) {
     var diff = myMoment.diff(now, 'days', true);
-    return diff < -6 ? 'sameElse' :
-            diff < -1 ? 'lastWeek' :
-            diff < 0 ? 'lastDay' :
-            diff < 1 ? 'sameDay' :
-            diff < 2 ? 'nextDay' :
-            diff < 7 ? 'nextWeek' : 'sameElse';
+    return diff < -6  'sameElse' :
+            diff < -1  'lastWeek' :
+            diff < 0  'lastDay' :
+            diff < 1  'sameDay' :
+            diff < 2  'nextDay' :
+            diff < 7  'nextWeek' : 'sameElse';
 }
 
 function calendar$1 (time, formats) {
@@ -4796,7 +4796,7 @@ function calendar$1 (time, formats) {
         sod = cloneWithOffset(now, this).startOf('day'),
         format = hooks.calendarFormat(this, sod) || 'sameElse';
 
-    var output = formats && (isFunction(formats[format]) ? formats[format].call(this, now) : formats[format]);
+    var output = formats && (isFunction(formats[format])  formats[format].call(this, now) : formats[format]);
 
     return this.format(output || this.localeData().calendar(format, this, createLocal(now)));
 }
@@ -4806,11 +4806,11 @@ function clone () {
 }
 
 function isAfter (input, units) {
-    var localInput = isMoment(input) ? input : createLocal(input);
+    var localInput = isMoment(input)  input : createLocal(input);
     if (!(this.isValid() && localInput.isValid())) {
         return false;
     }
-    units = normalizeUnits(!isUndefined(units) ? units : 'millisecond');
+    units = normalizeUnits(!isUndefined(units)  units : 'millisecond');
     if (units === 'millisecond') {
         return this.valueOf() > localInput.valueOf();
     } else {
@@ -4819,11 +4819,11 @@ function isAfter (input, units) {
 }
 
 function isBefore (input, units) {
-    var localInput = isMoment(input) ? input : createLocal(input);
+    var localInput = isMoment(input)  input : createLocal(input);
     if (!(this.isValid() && localInput.isValid())) {
         return false;
     }
-    units = normalizeUnits(!isUndefined(units) ? units : 'millisecond');
+    units = normalizeUnits(!isUndefined(units)  units : 'millisecond');
     if (units === 'millisecond') {
         return this.valueOf() < localInput.valueOf();
     } else {
@@ -4833,12 +4833,12 @@ function isBefore (input, units) {
 
 function isBetween (from, to, units, inclusivity) {
     inclusivity = inclusivity || '()';
-    return (inclusivity[0] === '(' ? this.isAfter(from, units) : !this.isBefore(from, units)) &&
-        (inclusivity[1] === ')' ? this.isBefore(to, units) : !this.isAfter(to, units));
+    return (inclusivity[0] === '('  this.isAfter(from, units) : !this.isBefore(from, units)) &&
+        (inclusivity[1] === ')'  this.isBefore(to, units) : !this.isAfter(to, units));
 }
 
 function isSame (input, units) {
-    var localInput = isMoment(input) ? input : createLocal(input),
+    var localInput = isMoment(input)  input : createLocal(input),
         inputMs;
     if (!(this.isValid() && localInput.isValid())) {
         return false;
@@ -4888,14 +4888,14 @@ function diff (input, units, asFloat) {
         }
     } else {
         delta = this - that;
-        output = units === 'second' ? delta / 1e3 : // 1000
-            units === 'minute' ? delta / 6e4 : // 1000 * 60
-            units === 'hour' ? delta / 36e5 : // 1000 * 60 * 60
-            units === 'day' ? (delta - zoneDelta) / 864e5 : // 1000 * 60 * 60 * 24, negate dst
-            units === 'week' ? (delta - zoneDelta) / 6048e5 : // 1000 * 60 * 60 * 24 * 7, negate dst
+        output = units === 'second'  delta / 1e3 : // 1000
+            units === 'minute'  delta / 6e4 : // 1000 * 60
+            units === 'hour'  delta / 36e5 : // 1000 * 60 * 60
+            units === 'day'  (delta - zoneDelta) / 864e5 : // 1000 * 60 * 60 * 24, negate dst
+            units === 'week'  (delta - zoneDelta) / 6048e5 : // 1000 * 60 * 60 * 24 * 7, negate dst
             delta;
     }
-    return asFloat ? output : absFloor(output);
+    return asFloat  output : absFloor(output);
 }
 
 function monthDiff (a, b) {
@@ -4954,11 +4954,11 @@ function inspect () {
     var func = 'moment';
     var zone = '';
     if (!this.isLocal()) {
-        func = this.utcOffset() === 0 ? 'moment.utc' : 'moment.parseZone';
+        func = this.utcOffset() === 0  'moment.utc' : 'moment.parseZone';
         zone = 'Z';
     }
     var prefix = '[' + func + '("]';
-    var year = (0 <= this.year() && this.year() <= 9999) ? 'YYYY' : 'YYYYYY';
+    var year = (0 <= this.year() && this.year() <= 9999)  'YYYY' : 'YYYYYY';
     var datetime = '-MM-DD[T]HH:mm:ss.SSS';
     var suffix = zone + '[")]';
 
@@ -4967,7 +4967,7 @@ function inspect () {
 
 function format (inputString) {
     if (!inputString) {
-        inputString = this.isUtc() ? hooks.defaultFormatUtc : hooks.defaultFormat;
+        inputString = this.isUtc()  hooks.defaultFormatUtc : hooks.defaultFormat;
     }
     var output = formatMoment(this, inputString);
     return this.localeData().postformat(output);
@@ -5088,7 +5088,7 @@ function endOf (units) {
         units = 'day';
     }
 
-    return this.startOf(units).add(1, (units === 'isoWeek' ? 'week' : units)).subtract(1, 'ms');
+    return this.startOf(units).add(1, (units === 'isoWeek'  'week' : units)).subtract(1, 'ms');
 }
 
 function valueOf () {
@@ -5123,7 +5123,7 @@ function toObject () {
 
 function toJSON () {
     // new Date(NaN).toJSON() === null
-    return this.isValid() ? this.toISOString() : null;
+    return this.isValid()  this.toISOString() : null;
 }
 
 function isValid$2 () {
@@ -5267,7 +5267,7 @@ addParseToken('Q', function (input, array) {
 // MOMENTS
 
 function getSetQuarter (input) {
-    return input == null ? Math.ceil((this.month() + 1) / 3) : this.month((input - 1) * 3 + this.month() % 3);
+    return input == null  Math.ceil((this.month() + 1) / 3) : this.month((input - 1) * 3 + this.month() % 3);
 }
 
 // FORMATTING
@@ -5287,7 +5287,7 @@ addRegexToken('D',  match1to2);
 addRegexToken('DD', match1to2, match2);
 addRegexToken('Do', function (isStrict, locale) {
     // TODO: Remove "ordinalParse" fallback in next major release.
-    return isStrict ?
+    return isStrict 
       (locale._dayOfMonthOrdinalParse || locale._ordinalParse) :
       locale._dayOfMonthOrdinalParseLenient;
 });
@@ -5326,7 +5326,7 @@ addParseToken(['DDD', 'DDDD'], function (input, array, config) {
 
 function getSetDayOfYear (input) {
     var dayOfYear = Math.round((this.clone().startOf('day') - this.clone().startOf('year')) / 864e5) + 1;
-    return input == null ? dayOfYear : this.add((input - dayOfYear), 'd');
+    return input == null  dayOfYear : this.add((input - dayOfYear), 'd');
 }
 
 // FORMATTING
@@ -5442,11 +5442,11 @@ addFormatToken('zz', 0, 0, 'zoneName');
 // MOMENTS
 
 function getZoneAbbr () {
-    return this._isUTC ? 'UTC' : '';
+    return this._isUTC  'UTC' : '';
 }
 
 function getZoneName () {
-    return this._isUTC ? 'Coordinated Universal Time' : '';
+    return this._isUTC  'Coordinated Universal Time' : '';
 }
 
 var proto = Moment.prototype;
@@ -5659,7 +5659,7 @@ function listWeekdaysImpl (localeSorted, format, index, field) {
     }
 
     var locale = getLocale(),
-        shift = localeSorted ? locale._week.dow : 0;
+        shift = localeSorted  locale._week.dow : 0;
 
     if (index != null) {
         return get$1(format, (index + shift) % 7, field, 'day');
@@ -5697,10 +5697,10 @@ getSetGlobalLocale('en', {
     dayOfMonthOrdinalParse: /\d{1,2}(th|st|nd|rd)/,
     ordinal : function (number) {
         var b = number % 10,
-            output = (toInt(number % 100 / 10) === 1) ? 'th' :
-            (b === 1) ? 'st' :
-            (b === 2) ? 'nd' :
-            (b === 3) ? 'rd' : 'th';
+            output = (toInt(number % 100 / 10) === 1)  'th' :
+            (b === 1)  'st' :
+            (b === 2)  'nd' :
+            (b === 3)  'rd' : 'th';
         return number + output;
     }
 });
@@ -5827,7 +5827,7 @@ function as (units) {
     if (units === 'month' || units === 'year') {
         days   = this._days   + milliseconds / 864e5;
         months = this._months + daysToMonths(days);
-        return units === 'month' ? months : months / 12;
+        return units === 'month'  months : months / 12;
     } else {
         // handle milliseconds separately because of floating point math errors (issue #1867)
         days = this._days + Math.round(monthsToDays(this._months));
@@ -5844,7 +5844,7 @@ function as (units) {
     }
 }
 
-// TODO: Use this.as('ms')?
+// TODO: Use this.as('ms')
 function valueOf$1 () {
     if (!this.isValid()) {
         return NaN;
@@ -5874,12 +5874,12 @@ var asYears        = makeAs('y');
 
 function get$2 (units) {
     units = normalizeUnits(units);
-    return this.isValid() ? this[units + 's']() : NaN;
+    return this.isValid()  this[units + 's']() : NaN;
 }
 
 function makeGetter(name) {
     return function () {
-        return this.isValid() ? this._data[name] : NaN;
+        return this.isValid()  this._data[name] : NaN;
     };
 }
 
@@ -6024,15 +6024,15 @@ function toISOString$1() {
         return 'P0D';
     }
 
-    return (total < 0 ? '-' : '') +
+    return (total < 0  '-' : '') +
         'P' +
-        (Y ? Y + 'Y' : '') +
-        (M ? M + 'M' : '') +
-        (D ? D + 'D' : '') +
-        ((h || m || s) ? 'T' : '') +
-        (h ? h + 'H' : '') +
-        (m ? m + 'M' : '') +
-        (s ? s + 'S' : '');
+        (Y  Y + 'Y' : '') +
+        (M  M + 'M' : '') +
+        (D  D + 'D' : '') +
+        ((h || m || s)  'T' : '') +
+        (h  h + 'H' : '') +
+        (m  m + 'M' : '') +
+        (s  s + 'S' : '');
 }
 
 var proto$2 = Duration.prototype;
@@ -6439,10 +6439,10 @@ module.exports = function(Chart) {
 			rectangle._model = {
 				datasetLabel: dataset.label,
 				label: chart.data.labels[index],
-				borderSkipped: custom.borderSkipped ? custom.borderSkipped : rectangleOptions.borderSkipped,
-				backgroundColor: custom.backgroundColor ? custom.backgroundColor : helpers.valueAtIndexOrDefault(dataset.backgroundColor, index, rectangleOptions.backgroundColor),
-				borderColor: custom.borderColor ? custom.borderColor : helpers.valueAtIndexOrDefault(dataset.borderColor, index, rectangleOptions.borderColor),
-				borderWidth: custom.borderWidth ? custom.borderWidth : helpers.valueAtIndexOrDefault(dataset.borderWidth, index, rectangleOptions.borderWidth)
+				borderSkipped: custom.borderSkipped  custom.borderSkipped : rectangleOptions.borderSkipped,
+				backgroundColor: custom.backgroundColor  custom.backgroundColor : helpers.valueAtIndexOrDefault(dataset.backgroundColor, index, rectangleOptions.backgroundColor),
+				borderColor: custom.borderColor  custom.borderColor : helpers.valueAtIndexOrDefault(dataset.borderColor, index, rectangleOptions.borderColor),
+				borderWidth: custom.borderWidth  custom.borderWidth : helpers.valueAtIndexOrDefault(dataset.borderWidth, index, rectangleOptions.borderWidth)
 			};
 
 			me.updateElementGeometry(rectangle, index, reset);
@@ -6464,11 +6464,11 @@ module.exports = function(Chart) {
 			var ipixels = me.calculateBarIndexPixels(me.index, index, ruler);
 
 			model.horizontal = horizontal;
-			model.base = reset ? base : vpixels.base;
-			model.x = horizontal ? reset ? base : vpixels.head : ipixels.center;
-			model.y = horizontal ? ipixels.center : reset ? base : vpixels.head;
-			model.height = horizontal ? ipixels.size : undefined;
-			model.width = horizontal ? undefined : ipixels.size;
+			model.base = reset  base : vpixels.base;
+			model.x = horizontal  reset  base : vpixels.head : ipixels.center;
+			model.y = horizontal  ipixels.center : reset  base : vpixels.head;
+			model.height = horizontal  ipixels.size : undefined;
+			model.width = horizontal  undefined : ipixels.size;
 		},
 
 		/**
@@ -6508,7 +6508,7 @@ module.exports = function(Chart) {
 			var chart = me.chart;
 			var scale = me.getIndexScale();
 			var stacked = scale.options.stacked;
-			var ilen = last === undefined ? chart.data.datasets.length : last + 1;
+			var ilen = last === undefined  chart.data.datasets.length : last + 1;
 			var stacks = [];
 			var i, meta;
 
@@ -6543,8 +6543,8 @@ module.exports = function(Chart) {
 			var datasetIndex = me.index;
 			var pixels = [];
 			var isHorizontal = scale.isHorizontal();
-			var start = isHorizontal ? scale.left : scale.top;
-			var end = start + (isHorizontal ? scale.width : scale.height);
+			var start = isHorizontal  scale.left : scale.top;
+			var end = start + (isHorizontal  scale.width : scale.height);
 			var i, ilen;
 
 			for (i = 0, ilen = me.getMeta().data.length; i < ilen; ++i) {
@@ -6620,8 +6620,8 @@ module.exports = function(Chart) {
 			var leftSampleSize, rightSampleSize, leftCategorySize, rightCategorySize, fullBarSize, size;
 
 			if (length === 1) {
-				leftSampleSize = base > start ? base - start : end - base;
-				rightSampleSize = base < end ? end - base : base - start;
+				leftSampleSize = base > start  base - start : end - base;
+				rightSampleSize = base < end  end - base : base - start;
 			} else {
 				if (index > 0) {
 					leftSampleSize = (base - pixels[index - 1]) / 2;
@@ -6684,9 +6684,9 @@ module.exports = function(Chart) {
 			var custom = rectangle.custom || {};
 			var model = rectangle._model;
 
-			model.backgroundColor = custom.hoverBackgroundColor ? custom.hoverBackgroundColor : helpers.valueAtIndexOrDefault(dataset.hoverBackgroundColor, index, helpers.getHoverColor(model.backgroundColor));
-			model.borderColor = custom.hoverBorderColor ? custom.hoverBorderColor : helpers.valueAtIndexOrDefault(dataset.hoverBorderColor, index, helpers.getHoverColor(model.borderColor));
-			model.borderWidth = custom.hoverBorderWidth ? custom.hoverBorderWidth : helpers.valueAtIndexOrDefault(dataset.hoverBorderWidth, index, model.borderWidth);
+			model.backgroundColor = custom.hoverBackgroundColor  custom.hoverBackgroundColor : helpers.valueAtIndexOrDefault(dataset.hoverBackgroundColor, index, helpers.getHoverColor(model.backgroundColor));
+			model.borderColor = custom.hoverBorderColor  custom.hoverBorderColor : helpers.valueAtIndexOrDefault(dataset.hoverBorderColor, index, helpers.getHoverColor(model.borderColor));
+			model.borderWidth = custom.hoverBorderWidth  custom.hoverBorderWidth : helpers.valueAtIndexOrDefault(dataset.hoverBorderWidth, index, model.borderWidth);
 		},
 
 		removeHoverStyle: function(rectangle) {
@@ -6696,9 +6696,9 @@ module.exports = function(Chart) {
 			var model = rectangle._model;
 			var rectangleElementOptions = this.chart.options.elements.rectangle;
 
-			model.backgroundColor = custom.backgroundColor ? custom.backgroundColor : helpers.valueAtIndexOrDefault(dataset.backgroundColor, index, rectangleElementOptions.backgroundColor);
-			model.borderColor = custom.borderColor ? custom.borderColor : helpers.valueAtIndexOrDefault(dataset.borderColor, index, rectangleElementOptions.borderColor);
-			model.borderWidth = custom.borderWidth ? custom.borderWidth : helpers.valueAtIndexOrDefault(dataset.borderWidth, index, rectangleElementOptions.borderWidth);
+			model.backgroundColor = custom.backgroundColor  custom.backgroundColor : helpers.valueAtIndexOrDefault(dataset.backgroundColor, index, rectangleElementOptions.backgroundColor);
+			model.borderColor = custom.borderColor  custom.borderColor : helpers.valueAtIndexOrDefault(dataset.borderColor, index, rectangleElementOptions.borderColor);
+			model.borderWidth = custom.borderWidth  custom.borderWidth : helpers.valueAtIndexOrDefault(dataset.borderWidth, index, rectangleElementOptions.borderWidth);
 		}
 	});
 
@@ -6795,8 +6795,8 @@ module.exports = function(Chart) {
 			var data = me.getDataset().data[index];
 			var dsIndex = me.index;
 
-			var x = reset ? xScale.getPixelForDecimal(0.5) : xScale.getPixelForValue(typeof data === 'object' ? data : NaN, index, dsIndex);
-			var y = reset ? yScale.getBasePixel() : yScale.getPixelForValue(data, index, dsIndex);
+			var x = reset  xScale.getPixelForDecimal(0.5) : xScale.getPixelForValue(typeof data === 'object'  data : NaN, index, dsIndex);
+			var y = reset  yScale.getBasePixel() : yScale.getPixelForValue(data, index, dsIndex);
 
 			point._xScale = xScale;
 			point._yScale = yScale;
@@ -6809,7 +6809,7 @@ module.exports = function(Chart) {
 				borderWidth: options.borderWidth,
 				hitRadius: options.hitRadius,
 				pointStyle: options.pointStyle,
-				radius: reset ? 0 : options.radius,
+				radius: reset  0 : options.radius,
 				skip: custom.skip || isNaN(x) || isNaN(y),
 				x: x,
 				y: y,
@@ -6891,7 +6891,7 @@ module.exports = function(Chart) {
 			// Custom radius resolution
 			values.radius = resolve([
 				custom.radius,
-				data ? data.r : undefined,
+				data  data.r : undefined,
 				dataset.radius,
 				options.radius
 			], context, index);
@@ -6951,9 +6951,9 @@ defaults._set('doughnut', {
 						var custom = arc && arc.custom || {};
 						var valueAtIndexOrDefault = helpers.valueAtIndexOrDefault;
 						var arcOpts = chart.options.elements.arc;
-						var fill = custom.backgroundColor ? custom.backgroundColor : valueAtIndexOrDefault(ds.backgroundColor, i, arcOpts.backgroundColor);
-						var stroke = custom.borderColor ? custom.borderColor : valueAtIndexOrDefault(ds.borderColor, i, arcOpts.borderColor);
-						var bw = custom.borderWidth ? custom.borderWidth : valueAtIndexOrDefault(ds.borderWidth, i, arcOpts.borderWidth);
+						var fill = custom.backgroundColor  custom.backgroundColor : valueAtIndexOrDefault(ds.backgroundColor, i, arcOpts.backgroundColor);
+						var stroke = custom.borderColor  custom.borderColor : valueAtIndexOrDefault(ds.borderColor, i, arcOpts.borderColor);
+						var bw = custom.borderWidth  custom.borderWidth : valueAtIndexOrDefault(ds.borderWidth, i, arcOpts.borderWidth);
 
 						return {
 							text: label,
@@ -7065,7 +7065,7 @@ module.exports = function(Chart) {
 			// If the chart's circumference isn't a full circle, calculate minSize as a ratio of the width/height of the arc
 			if (circumference < Math.PI * 2.0) {
 				var startAngle = opts.rotation % (Math.PI * 2.0);
-				startAngle += Math.PI * 2.0 * (startAngle >= Math.PI ? -1 : startAngle < -Math.PI ? 1 : 0);
+				startAngle += Math.PI * 2.0 * (startAngle >= Math.PI  -1 : startAngle < -Math.PI  1 : 0);
 				var endAngle = startAngle + circumference;
 				var start = {x: Math.cos(startAngle), y: Math.sin(startAngle)};
 				var end = {x: Math.cos(endAngle), y: Math.sin(endAngle)};
@@ -7074,8 +7074,8 @@ module.exports = function(Chart) {
 				var contains180 = (startAngle <= -Math.PI && -Math.PI <= endAngle) || (startAngle <= Math.PI && Math.PI <= endAngle);
 				var contains270 = (startAngle <= -Math.PI * 0.5 && -Math.PI * 0.5 <= endAngle) || (startAngle <= Math.PI * 1.5 && Math.PI * 1.5 <= endAngle);
 				var cutout = cutoutPercentage / 100.0;
-				var min = {x: contains180 ? -1 : Math.min(start.x * (start.x < 0 ? 1 : cutout), end.x * (end.x < 0 ? 1 : cutout)), y: contains270 ? -1 : Math.min(start.y * (start.y < 0 ? 1 : cutout), end.y * (end.y < 0 ? 1 : cutout))};
-				var max = {x: contains0 ? 1 : Math.max(start.x * (start.x > 0 ? 1 : cutout), end.x * (end.x > 0 ? 1 : cutout)), y: contains90 ? 1 : Math.max(start.y * (start.y > 0 ? 1 : cutout), end.y * (end.y > 0 ? 1 : cutout))};
+				var min = {x: contains180  -1 : Math.min(start.x * (start.x < 0  1 : cutout), end.x * (end.x < 0  1 : cutout)), y: contains270  -1 : Math.min(start.y * (start.y < 0  1 : cutout), end.y * (end.y < 0  1 : cutout))};
+				var max = {x: contains0  1 : Math.max(start.x * (start.x > 0  1 : cutout), end.x * (end.x > 0  1 : cutout)), y: contains90  1 : Math.max(start.y * (start.y > 0  1 : cutout), end.y * (end.y > 0  1 : cutout))};
 				var size = {width: (max.x - min.x) * 0.5, height: (max.y - min.y) * 0.5};
 				minSize = Math.min(availableWidth / size.width, availableHeight / size.height);
 				offset = {x: (max.x + min.x) * -0.5, y: (max.y + min.y) * -0.5};
@@ -7083,7 +7083,7 @@ module.exports = function(Chart) {
 
 			chart.borderWidth = me.getMaxBorderWidth(meta.data);
 			chart.outerRadius = Math.max((minSize - chart.borderWidth) / 2, 0);
-			chart.innerRadius = Math.max(cutoutPercentage ? (chart.outerRadius / 100) * (cutoutPercentage) : 0, 0);
+			chart.innerRadius = Math.max(cutoutPercentage  (chart.outerRadius / 100) * (cutoutPercentage) : 0, 0);
 			chart.radiusLength = (chart.outerRadius - chart.innerRadius) / chart.getVisibleDatasetCount();
 			chart.offsetX = offset.x * chart.outerRadius;
 			chart.offsetY = offset.y * chart.outerRadius;
@@ -7109,9 +7109,9 @@ module.exports = function(Chart) {
 			var startAngle = opts.rotation; // non reset case handled later
 			var endAngle = opts.rotation; // non reset case handled later
 			var dataset = me.getDataset();
-			var circumference = reset && animationOpts.animateRotate ? 0 : arc.hidden ? 0 : me.calculateCircumference(dataset.data[index]) * (opts.circumference / (2.0 * Math.PI));
-			var innerRadius = reset && animationOpts.animateScale ? 0 : me.innerRadius;
-			var outerRadius = reset && animationOpts.animateScale ? 0 : me.outerRadius;
+			var circumference = reset && animationOpts.animateRotate  0 : arc.hidden  0 : me.calculateCircumference(dataset.data[index]) * (opts.circumference / (2.0 * Math.PI));
+			var innerRadius = reset && animationOpts.animateScale  0 : me.innerRadius;
+			var outerRadius = reset && animationOpts.animateScale  0 : me.outerRadius;
 			var valueAtIndexOrDefault = helpers.valueAtIndexOrDefault;
 
 			helpers.extend(arc, {
@@ -7191,11 +7191,11 @@ module.exports = function(Chart) {
 			var hoverWidth;
 
 			for (var i = 0; i < length; i++) {
-				borderWidth = arcs[i]._model ? arcs[i]._model.borderWidth : 0;
-				hoverWidth = arcs[i]._chart ? arcs[i]._chart.config.data.datasets[index].hoverBorderWidth : 0;
+				borderWidth = arcs[i]._model  arcs[i]._model.borderWidth : 0;
+				hoverWidth = arcs[i]._chart  arcs[i]._chart.config.data.datasets[index].hoverBorderWidth : 0;
 
-				max = borderWidth > max ? borderWidth : max;
-				max = hoverWidth > max ? hoverWidth : max;
+				max = borderWidth > max  borderWidth : max;
+				max = hoverWidth > max  hoverWidth : max;
 			}
 			return max;
 		}
@@ -7273,18 +7273,18 @@ module.exports = function(Chart) {
 					// The default behavior of lines is to break at null values, according
 					// to https://github.com/chartjs/Chart.js/issues/2435#issuecomment-216718158
 					// This option gives lines the ability to span gaps
-					spanGaps: dataset.spanGaps ? dataset.spanGaps : options.spanGaps,
-					tension: custom.tension ? custom.tension : helpers.valueOrDefault(dataset.lineTension, lineElementOptions.tension),
-					backgroundColor: custom.backgroundColor ? custom.backgroundColor : (dataset.backgroundColor || lineElementOptions.backgroundColor),
-					borderWidth: custom.borderWidth ? custom.borderWidth : (dataset.borderWidth || lineElementOptions.borderWidth),
-					borderColor: custom.borderColor ? custom.borderColor : (dataset.borderColor || lineElementOptions.borderColor),
-					borderCapStyle: custom.borderCapStyle ? custom.borderCapStyle : (dataset.borderCapStyle || lineElementOptions.borderCapStyle),
-					borderDash: custom.borderDash ? custom.borderDash : (dataset.borderDash || lineElementOptions.borderDash),
-					borderDashOffset: custom.borderDashOffset ? custom.borderDashOffset : (dataset.borderDashOffset || lineElementOptions.borderDashOffset),
-					borderJoinStyle: custom.borderJoinStyle ? custom.borderJoinStyle : (dataset.borderJoinStyle || lineElementOptions.borderJoinStyle),
-					fill: custom.fill ? custom.fill : (dataset.fill !== undefined ? dataset.fill : lineElementOptions.fill),
-					steppedLine: custom.steppedLine ? custom.steppedLine : helpers.valueOrDefault(dataset.steppedLine, lineElementOptions.stepped),
-					cubicInterpolationMode: custom.cubicInterpolationMode ? custom.cubicInterpolationMode : helpers.valueOrDefault(dataset.cubicInterpolationMode, lineElementOptions.cubicInterpolationMode),
+					spanGaps: dataset.spanGaps  dataset.spanGaps : options.spanGaps,
+					tension: custom.tension  custom.tension : helpers.valueOrDefault(dataset.lineTension, lineElementOptions.tension),
+					backgroundColor: custom.backgroundColor  custom.backgroundColor : (dataset.backgroundColor || lineElementOptions.backgroundColor),
+					borderWidth: custom.borderWidth  custom.borderWidth : (dataset.borderWidth || lineElementOptions.borderWidth),
+					borderColor: custom.borderColor  custom.borderColor : (dataset.borderColor || lineElementOptions.borderColor),
+					borderCapStyle: custom.borderCapStyle  custom.borderCapStyle : (dataset.borderCapStyle || lineElementOptions.borderCapStyle),
+					borderDash: custom.borderDash  custom.borderDash : (dataset.borderDash || lineElementOptions.borderDash),
+					borderDashOffset: custom.borderDashOffset  custom.borderDashOffset : (dataset.borderDashOffset || lineElementOptions.borderDashOffset),
+					borderJoinStyle: custom.borderJoinStyle  custom.borderJoinStyle : (dataset.borderJoinStyle || lineElementOptions.borderJoinStyle),
+					fill: custom.fill  custom.fill : (dataset.fill !== undefined  dataset.fill : lineElementOptions.fill),
+					steppedLine: custom.steppedLine  custom.steppedLine : helpers.valueOrDefault(dataset.steppedLine, lineElementOptions.stepped),
+					cubicInterpolationMode: custom.cubicInterpolationMode  custom.cubicInterpolationMode : helpers.valueOrDefault(dataset.cubicInterpolationMode, lineElementOptions.cubicInterpolationMode),
 				};
 
 				line.pivot();
@@ -7373,8 +7373,8 @@ module.exports = function(Chart) {
 				dataset.pointHitRadius = dataset.hitRadius;
 			}
 
-			x = xScale.getPixelForValue(typeof value === 'object' ? value : NaN, index, datasetIndex);
-			y = reset ? yScale.getBasePixel() : me.calculatePointY(value, index, datasetIndex);
+			x = xScale.getPixelForValue(typeof value === 'object'  value : NaN, index, datasetIndex);
+			y = reset  yScale.getBasePixel() : me.calculatePointY(value, index, datasetIndex);
 
 			// Utility
 			point._xScale = xScale;
@@ -7393,8 +7393,8 @@ module.exports = function(Chart) {
 				backgroundColor: me.getPointBackgroundColor(point, index),
 				borderColor: me.getPointBorderColor(point, index),
 				borderWidth: me.getPointBorderWidth(point, index),
-				tension: meta.dataset._model ? meta.dataset._model.tension : 0,
-				steppedLine: meta.dataset._model ? meta.dataset._model.steppedLine : false,
+				tension: meta.dataset._model  meta.dataset._model.tension : 0,
+				steppedLine: meta.dataset._model  meta.dataset._model.steppedLine : false,
 				// Tooltip
 				hitRadius: custom.hitRadius || helpers.valueAtIndexOrDefault(dataset.pointHitRadius, index, pointOptions.hitRadius)
 			};
@@ -7601,9 +7601,9 @@ defaults._set('polarArea', {
 						var custom = arc.custom || {};
 						var valueAtIndexOrDefault = helpers.valueAtIndexOrDefault;
 						var arcOpts = chart.options.elements.arc;
-						var fill = custom.backgroundColor ? custom.backgroundColor : valueAtIndexOrDefault(ds.backgroundColor, i, arcOpts.backgroundColor);
-						var stroke = custom.borderColor ? custom.borderColor : valueAtIndexOrDefault(ds.borderColor, i, arcOpts.borderColor);
-						var bw = custom.borderWidth ? custom.borderWidth : valueAtIndexOrDefault(ds.borderWidth, i, arcOpts.borderWidth);
+						var fill = custom.backgroundColor  custom.backgroundColor : valueAtIndexOrDefault(ds.backgroundColor, i, arcOpts.backgroundColor);
+						var stroke = custom.borderColor  custom.borderColor : valueAtIndexOrDefault(ds.borderColor, i, arcOpts.borderColor);
+						var bw = custom.borderWidth  custom.borderWidth : valueAtIndexOrDefault(ds.borderWidth, i, arcOpts.borderWidth);
 
 						return {
 							text: label,
@@ -7665,7 +7665,7 @@ module.exports = function(Chart) {
 			var arcOpts = opts.elements.arc;
 			var minSize = Math.min(chartArea.right - chartArea.left, chartArea.bottom - chartArea.top);
 			chart.outerRadius = Math.max((minSize - arcOpts.borderWidth / 2) / 2, 0);
-			chart.innerRadius = Math.max(opts.cutoutPercentage ? (chart.outerRadius / 100) * (opts.cutoutPercentage) : 1, 0);
+			chart.innerRadius = Math.max(opts.cutoutPercentage  (chart.outerRadius / 100) * (opts.cutoutPercentage) : 1, 0);
 			chart.radiusLength = (chart.outerRadius - chart.innerRadius) / chart.getVisibleDatasetCount();
 
 			me.outerRadius = chart.outerRadius - (chart.radiusLength * me.index);
@@ -7703,11 +7703,11 @@ module.exports = function(Chart) {
 
 			// var negHalfPI = -0.5 * Math.PI;
 			var datasetStartAngle = opts.startAngle;
-			var distance = arc.hidden ? 0 : scale.getDistanceFromCenterForValue(dataset.data[index]);
+			var distance = arc.hidden  0 : scale.getDistanceFromCenterForValue(dataset.data[index]);
 			var startAngle = datasetStartAngle + (circumference * visibleCount);
-			var endAngle = startAngle + (arc.hidden ? 0 : circumference);
+			var endAngle = startAngle + (arc.hidden  0 : circumference);
 
-			var resetRadius = animationOpts.animateScale ? 0 : scale.getDistanceFromCenterForValue(dataset.data[index]);
+			var resetRadius = animationOpts.animateScale  0 : scale.getDistanceFromCenterForValue(dataset.data[index]);
 
 			helpers.extend(arc, {
 				// Utility
@@ -7720,9 +7720,9 @@ module.exports = function(Chart) {
 					x: centerX,
 					y: centerY,
 					innerRadius: 0,
-					outerRadius: reset ? resetRadius : distance,
-					startAngle: reset && animationOpts.animateRotate ? datasetStartAngle : startAngle,
-					endAngle: reset && animationOpts.animateRotate ? datasetStartAngle : endAngle,
+					outerRadius: reset  resetRadius : distance,
+					startAngle: reset && animationOpts.animateRotate  datasetStartAngle : startAngle,
+					endAngle: reset && animationOpts.animateRotate  datasetStartAngle : endAngle,
 					label: helpers.valueAtIndexOrDefault(labels, index, labels[index])
 				}
 			});
@@ -7814,15 +7814,15 @@ module.exports = function(Chart) {
 				// Model
 				_model: {
 					// Appearance
-					tension: custom.tension ? custom.tension : helpers.valueOrDefault(dataset.lineTension, lineElementOptions.tension),
-					backgroundColor: custom.backgroundColor ? custom.backgroundColor : (dataset.backgroundColor || lineElementOptions.backgroundColor),
-					borderWidth: custom.borderWidth ? custom.borderWidth : (dataset.borderWidth || lineElementOptions.borderWidth),
-					borderColor: custom.borderColor ? custom.borderColor : (dataset.borderColor || lineElementOptions.borderColor),
-					fill: custom.fill ? custom.fill : (dataset.fill !== undefined ? dataset.fill : lineElementOptions.fill),
-					borderCapStyle: custom.borderCapStyle ? custom.borderCapStyle : (dataset.borderCapStyle || lineElementOptions.borderCapStyle),
-					borderDash: custom.borderDash ? custom.borderDash : (dataset.borderDash || lineElementOptions.borderDash),
-					borderDashOffset: custom.borderDashOffset ? custom.borderDashOffset : (dataset.borderDashOffset || lineElementOptions.borderDashOffset),
-					borderJoinStyle: custom.borderJoinStyle ? custom.borderJoinStyle : (dataset.borderJoinStyle || lineElementOptions.borderJoinStyle),
+					tension: custom.tension  custom.tension : helpers.valueOrDefault(dataset.lineTension, lineElementOptions.tension),
+					backgroundColor: custom.backgroundColor  custom.backgroundColor : (dataset.backgroundColor || lineElementOptions.backgroundColor),
+					borderWidth: custom.borderWidth  custom.borderWidth : (dataset.borderWidth || lineElementOptions.borderWidth),
+					borderColor: custom.borderColor  custom.borderColor : (dataset.borderColor || lineElementOptions.borderColor),
+					fill: custom.fill  custom.fill : (dataset.fill !== undefined  dataset.fill : lineElementOptions.fill),
+					borderCapStyle: custom.borderCapStyle  custom.borderCapStyle : (dataset.borderCapStyle || lineElementOptions.borderCapStyle),
+					borderDash: custom.borderDash  custom.borderDash : (dataset.borderDash || lineElementOptions.borderDash),
+					borderDashOffset: custom.borderDashOffset  custom.borderDashOffset : (dataset.borderDashOffset || lineElementOptions.borderDashOffset),
+					borderJoinStyle: custom.borderJoinStyle  custom.borderJoinStyle : (dataset.borderJoinStyle || lineElementOptions.borderJoinStyle),
 				}
 			});
 
@@ -7860,23 +7860,23 @@ module.exports = function(Chart) {
 
 				// Desired view properties
 				_model: {
-					x: reset ? scale.xCenter : pointPosition.x, // value not used in dataset scale, but we want a consistent API between scales
-					y: reset ? scale.yCenter : pointPosition.y,
+					x: reset  scale.xCenter : pointPosition.x, // value not used in dataset scale, but we want a consistent API between scales
+					y: reset  scale.yCenter : pointPosition.y,
 
 					// Appearance
-					tension: custom.tension ? custom.tension : helpers.valueOrDefault(dataset.lineTension, me.chart.options.elements.line.tension),
-					radius: custom.radius ? custom.radius : helpers.valueAtIndexOrDefault(dataset.pointRadius, index, pointElementOptions.radius),
-					backgroundColor: custom.backgroundColor ? custom.backgroundColor : helpers.valueAtIndexOrDefault(dataset.pointBackgroundColor, index, pointElementOptions.backgroundColor),
-					borderColor: custom.borderColor ? custom.borderColor : helpers.valueAtIndexOrDefault(dataset.pointBorderColor, index, pointElementOptions.borderColor),
-					borderWidth: custom.borderWidth ? custom.borderWidth : helpers.valueAtIndexOrDefault(dataset.pointBorderWidth, index, pointElementOptions.borderWidth),
-					pointStyle: custom.pointStyle ? custom.pointStyle : helpers.valueAtIndexOrDefault(dataset.pointStyle, index, pointElementOptions.pointStyle),
+					tension: custom.tension  custom.tension : helpers.valueOrDefault(dataset.lineTension, me.chart.options.elements.line.tension),
+					radius: custom.radius  custom.radius : helpers.valueAtIndexOrDefault(dataset.pointRadius, index, pointElementOptions.radius),
+					backgroundColor: custom.backgroundColor  custom.backgroundColor : helpers.valueAtIndexOrDefault(dataset.pointBackgroundColor, index, pointElementOptions.backgroundColor),
+					borderColor: custom.borderColor  custom.borderColor : helpers.valueAtIndexOrDefault(dataset.pointBorderColor, index, pointElementOptions.borderColor),
+					borderWidth: custom.borderWidth  custom.borderWidth : helpers.valueAtIndexOrDefault(dataset.pointBorderWidth, index, pointElementOptions.borderWidth),
+					pointStyle: custom.pointStyle  custom.pointStyle : helpers.valueAtIndexOrDefault(dataset.pointStyle, index, pointElementOptions.pointStyle),
 
 					// Tooltip
-					hitRadius: custom.hitRadius ? custom.hitRadius : helpers.valueAtIndexOrDefault(dataset.pointHitRadius, index, pointElementOptions.hitRadius)
+					hitRadius: custom.hitRadius  custom.hitRadius : helpers.valueAtIndexOrDefault(dataset.pointHitRadius, index, pointElementOptions.hitRadius)
 				}
 			});
 
-			point._model.skip = custom.skip ? custom.skip : (isNaN(point._model.x) || isNaN(point._model.y));
+			point._model.skip = custom.skip  custom.skip : (isNaN(point._model.x) || isNaN(point._model.y));
 		},
 		updateBezierControlPoints: function() {
 			var chartArea = this.chart.chartArea;
@@ -7910,10 +7910,10 @@ module.exports = function(Chart) {
 			var index = point._index;
 			var model = point._model;
 
-			model.radius = custom.hoverRadius ? custom.hoverRadius : helpers.valueAtIndexOrDefault(dataset.pointHoverRadius, index, this.chart.options.elements.point.hoverRadius);
-			model.backgroundColor = custom.hoverBackgroundColor ? custom.hoverBackgroundColor : helpers.valueAtIndexOrDefault(dataset.pointHoverBackgroundColor, index, helpers.getHoverColor(model.backgroundColor));
-			model.borderColor = custom.hoverBorderColor ? custom.hoverBorderColor : helpers.valueAtIndexOrDefault(dataset.pointHoverBorderColor, index, helpers.getHoverColor(model.borderColor));
-			model.borderWidth = custom.hoverBorderWidth ? custom.hoverBorderWidth : helpers.valueAtIndexOrDefault(dataset.pointHoverBorderWidth, index, model.borderWidth);
+			model.radius = custom.hoverRadius  custom.hoverRadius : helpers.valueAtIndexOrDefault(dataset.pointHoverRadius, index, this.chart.options.elements.point.hoverRadius);
+			model.backgroundColor = custom.hoverBackgroundColor  custom.hoverBackgroundColor : helpers.valueAtIndexOrDefault(dataset.pointHoverBackgroundColor, index, helpers.getHoverColor(model.backgroundColor));
+			model.borderColor = custom.hoverBorderColor  custom.hoverBorderColor : helpers.valueAtIndexOrDefault(dataset.pointHoverBorderColor, index, helpers.getHoverColor(model.borderColor));
+			model.borderWidth = custom.hoverBorderWidth  custom.hoverBorderWidth : helpers.valueAtIndexOrDefault(dataset.pointHoverBorderWidth, index, model.borderWidth);
 		},
 
 		removeHoverStyle: function(point) {
@@ -7923,10 +7923,10 @@ module.exports = function(Chart) {
 			var model = point._model;
 			var pointElementOptions = this.chart.options.elements.point;
 
-			model.radius = custom.radius ? custom.radius : helpers.valueAtIndexOrDefault(dataset.pointRadius, index, pointElementOptions.radius);
-			model.backgroundColor = custom.backgroundColor ? custom.backgroundColor : helpers.valueAtIndexOrDefault(dataset.pointBackgroundColor, index, pointElementOptions.backgroundColor);
-			model.borderColor = custom.borderColor ? custom.borderColor : helpers.valueAtIndexOrDefault(dataset.pointBorderColor, index, pointElementOptions.borderColor);
-			model.borderWidth = custom.borderWidth ? custom.borderWidth : helpers.valueAtIndexOrDefault(dataset.pointBorderWidth, index, pointElementOptions.borderWidth);
+			model.radius = custom.radius  custom.radius : helpers.valueAtIndexOrDefault(dataset.pointRadius, index, pointElementOptions.radius);
+			model.backgroundColor = custom.backgroundColor  custom.backgroundColor : helpers.valueAtIndexOrDefault(dataset.pointBackgroundColor, index, pointElementOptions.backgroundColor);
+			model.borderColor = custom.borderColor  custom.borderColor : helpers.valueAtIndexOrDefault(dataset.pointBorderColor, index, pointElementOptions.borderColor);
+			model.borderWidth = custom.borderWidth  custom.borderWidth : helpers.valueAtIndexOrDefault(dataset.pointBorderWidth, index, pointElementOptions.borderWidth);
 		}
 	});
 };
@@ -8085,7 +8085,7 @@ module.exports = function(Chart) {
 
 			me.dropFrames += (endTime - startTime) / me.frameDuration;
 
-			// Do we have more stuff to animate?
+			// Do we have more stuff to animate
 			if (me.animations.length > 0) {
 				me.requestAnimationFrame();
 			}
@@ -8234,7 +8234,7 @@ module.exports = function(Chart) {
 			me.config = config;
 			me.width = width;
 			me.height = height;
-			me.aspectRatio = height ? width / height : null;
+			me.aspectRatio = height  width / height : null;
 			me.options = config.options;
 			me._bufferedRender = false;
 
@@ -8326,7 +8326,7 @@ module.exports = function(Chart) {
 
 			// Set to 0 instead of canvas.size because the size defaults to 300x150 if the element is collased
 			var newWidth = Math.max(0, Math.floor(helpers.getMaximumWidth(canvas)));
-			var newHeight = Math.max(0, Math.floor(aspectRatio ? newWidth / aspectRatio : helpers.getMaximumHeight(canvas)));
+			var newHeight = Math.max(0, Math.floor(aspectRatio  newWidth / aspectRatio : helpers.getMaximumHeight(canvas)));
 
 			if (me.width === newWidth && me.height === newHeight) {
 				return;
@@ -8425,7 +8425,7 @@ module.exports = function(Chart) {
 
 				// TODO(SB): I think we should be able to remove this custom case (options.scale)
 				// and consider it as a regular scale part of the "scales"" map only! This would
-				// make the logic easier and remove some useless? custom code.
+				// make the logic easier and remove some useless custom code.
 				if (item.isDefault) {
 					me.scale = scale;
 				}
@@ -8840,7 +8840,7 @@ module.exports = function(Chart) {
 
 			// meta.hidden is a per chart dataset hidden flag override with 3 states: if true or false,
 			// the dataset.hidden value is ignored, else if null, the dataset hidden state is returned.
-			return typeof meta.hidden === 'boolean' ? !meta.hidden : !this.data.datasets[datasetIndex].hidden;
+			return typeof meta.hidden === 'boolean'  !meta.hidden : !this.data.datasets[datasetIndex].hidden;
 		},
 
 		generateLegend: function() {
@@ -8944,7 +8944,7 @@ module.exports = function(Chart) {
 		},
 
 		updateHoverStyle: function(elements, mode, enabled) {
-			var method = enabled ? 'setHoverStyle' : 'removeHoverStyle';
+			var method = enabled  'setHoverStyle' : 'removeHoverStyle';
 			var element, i, ilen;
 
 			for (i = 0, ilen = elements.length; i < ilen; ++i) {
@@ -9303,9 +9303,9 @@ module.exports = function(Chart) {
 			var valueOrDefault = helpers.valueAtIndexOrDefault;
 			var model = element._model;
 
-			model.backgroundColor = custom.backgroundColor ? custom.backgroundColor : valueOrDefault(dataset.backgroundColor, index, elementOpts.backgroundColor);
-			model.borderColor = custom.borderColor ? custom.borderColor : valueOrDefault(dataset.borderColor, index, elementOpts.borderColor);
-			model.borderWidth = custom.borderWidth ? custom.borderWidth : valueOrDefault(dataset.borderWidth, index, elementOpts.borderWidth);
+			model.backgroundColor = custom.backgroundColor  custom.backgroundColor : valueOrDefault(dataset.backgroundColor, index, elementOpts.backgroundColor);
+			model.borderColor = custom.borderColor  custom.borderColor : valueOrDefault(dataset.borderColor, index, elementOpts.borderColor);
+			model.borderWidth = custom.borderWidth  custom.borderWidth : valueOrDefault(dataset.borderWidth, index, elementOpts.borderWidth);
 		},
 
 		setHoverStyle: function(element) {
@@ -9316,9 +9316,9 @@ module.exports = function(Chart) {
 			var getHoverColor = helpers.getHoverColor;
 			var model = element._model;
 
-			model.backgroundColor = custom.hoverBackgroundColor ? custom.hoverBackgroundColor : valueOrDefault(dataset.hoverBackgroundColor, index, getHoverColor(model.backgroundColor));
-			model.borderColor = custom.hoverBorderColor ? custom.hoverBorderColor : valueOrDefault(dataset.hoverBorderColor, index, getHoverColor(model.borderColor));
-			model.borderWidth = custom.hoverBorderWidth ? custom.hoverBorderWidth : valueOrDefault(dataset.hoverBorderWidth, index, model.borderWidth);
+			model.backgroundColor = custom.hoverBackgroundColor  custom.hoverBackgroundColor : valueOrDefault(dataset.hoverBackgroundColor, index, getHoverColor(model.backgroundColor));
+			model.borderColor = custom.hoverBorderColor  custom.hoverBorderColor : valueOrDefault(dataset.hoverBorderColor, index, getHoverColor(model.borderColor));
+			model.borderWidth = custom.hoverBorderWidth  custom.hoverBorderWidth : valueOrDefault(dataset.hoverBorderWidth, index, model.borderWidth);
 		},
 
 		/**
@@ -9563,7 +9563,7 @@ module.exports = function(Chart) {
 
 					for (i = 0; i < slen; ++i) {
 						scale = source[key][i];
-						type = helpers.valueOrDefault(scale.type, key === 'xAxes' ? 'category' : 'linear');
+						type = helpers.valueOrDefault(scale.type, key === 'xAxes'  'category' : 'linear');
 
 						if (i >= target[key].length) {
 							target[key].push({});
@@ -9599,12 +9599,12 @@ module.exports = function(Chart) {
 
 		return filtered;
 	};
-	helpers.findIndex = Array.prototype.findIndex ?
+	helpers.findIndex = Array.prototype.findIndex 
 		function(array, callback, scope) {
 			return array.findIndex(callback, scope);
 		} :
 		function(array, callback, scope) {
-			scope = scope === undefined ? array : scope;
+			scope = scope === undefined  array : scope;
 			for (var i = 0, ilen = array.length; i < ilen; ++i) {
 				if (callback.call(scope, array[i], i, array)) {
 					return i;
@@ -9664,7 +9664,7 @@ module.exports = function(Chart) {
 			return min;
 		}, Number.POSITIVE_INFINITY);
 	};
-	helpers.sign = Math.sign ?
+	helpers.sign = Math.sign 
 		function(x) {
 			return Math.sign(x);
 		} :
@@ -9673,9 +9673,9 @@ module.exports = function(Chart) {
 			if (x === 0 || isNaN(x)) {
 				return x;
 			}
-			return x > 0 ? 1 : -1;
+			return x > 0  1 : -1;
 		};
-	helpers.log10 = Math.log10 ?
+	helpers.log10 = Math.log10 
 		function(x) {
 			return Math.log10(x);
 		} :
@@ -9709,7 +9709,7 @@ module.exports = function(Chart) {
 		return Math.sqrt(Math.pow(pt2.x - pt1.x, 2) + Math.pow(pt2.y - pt1.y, 2));
 	};
 	helpers.aliasPixel = function(pixelWidth) {
-		return (pixelWidth % 2 === 0) ? 0 : 0.5;
+		return (pixelWidth % 2 === 0)  0 : 0.5;
 	};
 	helpers.splineCurve = function(firstPoint, middlePoint, afterPoint, t) {
 		// Props to Rob Spencer at scaled innovation for his post on splining between points
@@ -9717,9 +9717,9 @@ module.exports = function(Chart) {
 
 		// This function must also respect "skipped" points
 
-		var previous = firstPoint.skip ? middlePoint : firstPoint;
+		var previous = firstPoint.skip  middlePoint : firstPoint;
 		var current = middlePoint;
-		var next = afterPoint.skip ? middlePoint : afterPoint;
+		var next = afterPoint.skip  middlePoint : afterPoint;
 
 		var d01 = Math.sqrt(Math.pow(current.x - previous.x, 2) + Math.pow(current.y - previous.y, 2));
 		var d12 = Math.sqrt(Math.pow(next.x - current.x, 2) + Math.pow(next.y - current.y, 2));
@@ -9728,8 +9728,8 @@ module.exports = function(Chart) {
 		var s12 = d12 / (d01 + d12);
 
 		// If all points are the same, s01 & s02 will be inf
-		s01 = isNaN(s01) ? 0 : s01;
-		s12 = isNaN(s12) ? 0 : s12;
+		s01 = isNaN(s01)  0 : s01;
+		s12 = isNaN(s12)  0 : s12;
 
 		var fa = t * s01; // scaling factor for triangle Ta
 		var fb = t * s12;
@@ -9769,13 +9769,13 @@ module.exports = function(Chart) {
 				continue;
 			}
 
-			pointBefore = i > 0 ? pointsWithTangents[i - 1] : null;
-			pointAfter = i < pointsLen - 1 ? pointsWithTangents[i + 1] : null;
+			pointBefore = i > 0  pointsWithTangents[i - 1] : null;
+			pointAfter = i < pointsLen - 1  pointsWithTangents[i + 1] : null;
 			if (pointAfter && !pointAfter.model.skip) {
 				var slopeDeltaX = (pointAfter.model.x - pointCurrent.model.x);
 
 				// In the case of two points that appear at the same x pixel, slopeDeltaX is 0
-				pointCurrent.deltaK = slopeDeltaX !== 0 ? (pointAfter.model.y - pointCurrent.model.y) / slopeDeltaX : 0;
+				pointCurrent.deltaK = slopeDeltaX !== 0  (pointAfter.model.y - pointCurrent.model.y) / slopeDeltaX : 0;
 			}
 
 			if (!pointBefore || pointBefore.model.skip) {
@@ -9823,8 +9823,8 @@ module.exports = function(Chart) {
 				continue;
 			}
 
-			pointBefore = i > 0 ? pointsWithTangents[i - 1] : null;
-			pointAfter = i < pointsLen - 1 ? pointsWithTangents[i + 1] : null;
+			pointBefore = i > 0  pointsWithTangents[i - 1] : null;
+			pointAfter = i < pointsLen - 1  pointsWithTangents[i + 1] : null;
 			if (pointBefore && !pointBefore.model.skip) {
 				deltaX = (pointCurrent.model.x - pointBefore.model.x) / 3;
 				pointCurrent.model.controlPointPreviousX = pointCurrent.model.x - deltaX;
@@ -9839,15 +9839,15 @@ module.exports = function(Chart) {
 	};
 	helpers.nextItem = function(collection, index, loop) {
 		if (loop) {
-			return index >= collection.length - 1 ? collection[0] : collection[index + 1];
+			return index >= collection.length - 1  collection[0] : collection[index + 1];
 		}
-		return index >= collection.length - 1 ? collection[collection.length - 1] : collection[index + 1];
+		return index >= collection.length - 1  collection[collection.length - 1] : collection[index + 1];
 	};
 	helpers.previousItem = function(collection, index, loop) {
 		if (loop) {
-			return index <= 0 ? collection[collection.length - 1] : collection[index - 1];
+			return index <= 0  collection[collection.length - 1] : collection[index - 1];
 		}
-		return index <= 0 ? collection[0] : collection[index - 1];
+		return index <= 0  collection[0] : collection[index - 1];
 	};
 	// Implementation of the nice number algorithm used in determining where axis labels will go
 	helpers.niceNum = function(range, round) {
@@ -9973,8 +9973,8 @@ module.exports = function(Chart) {
 
 		if (hasCNode || hasCContainer) {
 			return Math.min(
-				hasCNode ? parseMaxStyle(constrainedNode, domNode, percentageProperty) : infinity,
-				hasCContainer ? parseMaxStyle(constrainedContainer, parentNode, percentageProperty) : infinity);
+				hasCNode  parseMaxStyle(constrainedNode, domNode, percentageProperty) : infinity,
+				hasCContainer  parseMaxStyle(constrainedContainer, parentNode, percentageProperty) : infinity);
 		}
 
 		return 'none';
@@ -9997,7 +9997,7 @@ module.exports = function(Chart) {
 		var paddingRight = parseInt(helpers.getStyle(container, 'padding-right'), 10);
 		var w = container.clientWidth - paddingLeft - paddingRight;
 		var cw = helpers.getConstraintWidth(domNode);
-		return isNaN(cw) ? w : Math.min(w, cw);
+		return isNaN(cw)  w : Math.min(w, cw);
 	};
 	helpers.getMaximumHeight = function(domNode) {
 		var container = domNode.parentNode;
@@ -10009,10 +10009,10 @@ module.exports = function(Chart) {
 		var paddingBottom = parseInt(helpers.getStyle(container, 'padding-bottom'), 10);
 		var h = container.clientHeight - paddingTop - paddingBottom;
 		var ch = helpers.getConstraintHeight(domNode);
-		return isNaN(ch) ? h : Math.min(h, ch);
+		return isNaN(ch)  h : Math.min(h, ch);
 	};
 	helpers.getStyle = function(el, property) {
-		return el.currentStyle ?
+		return el.currentStyle 
 			el.currentStyle[property] :
 			document.defaultView.getComputedStyle(el, null).getPropertyValue(property);
 	};
@@ -10059,7 +10059,7 @@ module.exports = function(Chart) {
 				longest = helpers.measureText(ctx, data, gc, longest, thing);
 			} else if (helpers.isArray(thing)) {
 				// if it is an array lets measure each element
-				// to do maybe simplify this function a bit so we can do this more recursively?
+				// to do maybe simplify this function a bit so we can do this more recursively
 				helpers.each(thing, function(nestedThing) {
 					// Undefined strings and arrays should not be measured
 					if (nestedThing !== undefined && nestedThing !== null && !helpers.isArray(nestedThing)) {
@@ -10101,7 +10101,7 @@ module.exports = function(Chart) {
 		return numberOfLines;
 	};
 
-	helpers.color = !color ?
+	helpers.color = !color 
 		function(value) {
 			console.error('Color.js not found!');
 			return value;
@@ -10117,7 +10117,7 @@ module.exports = function(Chart) {
 
 	helpers.getHoverColor = function(colorValue) {
 		/* global CanvasPattern */
-		return (colorValue instanceof CanvasPattern) ?
+		return (colorValue instanceof CanvasPattern) 
 			colorValue :
 			helpers.color(colorValue).saturate(0.5).darken(0.1).rgbString();
 	};
@@ -10229,8 +10229,8 @@ function getDistanceMetricForAxis(axis) {
 	var useY = axis.indexOf('y') !== -1;
 
 	return function(pt1, pt2) {
-		var deltaX = useX ? Math.abs(pt1.x - pt2.x) : 0;
-		var deltaY = useY ? Math.abs(pt1.y - pt2.y) : 0;
+		var deltaX = useX  Math.abs(pt1.x - pt2.x) : 0;
+		var deltaY = useY  Math.abs(pt1.y - pt2.y) : 0;
 		return Math.sqrt(Math.pow(deltaX, 2) + Math.pow(deltaY, 2));
 	};
 }
@@ -10240,7 +10240,7 @@ function indexMode(chart, e, options) {
 	// Default axis for index mode is 'x' to match old behaviour
 	options.axis = options.axis || 'x';
 	var distanceMetric = getDistanceMetricForAxis(options.axis);
-	var items = options.intersect ? getIntersectItems(chart, position) : getNearestItems(chart, position, false, distanceMetric);
+	var items = options.intersect  getIntersectItems(chart, position) : getNearestItems(chart, position, false, distanceMetric);
 	var elements = [];
 
 	if (!items.length) {
@@ -10325,7 +10325,7 @@ module.exports = {
 			var position = getRelativePosition(e, chart);
 			options.axis = options.axis || 'xy';
 			var distanceMetric = getDistanceMetricForAxis(options.axis);
-			var items = options.intersect ? getIntersectItems(chart, position) : getNearestItems(chart, position, false, distanceMetric);
+			var items = options.intersect  getIntersectItems(chart, position) : getNearestItems(chart, position, false, distanceMetric);
 
 			if (items.length > 0) {
 				items = chart.getDatasetMeta(items[0]._datasetIndex).data;
@@ -10525,9 +10525,9 @@ module.exports = function(Chart) {
 			return v;
 		});
 		array.sort(function(a, b) {
-			var v0 = reverse ? b : a;
-			var v1 = reverse ? a : b;
-			return v0.weight === v1.weight ?
+			var v0 = reverse  b : a;
+			var v1 = reverse  a : b;
+			return v0.weight === v1.weight 
 				v0._tmpIndex_ - v1._tmpIndex_ :
 				v0.weight - v1.weight;
 		});
@@ -10584,7 +10584,7 @@ module.exports = function(Chart) {
 		 * @param {Object} layoutItem - the item to remove from the layout
 		 */
 		removeBox: function(chart, layoutItem) {
-			var index = chart.boxes ? chart.boxes.indexOf(layoutItem) : -1;
+			var index = chart.boxes  chart.boxes.indexOf(layoutItem) : -1;
 			if (index !== -1) {
 				chart.boxes.splice(index, 1);
 			}
@@ -10700,7 +10700,7 @@ module.exports = function(Chart) {
 				var isHorizontal = box.isHorizontal();
 
 				if (isHorizontal) {
-					minSize = box.update(box.fullWidth ? chartWidth : maxChartAreaWidth, horizontalBoxHeight);
+					minSize = box.update(box.fullWidth  chartWidth : maxChartAreaWidth, horizontalBoxHeight);
 					maxChartAreaHeight -= minSize.height;
 				} else {
 					minSize = box.update(verticalBoxWidth, chartAreaHeight);
@@ -10763,7 +10763,7 @@ module.exports = function(Chart) {
 
 						// Don't use min size here because of label rotation. When the labels are rotated, their rotation highly depends
 						// on the margin. Sometimes they need to increase in size slightly
-						box.update(box.fullWidth ? chartWidth : maxChartAreaWidth, chartHeight / 2, scaleMargin);
+						box.update(box.fullWidth  chartWidth : maxChartAreaWidth, chartHeight / 2, scaleMargin);
 					} else {
 						box.update(minBoxSize.minSize.width, maxChartAreaHeight);
 					}
@@ -10880,8 +10880,8 @@ module.exports = function(Chart) {
 
 			function placeBox(box) {
 				if (box.isHorizontal()) {
-					box.left = box.fullWidth ? leftPadding : totalLeftBoxesWidth;
-					box.right = box.fullWidth ? width - rightPadding : totalLeftBoxesWidth + maxChartAreaWidth;
+					box.left = box.fullWidth  leftPadding : totalLeftBoxesWidth;
+					box.right = box.fullWidth  width - rightPadding : totalLeftBoxesWidth + maxChartAreaWidth;
 					box.top = top;
 					box.bottom = top + box.height;
 
@@ -11004,7 +11004,7 @@ module.exports = function(Chart) {
 		},
 
 		/**
-		 * Returns the number of registered plugins?
+		 * Returns the number of registered plugins
 		 * @returns {Number}
 		 * @since 2.1.5
 		 */
@@ -11422,7 +11422,7 @@ function getLineValue(scale, index, offsetGridLines) {
 module.exports = function(Chart) {
 
 	function computeTextSize(context, tick, font) {
-		return helpers.isArray(tick) ?
+		return helpers.isArray(tick) 
 			helpers.longestText(context, font, tick) :
 			context.measureText(tick).width;
 	}
@@ -11732,19 +11732,19 @@ module.exports = function(Chart) {
 			// Width
 			if (isHorizontal) {
 				// subtract the margins to line up with the chartArea if we are a full width scale
-				minSize.width = me.isFullWidth() ? me.maxWidth - me.margins.left - me.margins.right : me.maxWidth;
+				minSize.width = me.isFullWidth()  me.maxWidth - me.margins.left - me.margins.right : me.maxWidth;
 			} else {
-				minSize.width = display && gridLineOpts.drawTicks ? tickMarkLength : 0;
+				minSize.width = display && gridLineOpts.drawTicks  tickMarkLength : 0;
 			}
 
 			// height
 			if (isHorizontal) {
-				minSize.height = display && gridLineOpts.drawTicks ? tickMarkLength : 0;
+				minSize.height = display && gridLineOpts.drawTicks  tickMarkLength : 0;
 			} else {
 				minSize.height = me.maxHeight; // fill all the height
 			}
 
-			// Are we showing a title for the scale?
+			// Are we showing a title for the scale
 			if (scaleLabelOpts.display && display) {
 				var scaleLabelLineHeight = parseLineHeight(scaleLabelOpts);
 				var scaleLabelPadding = helpers.options.toPadding(scaleLabelOpts.padding);
@@ -11787,8 +11787,8 @@ module.exports = function(Chart) {
 					// Ensure that our ticks are always inside the canvas. When rotated, ticks are right aligned
 					// which means that the right padding is dominated by the font height
 					if (me.labelRotation !== 0) {
-						me.paddingLeft = opts.position === 'bottom' ? (cosRotation * firstLabelWidth) + 3 : (cosRotation * lineSpace) + 3; // add 3 px to move away from canvas edges
-						me.paddingRight = opts.position === 'bottom' ? (cosRotation * lineSpace) + 3 : (cosRotation * lastLabelWidth) + 3;
+						me.paddingLeft = opts.position === 'bottom'  (cosRotation * firstLabelWidth) + 3 : (cosRotation * lineSpace) + 3; // add 3 px to move away from canvas edges
+						me.paddingRight = opts.position === 'bottom'  (cosRotation * lineSpace) + 3 : (cosRotation * lastLabelWidth) + 3;
 					} else {
 						me.paddingLeft = firstLabelWidth / 2 + 3; // add 3 px to move away from canvas edges
 						me.paddingRight = lastLabelWidth / 2 + 3;
@@ -11900,7 +11900,7 @@ module.exports = function(Chart) {
 			var offset = me.options.offset;
 			if (me.isHorizontal()) {
 				var innerWidth = me.width - (me.paddingLeft + me.paddingRight);
-				var tickWidth = innerWidth / Math.max((me._ticks.length - (offset ? 0 : 1)), 1);
+				var tickWidth = innerWidth / Math.max((me._ticks.length - (offset  0 : 1)), 1);
 				var pixel = (tickWidth * index) + me.paddingLeft;
 
 				if (offset) {
@@ -11908,7 +11908,7 @@ module.exports = function(Chart) {
 				}
 
 				var finalVal = me.left + Math.round(pixel);
-				finalVal += me.isFullWidth() ? me.margins.left : 0;
+				finalVal += me.isFullWidth()  me.margins.left : 0;
 				return finalVal;
 			}
 			var innerHeight = me.height - (me.paddingTop + me.paddingBottom);
@@ -11926,7 +11926,7 @@ module.exports = function(Chart) {
 				var valueOffset = (innerWidth * decimal) + me.paddingLeft;
 
 				var finalVal = me.left + Math.round(valueOffset);
-				finalVal += me.isFullWidth() ? me.margins.left : 0;
+				finalVal += me.isFullWidth()  me.margins.left : 0;
 				return finalVal;
 			}
 			return me.top + (decimal * me.height);
@@ -11945,9 +11945,9 @@ module.exports = function(Chart) {
 			var min = me.min;
 			var max = me.max;
 
-			return me.beginAtZero ? 0 :
-				min < 0 && max < 0 ? max :
-				min > 0 && max > 0 ? min :
+			return me.beginAtZero  0 :
+				min < 0 && max < 0  max :
+				min > 0 && max > 0  min :
 				0;
 		},
 
@@ -12020,13 +12020,13 @@ module.exports = function(Chart) {
 			var isRotated = me.labelRotation !== 0;
 			var isHorizontal = me.isHorizontal();
 
-			var ticks = optionTicks.autoSkip ? me._autoSkip(me.getTicks()) : me.getTicks();
+			var ticks = optionTicks.autoSkip  me._autoSkip(me.getTicks()) : me.getTicks();
 			var tickFontColor = helpers.valueOrDefault(optionTicks.fontColor, globalDefaults.defaultFontColor);
 			var tickFont = parseFontOptions(optionTicks);
 			var majorTickFontColor = helpers.valueOrDefault(optionMajorTicks.fontColor, globalDefaults.defaultFontColor);
 			var majorTickFont = parseFontOptions(optionMajorTicks);
 
-			var tl = gridLines.drawTicks ? gridLines.tickMarkLength : 0;
+			var tl = gridLines.drawTicks  gridLines.tickMarkLength : 0;
 
 			var scaleLabelFontColor = helpers.valueOrDefault(scaleLabel.fontColor, globalDefaults.defaultFontColor);
 			var scaleLabelFont = parseFontOptions(scaleLabel);
@@ -12035,10 +12035,10 @@ module.exports = function(Chart) {
 
 			var itemsToDraw = [];
 
-			var xTickStart = options.position === 'right' ? me.left : me.right - tl;
-			var xTickEnd = options.position === 'right' ? me.left + tl : me.right;
-			var yTickStart = options.position === 'bottom' ? me.top : me.bottom - tl;
-			var yTickEnd = options.position === 'bottom' ? me.top + tl : me.bottom;
+			var xTickStart = options.position === 'right'  me.left : me.right - tl;
+			var xTickEnd = options.position === 'right'  me.left + tl : me.right;
+			var yTickStart = options.position === 'bottom'  me.top : me.bottom - tl;
+			var yTickEnd = options.position === 'bottom'  me.top + tl : me.bottom;
 
 			helpers.each(ticks, function(tick, index) {
 				// autoskipper skipped this tick (#4635)
@@ -12072,13 +12072,13 @@ module.exports = function(Chart) {
 
 					if (options.position === 'bottom') {
 						// bottom
-						textBaseline = !isRotated ? 'top' : 'middle';
-						textAlign = !isRotated ? 'center' : 'right';
+						textBaseline = !isRotated  'top' : 'middle';
+						textAlign = !isRotated  'center' : 'right';
 						labelY = me.top + labelYOffset;
 					} else {
 						// top
-						textBaseline = !isRotated ? 'bottom' : 'middle';
-						textAlign = !isRotated ? 'center' : 'left';
+						textBaseline = !isRotated  'bottom' : 'middle';
+						textAlign = !isRotated  'center' : 'left';
 						labelY = me.bottom - labelYOffset;
 					}
 
@@ -12100,14 +12100,14 @@ module.exports = function(Chart) {
 					var labelXOffset;
 
 					if (optionTicks.mirror) {
-						textAlign = isLeft ? 'left' : 'right';
+						textAlign = isLeft  'left' : 'right';
 						labelXOffset = tickPadding;
 					} else {
-						textAlign = isLeft ? 'right' : 'left';
+						textAlign = isLeft  'right' : 'left';
 						labelXOffset = tl + tickPadding;
 					}
 
-					labelX = isLeft ? me.right - labelXOffset : me.left + labelXOffset;
+					labelX = isLeft  me.right - labelXOffset : me.left + labelXOffset;
 
 					var yLineValue = getLineValue(me, index, gridLines.offsetGridLines && ticks.length > 1);
 					if (yLineValue < me.top) {
@@ -12179,8 +12179,8 @@ module.exports = function(Chart) {
 					context.save();
 					context.translate(itemToDraw.labelX, itemToDraw.labelY);
 					context.rotate(itemToDraw.rotation);
-					context.font = itemToDraw.major ? majorTickFont.font : tickFont.font;
-					context.fillStyle = itemToDraw.major ? majorTickFontColor : tickFontColor;
+					context.font = itemToDraw.major  majorTickFont.font : tickFont.font;
+					context.fillStyle = itemToDraw.major  majorTickFontColor : tickFontColor;
 					context.textBaseline = itemToDraw.textBaseline;
 					context.textAlign = itemToDraw.textAlign;
 
@@ -12209,15 +12209,15 @@ module.exports = function(Chart) {
 				if (isHorizontal) {
 					scaleLabelX = me.left + ((me.right - me.left) / 2); // midpoint of the width
 					scaleLabelY = options.position === 'bottom'
-						? me.bottom - halfLineHeight - scaleLabelPadding.bottom
+						 me.bottom - halfLineHeight - scaleLabelPadding.bottom
 						: me.top + halfLineHeight + scaleLabelPadding.top;
 				} else {
 					var isLeft = options.position === 'left';
 					scaleLabelX = isLeft
-						? me.left + halfLineHeight + scaleLabelPadding.top
+						 me.left + halfLineHeight + scaleLabelPadding.top
 						: me.right - halfLineHeight - scaleLabelPadding.top;
 					scaleLabelY = me.top + ((me.bottom - me.top) / 2);
-					rotation = isLeft ? -0.5 * Math.PI : 0.5 * Math.PI;
+					rotation = isLeft  -0.5 * Math.PI : 0.5 * Math.PI;
 				}
 
 				context.save();
@@ -12242,11 +12242,11 @@ module.exports = function(Chart) {
 
 				var aliasPixel = helpers.aliasPixel(context.lineWidth);
 				if (isHorizontal) {
-					y1 = y2 = options.position === 'top' ? me.bottom : me.top;
+					y1 = y2 = options.position === 'top'  me.bottom : me.top;
 					y1 += aliasPixel;
 					y2 += aliasPixel;
 				} else {
-					x1 = x2 = options.position === 'left' ? me.right : me.left;
+					x1 = x2 = options.position === 'left'  me.right : me.left;
 					x1 += aliasPixel;
 					x2 += aliasPixel;
 				}
@@ -12282,11 +12282,11 @@ module.exports = function(Chart) {
 			this.defaults[type] = helpers.clone(scaleDefaults);
 		},
 		getScaleConstructor: function(type) {
-			return this.constructors.hasOwnProperty(type) ? this.constructors[type] : undefined;
+			return this.constructors.hasOwnProperty(type)  this.constructors[type] : undefined;
 		},
 		getScaleDefaults: function(type) {
 			// Return the scale defaults merged with the global settings so that we always use the latest ones
-			return this.defaults.hasOwnProperty(type) ? helpers.merge({}, [defaults.scale, this.defaults[type]]) : {};
+			return this.defaults.hasOwnProperty(type)  helpers.merge({}, [defaults.scale, this.defaults[type]]) : {};
 		},
 		updateScaleDefaults: function(type, additions) {
 			var me = this;
@@ -12391,11 +12391,11 @@ module.exports = {
 			}
 
 			// Put the values into the ticks array
-			ticks.push(generationOptions.min !== undefined ? generationOptions.min : niceMin);
+			ticks.push(generationOptions.min !== undefined  generationOptions.min : niceMin);
 			for (var j = 1; j < numSpaces; ++j) {
 				ticks.push(niceMin + (j * spacing));
 			}
-			ticks.push(generationOptions.max !== undefined ? generationOptions.max : niceMax);
+			ticks.push(generationOptions.max !== undefined  generationOptions.max : niceMax);
 
 			return ticks;
 		},
@@ -12463,7 +12463,7 @@ module.exports = {
 		 * @return {String|Array} the label to display
 		 */
 		values: function(value) {
-			return helpers.isArray(value) ? value : '' + value;
+			return helpers.isArray(value)  value : '' + value;
 		},
 
 		/**
@@ -12476,7 +12476,7 @@ module.exports = {
 		 */
 		linear: function(tickValue, index, ticks) {
 			// If we have lots of ticks, don't use the ones
-			var delta = ticks.length > 3 ? ticks[2] - ticks[1] : ticks[1] - ticks[0];
+			var delta = ticks.length > 3  ticks[2] - ticks[1] : ticks[1] - ticks[0];
 
 			// If we have a number like 2.5 as the delta, figure out how many decimal places we need
 			if (Math.abs(delta) > 1) {
@@ -12557,7 +12557,7 @@ defaults._set('global', {
 				// Pick first xLabel for now
 				var title = '';
 				var labels = data.labels;
-				var labelCount = labels ? labels.length : 0;
+				var labelCount = labels  labels.length : 0;
 
 				if (tooltipItems.length > 0) {
 					var item = tooltipItems[0];
@@ -12646,8 +12646,8 @@ module.exports = function(Chart) {
 		var datasetIndex = element._datasetIndex;
 
 		return {
-			xLabel: xScale ? xScale.getLabelForIndex(index, datasetIndex) : '',
-			yLabel: yScale ? yScale.getLabelForIndex(index, datasetIndex) : '',
+			xLabel: xScale  xScale.getLabelForIndex(index, datasetIndex) : '',
+			yLabel: yScale  yScale.getLabelForIndex(index, datasetIndex) : '',
 			index: index,
 			datasetIndex: datasetIndex,
 			x: element._model.x,
@@ -12731,13 +12731,13 @@ module.exports = function(Chart) {
 		var footerFontSize = model.footerFontSize;
 
 		height += titleLineCount * titleFontSize; // Title Lines
-		height += titleLineCount ? (titleLineCount - 1) * model.titleSpacing : 0; // Title Line Spacing
-		height += titleLineCount ? model.titleMarginBottom : 0; // Title's bottom Margin
+		height += titleLineCount  (titleLineCount - 1) * model.titleSpacing : 0; // Title Line Spacing
+		height += titleLineCount  model.titleMarginBottom : 0; // Title's bottom Margin
 		height += combinedBodyLength * bodyFontSize; // Body Lines
-		height += combinedBodyLength ? (combinedBodyLength - 1) * model.bodySpacing : 0; // Body Line Spacing
-		height += footerLineCount ? model.footerMarginTop : 0; // Footer Margin
+		height += combinedBodyLength  (combinedBodyLength - 1) * model.bodySpacing : 0; // Body Line Spacing
+		height += footerLineCount  model.footerMarginTop : 0; // Footer Margin
 		height += footerLineCount * (footerFontSize); // Footer Lines
-		height += footerLineCount ? (footerLineCount - 1) * model.footerSpacing : 0; // Footer Line Spacing
+		height += footerLineCount  (footerLineCount - 1) * model.footerSpacing : 0; // Footer Line Spacing
 
 		// Title width
 		var widthPadding = 0;
@@ -12753,7 +12753,7 @@ module.exports = function(Chart) {
 		helpers.each(model.beforeBody.concat(model.afterBody), maxLineWidth);
 
 		// Body lines may include some extra width due to the color box
-		widthPadding = model.displayColors ? (bodyFontSize + 2) : 0;
+		widthPadding = model.displayColors  (bodyFontSize + 2) : 0;
 		helpers.each(body, function(bodyItem) {
 			helpers.each(bodyItem.before, maxLineWidth);
 			helpers.each(bodyItem.lines, maxLineWidth);
@@ -12821,13 +12821,13 @@ module.exports = function(Chart) {
 			return x - size.width < 0;
 		};
 		yf = function(y) {
-			return y <= midY ? 'top' : 'bottom';
+			return y <= midY  'top' : 'bottom';
 		};
 
 		if (lf(model.x)) {
 			xAlign = 'left';
 
-			// Is tooltip too wide and goes over the right side of the chart.?
+			// Is tooltip too wide and goes over the right side of the chart.
 			if (olf(model.x)) {
 				xAlign = 'center';
 				yAlign = yf(model.y);
@@ -12835,7 +12835,7 @@ module.exports = function(Chart) {
 		} else if (rf(model.x)) {
 			xAlign = 'right';
 
-			// Is tooltip too wide and goes outside left edge of canvas?
+			// Is tooltip too wide and goes outside left edge of canvas
 			if (orf(model.x)) {
 				xAlign = 'center';
 				yAlign = yf(model.y);
@@ -12844,8 +12844,8 @@ module.exports = function(Chart) {
 
 		var opts = tooltip._options;
 		return {
-			xAlign: opts.xAlign ? opts.xAlign : xAlign,
-			yAlign: opts.yAlign ? opts.yAlign : yAlign
+			xAlign: opts.xAlign  opts.xAlign : xAlign,
+			yAlign: opts.yAlign  opts.yAlign : yAlign
 		};
 	}
 
@@ -12925,7 +12925,7 @@ module.exports = function(Chart) {
 		// Args are: (tooltipItem, data)
 		getBeforeBody: function() {
 			var lines = this._options.callbacks.beforeBody.apply(this, arguments);
-			return helpers.isArray(lines) ? lines : lines !== undefined ? [lines] : [];
+			return helpers.isArray(lines)  lines : lines !== undefined  [lines] : [];
 		},
 
 		// Args are: (tooltipItem, data)
@@ -12953,7 +12953,7 @@ module.exports = function(Chart) {
 		// Args are: (tooltipItem, data)
 		getAfterBody: function() {
 			var lines = this._options.callbacks.afterBody.apply(this, arguments);
-			return helpers.isArray(lines) ? lines : lines !== undefined ? [lines] : [];
+			return helpers.isArray(lines)  lines : lines !== undefined  [lines] : [];
 		},
 
 		// Get the footer and beforeFooter and afterFooter lines
@@ -13198,7 +13198,7 @@ module.exports = function(Chart) {
 			helpers.each(vm.beforeBody, fillLineOfText);
 
 			var drawColorBoxes = vm.displayColors;
-			xLinePadding = drawColorBoxes ? (bodyFontSize + 2) : 0;
+			xLinePadding = drawColorBoxes  (bodyFontSize + 2) : 0;
 
 			// Draw body lines now
 			helpers.each(body, function(bodyItem, i) {
@@ -13315,7 +13315,7 @@ module.exports = function(Chart) {
 			};
 
 			// IE11/Edge does not like very small opacities, so snap to 0
-			var opacity = Math.abs(vm.opacity < 1e-3) ? 0 : vm.opacity;
+			var opacity = Math.abs(vm.opacity < 1e-3)  0 : vm.opacity;
 
 			// Truthy/falsey value for empty tooltip
 			var hasTooltipContent = vm.title.length || vm.beforeBody.length || vm.body.length || vm.afterBody.length || vm.footer.length;
@@ -13645,7 +13645,7 @@ module.exports = Element.extend({
 					lastDrawnIndex = index;
 				}
 			} else {
-				previous = lastDrawnIndex === -1 ? previous : points[lastDrawnIndex];
+				previous = lastDrawnIndex === -1  previous : points[lastDrawnIndex];
 
 				if (!currentVM.skip) {
 					if ((lastDrawnIndex !== (index - 1) && !spanGaps) || lastDrawnIndex === -1) {
@@ -13692,18 +13692,18 @@ defaults._set('global', {
 
 function xRange(mouseX) {
 	var vm = this._view;
-	return vm ? (Math.pow(mouseX - vm.x, 2) < Math.pow(vm.radius + vm.hitRadius, 2)) : false;
+	return vm  (Math.pow(mouseX - vm.x, 2) < Math.pow(vm.radius + vm.hitRadius, 2)) : false;
 }
 
 function yRange(mouseY) {
 	var vm = this._view;
-	return vm ? (Math.pow(mouseY - vm.y, 2) < Math.pow(vm.radius + vm.hitRadius, 2)) : false;
+	return vm  (Math.pow(mouseY - vm.y, 2) < Math.pow(vm.radius + vm.hitRadius, 2)) : false;
 }
 
 module.exports = Element.extend({
 	inRange: function(mouseX, mouseY) {
 		var vm = this._view;
-		return vm ? ((Math.pow(mouseX - vm.x, 2) + Math.pow(mouseY - vm.y, 2)) < Math.pow(vm.hitRadius + vm.radius, 2)) : false;
+		return vm  ((Math.pow(mouseX - vm.x, 2) + Math.pow(mouseY - vm.y, 2)) < Math.pow(vm.hitRadius + vm.radius, 2)) : false;
 	},
 
 	inLabelRange: xRange,
@@ -13752,7 +13752,7 @@ module.exports = Element.extend({
 		ctx.fillStyle = vm.backgroundColor || defaultColor;
 
 		// Cliping for Points.
-		// going out from inner charArea?
+		// going out from inner charArea
 		if ((chartArea !== undefined) && ((model.x < chartArea.left) || (chartArea.right * errMargin < model.x) || (model.y < chartArea.top) || (chartArea.bottom * errMargin < model.y))) {
 			// Point fade out
 			if (model.x < chartArea.left) {
@@ -13842,7 +13842,7 @@ module.exports = Element.extend({
 			top = vm.y;
 			bottom = vm.base;
 			signX = 1;
-			signY = bottom > top ? 1 : -1;
+			signY = bottom > top  1 : -1;
 			borderSkipped = vm.borderSkipped || 'bottom';
 		} else {
 			// horizontal bar
@@ -13850,7 +13850,7 @@ module.exports = Element.extend({
 			right = vm.x;
 			top = vm.y - vm.height / 2;
 			bottom = vm.y + vm.height / 2;
-			signX = right > left ? 1 : -1;
+			signX = right > left  1 : -1;
 			signY = 1;
 			borderSkipped = vm.borderSkipped || 'left';
 		}
@@ -13860,19 +13860,19 @@ module.exports = Element.extend({
 		if (borderWidth) {
 			// borderWidth shold be less than bar width and bar height.
 			var barSize = Math.min(Math.abs(left - right), Math.abs(top - bottom));
-			borderWidth = borderWidth > barSize ? barSize : borderWidth;
+			borderWidth = borderWidth > barSize  barSize : borderWidth;
 			var halfStroke = borderWidth / 2;
 			// Adjust borderWidth when bar top position is near vm.base(zero).
-			var borderLeft = left + (borderSkipped !== 'left' ? halfStroke * signX : 0);
-			var borderRight = right + (borderSkipped !== 'right' ? -halfStroke * signX : 0);
-			var borderTop = top + (borderSkipped !== 'top' ? halfStroke * signY : 0);
-			var borderBottom = bottom + (borderSkipped !== 'bottom' ? -halfStroke * signY : 0);
-			// not become a vertical line?
+			var borderLeft = left + (borderSkipped !== 'left'  halfStroke * signX : 0);
+			var borderRight = right + (borderSkipped !== 'right'  -halfStroke * signX : 0);
+			var borderTop = top + (borderSkipped !== 'top'  halfStroke * signY : 0);
+			var borderBottom = bottom + (borderSkipped !== 'bottom'  -halfStroke * signY : 0);
+			// not become a vertical line
 			if (borderLeft !== borderRight) {
 				top = borderTop;
 				bottom = borderBottom;
 			}
-			// not become a horizontal line?
+			// not become a horizontal line
 			if (borderTop !== borderBottom) {
 				left = borderLeft;
 				right = borderRight;
@@ -14027,7 +14027,7 @@ var exports = module.exports = {
 	 * @param {Number} width - The rectangle's width.
 	 * @param {Number} height - The rectangle's height.
 	 * @param {Number} radius - The rounded amount (in pixels) for the four corners.
-	 * @todo handle `radius` as top-left, top-right, bottom-right, bottom-left array/object?
+	 * @todo handle `radius` as top-left, top-right, bottom-right, bottom-left array/object
 	 */
 	roundedRect: function(ctx, x, y, width, height, radius) {
 		if (radius) {
@@ -14184,10 +14184,10 @@ var exports = module.exports = {
 		}
 
 		ctx.bezierCurveTo(
-			flip ? previous.controlPointPreviousX : previous.controlPointNextX,
-			flip ? previous.controlPointPreviousY : previous.controlPointNextY,
-			flip ? target.controlPointNextX : target.controlPointPreviousX,
-			flip ? target.controlPointNextY : target.controlPointPreviousY,
+			flip  previous.controlPointPreviousX : previous.controlPointNextX,
+			flip  previous.controlPointPreviousY : previous.controlPointNextY,
+			flip  target.controlPointNextX : target.controlPointPreviousX,
+			flip  target.controlPointNextY : target.controlPointPreviousY,
 			target.x,
 			target.y);
 	}
@@ -14257,7 +14257,7 @@ var helpers = {
 	 * @returns {Boolean}
 	 * @function
 	 */
-	isArray: Array.isArray ? Array.isArray : function(value) {
+	isArray: Array.isArray  Array.isArray : function(value) {
 		return Object.prototype.toString.call(value) === '[object Array]';
 	},
 
@@ -14278,7 +14278,7 @@ var helpers = {
 	 * @returns {*}
 	 */
 	valueOrDefault: function(value, defaultValue) {
-		return typeof value === 'undefined' ? defaultValue : value;
+		return typeof value === 'undefined'  defaultValue : value;
 	},
 
 	/**
@@ -14289,7 +14289,7 @@ var helpers = {
 	 * @returns {*}
 	 */
 	valueAtIndexOrDefault: function(value, index, defaultValue) {
-		return helpers.valueOrDefault(helpers.isArray(value) ? value[index] : value, defaultValue);
+		return helpers.valueOrDefault(helpers.isArray(value)  value[index] : value, defaultValue);
 	},
 
 	/**
@@ -14435,7 +14435,7 @@ var helpers = {
 	 * @returns {Object} The `target` object.
 	 */
 	merge: function(target, source, options) {
-		var sources = helpers.isArray(source) ? source : [source];
+		var sources = helpers.isArray(source)  source : [source];
 		var ilen = sources.length;
 		var merge, i, keys, klen, k;
 
@@ -14494,7 +14494,7 @@ var helpers = {
 	 */
 	inherits: function(extensions) {
 		var me = this;
-		var ChartElement = (extensions && extensions.hasOwnProperty('constructor')) ? extensions.constructor : function() {
+		var ChartElement = (extensions && extensions.hasOwnProperty('constructor'))  extensions.constructor : function() {
 			return me.apply(this, arguments);
 		};
 
@@ -14646,11 +14646,11 @@ var effects = {
 	},
 
 	easeInExpo: function(t) {
-		return (t === 0) ? 0 : Math.pow(2, 10 * (t - 1));
+		return (t === 0)  0 : Math.pow(2, 10 * (t - 1));
 	},
 
 	easeOutExpo: function(t) {
-		return (t === 1) ? 1 : -Math.pow(2, -10 * t) + 1;
+		return (t === 1)  1 : -Math.pow(2, -10 * t) + 1;
 	},
 
 	easeInOutExpo: function(t) {
@@ -14829,7 +14829,7 @@ module.exports = {
 	 * @since 2.7.0
 	 */
 	toLineHeight: function(value, size) {
-		var matches = ('' + value).match(/^(normal|(\d+(?:\.\d+)?)(px|em|%)?)$/);
+		var matches = ('' + value).match(/^(normal|(\d+(:\.\d+))(px|em|%))$/);
 		if (!matches || matches[1] === 'normal') {
 			return size * 1.2;
 		}
@@ -14976,8 +14976,8 @@ var EVENT_TYPES = {
  */
 function readUsedSize(element, property) {
 	var value = helpers.getStyle(element, property);
-	var matches = value && value.match(/^(\d+)(\.\d+)?px$/);
-	return matches ? Number(matches[1]) : undefined;
+	var matches = value && value.match(/^(\d+)(\.\d+)px$/);
+	return matches  Number(matches[1]) : undefined;
 }
 
 /**
@@ -15057,7 +15057,7 @@ var supportsEventListenerOptions = (function() {
 
 // Default passive to true as expected by Chrome for 'touchstart' and 'touchend' events.
 // https://github.com/chartjs/Chart.js/issues/4287
-var eventListenerOptions = supportsEventListenerOptions ? {passive: true} : false;
+var eventListenerOptions = supportsEventListenerOptions  {passive: true} : false;
 
 function addEventListener(node, type, listener) {
 	node.addEventListener(type, listener, eventListenerOptions);
@@ -15072,8 +15072,8 @@ function createEvent(type, chart, x, y, nativeEvent) {
 		type: type,
 		chart: chart,
 		native: nativeEvent || null,
-		x: x !== undefined ? x : null,
-		y: y !== undefined ? y : null,
+		x: x !== undefined  x : null,
+		y: y !== undefined  y : null,
 	};
 }
 
@@ -15173,7 +15173,7 @@ function watchForRender(node, handler) {
 	});
 
 	// #4737: Chrome might skip the CSS animation when the CSS_RENDER_MONITOR class
-	// is removed then added back immediately (same animation frame?). Accessing the
+	// is removed then added back immediately (same animation frame). Accessing the
 	// `offsetParent` property will force a reflow and re-evaluate the CSS animation.
 	// https://gist.github.com/paulirish/5d52fb081b3570c81e3a#box-metrics
 	// https://github.com/chartjs/Chart.js/issues/4737
@@ -15400,7 +15400,7 @@ var basic = require(46);
 var dom = require(47);
 
 // @TODO Make possible to select another platform at build time.
-var implementation = dom._enabled ? dom : basic;
+var implementation = dom._enabled  dom : basic;
 
 /**
  * @namespace Chart.platform
@@ -15500,20 +15500,20 @@ module.exports = function() {
 			var points = (visible && meta.dataset._children) || [];
 			var length = points.length || 0;
 
-			return !length ? null : function(point, i) {
+			return !length  null : function(point, i) {
 				return (i < length && points[i]._view) || null;
 			};
 		},
 
 		boundary: function(source) {
 			var boundary = source.boundary;
-			var x = boundary ? boundary.x : null;
-			var y = boundary ? boundary.y : null;
+			var x = boundary  boundary.x : null;
+			var y = boundary  boundary.y : null;
 
 			return function(point) {
 				return {
-					x: x === null ? point.x : x,
-					y: y === null ? point.y : y,
+					x: x === null  point.x : x,
+					y: y === null  point.y : y,
 				};
 			};
 		}
@@ -15585,9 +15585,9 @@ module.exports = function() {
 		// controllers might still use it (e.g. the Smith chart).
 
 		if (fill === 'start') {
-			target = model.scaleBottom === undefined ? scale.bottom : model.scaleBottom;
+			target = model.scaleBottom === undefined  scale.bottom : model.scaleBottom;
 		} else if (fill === 'end') {
-			target = model.scaleTop === undefined ? scale.top : model.scaleTop;
+			target = model.scaleTop === undefined  scale.top : model.scaleTop;
 		} else if (model.scaleZero !== undefined) {
 			target = model.scaleZero;
 		} else if (scale.getBasePosition) {
@@ -15604,8 +15604,8 @@ module.exports = function() {
 			if (typeof target === 'number' && isFinite(target)) {
 				horizontal = scale.isHorizontal();
 				return {
-					x: horizontal ? target : null,
-					y: horizontal ? null : target
+					x: horizontal  target : null,
+					y: horizontal  null : target
 				};
 			}
 		}
@@ -15813,7 +15813,7 @@ defaults._set('global', {
 			var meta = ci.getDatasetMeta(index);
 
 			// See controller.isDatasetVisible comment
-			meta.hidden = meta.hidden === null ? !ci.data.datasets[index].hidden : null;
+			meta.hidden = meta.hidden === null  !ci.data.datasets[index].hidden : null;
 
 			// We hid a dataset ... rerender the chart
 			ci.update();
@@ -15837,10 +15837,10 @@ defaults._set('global', {
 			// lineWidth :
 			generateLabels: function(chart) {
 				var data = chart.data;
-				return helpers.isArray(data.datasets) ? data.datasets.map(function(dataset, i) {
+				return helpers.isArray(data.datasets)  data.datasets.map(function(dataset, i) {
 					return {
 						text: dataset.label,
-						fillStyle: (!helpers.isArray(dataset.backgroundColor) ? dataset.backgroundColor : dataset.backgroundColor[0]),
+						fillStyle: (!helpers.isArray(dataset.backgroundColor)  dataset.backgroundColor : dataset.backgroundColor[0]),
 						hidden: !chart.isDatasetVisible(i),
 						lineCap: dataset.borderCapStyle,
 						lineDash: dataset.borderDash,
@@ -15885,7 +15885,7 @@ module.exports = function(Chart) {
 	 * @return {Number} width of the color box area
 	 */
 	function getBoxWidth(labelOpts, fontSize) {
-		return labelOpts.usePointStyle ?
+		return labelOpts.usePointStyle 
 			fontSize * Math.SQRT2 :
 			labelOpts.boxWidth;
 	}
@@ -16019,9 +16019,9 @@ module.exports = function(Chart) {
 
 			if (isHorizontal) {
 				minSize.width = me.maxWidth; // fill all the width
-				minSize.height = display ? 10 : 0;
+				minSize.height = display  10 : 0;
 			} else {
-				minSize.width = display ? 10 : 0;
+				minSize.width = display  10 : 0;
 				minSize.height = me.maxHeight; // fill all the height
 			}
 
@@ -16034,7 +16034,7 @@ module.exports = function(Chart) {
 
 					// Width of each line of legend boxes. Labels wrap onto multiple lines when there are too many to fit on one
 					var lineWidths = me.lineWidths = [0];
-					var totalHeight = me.legendItems.length ? fontSize + (labelOpts.padding) : 0;
+					var totalHeight = me.legendItems.length  fontSize + (labelOpts.padding) : 0;
 
 					ctx.textAlign = 'left';
 					ctx.textBaseline = 'top';
@@ -16263,7 +16263,7 @@ module.exports = function(Chart) {
 		handleEvent: function(e) {
 			var me = this;
 			var opts = me.options;
-			var type = e.type === 'mouseup' ? 'click' : e.type;
+			var type = e.type === 'mouseup'  'click' : e.type;
 			var changed = false;
 
 			if (type === 'mousemove') {
@@ -16478,9 +16478,9 @@ module.exports = function(Chart) {
 			var display = opts.display;
 			var fontSize = valueOrDefault(opts.fontSize, defaults.global.defaultFontSize);
 			var minSize = me.minSize;
-			var lineCount = helpers.isArray(opts.text) ? opts.text.length : 1;
+			var lineCount = helpers.isArray(opts.text)  opts.text.length : 1;
 			var lineHeight = helpers.options.toLineHeight(opts.lineHeight, fontSize);
-			var textSize = display ? (lineCount * lineHeight) + (opts.padding * 2) : 0;
+			var textSize = display  (lineCount * lineHeight) + (opts.padding * 2) : 0;
 
 			if (me.isHorizontal()) {
 				minSize.width = me.maxWidth; // fill all the width
@@ -16533,10 +16533,10 @@ module.exports = function(Chart) {
 					titleY = top + offset;
 					maxWidth = right - left;
 				} else {
-					titleX = opts.position === 'left' ? left + offset : right - offset;
+					titleX = opts.position === 'left'  left + offset : right - offset;
 					titleY = top + ((bottom - top) / 2);
 					maxWidth = bottom - top;
-					rotation = Math.PI * (opts.position === 'left' ? -0.5 : 0.5);
+					rotation = Math.PI * (opts.position === 'left'  -0.5 : 0.5);
 				}
 
 				ctx.save();
@@ -16623,7 +16623,7 @@ module.exports = function(Chart) {
 		*/
 		getLabels: function() {
 			var data = this.chart.data;
-			return this.options.labels || (this.isHorizontal() ? data.xLabels : data.yLabels) || data.labels;
+			return this.options.labels || (this.isHorizontal()  data.xLabels : data.yLabels) || data.labels;
 		},
 
 		determineDataLimits: function() {
@@ -16636,13 +16636,13 @@ module.exports = function(Chart) {
 			if (me.options.ticks.min !== undefined) {
 				// user specified min value
 				findIndex = labels.indexOf(me.options.ticks.min);
-				me.minIndex = findIndex !== -1 ? findIndex : me.minIndex;
+				me.minIndex = findIndex !== -1  findIndex : me.minIndex;
 			}
 
 			if (me.options.ticks.max !== undefined) {
 				// user specified max value
 				findIndex = labels.indexOf(me.options.ticks.max);
-				me.maxIndex = findIndex !== -1 ? findIndex : me.maxIndex;
+				me.maxIndex = findIndex !== -1  findIndex : me.maxIndex;
 			}
 
 			me.min = labels[me.minIndex];
@@ -16653,7 +16653,7 @@ module.exports = function(Chart) {
 			var me = this;
 			var labels = me.getLabels();
 			// If we are viewing some subset of labels, slice the original array
-			me.ticks = (me.minIndex === 0 && me.maxIndex === labels.length - 1) ? labels : labels.slice(me.minIndex, me.maxIndex + 1);
+			me.ticks = (me.minIndex === 0 && me.maxIndex === labels.length - 1)  labels : labels.slice(me.minIndex, me.maxIndex + 1);
 		},
 
 		getLabelForIndex: function(index, datasetIndex) {
@@ -16672,19 +16672,19 @@ module.exports = function(Chart) {
 			var me = this;
 			var offset = me.options.offset;
 			// 1 is added because we need the length but we have the indexes
-			var offsetAmt = Math.max((me.maxIndex + 1 - me.minIndex - (offset ? 0 : 1)), 1);
+			var offsetAmt = Math.max((me.maxIndex + 1 - me.minIndex - (offset  0 : 1)), 1);
 
 			// If value is a data object, then index is the index in the data array,
 			// not the index of the scale. We need to change that.
 			var valueCategory;
 			if (value !== undefined && value !== null) {
-				valueCategory = me.isHorizontal() ? value.x : value.y;
+				valueCategory = me.isHorizontal()  value.x : value.y;
 			}
 			if (valueCategory !== undefined || (value !== undefined && isNaN(index))) {
 				var labels = me.getLabels();
 				value = valueCategory || value;
 				var idx = labels.indexOf(value);
-				index = idx !== -1 ? idx : index;
+				index = idx !== -1  idx : index;
 			}
 
 			if (me.isHorizontal()) {
@@ -16713,11 +16713,11 @@ module.exports = function(Chart) {
 			var me = this;
 			var offset = me.options.offset;
 			var value;
-			var offsetAmt = Math.max((me._ticks.length - (offset ? 0 : 1)), 1);
+			var offsetAmt = Math.max((me._ticks.length - (offset  0 : 1)), 1);
 			var horz = me.isHorizontal();
-			var valueDimension = (horz ? me.width : me.height) / offsetAmt;
+			var valueDimension = (horz  me.width : me.height) / offsetAmt;
 
-			pixel -= horz ? me.left : me.top;
+			pixel -= horz  me.left : me.top;
 
 			if (offset) {
 				pixel -= (valueDimension / 2);
@@ -16769,7 +16769,7 @@ module.exports = function(Chart) {
 			var DEFAULT_MAX = 1;
 
 			function IDMatches(meta) {
-				return isHorizontal ? meta.xAxisID === me.id : meta.yAxisID === me.id;
+				return isHorizontal  meta.xAxisID === me.id : meta.yAxisID === me.id;
 			}
 
 			// First Calculate the range
@@ -16799,7 +16799,7 @@ module.exports = function(Chart) {
 					var key = [
 						meta.type,
 						// we have a separate stack for stack=undefined datasets when the opts.stacked is undefined
-						((opts.stacked === undefined && meta.stack === undefined) ? datasetIndex : ''),
+						((opts.stacked === undefined && meta.stack === undefined)  datasetIndex : ''),
 						meta.stack
 					].join('.');
 
@@ -16839,8 +16839,8 @@ module.exports = function(Chart) {
 					var values = valuesForType.positiveValues.concat(valuesForType.negativeValues);
 					var minVal = helpers.min(values);
 					var maxVal = helpers.max(values);
-					me.min = me.min === null ? minVal : Math.min(me.min, minVal);
-					me.max = me.max === null ? maxVal : Math.max(me.max, maxVal);
+					me.min = me.min === null  minVal : Math.min(me.min, minVal);
+					me.max = me.max === null  maxVal : Math.max(me.max, maxVal);
 				});
 
 			} else {
@@ -16869,8 +16869,8 @@ module.exports = function(Chart) {
 				});
 			}
 
-			me.min = isFinite(me.min) && !isNaN(me.min) ? me.min : DEFAULT_MIN;
-			me.max = isFinite(me.max) && !isNaN(me.max) ? me.max : DEFAULT_MAX;
+			me.min = isFinite(me.min) && !isNaN(me.min)  me.min : DEFAULT_MIN;
+			me.max = isFinite(me.max) && !isNaN(me.max)  me.max : DEFAULT_MAX;
 
 			// Common base implementation to handle ticks.min, ticks.max, ticks.beginAtZero
 			this.handleTickRangeOptions();
@@ -16881,11 +16881,11 @@ module.exports = function(Chart) {
 			var tickOpts = me.options.ticks;
 
 			if (me.isHorizontal()) {
-				maxTicks = Math.min(tickOpts.maxTicksLimit ? tickOpts.maxTicksLimit : 11, Math.ceil(me.width / 50));
+				maxTicks = Math.min(tickOpts.maxTicksLimit  tickOpts.maxTicksLimit : 11, Math.ceil(me.width / 50));
 			} else {
 				// The factor of 2 used to scale the font size has been experimentally determined.
 				var tickFontSize = helpers.valueOrDefault(tickOpts.fontSize, defaults.global.defaultFontSize);
-				maxTicks = Math.min(tickOpts.maxTicksLimit ? tickOpts.maxTicksLimit : 11, Math.ceil(me.height / (2 * tickFontSize)));
+				maxTicks = Math.min(tickOpts.maxTicksLimit  tickOpts.maxTicksLimit : 11, Math.ceil(me.height / (2 * tickFontSize)));
 			}
 
 			return maxTicks;
@@ -16922,8 +16922,8 @@ module.exports = function(Chart) {
 		getValueForPixel: function(pixel) {
 			var me = this;
 			var isHorizontal = me.isHorizontal();
-			var innerDimension = isHorizontal ? me.width : me.height;
-			var offset = (isHorizontal ? pixel - me.left : me.bottom - pixel) / innerDimension;
+			var innerDimension = isHorizontal  me.width : me.height;
+			var offset = (isHorizontal  pixel - me.left : me.bottom - pixel) / innerDimension;
 			return me.start + ((me.end - me.start) * offset);
 		},
 		getPixelForTick: function(index) {
@@ -17096,7 +17096,7 @@ module.exports = function(Chart) {
 			var valueOrDefault = helpers.valueOrDefault;
 			var isHorizontal = me.isHorizontal();
 			function IDMatches(meta) {
-				return isHorizontal ? meta.xAxisID === me.id : meta.yAxisID === me.id;
+				return isHorizontal  meta.xAxisID === me.id : meta.yAxisID === me.id;
 			}
 
 			// Calculate Range
@@ -17127,7 +17127,7 @@ module.exports = function(Chart) {
 					var key = [
 						meta.type,
 						// we have a separate stack for stack=undefined datasets when the opts.stacked is undefined
-						((opts.stacked === undefined && meta.stack === undefined) ? datasetIndex : ''),
+						((opts.stacked === undefined && meta.stack === undefined)  datasetIndex : ''),
 						meta.stack
 					].join('.');
 
@@ -17158,8 +17158,8 @@ module.exports = function(Chart) {
 				helpers.each(valuesPerStack, function(valuesForType) {
 					var minVal = helpers.min(valuesForType);
 					var maxVal = helpers.max(valuesForType);
-					me.min = me.min === null ? minVal : Math.min(me.min, minVal);
-					me.max = me.max === null ? maxVal : Math.max(me.max, maxVal);
+					me.min = me.min === null  minVal : Math.min(me.min, minVal);
+					me.max = me.max === null  maxVal : Math.max(me.max, maxVal);
 				});
 
 			} else {
@@ -17286,7 +17286,7 @@ module.exports = function(Chart) {
 						pixel = me.top + innerDimension * 0.02 + (innerDimension * 0.98 / range * (helpers.log10(newVal) - helpers.log10(me.minNotZero)));
 					}
 				} else if (newVal === 0) {
-					pixel = tickOpts.reverse ? me.top : me.bottom;
+					pixel = tickOpts.reverse  me.top : me.bottom;
 				} else {
 					range = helpers.log10(me.end) - helpers.log10(start);
 					innerDimension = me.height;
@@ -17375,7 +17375,7 @@ module.exports = function(Chart) {
 
 	function getValueCount(scale) {
 		var opts = scale.options;
-		return opts.angleLines.display || opts.pointLabels.display ? scale.chart.data.labels.length : 0;
+		return opts.angleLines.display || opts.pointLabels.display  scale.chart.data.labels.length : 0;
 	}
 
 	function getPointLabelFontOptions(scale) {
@@ -17562,7 +17562,7 @@ module.exports = function(Chart) {
 		ctx.lineWidth = angleLineOpts.lineWidth;
 		ctx.strokeStyle = angleLineOpts.color;
 
-		var outerDistance = scale.getDistanceFromCenterForValue(opts.ticks.reverse ? scale.min : scale.max);
+		var outerDistance = scale.getDistanceFromCenterForValue(opts.ticks.reverse  scale.min : scale.max);
 
 		// Point Label Font
 		var plFont = getPointLabelFontOptions(scale);
@@ -17631,7 +17631,7 @@ module.exports = function(Chart) {
 	}
 
 	function numberOrZero(param) {
-		return helpers.isNumber(param) ? param : 0;
+		return helpers.isNumber(param)  param : 0;
 	}
 
 	var LinearRadialScale = Chart.LinearScaleBase.extend({
@@ -17647,7 +17647,7 @@ module.exports = function(Chart) {
 
 			var minSize = helpers.min([me.height, me.width]);
 			var tickFontSize = helpers.valueOrDefault(tickOpts.fontSize, globalDefaults.defaultFontSize);
-			me.drawingArea = opts.display ? (minSize / 2) - (tickFontSize / 2 + tickOpts.backdropPaddingY) : (minSize / 2);
+			me.drawingArea = opts.display  (minSize / 2) - (tickFontSize / 2 + tickOpts.backdropPaddingY) : (minSize / 2);
 		},
 		determineDataLimits: function() {
 			var me = this;
@@ -17671,8 +17671,8 @@ module.exports = function(Chart) {
 				}
 			});
 
-			me.min = (min === Number.POSITIVE_INFINITY ? 0 : min);
-			me.max = (max === Number.NEGATIVE_INFINITY ? 0 : max);
+			me.min = (min === Number.POSITIVE_INFINITY  0 : min);
+			me.max = (max === Number.NEGATIVE_INFINITY  0 : max);
 
 			// Common base implementation to handle ticks.min, ticks.max, ticks.beginAtZero
 			me.handleTickRangeOptions();
@@ -17680,7 +17680,7 @@ module.exports = function(Chart) {
 		getTickLimit: function() {
 			var tickOpts = this.options.ticks;
 			var tickFontSize = helpers.valueOrDefault(tickOpts.fontSize, globalDefaults.defaultFontSize);
-			return Math.min(tickOpts.maxTicksLimit ? tickOpts.maxTicksLimit : 11, Math.ceil(this.drawingArea / (1.5 * tickFontSize)));
+			return Math.min(tickOpts.maxTicksLimit  tickOpts.maxTicksLimit : 11, Math.ceil(this.drawingArea / (1.5 * tickFontSize)));
 		},
 		convertTicksToLabels: function() {
 			var me = this;
@@ -17734,7 +17734,7 @@ module.exports = function(Chart) {
 
 		getIndexAngle: function(index) {
 			var angleMultiplier = (Math.PI * 2) / getValueCount(this);
-			var startAngle = this.chart.options && this.chart.options.startAngle ?
+			var startAngle = this.chart.options && this.chart.options.startAngle 
 				this.chart.options.startAngle :
 				0;
 
@@ -17775,9 +17775,9 @@ module.exports = function(Chart) {
 			var max = me.max;
 
 			return me.getPointPositionForValue(0,
-				me.beginAtZero ? 0 :
-				min < 0 && max < 0 ? max :
-				min > 0 && max > 0 ? min :
+				me.beginAtZero  0 :
+				min < 0 && max < 0  max :
+				min > 0 && max > 0  min :
 				0);
 		},
 
@@ -17851,7 +17851,7 @@ module.exports = function(Chart) {
 'use strict';
 
 var moment = require(6);
-moment = typeof moment === 'function' ? moment : window.moment;
+moment = typeof moment === 'function'  moment : window.moment;
 
 var defaults = require(25);
 var helpers = require(45);
@@ -18016,11 +18016,11 @@ function interpolate(table, skey, sval, tkey) {
 	var range = lookup(table, skey, sval);
 
 	// Note: the lookup table ALWAYS contains at least 2 items (min and max)
-	var prev = !range.lo ? table[0] : !range.hi ? table[table.length - 2] : range.lo;
-	var next = !range.lo ? table[1] : !range.hi ? table[table.length - 1] : range.hi;
+	var prev = !range.lo  table[0] : !range.hi  table[table.length - 2] : range.lo;
+	var next = !range.lo  table[1] : !range.hi  table[table.length - 1] : range.hi;
 
 	var span = next[skey] - prev[skey];
-	var ratio = span ? (sval - prev[skey]) / span : 0;
+	var ratio = span  (sval - prev[skey]) / span : 0;
 	var offset = (next[tkey] - prev[tkey]) * ratio;
 
 	return prev[tkey] + offset;
@@ -18111,7 +18111,7 @@ function determineUnitForAutoTicks(minUnit, min, max, capacity) {
 
 	for (i = UNITS.indexOf(minUnit); i < ilen - 1; ++i) {
 		interval = INTERVALS[UNITS[i]];
-		factor = interval.steps ? interval.steps[interval.steps.length - 1] : MAX_INTEGER;
+		factor = interval.steps  interval.steps[interval.steps.length - 1] : MAX_INTEGER;
 
 		if (interval.common && Math.ceil((max - min) / (factor * interval.size)) <= capacity) {
 			return UNITS[i];
@@ -18136,7 +18136,7 @@ function determineUnitForFormatting(ticks, minUnit, min, max) {
 		}
 	}
 
-	return UNITS[minUnit ? UNITS.indexOf(minUnit) : 0];
+	return UNITS[minUnit  UNITS.indexOf(minUnit) : 0];
 }
 
 function determineMajorUnit(unit) {
@@ -18158,7 +18158,7 @@ function generate(min, max, capacity, options) {
 	var minor = timeOpts.unit || determineUnitForAutoTicks(timeOpts.minUnit, min, max, capacity);
 	var major = determineMajorUnit(minor);
 	var stepSize = helpers.valueOrDefault(timeOpts.stepSize, timeOpts.unitStepSize);
-	var weekday = minor === 'week' ? timeOpts.isoWeekday : false;
+	var weekday = minor === 'week'  timeOpts.isoWeekday : false;
 	var majorTicksEnabled = options.ticks.major.enabled;
 	var interval = INTERVALS[minor];
 	var first = moment(min);
@@ -18177,8 +18177,8 @@ function generate(min, max, capacity, options) {
 	}
 
 	// Align first/last ticks on unit
-	first = first.startOf(weekday ? 'day' : minor);
-	last = last.startOf(weekday ? 'day' : minor);
+	first = first.startOf(weekday  'day' : minor);
+	last = last.startOf(weekday  'day' : minor);
 
 	// Make sure that the last tick include max
 	if (last < max) {
@@ -18215,7 +18215,7 @@ function computeOffsets(table, ticks, min, max, options) {
 
 	if (options.offset && ticks.length) {
 		if (!options.time.min) {
-			upper = ticks.length > 1 ? ticks[1] : max;
+			upper = ticks.length > 1  ticks[1] : max;
 			lower = ticks[0];
 			left = (
 				interpolate(table, 'time', upper, 'pos') -
@@ -18224,7 +18224,7 @@ function computeOffsets(table, ticks, min, max, options) {
 		}
 		if (!options.time.max) {
 			upper = ticks[ticks.length - 1];
-			lower = ticks.length > 1 ? ticks[ticks.length - 2] : min;
+			lower = ticks.length > 1  ticks[ticks.length - 2] : min;
 			right = (
 				interpolate(table, 'time', upper, 'pos') -
 				interpolate(table, 'time', lower, 'pos')
@@ -18241,7 +18241,7 @@ function ticksFromTimestamps(values, majorUnit) {
 
 	for (i = 0, ilen = values.length; i < ilen; ++i) {
 		value = values[i];
-		major = majorUnit ? value === +moment(value).startOf(majorUnit) : false;
+		major = majorUnit  value === +moment(value).startOf(majorUnit) : false;
 
 		ticks.push({
 			value: value,
@@ -18291,7 +18291,7 @@ module.exports = function(Chart) {
 				minute: 'h:mm a', // 11:20 AM
 				hour: 'hA', // 5PM
 				day: 'MMM D', // Sep 4
-				week: 'll', // Week 46, or maybe "[W]WW - YYYY" ?
+				week: 'll', // Week 46, or maybe "[W]WW - YYYY" 
 				month: 'MMM YYYY', // Sept 2015
 				quarter: '[Q]Q - YYYY', // Q3
 				year: 'YYYY' // 2015
@@ -18405,8 +18405,8 @@ module.exports = function(Chart) {
 			max = parse(timeOpts.max, me) || max;
 
 			// In case there is no valid min/max, let's use today limits
-			min = min === MAX_INTEGER ? +moment().startOf('day') : min;
-			max = max === MIN_INTEGER ? +moment().endOf('day') + 1 : max;
+			min = min === MAX_INTEGER  +moment().startOf('day') : min;
+			max = max === MIN_INTEGER  +moment().endOf('day') + 1 : max;
 
 			// Make sure that max is strictly higher than min (required by the lookup table)
 			me.min = Math.min(min, max);
@@ -18477,7 +18477,7 @@ module.exports = function(Chart) {
 			var me = this;
 			var data = me.chart.data;
 			var timeOpts = me.options.time;
-			var label = data.labels && index < data.labels.length ? data.labels[index] : '';
+			var label = data.labels && index < data.labels.length  data.labels[index] : '';
 			var value = data.datasets[datasetIndex].data[index];
 
 			if (helpers.isObject(value)) {
@@ -18505,11 +18505,11 @@ module.exports = function(Chart) {
 			var majorTime = tick.clone().startOf(majorUnit).valueOf();
 			var majorTickOpts = options.ticks.major;
 			var major = majorTickOpts.enabled && majorUnit && majorFormat && time === majorTime;
-			var label = tick.format(formatOverride ? formatOverride : major ? majorFormat : minorFormat);
-			var tickOpts = major ? majorTickOpts : options.ticks.minor;
+			var label = tick.format(formatOverride  formatOverride : major  majorFormat : minorFormat);
+			var tickOpts = major  majorTickOpts : options.ticks.minor;
 			var formatter = helpers.valueOrDefault(tickOpts.callback, tickOpts.userCallback);
 
-			return formatter ? formatter(label, index, ticks) : label;
+			return formatter  formatter(label, index, ticks) : label;
 		},
 
 		convertTicksToLabels: function(ticks) {
@@ -18528,8 +18528,8 @@ module.exports = function(Chart) {
 		 */
 		getPixelForOffset: function(time) {
 			var me = this;
-			var size = me._horizontal ? me.width : me.height;
-			var start = me._horizontal ? me.left : me.top;
+			var size = me._horizontal  me.width : me.height;
+			var start = me._horizontal  me.left : me.top;
 			var pos = interpolate(me._table, 'time', time, 'pos');
 
 			return start + size * (me._offsets.left + pos) / (me._offsets.left + 1 + me._offsets.right);
@@ -18554,16 +18554,16 @@ module.exports = function(Chart) {
 
 		getPixelForTick: function(index) {
 			var ticks = this.getTicks();
-			return index >= 0 && index < ticks.length ?
+			return index >= 0 && index < ticks.length 
 				this.getPixelForOffset(ticks[index].value) :
 				null;
 		},
 
 		getValueForPixel: function(pixel) {
 			var me = this;
-			var size = me._horizontal ? me.width : me.height;
-			var start = me._horizontal ? me.left : me.top;
-			var pos = (size ? (pixel - start) / size : 0) * (me._offsets.left + 1 + me._offsets.left) - me._offsets.right;
+			var size = me._horizontal  me.width : me.height;
+			var start = me._horizontal  me.left : me.top;
+			var pos = (size  (pixel - start) / size : 0) * (me._offsets.left + 1 + me._offsets.left) - me._offsets.right;
 			var time = interpolate(me._table, 'pos', pos, 'time');
 
 			return moment(time);
@@ -18595,7 +18595,7 @@ module.exports = function(Chart) {
 
 			var exampleLabel = me.tickFormatFunction(moment(exampleTime), 0, [], formatOverride);
 			var tickLabelWidth = me.getLabelWidth(exampleLabel);
-			var innerWidth = me.isHorizontal() ? me.width : me.height;
+			var innerWidth = me.isHorizontal()  me.width : me.height;
 
 			return Math.floor(innerWidth / tickLabelWidth);
 		}

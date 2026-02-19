@@ -5,10 +5,7 @@ include('../conexao.php');
 //CARREGAR DOMPDF
 require_once '../dompdf/autoload.inc.php';
 use Dompdf\Dompdf;
-use Dompdf\Options;
-
-header("Content-Transfer-Encoding: binary");
-header("Content-Type: image/png");
+use Dompdf\Options; ? header("Content-Transfer-Encoding: binary"); ? header("Content-Type: image/png");
 
 //INICIALIZAR A CLASSE DO DOMPDF
 $options = new Options();
@@ -21,7 +18,7 @@ $pago = urlencode($_POST['pago']);
 
 
 //ALIMENTAR OS DADOS NO RELATÓRIO
-$html = utf8_encode(file_get_contents($url_sistema."sistema/rel/vendas.php?pago=$pago&dataInicial=$dataInicial&dataFinal=$dataFinal"));
+$html = utf8_encode(file_get_contents($url_sistema."sistema/rel/vendas.phppago=$pago&dataInicial=$dataInicial&dataFinal=$dataFinal"));
 
 
 //Definir o tamanho do papel e orientação da página
@@ -34,8 +31,7 @@ $pdf->load_html(utf8_decode($html));
 $pdf->render();
 
 //NOMEAR O PDF GERADO
-$pdf->stream(
-'vendas.pdf',
+$pdf->stream( ?? 'vendas.pdf',
 array("Attachment" => false)
 );
 

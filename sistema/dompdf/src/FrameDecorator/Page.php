@@ -1,8 +1,8 @@
 <?php
 /**
  * @package dompdf
- * @link    http://dompdf.github.com/
- * @author  Benj Carson <benjcarson@digitaljunkies.ca>
+ * @link ? http ://dompdf.github.com/
+ * @author ?? Benj Carson <benjcarson@digitaljunkies.ca>
  * @license http://www.gnu.org/copyleft/lesser.html GNU Lesser General Public License
  */
 namespace Dompdf\FrameDecorator;
@@ -16,7 +16,7 @@ use Dompdf\Renderer;
 /**
  * Decorates frames for page layout
  *
- * @access  private
+ * @access ?? private
  * @package dompdf
  */
 class Page extends AbstractFrameDecorator
@@ -94,7 +94,7 @@ class Page extends AbstractFrameDecorator
     }
 
     /**
-     * Set the frame's containing block.  Overridden to set $this->_bottom_page_margin.
+     * Set the frame's containing block. ?? Overridden to set $this->_bottom_page_margin.
      *
      * @param float $x
      * @param float $y
@@ -157,7 +157,7 @@ class Page extends AbstractFrameDecorator
     }
 
     /**
-     * Check if a forced page break is required before $frame.  This uses the
+     * Check if a forced page break is required before $frame. ?? This uses the
      * frame's page_break_before property as well as the preceeding frame's
      * page_break_after property.
      *
@@ -233,37 +233,37 @@ class Page extends AbstractFrameDecorator
      *
      * In the normal flow, page breaks can occur at the following places:
      *
-     *    1. In the vertical margin between block boxes. When a page
-     *    break occurs here, the used values of the relevant
-     *    'margin-top' and 'margin-bottom' properties are set to '0'.
-     *    2. Between line boxes inside a block box.
-     *    3. Between the content edge of a block container box and the
-     *    outer edges of its child content (margin edges of block-level
-     *    children or line box edges for inline-level children) if there
-     *    is a (non-zero) gap between them.
+     * ?? 1. In the vertical margin between block boxes. When a page
+     * ?? break occurs here, the used values of the relevant
+     * ?? 'margin-top' and 'margin-bottom' properties are set to '0'.
+     * ?? 2. Between line boxes inside a block box.
+     * ?? 3. Between the content edge of a block container box and the
+     * ?? outer edges of its child content (margin edges of block-level
+     * ?? children or line box edges for inline-level children) if there
+     * ?? is a (non-zero) gap between them.
      *
      * These breaks are subject to the following rules:
      *
      *   * Rule A: Breaking at (1) is allowed only if the
-     *     'page-break-after' and 'page-break-before' properties of
-     *     all the elements generating boxes that meet at this margin
-     *     allow it, which is when at least one of them has the value
-     *     'always', 'left', or 'right', or when all of them are
-     *     'auto'.
+     * ?? 'page-break-after' and 'page-break-before' properties of
+     * ?? all the elements generating boxes that meet at this margin
+     * ?? allow it, which is when at least one of them has the value
+     * ?? 'always', 'left', or 'right', or when all of them are
+     * ?? 'auto'.
      *
      *   * Rule B: However, if all of them are 'auto' and the
-     *     nearest common ancestor of all the elements has a
-     *     'page-break-inside' value of 'avoid', then breaking here is
-     *     not allowed.
+     * ?? nearest common ancestor of all the elements has a
+     * ?? 'page-break-inside' value of 'avoid', then breaking here is
+     * ?? not allowed.
      *
      *   * Rule C: Breaking at (2) is allowed only if the number of
-     *     line boxes between the break and the start of the enclosing
-     *     block box is the value of 'orphans' or more, and the number
-     *     of line boxes between the break and the end of the box is
-     *     the value of 'widows' or more.
+     * ?? line boxes between the break and the start of the enclosing
+     * ?? block box is the value of 'orphans' or more, and the number
+     * ?? of line boxes between the break and the end of the box is
+     * ?? the value of 'widows' or more.
      *
      *   * Rule D: In addition, breaking at (2) is allowed only if
-     *     the 'page-break-inside' property is 'auto'.
+     * ?? the 'page-break-inside' property is 'auto'.
      *
      * If the above doesn't provide enough break points to keep
      * content from overflowing the page boxes, then rules B and D are
@@ -272,7 +272,7 @@ class Page extends AbstractFrameDecorator
      * If that still does not lead to sufficient break points, rules A
      * and C are dropped as well, to find still more break points.
      *
-     * We will also allow breaks between table rows.  However, when
+     * We will also allow breaks between table rows. ?? However, when
      * splitting a table, the table headers should carry over to the
      * next page (but they don't yet).
      *
@@ -286,8 +286,7 @@ class Page extends AbstractFrameDecorator
         Helpers::dompdf_debug("page-break", "_page_break_allowed(" . $frame->get_node()->nodeName . ")");
         $display = $frame->get_style()->display;
 
-        // Block Frames (1):
-        if (in_array($display, $block_types)) {
+        // Block Frames (1) : if (in_array($display, $block_types)) {
 
             // Avoid breaks within table-cells
             if ($this->_in_table > ($display === "table" ? 1 : 0)) {
@@ -310,7 +309,7 @@ class Page extends AbstractFrameDecorator
                 $prev = $prev->get_prev_sibling();
             }
 
-            // Does the previous element allow a page break after?
+            // Does the previous element allow a page break after
             if ($prev && $prev->get_style()->page_break_after === "avoid") {
                 Helpers::dompdf_debug("page-break", "after: avoid");
 
@@ -350,8 +349,7 @@ class Page extends AbstractFrameDecorator
 
             return true;
 
-        } // Inline frames (2):
-        else {
+        } // Inline frames (2) : else {
             if (in_array($display, Style::$INLINE_TYPES)) {
 
                 // Avoid breaks within table-cells
@@ -370,7 +368,7 @@ class Page extends AbstractFrameDecorator
                 }
 
                 // FIXME: Checking widows is tricky without having laid out the
-                // remaining line boxes.  Just ignore it for now...
+                // remaining line boxes. ?? Just ignore it for now...
 
                 // Rule D
                 $p = $block_parent;
@@ -448,7 +446,7 @@ class Page extends AbstractFrameDecorator
                         return false;
 
                     } else {
-                        Helpers::dompdf_debug("page-break", "? " . $frame->get_style()->display . "");
+                        Helpers::dompdf_debug("page-break", " " . $frame->get_style()->display . "");
 
                         return false;
                     }
@@ -458,7 +456,7 @@ class Page extends AbstractFrameDecorator
     }
 
     /**
-     * Check if $frame will fit on the page.  If the frame does not fit,
+     * Check if $frame will fit on the page. ?? If the frame does not fit,
      * the frame tree is modified so that a page break occurs in the
      * correct location.
      *
@@ -522,7 +520,7 @@ class Page extends AbstractFrameDecorator
             // echo "\nbacktrack: " .$iter->get_node()->nodeName ." ".spl_object_hash($iter->get_node()). "";
             if ($iter === $this) {
                 Helpers::dompdf_debug("page-break", "reached root.");
-                // We've reached the root in our search.  Just split at $frame.
+                // We've reached the root in our search. ?? Just split at $frame.
                 break;
             }
 
@@ -587,7 +585,7 @@ class Page extends AbstractFrameDecorator
 
         $this->_in_table = $in_table;
 
-        // No valid page break found.  Just break at $frame.
+        // No valid page break found. ?? Just break at $frame.
         Helpers::dompdf_debug("page-break", "no valid break found, just splitting.");
 
         // If we are in a table, backtrack to the nearest top-level table row

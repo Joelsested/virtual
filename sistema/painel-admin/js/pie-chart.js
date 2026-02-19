@@ -29,7 +29,7 @@
 
     var drawCircle = function (color, lineWidth, percent) {
       percent = Math.min(Math.max(-1, percent || 0), 1);
-      var isNegative = percent <= 0 ? true : false;
+      var isNegative = percent <= 0  true : false;
 
       ctx.beginPath();
       ctx.arc(0, 0, radius, 0, Math.PI * 2 * percent, isNegative);
@@ -148,7 +148,7 @@
       // merge user options into default options
       for (var i in defaultOptions) {
         if (defaultOptions.hasOwnProperty(i)) {
-          options[i] = userOptions && typeof(userOptions[i]) !== 'undefined' ? userOptions[i] : defaultOptions[i];
+          options[i] = userOptions && typeof(userOptions[i]) !== 'undefined'  userOptions[i] : defaultOptions[i];
           if (typeof(options[i]) === 'function') {
             options[i] = options[i].bind(this);
           }

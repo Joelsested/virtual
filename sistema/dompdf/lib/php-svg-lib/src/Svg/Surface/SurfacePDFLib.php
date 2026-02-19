@@ -1,8 +1,8 @@
 <?php
 /**
  * @package php-svg-lib
- * @link    http://github.com/PhenX/php-svg-lib
- * @author  Fabien M�nager <fabien.menager@gmail.com>
+ * @link ? http ://github.com/PhenX/php-svg-lib
+ * @author ?? Fabien M�nager <fabien.menager@gmail.com>
  * @license GNU LGPLv3+ http://www.gnu.org/copyleft/lesser.html
  */
 
@@ -38,9 +38,8 @@ class SurfacePDFLib implements SurfaceInterface
             $canvas->set_option("stringformat=utf8");
             $canvas->set_option("errorpolicy=return");
 
-            /*  open new PDF file; insert a file name to create the PDF on disk */
-            if ($canvas->begin_document("", "") == 0) {
-                die("Error: " . $canvas->get_errmsg());
+            /* ?? open new PDF file; insert a file name to create the PDF on disk */
+            if ($canvas->begin_document("", "") == 0) { ? die("Error: " . $canvas->get_errmsg());
             }
             $canvas->set_info("Creator", "PDFlib starter sample");
             $canvas->set_info("Title", "starter_graphics");
@@ -50,10 +49,7 @@ class SurfacePDFLib implements SurfaceInterface
 
         // Flip PDF coordinate system so that the origin is in
         // the top left rather than the bottom left
-        $canvas->setmatrix(
-            1, 0,
-            0, -1,
-            0, $h
+        $canvas->setmatrix( ?? 1, 0, 0, -1, 0, $h
         );
 
         $this->width  = $w;
@@ -316,9 +312,7 @@ class SurfacePDFLib implements SurfaceInterface
         $canvas = $this->canvas;
 
         if ($stroke = $style->stroke && is_array($style->stroke)) {
-            $canvas->setcolor(
-                "stroke",
-                "rgb",
+            $canvas->setcolor( ?? "stroke", "rgb",
                 $stroke[0] / 255,
                 $stroke[1] / 255,
                 $stroke[2] / 255,
@@ -327,9 +321,7 @@ class SurfacePDFLib implements SurfaceInterface
         }
 
         if ($fill = $style->fill && is_array($style->fill)) {
-            $canvas->setcolor(
-                "fill",
-                "rgb",
+            $canvas->setcolor( ?? "fill", "rgb",
                 $fill[0] / 255,
                 $fill[1] / 255,
                 $fill[2] / 255,
@@ -338,9 +330,7 @@ class SurfacePDFLib implements SurfaceInterface
         }
 
         if ($fillRule = strtolower($style->fillRule)) {
-            $map = array(
-                "nonzero" => "winding",
-                "evenodd" => "evenodd",
+            $map = array( ?? "nonzero" => "winding", "evenodd" => "evenodd",
             );
 
             if (isset($map[$fillRule])) {
@@ -396,15 +386,7 @@ class SurfacePDFLib implements SurfaceInterface
 
     private function getFont($family, $style)
     {
-        $map = array(
-            "serif"      => "Times",
-            "sans-serif" => "Helvetica",
-            "fantasy"    => "Symbol",
-            "cursive"    => "Times",
-            "monospace"  => "Courier",
-
-            "arial"      => "Helvetica",
-            "verdana"    => "Helvetica",
+        $map = array( ?? "serif"      => "Times", "sans-serif" => "Helvetica", "fantasy"    => "Symbol", "cursive"    => "Times", "monospace"  => "Courier", "arial"      => "Helvetica", "verdana"    => "Helvetica",
         );
 
         $family = strtolower($family);

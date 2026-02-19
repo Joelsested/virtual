@@ -1,8 +1,8 @@
 <?php
 /**
  * @package dompdf
- * @link    http://dompdf.github.com/
- * @author  Benj Carson <benjcarson@digitaljunkies.ca>
+ * @link ? http ://dompdf.github.com/
+ * @author ?? Benj Carson <benjcarson@digitaljunkies.ca>
  * @license http://www.gnu.org/copyleft/lesser.html GNU Lesser General Public License
  */
 namespace Dompdf\Renderer;
@@ -198,10 +198,7 @@ class Block extends AbstractRenderer
     {
         $style = $frame->get_style();
 
-        $props = [
-            "width" => $style->outline_width,
-            "style" => $style->outline_style,
-            "color" => $style->outline_color,
+        $props = ["width" => $style->outline_width, "style" => $style->outline_style, "color" => $style->outline_color,
         ];
 
         if (!$props["style"] || $props["style"] === "none" || $props["width"] <= 0) {

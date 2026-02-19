@@ -95,7 +95,7 @@ if (@$_SESSION['nivel'] != 'Administrador' and @$_SESSION['nivel'] != 'Secretari
 					<div class="row">
 						<div class="col-md-5">
 							<div class="form-group">
-								<label>Endereço <small><small>(Rua, Número e Bairro)</small></small></label>
+								<label>Endereço <small><small>(Rua, NÍºmero e Bairro)</small></small></label>
 								<input type="text" class="form-control" name="endereco" id="endereco">
 							</div>
 						</div>
@@ -380,11 +380,6 @@ if (@$_SESSION['nivel'] != 'Administrador' and @$_SESSION['nivel'] != 'Secretari
 						<span><b>Ativo: </b></span>
 						<span id="ativo_mostrar"></span>
 					</div>
-
-					<div class="col-md-2">
-						<span><b>Senha: </b></span>
-						<span id="senha_mostrar"></span>
-					</div>
 				</div>
 
 
@@ -408,7 +403,7 @@ if (@$_SESSION['nivel'] != 'Administrador' and @$_SESSION['nivel'] != 'Secretari
 
 
 <script type="text/javascript">
-	var pag = "<?= $pag ?>"
+	var pag = "<= $pag >"
 </script>
 <script src="js/ajax.js"></script>
 
@@ -460,8 +455,7 @@ if (@$_SESSION['nivel'] != 'Administrador' and @$_SESSION['nivel'] != 'Secretari
 	document.getElementById('cep').addEventListener('input', function() {
 		let cep = this.value.replace(/\D/g, ''); // Remove caracteres não numéricos
 
-	if (cep.length === 8) { // Verifica se o CEP tem 8 dígitos
-		fetch(`https://viacep.com.br/ws/${cep}/json/`)
+	if (cep.length === 8) { // Verifica se o CEP tem 8 dígitos ? fetch(`https://viacep.com.br/ws/${cep}/json/`)
 			.then(response => response.json())
 			.then(data => {
 				if (!data.erro) {

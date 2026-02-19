@@ -41,9 +41,13 @@ for($i=0; $i < $total_reg; $i++){
 	$telefone = $res[$i]['telefone'];
 	$foto = $res[$i]['foto'];
 	$data = $res[$i]['data'];
+	$nascimento = $res[$i]['nascimento'] ?? '';
 	$ativo = $res[$i]['ativo'];
 	$wallet_id = $res[$i]['wallet_id'] ?? 'Não disponível';
 	$comissao = $res[$i]['comissao'];
+	$professor = $res[$i]['professor'] ?? 0;
+	$secretario_id = $res[$i]['secretario_id'] ?? '';
+	$tutor_id = $res[$i]['tutor_id'] ?? '';
 
 	$dataF = implode('/', array_reverse(explode('-', $data)));
 
@@ -68,15 +72,15 @@ echo <<<HTML
 		</td> 
 		<td class="esc">
 		{$telefone}
-		<a target="_blank" href="https://api.whatsapp.com/send?1=pt_BR&phone=55{$telefone}" title="Chamar no Whatsapp"><i class="fa fa-whatsapp verde"></i></a>
+		<a target="_blank" href="https://api.whatsapp.com/send1=pt_BR&phone=55{$telefone}" title="Chamar no Whatsapp"><i class="fa fa-whatsapp verde"></i></a>
 		</td>
 		<td class="esc">{$email}</td>		
 		<td class="esc">{$dataF}</td>
 		
 		<td>
-		<big><a href="#" onclick="editar('{$id}', '{$nome}', '{$cpf}','{$email}','{$telefone}', '{$wallet_id}', '{$comissao}', '{$foto}')" title="Editar Dados"><i class="fa fa-edit text-primary"></i></a></big>
+		<big><a href="#" onclick="editar('{$id}', '{$nome}', '{$cpf}','{$email}','{$telefone}', '{$wallet_id}', '{$comissao}', '{$professor}', '{$tutor_id}', '{$secretario_id}', '{$foto}', '{$nascimento}')" title="Editar Dados"><i class="fa fa-edit text-primary"></i></a></big>
 
-		<big><a href="#" onclick="mostrar('{$nome}', '{$cpf}','{$email}','{$telefone}', '{$wallet_id}', '{$comissao}', '{$foto}', '{$dataF}', '{$ativo}')" title="Ver Dados"><i class="fa fa-info-circle text-secondary"></i></a></big>
+		<big><a href="#" onclick="mostrar('{$nome}', '{$cpf}','{$email}','{$telefone}', '{$wallet_id}', '{$comissao}', '{$foto}', '{$dataF}', '{$ativo}', '{$nascimento}')" title="Ver Dados"><i class="fa fa-info-circle text-secondary"></i></a></big>
 
 
 
@@ -86,7 +90,7 @@ echo <<<HTML
 		<ul class="dropdown-menu" style="margin-left:-230px;">
 		<li>
 		<div class="notification_desc2">
-		<p>Confirmar Exclusão? <a href="#" onclick="excluir('{$id}')"><span class="text-danger">Sim</span></a></p>
+		<p>Confirmar Exclusão <a href="#" onclick="excluir('{$id}')"><span class="text-danger">Sim</span></a></p>
 		</div>
 		</li>										
 		</ul>
@@ -123,14 +127,12 @@ HTML;
 <script type="text/javascript">
 
 	$(document).ready( function () {
-		$('#tabela').DataTable({
-			"ordering": false,
-			"stateSave": true,
+		$('#tabela').DataTable({ ? "ordering" : false, ? "stateSave" : true,
 		});
 		$('#tabela_filter label input').focus();
 	} );
 	
-	function editar(id, nome, cpf, email, telefone, wallet_id, comissao, foto){
+function editar(id, nome, cpf, email, telefone, wallet_id, comissao, professor, tutor_id, secretario_id, foto, nascimento){
 		$('#wallet_id').val(wallet_id);
 		$('#comissao').val(comissao);
 
@@ -138,7 +140,19 @@ HTML;
 		$('#nome').val(nome);
 		$('#telefone').val(telefone);
 		$('#cpf').val(cpf);
-		$('#email').val(email);	
+		$('#email').val(email);
+		$('#professor').prop('checked', professor == "1");
+		var atendenteValor = '';
+		if (tutor_id) {
+			atendenteValor = 'tutor:' + tutor_id;
+		} else if (secretario_id) {
+			atendenteValor = 'secretario:' + secretario_id;
+		}
+		$('#atendente').val(atendenteValor);
+		if (typeof toggleAtendente === 'function') {
+			toggleAtendente();
+		}
+		$('#nascimento').val(nascimento);
 		
 		$('#foto').val('');
 		$('#target').attr('src','img/perfil/' + foto);		
@@ -149,7 +163,7 @@ HTML;
 	}
 
 
-	function mostrar(nome, cpf, email, telefone, wallet_id, comissao, foto, data, cartao, ativo){
+	function mostrar(nome, cpf, email, telefone, wallet_id, comissao, foto, data, cartao, ativo, nascimento){
 		$('#walletId').text(wallet_id);
 		$('#comissao_mostrar').text(comissao);
 		
@@ -160,6 +174,7 @@ HTML;
 		$('#data_mostrar').text(data);
 		$('#ativo_mostrar').text(ativo);		
 		$('#target_mostrar').attr('src','img/perfil/' + foto);
+		$('#nascimento_mostrar').text(nascimento);
 
 		$('#modalMostrar').modal('show');
 		
@@ -169,6 +184,11 @@ HTML;
 	function limparCampos(){
 		$('#wallet_id').val('');
 		$('#comissao').val('');
+		$('#professor').prop('checked', false);
+		$('#atendente').val('');
+		if (typeof toggleAtendente === 'function') {
+			toggleAtendente();
+		}
 		$('#id').val('');
 		$('#nome').val('');
 		$('#telefone').val('');
@@ -176,10 +196,8 @@ HTML;
 		$('#email').val('');		
 		$('#foto').val('');
 		$('#target').attr('src','img/perfil/sem-perfil.jpg');		
+		$('#nascimento').val('');
 	}
 
-
-
-
+// sem conversao para input type="text"
 </script>
-

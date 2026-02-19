@@ -1,8 +1,8 @@
 <?php
 /**
  * @package dompdf
- * @link    http://dompdf.github.com/
- * @author  Benj Carson <benjcarson@digitaljunkies.ca>
+ * @link ? http ://dompdf.github.com/
+ * @author ?? Benj Carson <benjcarson@digitaljunkies.ca>
  * @license http://www.gnu.org/copyleft/lesser.html GNU Lesser General Public License
  */
 namespace Dompdf\FrameReflower;
@@ -19,7 +19,7 @@ use Dompdf\Frame\Factory;
  * Base reflower class
  *
  * Reflower objects are responsible for determining the width and height of
- * individual frames.  They also create line and page breaks as necessary.
+ * individual frames. ?? They also create line and page breaks as necessary.
  *
  * @package dompdf
  */
@@ -201,7 +201,7 @@ abstract class AbstractFrameReflower
     /**
      * Required for table layout: Returns an array(0 => min, 1 => max, "min"
      * => min, "max" => max) of the minimum and maximum widths of this frame.
-     * This provides a basic implementation.  Child classes should override
+     * This provides a basic implementation. ?? Child classes should override
      * this if necessary.
      *
      * @return array|null
@@ -228,9 +228,7 @@ abstract class AbstractFrameReflower
         // Handle degenerate case
         if (!$this->_frame->get_first_child()) {
             return $this->_min_max_cache = [
-                $delta, $delta,
-                "min" => $delta,
-                "max" => $delta,
+                $delta, $delta, "min" => $delta, "max" => $delta,
             ];
         }
 
@@ -273,7 +271,7 @@ abstract class AbstractFrameReflower
         $max = count($high) ? max($high) : 0;
 
         // Use specified width if it is greater than the minimum defined by the
-        // content.  If the width is a percentage ignore it for now.
+        // content. ?? If the width is a percentage ignore it for now.
         $width = $style->width;
         if ($width !== "auto" && !Helpers::is_percent($width)) {
             $width = (float)$style->length_in_pt($width, $cb_w);
@@ -309,8 +307,7 @@ abstract class AbstractFrameReflower
         $string = str_replace(["\\\n", '\\"', "\\'"],
             ["", '"', "'"], $string);
 
-        // Convert escaped hex characters into ascii characters (e.g. \A => newline)
-        $string = preg_replace_callback("/\\\\([0-9a-fA-F]{0,6})/",
+        // Convert escaped hex characters into ascii characters (e.g. \A => newline) ?? $string = preg_replace_callback("/\\\\([0-9a-fA-F]{0,6})/",
             function ($matches) { return \Dompdf\Helpers::unichr(hexdec($matches[1])); },
             $string);
         return $string;
@@ -353,14 +350,7 @@ abstract class AbstractFrameReflower
     protected function _parse_content()
     {
         // Matches generated content
-        $re = "/\n" .
-            "\s(counters?\\([^)]*\\))|\n" .
-            "\A(counters?\\([^)]*\\))|\n" .
-            "\s([\"']) ( (?:[^\"']|\\\\[\"'])+ )(?<!\\\\)\\3|\n" .
-            "\A([\"']) ( (?:[^\"']|\\\\[\"'])+ )(?<!\\\\)\\5|\n" .
-            "\s([^\s\"']+)|\n" .
-            "\A([^\s\"']+)\n" .
-            "/xi";
+        $re = "/\n" . ?? "\s(counters\\([^)]*\\))|\n" . ?? "\A(counters\\([^)]*\\))|\n" . ?? "\s([\"']) ( (:[^\"']|\\\\[\"'])+ )(<!\\\\)\\3|\n" . ?? "\A([\"']) ( (:[^\"']|\\\\[\"'])+ )(<!\\\\)\\5|\n" . ?? "\s([^\s\"']+)|\n" . ?? "\A([^\s\"']+)\n" . ?? "/xi";
 
         $content = $this->_frame->get_style()->content;
 
@@ -387,8 +377,7 @@ abstract class AbstractFrameReflower
             }
 
             if (isset($match[1]) && $match[1] !== "") {
-                // counters?(...)
-                $match[1] = mb_strtolower(trim($match[1]));
+                // counters(...) ?? $match[1] = mb_strtolower(trim($match[1]));
 
                 // Handle counter() references:
                 // http://www.w3.org/TR/CSS21/generate.html#content
@@ -398,7 +387,7 @@ abstract class AbstractFrameReflower
                     continue;
                 }
 
-                preg_match('/(counters?)(^\()*?\(\s*([^\s,]+)\s*(,\s*["\']?([^"\'\)]*)["\']?\s*(,\s*([^\s)]+)\s*)?)?\)/i', $match[1], $args);
+                preg_match('/(counters)(^\()*\(\s*([^\s,]+)\s*(,\s*["\']([^"\'\)]*)["\']\s*(,\s*([^\s)]+)\s*))\)/i', $match[1], $args);
                 $counter_id = $args[3];
                 if (strtolower($args[1]) == 'counter') {
                     // counter(name [,style])
@@ -436,7 +425,7 @@ abstract class AbstractFrameReflower
                     }
                     $text .= implode($string, $tmp);
                 } else {
-                    // countertops?
+                    // countertops
                     continue;
                 }
 
@@ -488,7 +477,7 @@ abstract class AbstractFrameReflower
         // if the element was pushed to a new page use the saved counter value, otherwise use the CSS reset value
         if ($style->counter_reset && ($reset = $style->counter_reset) !== "none") {
             $vars = preg_split('/\s+/', trim($reset), 2);
-            $frame->reset_counter($vars[0], (isset($frame->_counters['__' . $vars[0]]) ? $frame->_counters['__' . $vars[0]] : (isset($vars[1]) ? $vars[1] : 0)));
+            $frame->reset_counter($vars[0], (isset($frame->_counters['__' . $vars[0]]) ?? $frame->_counters['__' . $vars[0]] ?: (isset($vars[1]) ?? $vars[1] ?: 0)));
         }
 
         if ($style->counter_increment && ($increment = $style->counter_increment) !== "none") {
@@ -499,7 +488,7 @@ abstract class AbstractFrameReflower
             $content = $this->_parse_content();
             // add generated content to the font subset
             // FIXME: This is currently too late because the font subset has already been generated.
-            //        See notes in issue #750.
+            // ?? See notes in issue #750.
             if ($frame->get_dompdf()->getOptions()->getIsFontSubsettingEnabled() && $frame->get_dompdf()->get_canvas() instanceof CPDF) {
                 $frame->get_dompdf()->get_canvas()->register_string_subset($style->font_family, $content);
             }

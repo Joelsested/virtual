@@ -38,6 +38,7 @@ for($i=0; $i < $total_reg; $i++){
 	$sexo = $res[$i]['sexo'];
 	$foto = $res[$i]['foto'];
 	$data = $res[$i]['data'];
+	$nascimento = $res[$i]['nascimento'] ?? '';
 	$cartao = $res[$i]['cartao'];
 	$ativo = $res[$i]['ativo'];
 	$arquivo = $res[$i]['arquivo'];
@@ -46,7 +47,6 @@ for($i=0; $i < $total_reg; $i++){
 
 	$query2 = $pdo->query("SELECT * FROM usuarios where id_pessoa = '$id' and nivel = 'Secretario'");
 	$res2 = $query2->fetchAll(PDO::FETCH_ASSOC);
-	$senha_usuario = $res2[0]['senha'];
 
 
 	if($ativo == 'Sim'){
@@ -82,7 +82,7 @@ echo <<<HTML
 		</td> 
 		<td class="esc">
 		{$telefone}
-		<a target="_blank" href="https://api.whatsapp.com/send?1=pt_BR&phone=55{$telefone}" title="Chamar no Whatsapp"><i class="fa {$icone_whatsapp} verde"></i></a>
+		<a target="_blank" href="https://api.whatsapp.com/send1=pt_BR&phone=55{$telefone}" title="Chamar no Whatsapp"><i class="fa {$icone_whatsapp} verde"></i></a>
 		</td>
 		<td class="esc">{$email}</td>		
 		
@@ -95,9 +95,8 @@ echo <<<HTML
 
 
 
-		<big><a href="#" onclick="editar('{$id}', '{$nome}', '{$cpf}','{$email}','{$telefone}','{$endereco}','{$cidade}','{$estado}','{$sexo}', '{$foto}')" title="Editar Dados"><i class="fa fa-edit text-primary"></i></a></big>
+		<big><a href="#" onclick="editar('{$id}', '{$nome}', '{$cpf}','{$email}','{$telefone}','{$endereco}','{$cidade}','{$estado}','{$sexo}', '{$foto}', '{$nascimento}')" title="Editar Dados"><i class="fa fa-edit text-primary"></i></a></big>
 
-		<big><a href="#" onclick="mostrar('{$nome}', '{$cpf}','{$email}','{$telefone}','{$endereco}','{$cidade}','{$estado}','{$sexo}', '{$foto}', '{$dataF}', '{$cartao}', '{$ativo}', '{$senha_usuario}')" title="Ver Dados"><i class="fa fa-info-circle text-secondary"></i></a></big>
 
 
 
@@ -107,7 +106,7 @@ echo <<<HTML
 		<ul class="dropdown-menu" style="margin-left:-230px;">
 		<li>
 		<div class="notification_desc2">
-		<p>Confirmar Exclusão? <a href="#" onclick="excluir('{$id}')"><span class="text-danger">Sim</span></a></p>
+		<p>Confirmar Exclusão <a href="#" onclick="excluir('{$id}')"><span class="text-danger">Sim</span></a></p>
 		</div>
 		</li>										
 		</ul>
@@ -152,15 +151,13 @@ HTML;
 
 <script type="text/javascript">
 
-	$(document).ready( function () {
-		$('#tabela').DataTable({
-			"ordering": false,
-			"stateSave": true,
+	$(document).ready(function () {
+		$('#tabela').DataTable({ ? "ordering" : false, ? "stateSave" : true,
 		});
 		$('#tabela_filter label input').focus();
 	} );
 
-	function editar(id, nome, cpf, email, telefone, endereco, cidade, estado, sexo, foto){
+	function editar(id, nome, cpf, email, telefone, endereco, cidade, estado, sexo, foto, nascimento){
 
 		$('#id').val(id);
 		$('#nome').val(nome);
@@ -173,6 +170,7 @@ HTML;
 		$('#sexo').val(sexo);
 		$('#foto').val('');
 		$('#target').attr('src','../painel-aluno/img/perfil/' + foto);		
+		$('#nascimento').val(nascimento);
 		
 		$('#tituloModal').text('Editar Registro');
 		$('#modalForm').modal('show');
@@ -180,13 +178,12 @@ HTML;
 	}
 
 
-	function mostrar(nome, cpf, email, telefone, endereco, cidade, estado, sexo, foto, data, cartao, ativo, senha){
+	function mostrar(nome, cpf, email, telefone, endereco, cidade, estado, sexo, foto, data, cartao, ativo, nascimento){
 		
 		$('#nome_mostrar').text(nome);
 		$('#telefone_mostrar').text(telefone);
 		$('#cpf_mostrar').text(cpf);
 		$('#email_mostrar').text(email);
-		$('#senha_mostrar').text(senha);
 		$('#endereco_mostrar').text(endereco);
 		$('#cidade_mostrar').text(cidade);
 		$('#estado_mostrar').text(estado);
@@ -195,6 +192,7 @@ HTML;
 		$('#cartao_mostrar').text(cartao);
 		$('#ativo_mostrar').text(ativo);		
 		$('#target_mostrar').attr('src','../painel-aluno/img/perfil/' + foto);
+		$('#nascimento_mostrar').text(nascimento);
 
 		$('#modalMostrar').modal('show');
 		
@@ -211,9 +209,12 @@ HTML;
 		$('#cidade').val('');
 		$('#estado').val('');
 		$('#sexo').val('');	
+		$('#nascimento').val('');
 		$('#foto').val('');
 		$('#target').attr('src','img/perfil/sem-perfil.jpg');		
 	}
+
+	// sem conversao para input type="text"
 
 
 
@@ -227,11 +228,9 @@ HTML;
 
         success: function (mensagem) {
             if (mensagem.trim() == "Alterado com Sucesso") {
-            	 $('#mensagem-excluir').addClass('verde')
-                 $('#mensagem-excluir').text(mensagem)                 
+            	 $('#mensagem-excluir').addClass('verde') $('#mensagem-excluir').text(mensagem)                 
             }else{
-            	 $('#mensagem-excluir').addClass('text-danger')
-                 $('#mensagem-excluir').text(mensagem)  
+            	 $('#mensagem-excluir').addClass('text-danger') $('#mensagem-excluir').text(mensagem)  
             }               
         },
 
@@ -258,4 +257,3 @@ HTML;
 
 
 </script>
-

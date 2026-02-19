@@ -16,9 +16,9 @@ if($total_reg > 0){
 }
 
 
-$query = $pdo->query("INSERT INTO $tabela SET  id_pacote = '$id_pacote', id_curso = '$id_curso'");
+$query = $pdo->query("INSERT INTO $tabela SET ?? id_pacote = '$id_pacote', id_curso = '$id_curso'");
 
 
 echo 'Salvo com Sucesso';
 
- ?>
+?>

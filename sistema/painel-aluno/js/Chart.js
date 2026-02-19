@@ -275,7 +275,7 @@
 		inherits = helpers.inherits = function(extensions){
 			//Basic javascript inheritance based on the model created in Backbone.js
 			var parent = this;
-			var ChartElement = (extensions && extensions.hasOwnProperty("constructor")) ? extensions.constructor : function(){ return parent.apply(this, arguments); };
+			var ChartElement = (extensions && extensions.hasOwnProperty("constructor"))  extensions.constructor : function(){ return parent.apply(this, arguments); };
 
 			var Surrogate = function(){ this.constructor = ChartElement;};
 			Surrogate.prototype = parent.prototype;
@@ -355,7 +355,7 @@
 			};
 		},
 		aliasPixel = helpers.aliasPixel = function(pixelWidth){
-			return (pixelWidth % 2 === 0) ? 0 : 0.5;
+			return (pixelWidth % 2 === 0)  0 : 0.5;
 		},
 		splineCurve = helpers.splineCurve = function(FirstPoint,MiddlePoint,AfterPoint,t){
 			//Props to Rob Spencer at scaled innovation for his post on splining between points
@@ -405,7 +405,7 @@
 			var	valueRange = Math.abs(maxValue - minValue),
 				rangeOrderOfMagnitude = calculateOrderOfMagnitude(valueRange),
 				graphMax = Math.ceil(maxValue / (1 * Math.pow(10, rangeOrderOfMagnitude))) * Math.pow(10, rangeOrderOfMagnitude),
-				graphMin = (startFromZero) ? 0 : Math.floor(minValue / (1 * Math.pow(10, rangeOrderOfMagnitude))) * Math.pow(10, rangeOrderOfMagnitude),
+				graphMin = (startFromZero)  0 : Math.floor(minValue / (1 * Math.pow(10, rangeOrderOfMagnitude))) * Math.pow(10, rangeOrderOfMagnitude),
 				graphRange = graphMax - graphMin,
 				stepValue = Math.pow(10, rangeOrderOfMagnitude),
 				numberOfSteps = Math.round(graphRange / stepValue);
@@ -472,7 +472,7 @@
 			function tmpl(str, data){
 				// Figure out if we're getting a template, or if we need to
 				// load the template - and be sure to cache the result.
-				var fn = !/\W/.test(str) ?
+				var fn = !/\W/.test(str) 
 				cache[str] = cache[str] :
 
 				// Generate a reusable function that will serve as a template
@@ -488,7 +488,7 @@
 						.replace(/[\r\t\n]/g, " ")
 						.split("<%").join("\t")
 						.replace(/((^|%>)[^\t]*)'/g, "$1\r")
-						.replace(/\t=(.*?)%>/g, "',$1,'")
+						.replace(/\t=(.*)%>/g, "',$1,'")
 						.split("\t").join("');")
 						.split("%>").join("p.push('")
 						.split("\r").join("\\'") +
@@ -496,7 +496,7 @@
 				);
 
 				// Provide some basic currying to the user
-				return data ? fn( data ) : fn;
+				return data  fn( data ) : fn;
 			}
 			return tmpl(templateString,valuesObject);
 		},
@@ -567,10 +567,10 @@
 				return -1 / 2 * (Math.cos(Math.PI * t / 1) - 1);
 			},
 			easeInExpo: function (t) {
-				return (t === 0) ? 1 : 1 * Math.pow(2, 10 * (t / 1 - 1));
+				return (t === 0)  1 : 1 * Math.pow(2, 10 * (t / 1 - 1));
 			},
 			easeOutExpo: function (t) {
-				return (t === 1) ? 1 : 1 * (-Math.pow(2, -10 * t / 1) + 1);
+				return (t === 1)  1 : 1 * (-Math.pow(2, -10 * t / 1) + 1);
 			},
 			easeInOutExpo: function (t) {
 				if (t === 0) return 0;
@@ -795,7 +795,7 @@
 			var longest = 0;
 			each(arrayOfStrings,function(string){
 				var textWidth = ctx.measureText(string).width;
-				longest = (textWidth > longest) ? textWidth : longest;
+				longest = (textWidth > longest)  textWidth : longest;
 			});
 			return longest;
 		},
@@ -849,7 +849,7 @@
 			this.stop();
 			var canvas = this.chart.canvas,
 				newWidth = getMaximumWidth(this.chart.canvas),
-				newHeight = this.options.maintainAspectRatio ? newWidth / this.chart.aspectRatio : getMaximumHeight(this.chart.canvas);
+				newHeight = this.options.maintainAspectRatio  newWidth / this.chart.aspectRatio : getMaximumHeight(this.chart.canvas);
 
 			canvas.width = this.chart.width = newWidth;
 			canvas.height = this.chart.height = newHeight;
@@ -989,7 +989,7 @@
 							xMax = max(xPositions);
 
 							return {
-								x: (xMin > this.chart.width/2) ? xMin : xMax,
+								x: (xMin > this.chart.width/2)  xMin : xMax,
 								y: (yMin + yMax)/2
 							};
 						}).call(this, dataIndex);
@@ -1072,7 +1072,7 @@
 			//I.e. if we extend a line chart, we'll use the defaults from the line chart if our new chart
 			//doesn't define some defaults of their own.
 
-			var baseDefaults = (Chart.defaults[parent.prototype.name]) ? clone(Chart.defaults[parent.prototype.name]) : {};
+			var baseDefaults = (Chart.defaults[parent.prototype.name])  clone(Chart.defaults[parent.prototype.name]) : {};
 
 			Chart.defaults[chartName] = extend(baseDefaults,extensions.defaults);
 
@@ -1464,7 +1464,7 @@
 			for (var i=0; i<=this.steps; i++){
 				this.yLabels.push(template(this.templateString,{value:(this.min + (i * this.stepValue)).toFixed(stepDecimalPlaces)}));
 			}
-			this.yLabelWidth = (this.display && this.showLabels) ? longestText(this.ctx,this.font,this.yLabels) : 0;
+			this.yLabelWidth = (this.display && this.showLabels)  longestText(this.ctx,this.font,this.yLabels) : 0;
 		},
 		addXLabel : function(label){
 			this.xLabels.push(label);
@@ -1481,8 +1481,8 @@
 			// First we need the width of the yLabels, assuming the xLabels aren't rotated
 
 			// To do that we need the base line at the top and base of the chart, assuming there is no x label rotation
-			this.startPoint = (this.display) ? this.fontSize : 0;
-			this.endPoint = (this.display) ? this.height - (this.fontSize * 1.5) - 5 : this.height; // -5 to pad labels
+			this.startPoint = (this.display)  this.fontSize : 0;
+			this.endPoint = (this.display)  this.height - (this.fontSize * 1.5) - 5 : this.height; // -5 to pad labels
 
 			// Apply padding settings to the start and end point.
 			this.startPoint += this.padding;
@@ -1537,7 +1537,7 @@
 
 
 			this.xScalePaddingRight = lastWidth/2 + 3;
-			this.xScalePaddingLeft = (firstWidth/2 > this.yLabelWidth + 10) ? firstWidth/2 : this.yLabelWidth + 10;
+			this.xScalePaddingLeft = (firstWidth/2 > this.yLabelWidth + 10)  firstWidth/2 : this.yLabelWidth + 10;
 
 			this.xLabelRotation = 0;
 			if (this.display){
@@ -1589,9 +1589,9 @@
 		},
 		calculateX : function(index){
 			var isRotated = (this.xLabelRotation > 0),
-				// innerWidth = (this.offsetGridLines) ? this.width - offsetLeft - this.padding : this.width - (offsetLeft + halfLabelWidth * 2) - this.padding,
+				// innerWidth = (this.offsetGridLines)  this.width - offsetLeft - this.padding : this.width - (offsetLeft + halfLabelWidth * 2) - this.padding,
 				innerWidth = this.width - (this.xScalePaddingLeft + this.xScalePaddingRight),
-				valueWidth = innerWidth/Math.max((this.valuesCount - ((this.offsetGridLines) ? 0 : 1)), 1),
+				valueWidth = innerWidth/Math.max((this.valuesCount - ((this.offsetGridLines)  0 : 1)), 1),
 				valueOffset = (valueWidth * index) + this.xScalePaddingLeft;
 
 			if (this.offsetGridLines){
@@ -1663,7 +1663,7 @@
 				each(this.xLabels,function(label,index){
 					var xPos = this.calculateX(index) + aliasPixel(this.lineWidth),
 						// Check to see if line/bar here and decide where to place the line
-						linePos = this.calculateX(index - (this.offsetGridLines ? 0.5 : 0)) + aliasPixel(this.lineWidth),
+						linePos = this.calculateX(index - (this.offsetGridLines  0.5 : 0)) + aliasPixel(this.lineWidth),
 						isRotated = (this.xLabelRotation > 0),
 						drawVerticalLine = this.showVerticalLines;
 
@@ -1706,11 +1706,11 @@
 					ctx.closePath();
 
 					ctx.save();
-					ctx.translate(xPos,(isRotated) ? this.endPoint + 12 : this.endPoint + 8);
+					ctx.translate(xPos,(isRotated)  this.endPoint + 12 : this.endPoint + 8);
 					ctx.rotate(toRadians(this.xLabelRotation)*-1);
 					ctx.font = this.font;
-					ctx.textAlign = (isRotated) ? "right" : "center";
-					ctx.textBaseline = (isRotated) ? "middle" : "top";
+					ctx.textAlign = (isRotated)  "right" : "center";
+					ctx.textBaseline = (isRotated)  "middle" : "top";
 					ctx.fillText(label, 0, 0);
 					ctx.restore();
 				},this);
@@ -1723,7 +1723,7 @@
 	Chart.RadialScale = Chart.Element.extend({
 		initialize: function(){
 			this.size = min([this.height, this.width]);
-			this.drawingArea = (this.display) ? (this.size/2) - (this.fontSize/2 + this.backdropPaddingY) : (this.size/2);
+			this.drawingArea = (this.display)  (this.size/2) - (this.fontSize/2 + this.backdropPaddingY) : (this.size/2);
 		},
 		calculateCenterOffset: function(value){
 			// Take into account half font size + the yPadding of the top value
@@ -1735,7 +1735,7 @@
 			if (!this.lineArc){
 				this.setScaleSize();
 			} else {
-				this.drawingArea = (this.display) ? (this.size/2) - (this.fontSize/2 + this.backdropPaddingY) : (this.size/2);
+				this.drawingArea = (this.display)  (this.size/2) - (this.fontSize/2 + this.backdropPaddingY) : (this.size/2);
 			}
 			this.buildYLabels();
 		},
@@ -1847,8 +1847,8 @@
 			radiusReductionLeft = xProtrusionLeft / Math.sin(furthestLeftAngle + Math.PI/2);
 
 			// Ensure we actually need to reduce the size of the chart
-			radiusReductionRight = (isNumber(radiusReductionRight)) ? radiusReductionRight : 0;
-			radiusReductionLeft = (isNumber(radiusReductionLeft)) ? radiusReductionLeft : 0;
+			radiusReductionRight = (isNumber(radiusReductionRight))  radiusReductionRight : 0;
+			radiusReductionLeft = (isNumber(radiusReductionLeft))  radiusReductionLeft : 0;
 
 			this.drawingArea = largestPossibleRadius - (radiusReductionLeft + radiusReductionRight)/2;
 
@@ -2097,7 +2097,7 @@
 			//Set up tooltip events on the chart
 			if (this.options.showTooltips){
 				helpers.bindEvents(this, this.options.tooltipEvents, function(evt){
-					var activeBars = (evt.type !== 'mouseout') ? this.getBarsAtEvent(evt) : [];
+					var activeBars = (evt.type !== 'mouseout')  this.getBarsAtEvent(evt) : [];
 
 					this.eachBars(function(bar){
 						bar.restore(['fillColor', 'strokeColor']);
@@ -2234,9 +2234,9 @@
 				lineColor : this.options.scaleLineColor,
 				showHorizontalLines : this.options.scaleShowHorizontalLines,
 				showVerticalLines : this.options.scaleShowVerticalLines,
-				gridLineWidth : (this.options.scaleShowGridLines) ? this.options.scaleGridLineWidth : 0,
-				gridLineColor : (this.options.scaleShowGridLines) ? this.options.scaleGridLineColor : "rgba(0,0,0,0)",
-				padding : (this.options.showScale) ? 0 : (this.options.barShowStroke) ? this.options.barStrokeWidth : 0,
+				gridLineWidth : (this.options.scaleShowGridLines)  this.options.scaleGridLineWidth : 0,
+				gridLineColor : (this.options.scaleShowGridLines)  this.options.scaleGridLineColor : "rgba(0,0,0,0)",
+				padding : (this.options.showScale)  0 : (this.options.barShowStroke)  this.options.barStrokeWidth : 0,
 				showLabels : this.options.scaleShowLabels,
 				display : this.options.showScale
 			};
@@ -2382,7 +2382,7 @@
 			//Set up tooltip events on the chart
 			if (this.options.showTooltips){
 				helpers.bindEvents(this, this.options.tooltipEvents, function(evt){
-					var activeSegments = (evt.type !== 'mouseout') ? this.getSegmentsAtEvent(evt) : [];
+					var activeSegments = (evt.type !== 'mouseout')  this.getSegmentsAtEvent(evt) : [];
 
 					helpers.each(this.segments,function(segment){
 						segment.restore(["fillColor"]);
@@ -2415,15 +2415,15 @@
 			var index = atIndex || this.segments.length;
 			this.segments.splice(index, 0, new this.SegmentArc({
 				value : segment.value,
-				outerRadius : (this.options.animateScale) ? 0 : this.outerRadius,
-				innerRadius : (this.options.animateScale) ? 0 : (this.outerRadius/100) * this.options.percentageInnerCutout,
+				outerRadius : (this.options.animateScale)  0 : this.outerRadius,
+				innerRadius : (this.options.animateScale)  0 : (this.outerRadius/100) * this.options.percentageInnerCutout,
 				fillColor : segment.color,
 				highlightColor : segment.highlight || segment.color,
 				showStroke : this.options.segmentShowStroke,
 				strokeWidth : this.options.segmentStrokeWidth,
 				strokeColor : this.options.segmentStrokeColor,
 				startAngle : Math.PI * 1.5,
-				circumference : (this.options.animateRotate) ? 0 : this.calculateCircumference(segment.value),
+				circumference : (this.options.animateRotate)  0 : this.calculateCircumference(segment.value),
 				label : segment.label
 			}));
 			if (!silent){
@@ -2455,7 +2455,7 @@
 		},
 
 		removeData: function(atIndex){
-			var indexToDelete = (helpers.isNumber(atIndex)) ? atIndex : this.segments.length-1;
+			var indexToDelete = (helpers.isNumber(atIndex))  atIndex : this.segments.length-1;
 			this.segments.splice(indexToDelete, 1);
 			this.reflow();
 			this.update();
@@ -2475,7 +2475,7 @@
 			}, this);
 		},
 		draw : function(easeDecimal){
-			var animDecimal = (easeDecimal) ? easeDecimal : 1;
+			var animDecimal = (easeDecimal)  easeDecimal : 1;
 			this.clear();
 			helpers.each(this.segments,function(segment,index){
 				segment.transition({
@@ -2583,7 +2583,7 @@
 			//Set up tooltip events on the chart
 			if (this.options.showTooltips){
 				helpers.bindEvents(this, this.options.tooltipEvents, function(evt){
-					var activePoints = (evt.type !== 'mouseout') ? this.getPointsAtEvent(evt) : [];
+					var activePoints = (evt.type !== 'mouseout')  this.getPointsAtEvent(evt) : [];
 					this.eachPoints(function(point){
 						point.restore(['fillColor', 'strokeColor']);
 					});
@@ -2705,9 +2705,9 @@
 				lineColor : this.options.scaleLineColor,
 				showHorizontalLines : this.options.scaleShowHorizontalLines,
 				showVerticalLines : this.options.scaleShowVerticalLines,
-				gridLineWidth : (this.options.scaleShowGridLines) ? this.options.scaleGridLineWidth : 0,
-				gridLineColor : (this.options.scaleShowGridLines) ? this.options.scaleGridLineColor : "rgba(0,0,0,0)",
-				padding: (this.options.showScale) ? 0 : this.options.pointDotRadius + this.options.pointDotStrokeWidth,
+				gridLineWidth : (this.options.scaleShowGridLines)  this.options.scaleGridLineWidth : 0,
+				gridLineColor : (this.options.scaleShowGridLines)  this.options.scaleGridLineColor : "rgba(0,0,0,0)",
+				padding: (this.options.showScale)  0 : this.options.pointDotRadius + this.options.pointDotStrokeWidth,
 				showLabels : this.options.scaleShowLabels,
 				display : this.options.showScale
 			};
@@ -2799,7 +2799,7 @@
 				// This would cause issues when there is no animation, because the y of the next point would be 0, so beziers would be skewed
 				if (this.options.bezierCurve){
 					helpers.each(pointsWithValues, function(point, index){
-						var tension = (index > 0 && index < pointsWithValues.length - 1) ? this.options.bezierCurveTension : 0;
+						var tension = (index > 0 && index < pointsWithValues.length - 1)  this.options.bezierCurveTension : 0;
 						point.controlPoints = helpers.splineCurve(
 							previousPoint(point, pointsWithValues, index),
 							point,
@@ -2963,7 +2963,7 @@
 				backdropColor: this.options.scaleBackdropColor,
 				backdropPaddingY : this.options.scaleBackdropPaddingY,
 				backdropPaddingX: this.options.scaleBackdropPaddingX,
-				lineWidth: (this.options.scaleShowLine) ? this.options.scaleLineWidth : 0,
+				lineWidth: (this.options.scaleShowLine)  this.options.scaleLineWidth : 0,
 				lineColor: this.options.scaleLineColor,
 				lineArc: true,
 				width: this.chart.width,
@@ -2986,7 +2986,7 @@
 			//Set up tooltip events on the chart
 			if (this.options.showTooltips){
 				helpers.bindEvents(this, this.options.tooltipEvents, function(evt){
-					var activeSegments = (evt.type !== 'mouseout') ? this.getSegmentsAtEvent(evt) : [];
+					var activeSegments = (evt.type !== 'mouseout')  this.getSegmentsAtEvent(evt) : [];
 					helpers.each(this.segments,function(segment){
 						segment.restore(["fillColor"]);
 					});
@@ -3017,8 +3017,8 @@
 				highlightColor: segment.highlight || segment.color,
 				label: segment.label,
 				value: segment.value,
-				outerRadius: (this.options.animateScale) ? 0 : this.scale.calculateCenterOffset(segment.value),
-				circumference: (this.options.animateRotate) ? 0 : this.scale.getCircumference(),
+				outerRadius: (this.options.animateScale)  0 : this.scale.calculateCenterOffset(segment.value),
+				circumference: (this.options.animateRotate)  0 : this.scale.getCircumference(),
 				startAngle: Math.PI * 1.5
 			}));
 			if (!silent){
@@ -3027,7 +3027,7 @@
 			}
 		},
 		removeData: function(atIndex){
-			var indexToDelete = (helpers.isNumber(atIndex)) ? atIndex : this.segments.length-1;
+			var indexToDelete = (helpers.isNumber(atIndex))  atIndex : this.segments.length-1;
 			this.segments.splice(indexToDelete, 1);
 			this.reflow();
 			this.update();
@@ -3045,7 +3045,7 @@
 				valuesArray.push(segment.value);
 			});
 
-			var scaleSizes = (this.options.scaleOverride) ?
+			var scaleSizes = (this.options.scaleOverride) 
 				{
 					steps: this.options.scaleSteps,
 					stepValue: this.options.scaleStepWidth,
@@ -3214,7 +3214,7 @@
 			//Set up tooltip events on the chart
 			if (this.options.showTooltips){
 				helpers.bindEvents(this, this.options.tooltipEvents, function(evt){
-					var activePointsCollection = (evt.type !== 'mouseout') ? this.getPointsAtEvent(evt) : [];
+					var activePointsCollection = (evt.type !== 'mouseout')  this.getPointsAtEvent(evt) : [];
 
 					this.eachPoints(function(point){
 						point.restore(['fillColor', 'strokeColor']);
@@ -3252,8 +3252,8 @@
 						value : dataPoint,
 						label : data.labels[index],
 						datasetLabel: dataset.label,
-						x: (this.options.animation) ? this.scale.xCenter : pointPosition.x,
-						y: (this.options.animation) ? this.scale.yCenter : pointPosition.y,
+						x: (this.options.animation)  this.scale.xCenter : pointPosition.x,
+						y: (this.options.animation)  this.scale.yCenter : pointPosition.y,
 						strokeColor : dataset.pointStrokeColor,
 						fillColor : dataset.pointColor,
 						highlightFill : dataset.pointHighlightFill || dataset.pointColor,
@@ -3308,10 +3308,10 @@
 				backdropColor: this.options.scaleBackdropColor,
 				backdropPaddingY : this.options.scaleBackdropPaddingY,
 				backdropPaddingX: this.options.scaleBackdropPaddingX,
-				lineWidth: (this.options.scaleShowLine) ? this.options.scaleLineWidth : 0,
+				lineWidth: (this.options.scaleShowLine)  this.options.scaleLineWidth : 0,
 				lineColor: this.options.scaleLineColor,
 				angleLineColor : this.options.angleLineColor,
-				angleLineWidth : (this.options.angleShowLineOut) ? this.options.angleLineWidth : 0,
+				angleLineWidth : (this.options.angleShowLineOut)  this.options.angleLineWidth : 0,
 				// Point labels at the edge of each line
 				pointLabelFontColor : this.options.pointLabelFontColor,
 				pointLabelFontSize : this.options.pointLabelFontSize,
@@ -3348,7 +3348,7 @@
 			})();
 
 
-			var scaleSizes = (this.options.scaleOverride) ?
+			var scaleSizes = (this.options.scaleOverride) 
 				{
 					steps: this.options.scaleSteps,
 					stepValue: this.options.scaleStepWidth,
