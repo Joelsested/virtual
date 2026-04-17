@@ -17,8 +17,8 @@ use Dompdf\Exception;
 
 /**
  * @package dompdf
- * @link ? http ://dompdf.github.com/
- * @author ?? Benj Carson <benjcarson@digitaljunkies.ca>
+ * @link    http://dompdf.github.com/
+ * @author  Benj Carson <benjcarson@digitaljunkies.ca>
  * @license http://www.gnu.org/copyleft/lesser.html GNU Lesser General Public License
  */
 
@@ -92,7 +92,7 @@ abstract class AbstractFrameDecorator extends Frame
     /**
      * Class constructor
      *
-     * @param Frame $frame ?? The decoration target
+     * @param Frame $frame   The decoration target
      * @param Dompdf $dompdf The Dompdf object
      */
     function __construct(Frame $frame, Dompdf $dompdf)
@@ -638,7 +638,7 @@ abstract class AbstractFrameDecorator extends Frame
     /**
      * split this frame at $child.
      * The current frame is cloned and $child and all children following
-     * $child are added to the clone. ?? The clone is then passed to the
+     * $child are added to the clone.  The clone is then passed to the
      * current frame's parent->split() method.
      *
      * @param Frame $child
@@ -824,7 +824,7 @@ abstract class AbstractFrameDecorator extends Frame
      * @param string $type
      * @return bool|string
      *
-     * TODO: What version is the best : this one or the one in ListBullet 
+     * TODO: What version is the best : this one or the one in ListBullet ?
      */
     function counter_value($id = self::DEFAULT_COUNTER, $type = "decimal")
     {

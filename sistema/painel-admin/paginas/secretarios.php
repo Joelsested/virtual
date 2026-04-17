@@ -81,8 +81,8 @@ if (@$_SESSION['nivel'] != 'Administrador' and @$_SESSION['nivel'] != 'Tesoureir
                     <div class="col-md-8">
                             <div class="form-group">
                                 <label>Endereço</label>
-                                <input type="text" class="form-control" name="endereco" id="endereco">
-                                       placeholder="Rua X NÍºmero 20 Bairro X">
+                                <input type="text" class="form-control" name="endereco" id="endereco"
+                                       placeholder="Rua X Número 20 Bairro X">
                             </div>
                         </div>
 
@@ -180,7 +180,7 @@ if (@$_SESSION['nivel'] != 'Administrador' and @$_SESSION['nivel'] != 'Tesoureir
                         <div class="col-md-8">
                             <div class="form-group">
                                 <label>Arquivo</label>
-                                <input class="form-control" type="file" name="arquivo_conta">
+                                <input class="form-control" type="file" name="arquivo_conta"
                                        onChange="carregarImgArquivos();" id="arquivo_conta">
                             </div>
                         </div>
@@ -195,7 +195,7 @@ if (@$_SESSION['nivel'] != 'Administrador' and @$_SESSION['nivel'] != 'Tesoureir
 
                     <div class="row" style="margin-top:-40px">
                         <div class="col-md-8">
-                            <input type="text" class="form-control" name="nome_arq" id="nome_arq">
+                            <input type="text" class="form-control" name="nome_arq" id="nome_arq"
                                    placeholder="Nome do Arquivo * " required>
                         </div>
 
@@ -266,6 +266,11 @@ if (@$_SESSION['nivel'] != 'Administrador' and @$_SESSION['nivel'] != 'Tesoureir
                         <span id="email_mostrar"></span>
                     </div>
 
+                    <div class="col-md-4">
+                        <span><b>Senha: </b></span>
+                        <span id="senha_mostrar"></span>
+                    </div>
+
                 </div>
 
 
@@ -334,8 +339,8 @@ if (@$_SESSION['nivel'] != 'Administrador' and @$_SESSION['nivel'] != 'Tesoureir
 </div>
 
 
-<script type="text/javascript">var pag = "<=$pag>"</script>
-<script src="js/ajax.js"></script>
+<script type="text/javascript">var pag = "<?=$pag?>"</script>
+<script src="js/ajax.js?v=<?= @filemtime(__DIR__ . '/../js/ajax.js') ?>"></script>
 
 
 <script type="text/javascript">
@@ -377,3 +382,4 @@ if (@$_SESSION['nivel'] != 'Administrador' and @$_SESSION['nivel'] != 'Tesoureir
 
     }
 </script>
+

@@ -19,8 +19,8 @@
 */
 @font-face {
 	font-family: 'FontAwesome';
-	src: url("../fonts/fontawesome-webfont.eotv=4.7.0");
-	src: url("../fonts/fontawesome-webfont.eot#iefix&v=4.7.0") format("embedded-opentype"), url("../fonts/fontawesome-webfont.woff2v=4.7.0") format("woff2"), url("../fonts/fontawesome-webfont.woffv=4.7.0") format("woff"), url("../fonts/fontawesome-webfont.ttfv=4.7.0") format("truetype"), url("../fonts/fontawesome-webfont.svgv=4.7.0#fontawesomeregular") format("svg");
+	src: url("../fonts/fontawesome-webfont.eot?v=4.7.0");
+	src: url("../fonts/fontawesome-webfont.eot?#iefix&v=4.7.0") format("embedded-opentype"), url("../fonts/fontawesome-webfont.woff2?v=4.7.0") format("woff2"), url("../fonts/fontawesome-webfont.woff?v=4.7.0") format("woff"), url("../fonts/fontawesome-webfont.ttf?v=4.7.0") format("truetype"), url("../fonts/fontawesome-webfont.svg?v=4.7.0#fontawesomeregular") format("svg");
 	font-weight: normal;
 	font-style: normal;
 }
@@ -3073,8 +3073,8 @@
 */
 @font-face {
 	font-family: "Material Design Icons";
-	src: url("../fonts/materialdesignicons-webfont.eotv=1.4.57");
-	src: url("../fonts/materialdesignicons-webfont.eot#iefix&v=1.4.57") format("embedded-opentype"), url("../fonts/materialdesignicons-webfont.woff2v=1.4.57") format("woff2"), url("../fonts/materialdesignicons-webfont.woffv=1.4.57") format("woff"), url("../fonts/materialdesignicons-webfont.ttfv=1.4.57") format("truetype"), url("../fonts/materialdesignicons-webfont.svgv=1.4.57#materialdesigniconsregular") format("svg");
+	src: url("../fonts/materialdesignicons-webfont.eot?v=1.4.57");
+	src: url("../fonts/materialdesignicons-webfont.eot?#iefix&v=1.4.57") format("embedded-opentype"), url("../fonts/materialdesignicons-webfont.woff2?v=1.4.57") format("woff2"), url("../fonts/materialdesignicons-webfont.woff?v=1.4.57") format("woff"), url("../fonts/materialdesignicons-webfont.ttf?v=1.4.57") format("truetype"), url("../fonts/materialdesignicons-webfont.svg?v=1.4.57#materialdesigniconsregular") format("svg");
 	font-weight: normal;
 	font-style: normal;
 }

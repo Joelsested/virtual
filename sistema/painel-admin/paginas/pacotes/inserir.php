@@ -30,7 +30,8 @@ $desc_rapida = str_replace("'", " ", $desc_rapida);
 $desc_rapida = str_replace('"', ' ', $desc_rapida);
 
 $nome_novo = strtolower( preg_replace("[^a-zA-Z0-9-]", "-", 
-        strtr(utf8_decode(trim($nome)), utf8_decode("áàãâéêíóôõúüñçÁÀÃÂÉÊÍÓÔÕÚÜÑÇ"), "aaaaeeiooouuncAAAAEEIOOOUUNC-")) );
+        strtr(utf8_decode(trim($nome)), utf8_decode("áàãâéêíóôõúüñçÁÀÃÂÉÊÍÓÔÕÚÜÑÇ"),
+        "aaaaeeiooouuncAAAAEEIOOOUUNC-")) );
 $url = preg_replace('/[ -]+/' , '-' , $nome_novo);
 
 $id = $_POST['id'];
@@ -104,4 +105,4 @@ $query->execute();
 
 echo 'Salvo com Sucesso';
 
-?>
+ ?>

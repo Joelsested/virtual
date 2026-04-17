@@ -1,8 +1,8 @@
 <?php
 /**
  * @package php-svg-lib
- * @link ? http ://github.com/PhenX/php-svg-lib
- * @author ?? Fabien M�nager <fabien.menager@gmail.com>
+ * @link    http://github.com/PhenX/php-svg-lib
+ * @author  Fabien M�nager <fabien.menager@gmail.com>
  * @license GNU LGPLv3+ http://www.gnu.org/copyleft/lesser.html
  */
 
@@ -40,7 +40,10 @@ class SurfaceCpdf implements SurfaceInterface
 
         // Flip PDF coordinate system so that the origin is in
         // the top left rather than the bottom left
-        $canvas->transform(array( ?? 1, 0, 0, -1, 0, $h
+        $canvas->transform(array(
+            1,  0,
+            0, -1,
+            0, $h
         ));
 
         $this->width  = $w;
@@ -83,8 +86,9 @@ class SurfaceCpdf implements SurfaceInterface
         $sin_a = sin($a);
 
         $this->transform(
-            $cos_a, ?? $sin_a,
-            -$sin_a, ?? $cos_a, 0, 0
+            $cos_a,                         $sin_a,
+            -$sin_a,                         $cos_a,
+            0, 0
         );
     }
 
@@ -92,7 +96,9 @@ class SurfaceCpdf implements SurfaceInterface
     {
         if (self::DEBUG) echo __FUNCTION__ . "\n";
 
-        $this->transform( ?? 1, 0, 0, 1,
+        $this->transform(
+            1,  0,
+            0,  1,
             $x, $y
         );
     }
@@ -421,12 +427,33 @@ class SurfaceCpdf implements SurfaceInterface
 
     public function setFont($family, $style, $weight)
     {
-        $map = array( ?? "serif"      => "Times", "sans-serif" => "Helvetica", "fantasy"    => "Symbol", "cursive"    => "Times", "monospace"  => "Courier", "arial"      => "Helvetica", "verdana"    => "Helvetica",
+        $map = array(
+            "serif"      => "Times",
+            "sans-serif" => "Helvetica",
+            "fantasy"    => "Symbol",
+            "cursive"    => "Times",
+            "monospace"  => "Courier",
+
+            "arial"      => "Helvetica",
+            "verdana"    => "Helvetica",
         );
 
-        $styleMap = array( ?? 'Helvetica' => array( ?? 'b'  => 'Helvetica-Bold', 'i'  => 'Helvetica-Oblique', 'bi' => 'Helvetica-BoldOblique',
-            ), 'Courier' => array( ?? 'b'  => 'Courier-Bold', 'i'  => 'Courier-Oblique', 'bi' => 'Courier-BoldOblique',
-            ), 'Times' => array( ?? ''   => 'Times-Roman', 'b'  => 'Times-Bold', 'i'  => 'Times-Italic', 'bi' => 'Times-BoldItalic',
+        $styleMap = array(
+            'Helvetica' => array(
+                'b'  => 'Helvetica-Bold',
+                'i'  => 'Helvetica-Oblique',
+                'bi' => 'Helvetica-BoldOblique',
+            ),
+            'Courier' => array(
+                'b'  => 'Courier-Bold',
+                'i'  => 'Courier-Oblique',
+                'bi' => 'Courier-BoldOblique',
+            ),
+            'Times' => array(
+                ''   => 'Times-Roman',
+                'b'  => 'Times-Bold',
+                'i'  => 'Times-Italic',
+                'bi' => 'Times-BoldItalic',
             ),
         );
 

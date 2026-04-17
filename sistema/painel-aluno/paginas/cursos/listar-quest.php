@@ -15,7 +15,7 @@ if($total_reg > 0){
 		$id = $res[$i]['id'];		
 		$pergunta = $res[$i]['pergunta'];
 		$numeracao = $i + 1;
-		echo '<p style="margin-bottom:5px"><b>'.$numeracao.' - '.$pergunta.'</b></p><div style="margin-bottom:15px" ><small>';
+		echo '<p style="margin-bottom:5px"><b>'.$numeracao.' - '.$pergunta.'?</b></p><div style="margin-bottom:15px" ><small>';
 
 		$query2 = $pdo->query("SELECT * FROM alternativas where pergunta = '$id' ORDER BY id asc");
 		$res2 = $query2->fetchAll(PDO::FETCH_ASSOC);
@@ -46,7 +46,8 @@ if($total_reg > 0){
 
 				echo '<div style="margin-bottom:5px">
   <input class="" onclick="salv(' . $id_alt . ', ' . $id_curso . ', ' . $numeracao . ', \'' . $id . '\', \'' . $id_aluno . '\', \'' . $letras . '\', \'' . $correta . '\')" type="radio" name="'.$id.'" value="'.$id_alt.'" style="margin-right:5px">
-  <span class="" style="font-weight:200"> ?? '.$letras.' - '.$resposta.'
+  <span class="" style="font-weight:200">
+    '.$letras.' - '.$resposta.'
   </span>
 </div>';
 			}
@@ -61,4 +62,6 @@ if($total_reg > 0){
 
 
 ?>
+
+
 

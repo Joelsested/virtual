@@ -178,7 +178,7 @@ $resposta_consulta = $consulta_arquivos->fetchAll(PDO::FETCH_ASSOC);
 
   <tbody>
 
-   <?php foreach ($resposta_consulta as $registro)  : ?>
+   <?php foreach ($resposta_consulta as $registro): ?>
 
     <tr>
 
@@ -196,7 +196,7 @@ $resposta_consulta = $consulta_arquivos->fetchAll(PDO::FETCH_ASSOC);
 
       <big>
 
-       <a href="#" onclick="mostrarArquivo('<?php echo $registro['arquivo']; >', '<?php echo htmlspecialchars($registro['descricao'], ENT_QUOTES, 'UTF-8'); ?>')" title="Visualizar"?>
+       <a href="#" onclick="mostrarArquivo('<?php echo $registro['arquivo']; ?>', '<?php echo htmlspecialchars($registro['descricao'], ENT_QUOTES, 'UTF-8'); ?>')" title="Visualizar">
 
         <i class="fa fa-eye text-secondary"></i>
 
@@ -208,9 +208,9 @@ $resposta_consulta = $consulta_arquivos->fetchAll(PDO::FETCH_ASSOC);
 
       <big>
 
-       <?php if ($registro['bloqueado'] == 0)  : ?>
+       <?php if ($registro['bloqueado'] == 0): ?>
 
-        <a href="#" onclick="apagarArquivo('<?php echo $registro['id']; >')" title="Apagar"?>
+        <a href="#" onclick="apagarArquivo('<?php echo $registro['id']; ?>')" title="Apagar">
 
          <i class="fa fa-trash-o text-danger"></i>
 
@@ -250,7 +250,7 @@ $resposta_consulta = $consulta_arquivos->fetchAll(PDO::FETCH_ASSOC);
 
 <script type="text/javascript">
 
- var pag = "<= $pag >"
+ var pag = "<?= $pag ?>"
 
 </script>
 
@@ -280,7 +280,11 @@ $resposta_consulta = $consulta_arquivos->fetchAll(PDO::FETCH_ASSOC);
 
  $(document).ready(function() {
 
-  $('#tabela2').DataTable({ ? "ordering" : false, ? "stateSave" : true,
+  $('#tabela2').DataTable({
+
+   "ordering": false,
+
+   "stateSave": true,
 
   });
 
@@ -376,7 +380,7 @@ $resposta_consulta = $consulta_arquivos->fetchAll(PDO::FETCH_ASSOC);
 
   Swal.fire({
 
-   title: "Deseja apagar o arquivo",
+   title: "Deseja apagar o arquivo?",
 
    text: "Esta ação não poderá ser desfeita!",
 
@@ -398,7 +402,9 @@ $resposta_consulta = $consulta_arquivos->fetchAll(PDO::FETCH_ASSOC);
 
       method: "POST",
 
-      headers: { ? "Content-Type" : "application/x-www-form-urlencoded"
+      headers: {
+
+       "Content-Type": "application/x-www-form-urlencoded"
 
       },
 

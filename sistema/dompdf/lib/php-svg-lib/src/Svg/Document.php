@@ -1,8 +1,8 @@
 <?php
 /**
  * @package php-svg-lib
- * @link ? http ://github.com/PhenX/php-svg-lib
- * @author ?? Fabien Ménager <fabien.menager@gmail.com>
+ * @link    http://github.com/PhenX/php-svg-lib
+ * @author  Fabien Ménager <fabien.menager@gmail.com>
  * @license GNU LGPLv3+ http://www.gnu.org/copyleft/lesser.html
  */
 
@@ -163,7 +163,12 @@ class Document extends AbstractTag
             }
         }
 
-        return array( ?? 0        => $this->width, 1        => $this->height, "width"  => $this->width, "height" => $this->height,
+        return array(
+            0        => $this->width,
+            1        => $this->height,
+
+            "width"  => $this->width,
+            "height" => $this->height,
         );
     }
 
@@ -233,7 +238,7 @@ class Document extends AbstractTag
     public function getDef($id) {
         $id = ltrim($id, "#");
 
-        return isset($this->defs[$id]) ?? $this->defs[$id] ?: null;
+        return isset($this->defs[$id]) ? $this->defs[$id] : null;
     }
 
     private function _tagStart($parser, $name, $attributes)

@@ -90,7 +90,9 @@ class HTML5_InputStream {
         by U+FFFD REPLACEMENT CHARACTERs. Any occurrences of such
         characters is a parse error. */
         for ($i = 0, $count = substr_count($data, "\0"); $i < $count; $i++) {
-            $this->errors[] = ['type' => HTML5_Tokenizer::PARSEERROR, 'data' => 'null-character'
+            $this->errors[] = [
+                'type' => HTML5_Tokenizer::PARSEERROR,
+                'data' => 'null-character'
             ];
         }
         /* U+000D CARRIAGE RETURN (CR) characters and U+000A LINE FEED
@@ -101,15 +103,21 @@ class HTML5_InputStream {
         by LF characters, and there are never any CR characters in the
         input to the tokenization stage. */
         $data = str_replace(
-            ["\0", "\r\n", "\r"
+            [
+                "\0",
+                "\r\n",
+                "\r"
             ],
-            ["\xEF\xBF\xBD", "\n", "\n"
+            [
+                "\xEF\xBF\xBD",
+                "\n",
+                "\n"
             ],
             $data
         );
 
         /* Any occurrences of any characters in the ranges U+0001 to
-        U+0008, U+000B, ?? U+000E to U+001F, ?? U+007F ?? to U+009F,
+        U+0008, U+000B,  U+000E to U+001F,  U+007F  to U+009F,
         U+D800 to U+DFFF , U+FDD0 to U+FDEF, and
         characters U+FFFE, U+FFFF, U+1FFFE, U+1FFFF, U+2FFFE, U+2FFFF,
         U+3FFFE, U+3FFFF, U+4FFFE, U+4FFFF, U+5FFFE, U+5FFFF, U+6FFFE,
@@ -120,12 +128,13 @@ class HTML5_InputStream {
         or permanently undefined Unicode characters.) */
         // Check PCRE is loaded.
         if (extension_loaded('pcre')) {
-            $count = preg_match_all( ?? '/(:
-                    [\x01-\x08\x0B\x0E-\x1F\x7F] # U+0001 to U+0008, U+000B, ?? U+000E to U+001F and U+007F
+            $count = preg_match_all(
+                '/(?:
+                    [\x01-\x08\x0B\x0E-\x1F\x7F] # U+0001 to U+0008, U+000B,  U+000E to U+001F and U+007F
                 |
                     \xC2[\x80-\x9F] # U+0080 to U+009F
                 |
-                    \xED(:\xA0[\x80-\xFF]|[\xA1-\xBE][\x00-\xFF]|\xBF[\x00-\xBF]) # U+D800 to U+DFFFF
+                    \xED(?:\xA0[\x80-\xFF]|[\xA1-\xBE][\x00-\xFF]|\xBF[\x00-\xBF]) # U+D800 to U+DFFFF
                 |
                     \xEF\xB7[\x90-\xAF] # U+FDD0 to U+FDEF
                 |
@@ -137,7 +146,9 @@ class HTML5_InputStream {
                 $matches
             );
             for ($i = 0; $i < $count; $i++) {
-                $this->errors[] = ['type' => HTML5_Tokenizer::PARSEERROR, 'data' => 'invalid-codepoint'
+                $this->errors[] = [
+                    'type' => HTML5_Tokenizer::PARSEERROR,
+                    'data' => 'invalid-codepoint'
                 ];
             }
         } else {
@@ -210,7 +221,9 @@ class HTML5_InputStream {
      * @return bool|string
      */
     public function char() {
-        return ($this->char++ < $this->EOF) ?? $this->data[$this->char - 1] ?: false;
+        return ($this->char++ < $this->EOF)
+            ? $this->data[$this->char - 1]
+            : false;
     }
 
     /**

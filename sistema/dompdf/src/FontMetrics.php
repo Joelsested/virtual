@@ -1,10 +1,10 @@
 <?php
 /**
  * @package dompdf
- * @link ? http ://dompdf.github.com/
- * @author ?? Benj Carson <benjcarson@digitaljunkies.ca>
- * @author ?? Helmut Tischer <htischer@weihenstephan.org>
- * @author ?? Fabien Ménager <fabien.menager@gmail.com>
+ * @link    http://dompdf.github.com/
+ * @author  Benj Carson <benjcarson@digitaljunkies.ca>
+ * @author  Helmut Tischer <htischer@weihenstephan.org>
+ * @author  Fabien Ménager <fabien.menager@gmail.com>
  * @license http://www.gnu.org/copyleft/lesser.html GNU Lesser General Public License
  */
 
@@ -15,7 +15,7 @@ use FontLib\Font;
 /**
  * The font metrics class
  *
- * This class provides information about fonts and text. ?? It can resolve
+ * This class provides information about fonts and text.  It can resolve
  * font names into actual installed font files, as well as determine the
  * size of text in a particular font and size.
  *
@@ -91,18 +91,19 @@ class FontMetrics
      */
     public function saveFontFamilies()
     {
-        // replace the path to the DOMPDF font directories with the corresponding constants (allows for more portability) ?? $cacheData = sprintf("<?php return array (%s", PHP_EOL);
+        // replace the path to the DOMPDF font directories with the corresponding constants (allows for more portability)
+        $cacheData = sprintf("<?php return array (%s", PHP_EOL);
         foreach ($this->fontLookup as $family => $variants) {
-            $cacheData .= sprintf(" ?? '%s' => array(%s", addslashes($family), PHP_EOL);
+            $cacheData .= sprintf("  '%s' => array(%s", addslashes($family), PHP_EOL);
             foreach ($variants as $variant => $path) {
                 $path = sprintf("'%s'", $path);
                 $path = str_replace('\'' . $this->getOptions()->getFontDir() , '$fontDir . \'' , $path);
                 $path = str_replace('\'' . $this->getOptions()->getRootDir() , '$rootDir . \'' , $path);
-                $cacheData .= sprintf(" ?? '%s' => %s,%s", $variant, $path, PHP_EOL);
+                $cacheData .= sprintf("    '%s' => %s,%s", $variant, $path, PHP_EOL);
             }
-            $cacheData .= sprintf(" ?? ),%s", PHP_EOL);
+            $cacheData .= sprintf("  ),%s", PHP_EOL);
         }
-        $cacheData .= ") >";
+        $cacheData .= ") ?>";
         file_put_contents($this->getCacheFile(), $cacheData);
     }
 
@@ -238,7 +239,8 @@ class FontMetrics
             }
 
             $remoteFile = $realfile;
-        } ? list($remoteFileContent, $http_response_header) = @Helpers::getFileContent($remoteFile, $context);
+        }
+        list($remoteFileContent, $http_response_header) = @Helpers::getFileContent($remoteFile, $context);
         if (empty($remoteFileContent)) {
             return false;
         }
@@ -297,7 +299,7 @@ class FontMetrics
      *
      * @param string $text the text to be sized
      * @param string $font the desired font
-     * @param float $size ?? the desired font size
+     * @param float $size  the desired font size
      * @param float $wordSpacing
      * @param float $charSpacing
      *
@@ -368,7 +370,7 @@ class FontMetrics
 
     /**
      * Resolves a font family & subtype into an actual font file
-     * Subtype can be one of 'normal', 'bold', 'italic' or 'bold_italic'. ?? If
+     * Subtype can be one of 'normal', 'bold', 'italic' or 'bold_italic'.  If
      * the particular font family has no suitable font file, the default font
      * ({@link Options::defaultFont}) is used.  The font file returned
      * is the absolute pathname to the font file on the system.
@@ -499,7 +501,7 @@ class FontMetrics
         }
 
         return $style === null
-             $weight
+            ? $weight
             : $weight.'_'.$style;
     }
 

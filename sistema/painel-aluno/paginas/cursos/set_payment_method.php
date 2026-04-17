@@ -1,135 +1,117 @@
 <?php
 require_once("../../../conexao.php");
-$tabela = 'matriculas';
-@session_start();
+require_once __DIR__ . '/../../../../config/session.php';
+sested_session_start();
 
 $id_usuario = $_SESSION['id'] ?? null;
 $id_curso = $_POST['id_curso'] ?? null;
 $forma_pgto = $_POST['forma_pgto'] ?? null;
-$id_matricula = $_POST['id'] ?? ($_POST['id_matricula']  null);
+$id_matricula = $_POST['id'] ?? null;
+$tabela = 'matriculas';
 
-// Se voce ja tiver essas infos no POST ou sessao, pode pegar de la
 $nome_do_curso = $_POST['nome_do_curso'] ?? 'Pagamento Curso';
-$pacote = $_POST['pacote'] ?? '';
-$quantidadeParcelas = $_POST['quantidadeParcelas'] ?? 1; // valor padrao ? header('Content-Type: application/json; charset=utf-8');
+$pacote = $_POST['pacote'] ?? 'Nao';
+$quantidadeParcelas = $_POST['quantidadeParcelas'] ?? 1;
 
-$startedTransaction = false;
+header('Content-Type: application/json; charset=utf-8');
 
 try {
-    $forma_pgto = strtoupper(trim((string)$forma_pgto));
-    $quantidadeParcelas = (int)$quantidadeParcelas;
+    $forma_pgto = strtoupper(trim((string) $forma_pgto));
+    $quantidadeParcelas = (int) $quantidadeParcelas;
     if ($quantidadeParcelas < 1) {
         $quantidadeParcelas = 1;
     }
+
+    $maxParcelas = 24;
     if ($forma_pgto === 'BOLETO_PARCELADO') {
-        if ($quantidadeParcelas > 24) {
-            $quantidadeParcelas = 24;
+        if ($quantidadeParcelas > $maxParcelas) {
+            $quantidadeParcelas = $maxParcelas;
         }
     } else {
         $quantidadeParcelas = 1;
     }
 
-    if (!$id_usuario || !$id_curso || !$forma_pgto) {
-        throw new Exception("Dados incompletos");
+    if (!$id_usuario || !$id_curso || !$forma_pgto || !$id_matricula) {
+        throw new Exception('Dados incompletos.');
     }
 
-    $pacote_normalizado = strtolower(trim((string)$pacote));
-    $is_pacote = ($pacote_normalizado === 'sim');
-    $pacote = $is_pacote ? 'Sim' : 'Nao';
-
-    $where = "aluno = :aluno AND id_curso = :id_curso";
-    $params = [':aluno' => $id_usuario, ':id_curso' => $id_curso,
-    ];
-
-    if ($is_pacote) {
-        $where .= " AND pacote = 'Sim'";
-    } else {
-        $where .= " AND (pacote <> 'Sim' OR pacote IS NULL)";
+    $formasPermitidas = ['BOLETO', 'BOLETO_PARCELADO', 'PIX', 'CARTAO_DE_CREDITO', 'CARTAO_RECORRENTE'];
+    if (!in_array($forma_pgto, $formasPermitidas, true)) {
+        throw new Exception('Forma de pagamento invalida.');
     }
 
-    $stmt = $pdo->prepare("SELECT id, status, total_recebido, forma_pgto FROM $tabela WHERE $where");
-    $stmt->execute($params);
-    $matriculas = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-    if (!$matriculas && $id_matricula !== null && $id_matricula !== '') {
-        $stmt = $pdo->prepare("SELECT id, status, total_recebido, forma_pgto FROM $tabela WHERE id = :id LIMIT 1");
-        $stmt->execute([':id' => $id_matricula]);
-        $matricula = $stmt->fetch(PDO::FETCH_ASSOC);
-        if ($matricula) {
-            $matriculas = [$matricula];
-            $where = "id = :id";
-            $params = [':id' => $matricula['id']];
-        }
+    $stmtMatricula = $pdo->prepare("SELECT * FROM {$tabela} WHERE id = :id AND aluno = :aluno LIMIT 1");
+    $stmtMatricula->execute([':id' => $id_matricula, ':aluno' => $id_usuario]);
+    $matricula = $stmtMatricula->fetch(PDO::FETCH_ASSOC);
+    if (!$matricula) {
+        throw new Exception('Matricula nao encontrada.');
     }
 
-    if (!$matriculas) {
-        throw new Exception("Matricula nao encontrada");
+    $statusMatricula = $matricula['status'] ?? '';
+    if ($statusMatricula !== '' && strcasecmp($statusMatricula, 'Aguardando') !== 0) {
+        throw new Exception('Pagamento ja confirmado. Nao e possivel alterar a forma de pagamento.');
     }
 
-    foreach ($matriculas as $matricula) {
-        $status = strtoupper(trim((string)($matricula['status'] ?? '')));
-        $total_recebido = (float)($matricula['total_recebido'] ?? 0);
-        if ($status !== 'AGUARDANDO' || $total_recebido > 0) {
-            throw new Exception("Pagamento ja confirmado. Nao e possivel alterar.");
-        }
+    if (!empty($matricula['pacote'])) {
+        $pacote = $matricula['pacote'];
     }
 
-    $forma_atual = strtoupper(trim((string)($matriculas[0]['forma_pgto'] ?? '')));
-    $mesma_forma = true;
-    foreach ($matriculas as $matricula) {
-        $forma_mat = strtoupper(trim((string)($matricula['forma_pgto'] ?? '')));
-        if ($forma_mat !== $forma_atual) {
-            $mesma_forma = false;
-            break;
-        }
+    $stmtPixPago = $pdo->prepare("SELECT COUNT(*) FROM pagamentos_pix WHERE id_matricula = :id AND status = 'CONCLUIDA'");
+    $stmtPixPago->execute([':id' => $id_matricula]);
+    if ($stmtPixPago->fetchColumn() > 0) {
+        throw new Exception('Pagamento PIX confirmado. Nao e possivel alterar a forma de pagamento.');
     }
 
-    if (!$mesma_forma || $forma_atual !== $forma_pgto) {
-        $ids = array_column($matriculas, 'id');
-        $placeholders = implode(',', array_fill(0, count($ids), ''));
-
-        $pdo->beginTransaction();
-        $startedTransaction = true;
-
-        $pdo->prepare("DELETE FROM pagamentos_pix WHERE id_matricula IN ($placeholders)")->execute($ids);
-        $pdo->prepare("DELETE FROM pagamentos_boleto WHERE id_matricula IN ($placeholders)")->execute($ids);
-        $pdo->prepare("DELETE FROM parcelas_geradas_por_boleto WHERE id_matricula IN ($placeholders)")->execute($ids);
-        $pdo->prepare("DELETE FROM boletos_parcelados WHERE id_matricula IN ($placeholders)")->execute($ids);
-
-        $update = $pdo->prepare("UPDATE $tabela SET forma_pgto = :forma_pgto, id_asaas = NULL, boleto = NULL, ref_api = NULL, dump = NULL WHERE $where");
-        $params[':forma_pgto'] = $forma_pgto;
-        $update->execute($params);
-
-        $pdo->commit();
-        $startedTransaction = false;
+    $stmtBoletoPago = $pdo->prepare("SELECT COUNT(*) FROM pagamentos_boleto WHERE id_matricula = :id AND status = 'paid'");
+    $stmtBoletoPago->execute([':id' => $id_matricula]);
+    if ($stmtBoletoPago->fetchColumn() > 0) {
+        throw new Exception('Pagamento por boleto confirmado. Nao e possivel alterar a forma de pagamento.');
     }
 
-    // Definir pagina de redirecionamento com base na forma
+    $stmtParcelaPaga = $pdo->prepare("SELECT COUNT(*) FROM parcelas_geradas_por_boleto WHERE id_matricula = :id AND situacao = 1");
+    $stmtParcelaPaga->execute([':id' => $id_matricula]);
+    if ($stmtParcelaPaga->fetchColumn() > 0) {
+        throw new Exception('Ja existe parcela paga para esta matricula. Nao e possivel alterar a forma de pagamento.');
+    }
+
+    // Mantem historico de cobrancas EFY para nao perder parcelas e boletos ja gerados.
+    $query = $pdo->prepare("UPDATE $tabela SET forma_pgto = :forma_pgto WHERE aluno = :aluno AND id = :id");
+    $query->bindValue(':forma_pgto', $forma_pgto);
+    $query->bindValue(':aluno', $id_usuario);
+    $query->bindValue(':id', $id_matricula);
+    $query->execute();
+
     $redirectUrl = null;
     switch ($forma_pgto) {
         case 'BOLETO':
-            // monta URL com os parametros exigidos pelo /efi/index.php
-            $redirectUrl = $url_sistema . "efi/index.php" . http_build_query(["formaDePagamento" => $forma_pgto, "billingType" => strtoupper($forma_pgto), "quantidadeParcelas" => $quantidadeParcelas, "id_do_curso" => $id_curso, "nome_do_curso" => $nome_do_curso, "pacote" => $pacote
-            ]);
-            break;
         case 'BOLETO_PARCELADO':
-            // monta URL com os parametros exigidos pelo /efi/index.php
-            $redirectUrl = $url_sistema . "efi/index.php" . http_build_query(["formaDePagamento" => $forma_pgto, "billingType" => strtoupper($forma_pgto), "quantidadeParcelas" => $quantidadeParcelas, "id_do_curso" => $id_curso, "nome_do_curso" => $nome_do_curso, "pacote" => $pacote
+        case 'PIX':
+            $redirectUrl = $url_sistema . 'efi/index.php?' . http_build_query([
+                'formaDePagamento' => $forma_pgto,
+                'billingType' => strtoupper($forma_pgto),
+                'quantidadeParcelas' => $quantidadeParcelas,
+                'id_do_curso' => $id_curso,
+                'id_matricula' => $id_matricula,
+                'nome_do_curso' => $nome_do_curso,
+                'pacote' => $pacote
             ]);
             break;
+
         case 'CARTAO_DE_CREDITO':
-            $redirectUrl = $url_sistema . "sistema/painel-aluno/index.php?pagina=parcelas_cartao";
+        case 'CARTAO_RECORRENTE':
+            $redirectUrl = $url_sistema . 'sistema/painel-aluno/index.php?pagina=parcelas_cartao';
             break;
-        default:
-            $redirectUrl = null;
     }
 
-    echo json_encode(["status" => "success", "message" => "Forma de pagamento salva com sucesso!", "redirect" => $redirectUrl
+    echo json_encode([
+        'status' => 'success',
+        'message' => 'Forma de pagamento salva com sucesso.',
+        'redirect' => $redirectUrl
     ]);
 } catch (Exception $e) {
-    if ($startedTransaction && $pdo->inTransaction()) {
-        $pdo->rollBack();
-    }
-    echo json_encode(["status" => "error", "message" => $e->getMessage()
+    echo json_encode([
+        'status' => 'error',
+        'message' => $e->getMessage()
     ]);
 }
+?>

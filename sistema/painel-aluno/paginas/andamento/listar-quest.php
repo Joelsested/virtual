@@ -11,7 +11,7 @@ if($total_reg > 0){
 		$id = $res[$i]['id'];		
 		$pergunta = $res[$i]['pergunta'];
 		$numeracao = $i + 1;
-		echo '<p style="margin-bottom:5px"><b>'.$numeracao.' - '.$pergunta.'</b></p><div style="margin-bottom:15px" ><small>';
+		echo '<p style="margin-bottom:5px"><b>'.$numeracao.' - '.$pergunta.'?</b></p><div style="margin-bottom:15px" ><small>';
 
 		$query2 = $pdo->query("SELECT * FROM alternativas where pergunta = '$id' ORDER BY id asc");
 		$res2 = $query2->fetchAll(PDO::FETCH_ASSOC);
@@ -42,7 +42,8 @@ if($total_reg > 0){
 
 				echo '<div class="form-check">
   <input class="form-check-input" type="radio" name="'.$id.'" value="'.$id_alt.'" >
-  <label class="form-check-label" style="font-weight:200"> ?? '.$letras.' - '.$resposta.'
+  <label class="form-check-label" style="font-weight:200">
+    '.$letras.' - '.$resposta.'
   </label>
 </div>';
 			}

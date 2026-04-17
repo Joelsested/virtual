@@ -7,15 +7,15 @@ use Dompdf\Frame\FrameList;
 
 /**
  * @package dompdf
- * @link ? http ://dompdf.github.com/
- * @author ?? Benj Carson <benjcarson@digitaljunkies.ca>
+ * @link    http://dompdf.github.com/
+ * @author  Benj Carson <benjcarson@digitaljunkies.ca>
  * @license http://www.gnu.org/copyleft/lesser.html GNU Lesser General Public License
  */
 
 /**
  * The main Frame class
  *
- * This class represents a single HTML element. ?? This class stores
+ * This class represents a single HTML element.  This class stores
  * positioning information as well as containing block location and
  * dimensions. Style information for the element is stored in a {@link
  * Style} object. Tree structure is maintained via the parent & children
@@ -36,7 +36,7 @@ class Frame
     protected $_node;
 
     /**
-     * Unique identifier for this frame. ?? Used to reference this frame
+     * Unique identifier for this frame.  Used to reference this frame
      * via the node.
      *
      * @var string
@@ -56,7 +56,7 @@ class Frame
     protected $_style;
 
     /**
-     * This frame's original style. ?? Needed for cases where frames are
+     * This frame's original style.  Needed for cases where frames are
      * split across pages.
      *
      * @var Style
@@ -78,7 +78,7 @@ class Frame
     protected $_frame_list;
 
     /**
-     * This frame's first child. ?? All children are handled as a
+     * This frame's first child.  All children are handled as a
      * doubly-linked list.
      *
      * @var Frame
@@ -107,7 +107,7 @@ class Frame
     protected $_next_sibling;
 
     /**
-     * This frame's containing block (used in layout) : array(x, y, w, h)
+     * This frame's containing block (used in layout): array(x, y, w, h)
      *
      * @var float[]
      */
@@ -188,7 +188,11 @@ class Frame
         $this->_style = null;
         $this->_original_style = null;
 
-        $this->_containing_block = ["x" => null, "y" => null, "w" => null, "h" => null,
+        $this->_containing_block = [
+            "x" => null,
+            "y" => null,
+            "w" => null,
+            "h" => null,
         ];
 
         $this->_containing_block[0] =& $this->_containing_block["x"];
@@ -196,7 +200,9 @@ class Frame
         $this->_containing_block[2] =& $this->_containing_block["w"];
         $this->_containing_block[3] =& $this->_containing_block["h"];
 
-        $this->_position = ["x" => null, "y" => null,
+        $this->_position = [
+            "x" => null,
+            "y" => null,
         ];
 
         $this->_position[0] =& $this->_position["x"];
@@ -459,7 +465,7 @@ class Frame
     //........................................................................
 
     /**
-     * Return the height of the margin box of the frame, in pt. ?? Meaningless
+     * Return the height of the margin box of the frame, in pt.  Meaningless
      * unless the height has been calculated properly.
      *
      * @return float
@@ -489,7 +495,7 @@ class Frame
     }
 
     /**
-     * Return the width of the margin box of the frame, in pt. ?? Meaningless
+     * Return the width of the margin box of the frame, in pt.  Meaningless
      * unless the width has been calculated properly.
      *
      * @return float
@@ -569,7 +575,10 @@ class Frame
 
         $h = $style->length_in_pt($style->height, $cb["h"]);
 
-        return [0 => $x, "x" => $x, 1 => $y, "y" => $y, 2 => $w, "w" => $w, 3 => $h, "h" => $h];
+        return [0 => $x, "x" => $x,
+            1 => $y, "y" => $y,
+            2 => $w, "w" => $w,
+            3 => $h, "h" => $h];
     }
 
     /**
@@ -617,7 +626,10 @@ class Frame
                 $cb["w"]
             );
 
-        return [0 => $x, "x" => $x, 1 => $y, "y" => $y, 2 => $w, "w" => $w, 3 => $h, "h" => $h];
+        return [0 => $x, "x" => $x,
+            1 => $y, "y" => $y,
+            2 => $w, "w" => $w,
+            3 => $h, "h" => $h];
     }
 
     /**
@@ -654,7 +666,10 @@ class Frame
             ],
             $cb["w"]);
 
-        return [0 => $x, "x" => $x, 1 => $y, "y" => $y, 2 => $w, "w" => $w, 3 => $h, "h" => $h];
+        return [0 => $x, "x" => $x,
+            1 => $y, "y" => $y,
+            2 => $w, "w" => $w,
+            3 => $h, "h" => $h];
     }
 
     /**
@@ -774,7 +789,7 @@ class Frame
     public function set_opacity($opacity)
     {
         $parent = $this->get_parent();
-        $base_opacity = (($parent && $parent->_opacity !== null) ?? $parent->_opacity : 1.0);
+        $base_opacity = (($parent && $parent->_opacity !== null) ? $parent->_opacity : 1.0);
         $this->_opacity = $base_opacity * $opacity;
     }
 
@@ -795,7 +810,8 @@ class Frame
     {
         $style = $this->_style;
 
-        return in_array( ?? "auto",
+        return in_array(
+            "auto",
             [
                 $style->height,
                 $style->margin_top,
@@ -819,7 +835,8 @@ class Frame
     {
         $style = $this->_style;
 
-        return in_array( ?? "auto",
+        return in_array(
+            "auto",
             [
                 $style->width,
                 $style->margin_left,
@@ -943,7 +960,7 @@ class Frame
     /**
      * Inserts a new child at the beginning of the Frame
      *
-     * @param $child ?? Frame The new Frame to insert
+     * @param $child       Frame The new Frame to insert
      * @param $update_node boolean Whether or not to update the DOM
      */
     public function prepend_child(Frame $child, $update_node = true)
@@ -975,7 +992,7 @@ class Frame
     /**
      * Inserts a new child at the end of the Frame
      *
-     * @param $child ?? Frame The new Frame to insert
+     * @param $child       Frame The new Frame to insert
      * @param $update_node boolean Whether or not to update the DOM
      */
     public function append_child(Frame $child, $update_node = true)
@@ -1012,8 +1029,8 @@ class Frame
     /**
      * Inserts a new child immediately before the specified frame
      *
-     * @param $new_child ?? Frame The new Frame to insert
-     * @param $ref ?? Frame The Frame after the new Frame
+     * @param $new_child   Frame The new Frame to insert
+     * @param $ref         Frame The Frame after the new Frame
      * @param $update_node boolean Whether or not to update the DOM
      *
      * @throws Exception
@@ -1060,8 +1077,8 @@ class Frame
     /**
      * Inserts a new child immediately after the specified frame
      *
-     * @param $new_child ?? Frame The new Frame to insert
-     * @param $ref ?? Frame The Frame before the new Frame
+     * @param $new_child   Frame The new Frame to insert
+     * @param $ref         Frame The Frame before the new Frame
      * @param $update_node boolean Whether or not to update the DOM
      *
      * @throws Exception
@@ -1161,9 +1178,9 @@ class Frame
     public function __toString()
     {
         // Skip empty text frames
-// ?? if ( $this->is_text_node() &&
-// ?? preg_replace("/\s/", "", $this->_node->data) === "" )
-// ?? return "";
+//     if ( $this->is_text_node() &&
+//          preg_replace("/\s/", "", $this->_node->data) === "" )
+//       return "";
 
 
         $str = "<b>" . $this->_node->nodeName . ":</b><br/>";
@@ -1180,15 +1197,21 @@ class Frame
         }
 
         if ($this->_parent) {
-            $str .= "\nParent:" . $this->_parent->_node->nodeName . ?? " (" . spl_object_hash($this->_parent->_node) . ") " . ?? "<br/>";
+            $str .= "\nParent:" . $this->_parent->_node->nodeName .
+                " (" . spl_object_hash($this->_parent->_node) . ") " .
+                "<br/>";
         }
 
         if ($this->_prev_sibling) {
-            $str .= "Prev: " . $this->_prev_sibling->_node->nodeName . ?? " (" . spl_object_hash($this->_prev_sibling->_node) . ") " . ?? "<br/>";
+            $str .= "Prev: " . $this->_prev_sibling->_node->nodeName .
+                " (" . spl_object_hash($this->_prev_sibling->_node) . ") " .
+                "<br/>";
         }
 
         if ($this->_next_sibling) {
-            $str .= "Next: " . $this->_next_sibling->_node->nodeName . ?? " (" . spl_object_hash($this->_next_sibling->_node) . ") " . ?? "<br/>";
+            $str .= "Next: " . $this->_next_sibling->_node->nodeName .
+                " (" . spl_object_hash($this->_next_sibling->_node) . ") " .
+                "<br/>";
         }
 
         $d = $this->get_decorator();
@@ -1216,7 +1239,12 @@ class Frame
                     }
                 }
 
-                $str .= ?? "\ny => " . $line->y . "\n" . ?? "w => " . $line->w . "\n" . ?? "h => " . $line->h . "\n" . ?? "left => " . $line->left . "\n" . ?? "right => " . $line->right . "\n";
+                $str .=
+                    "\ny => " . $line->y . "\n" .
+                    "w => " . $line->w . "\n" .
+                    "h => " . $line->h . "\n" .
+                    "left => " . $line->left . "\n" .
+                    "right => " . $line->right . "\n";
             }
             $str .= "</pre>";
         }

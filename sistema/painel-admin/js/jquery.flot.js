@@ -29,7 +29,7 @@ Licensed under the MIT license.
  * V. 1.1: Fix error handling so e.g. parsing an empty string does
  * produce a color rather than just crashing.
  */
-(function($){$.color={};$.color.make=function(r,g,b,a){var o={};o.r=r||0;o.g=g||0;o.b=b||0;o.a=a!=nulla:1;o.add=function(c,d){for(var i=0;i<c.length;++i)o[c.charAt(i)]+=d;return o.normalize()};o.scale=function(c,f){for(var i=0;i<c.length;++i)o[c.charAt(i)]*=f;return o.normalize()};o.toString=function(){if(o.a>=1){return"rgb("+[o.r,o.g,o.b].join(",")+")"}else{return"rgba("+[o.r,o.g,o.b,o.a].join(",")+")"}};o.normalize=function(){function clamp(min,value,max){return value<minmin:value>maxmax:value}o.r=clamp(0,parseInt(o.r),255);o.g=clamp(0,parseInt(o.g),255);o.b=clamp(0,parseInt(o.b),255);o.a=clamp(0,o.a,1);return o};o.clone=function(){return $.color.make(o.r,o.b,o.g,o.a)};return o.normalize()};$.color.extract=function(elem,css){var c;do{c=elem.css(css).toLowerCase();if(c!=""&&c!="transparent")break;elem=elem.parent()}while(elem.length&&!$.nodeName(elem.get(0),"body"));if(c=="rgba(0, 0, 0, 0)")c="transparent";return $.color.parse(c)};$.color.parse=function(str){var res,m=$.color.make;if(res=/rgb\(\s*([0-9]{1,3})\s*,\s*([0-9]{1,3})\s*,\s*([0-9]{1,3})\s*\)/.exec(str))return m(parseInt(res[1],10),parseInt(res[2],10),parseInt(res[3],10));if(res=/rgba\(\s*([0-9]{1,3})\s*,\s*([0-9]{1,3})\s*,\s*([0-9]{1,3})\s*,\s*([0-9]+(:\.[0-9]+))\s*\)/.exec(str))return m(parseInt(res[1],10),parseInt(res[2],10),parseInt(res[3],10),parseFloat(res[4]));if(res=/rgb\(\s*([0-9]+(:\.[0-9]+))\%\s*,\s*([0-9]+(:\.[0-9]+))\%\s*,\s*([0-9]+(:\.[0-9]+))\%\s*\)/.exec(str))return m(parseFloat(res[1])*2.55,parseFloat(res[2])*2.55,parseFloat(res[3])*2.55);if(res=/rgba\(\s*([0-9]+(:\.[0-9]+))\%\s*,\s*([0-9]+(:\.[0-9]+))\%\s*,\s*([0-9]+(:\.[0-9]+))\%\s*,\s*([0-9]+(:\.[0-9]+))\s*\)/.exec(str))return m(parseFloat(res[1])*2.55,parseFloat(res[2])*2.55,parseFloat(res[3])*2.55,parseFloat(res[4]));if(res=/#([a-fA-F0-9]{2})([a-fA-F0-9]{2})([a-fA-F0-9]{2})/.exec(str))return m(parseInt(res[1],16),parseInt(res[2],16),parseInt(res[3],16));if(res=/#([a-fA-F0-9])([a-fA-F0-9])([a-fA-F0-9])/.exec(str))return m(parseInt(res[1]+res[1],16),parseInt(res[2]+res[2],16),parseInt(res[3]+res[3],16));var name=$.trim(str).toLowerCase();if(name=="transparent")return m(255,255,255,0);else{res=lookupColors[name]||[0,0,0];return m(res[0],res[1],res[2])}};var lookupColors={aqua:[0,255,255],azure:[240,255,255],beige:[245,245,220],black:[0,0,0],blue:[0,0,255],brown:[165,42,42],cyan:[0,255,255],darkblue:[0,0,139],darkcyan:[0,139,139],darkgrey:[169,169,169],darkgreen:[0,100,0],darkkhaki:[189,183,107],darkmagenta:[139,0,139],darkolivegreen:[85,107,47],darkorange:[255,140,0],darkorchid:[153,50,204],darkred:[139,0,0],darksalmon:[233,150,122],darkviolet:[148,0,211],fuchsia:[255,0,255],gold:[255,215,0],green:[0,128,0],indigo:[75,0,130],khaki:[240,230,140],lightblue:[173,216,230],lightcyan:[224,255,255],lightgreen:[144,238,144],lightgrey:[211,211,211],lightpink:[255,182,193],lightyellow:[255,255,224],lime:[0,255,0],magenta:[255,0,255],maroon:[128,0,0],navy:[0,0,128],olive:[128,128,0],orange:[255,165,0],pink:[255,192,203],purple:[128,0,128],violet:[128,0,128],red:[255,0,0],silver:[192,192,192],white:[255,255,255],yellow:[255,255,0]}})(jQuery);
+(function($){$.color={};$.color.make=function(r,g,b,a){var o={};o.r=r||0;o.g=g||0;o.b=b||0;o.a=a!=null?a:1;o.add=function(c,d){for(var i=0;i<c.length;++i)o[c.charAt(i)]+=d;return o.normalize()};o.scale=function(c,f){for(var i=0;i<c.length;++i)o[c.charAt(i)]*=f;return o.normalize()};o.toString=function(){if(o.a>=1){return"rgb("+[o.r,o.g,o.b].join(",")+")"}else{return"rgba("+[o.r,o.g,o.b,o.a].join(",")+")"}};o.normalize=function(){function clamp(min,value,max){return value<min?min:value>max?max:value}o.r=clamp(0,parseInt(o.r),255);o.g=clamp(0,parseInt(o.g),255);o.b=clamp(0,parseInt(o.b),255);o.a=clamp(0,o.a,1);return o};o.clone=function(){return $.color.make(o.r,o.b,o.g,o.a)};return o.normalize()};$.color.extract=function(elem,css){var c;do{c=elem.css(css).toLowerCase();if(c!=""&&c!="transparent")break;elem=elem.parent()}while(elem.length&&!$.nodeName(elem.get(0),"body"));if(c=="rgba(0, 0, 0, 0)")c="transparent";return $.color.parse(c)};$.color.parse=function(str){var res,m=$.color.make;if(res=/rgb\(\s*([0-9]{1,3})\s*,\s*([0-9]{1,3})\s*,\s*([0-9]{1,3})\s*\)/.exec(str))return m(parseInt(res[1],10),parseInt(res[2],10),parseInt(res[3],10));if(res=/rgba\(\s*([0-9]{1,3})\s*,\s*([0-9]{1,3})\s*,\s*([0-9]{1,3})\s*,\s*([0-9]+(?:\.[0-9]+)?)\s*\)/.exec(str))return m(parseInt(res[1],10),parseInt(res[2],10),parseInt(res[3],10),parseFloat(res[4]));if(res=/rgb\(\s*([0-9]+(?:\.[0-9]+)?)\%\s*,\s*([0-9]+(?:\.[0-9]+)?)\%\s*,\s*([0-9]+(?:\.[0-9]+)?)\%\s*\)/.exec(str))return m(parseFloat(res[1])*2.55,parseFloat(res[2])*2.55,parseFloat(res[3])*2.55);if(res=/rgba\(\s*([0-9]+(?:\.[0-9]+)?)\%\s*,\s*([0-9]+(?:\.[0-9]+)?)\%\s*,\s*([0-9]+(?:\.[0-9]+)?)\%\s*,\s*([0-9]+(?:\.[0-9]+)?)\s*\)/.exec(str))return m(parseFloat(res[1])*2.55,parseFloat(res[2])*2.55,parseFloat(res[3])*2.55,parseFloat(res[4]));if(res=/#([a-fA-F0-9]{2})([a-fA-F0-9]{2})([a-fA-F0-9]{2})/.exec(str))return m(parseInt(res[1],16),parseInt(res[2],16),parseInt(res[3],16));if(res=/#([a-fA-F0-9])([a-fA-F0-9])([a-fA-F0-9])/.exec(str))return m(parseInt(res[1]+res[1],16),parseInt(res[2]+res[2],16),parseInt(res[3]+res[3],16));var name=$.trim(str).toLowerCase();if(name=="transparent")return m(255,255,255,0);else{res=lookupColors[name]||[0,0,0];return m(res[0],res[1],res[2])}};var lookupColors={aqua:[0,255,255],azure:[240,255,255],beige:[245,245,220],black:[0,0,0],blue:[0,0,255],brown:[165,42,42],cyan:[0,255,255],darkblue:[0,0,139],darkcyan:[0,139,139],darkgrey:[169,169,169],darkgreen:[0,100,0],darkkhaki:[189,183,107],darkmagenta:[139,0,139],darkolivegreen:[85,107,47],darkorange:[255,140,0],darkorchid:[153,50,204],darkred:[139,0,0],darksalmon:[233,150,122],darkviolet:[148,0,211],fuchsia:[255,0,255],gold:[255,215,0],green:[0,128,0],indigo:[75,0,130],khaki:[240,230,140],lightblue:[173,216,230],lightcyan:[224,255,255],lightgreen:[144,238,144],lightgrey:[211,211,211],lightpink:[255,182,193],lightyellow:[255,255,224],lime:[0,255,0],magenta:[255,0,255],maroon:[128,0,0],navy:[0,0,128],olive:[128,128,0],orange:[255,165,0],pink:[255,192,203],purple:[128,0,128],violet:[128,0,128],red:[255,0,0],silver:[192,192,192],white:[255,255,255],yellow:[255,255,0]}})(jQuery);
 
 // the actual Flot code
 (function($) {
@@ -438,7 +438,7 @@ Licensed under the MIT license.
 		position = {
 			active: true,
 			rendered: false,
-			element: positions.length  info.element.clone() : info.element,
+			element: positions.length ? info.element.clone() : info.element,
 			x: x,
 			y: y
 		};
@@ -655,7 +655,7 @@ Licensed under the MIT license.
             var res = {}, i;
             $.each(xaxes.concat(yaxes), function (_, axis) {
                 if (axis)
-                    res[axis.direction + (axis.n != 1  axis.n : "") + "axis"] = axis;
+                    res[axis.direction + (axis.n != 1 ? axis.n : "") + "axis"] = axis;
             });
             return res;
         };
@@ -769,7 +769,7 @@ Licensed under the MIT license.
 
             var i, axisOptions, axisCount,
                 fontSize = placeholder.css("font-size"),
-                fontSizeDefault = fontSize  +fontSize.replace("px", "") : 13,
+                fontSizeDefault = fontSize ? +fontSize.replace("px", "") : 13,
                 fontDefaults = {
                     style: placeholder.css("font-style"),
                     size: Math.round(0.8 * fontSizeDefault),
@@ -981,8 +981,8 @@ Licensed under the MIT license.
             if (!axes[number - 1])
                 axes[number - 1] = {
                     n: number, // save the number for future reference
-                    direction: axes == xaxes  "x" : "y",
-                    options: $.extend(true, {}, axes == xaxes  options.xaxis : options.yaxis)
+                    direction: axes == xaxes ? "x" : "y",
+                    options: $.extend(true, {}, axes == xaxes ? options.xaxis : options.yaxis)
                 };
 
             return axes[number - 1];
@@ -1402,7 +1402,7 @@ Licensed under the MIT license.
                 ticks = axis.ticks || [],
                 labelWidth = opts.labelWidth || 0,
                 labelHeight = opts.labelHeight || 0,
-                maxWidth = labelWidth || (axis.direction == "x"  Math.floor(surface.width / (ticks.length || 1)) : null),
+                maxWidth = labelWidth || (axis.direction == "x" ? Math.floor(surface.width / (ticks.length || 1)) : null),
                 legacyStyles = axis.direction + "Axis " + axis.direction + axis.n + "Axis",
                 layer = "flot-" + axis.direction + "-axis flot-" + axis.direction + axis.n + "-axis " + legacyStyles,
                 font = opts.font || "flot-tick-label tickLabel";
@@ -1445,7 +1445,7 @@ Licensed under the MIT license.
 
             // Determine the axis's position in its direction and on its side
 
-            $.each(isXAxis  xaxes : yaxes, function(i, a) {
+            $.each(isXAxis ? xaxes : yaxes, function(i, a) {
                 if (a && (a.show || a.reserveSpace)) {
                     if (a === axis) {
                         found = true;
@@ -1471,7 +1471,7 @@ Licensed under the MIT license.
             // The ticks for the first axis in each direction stretch across
 
             if (tickLength == null) {
-                tickLength = first  "full" : 5;
+                tickLength = first ? "full" : 5;
             }
 
             if (!isNaN(+tickLength))
@@ -1573,7 +1573,7 @@ Licensed under the MIT license.
 
             for (var a in plotOffset) {
                 var margin = options.grid.margin || 0;
-                plotOffset[a] = typeof margin == "number"  margin : margin[a] || 0;
+                plotOffset[a] = typeof margin == "number" ? margin : margin[a] || 0;
             }
 
             executeHooks(hooks.processOffset, [plotOffset]);
@@ -1582,17 +1582,17 @@ Licensed under the MIT license.
 
             for (var a in plotOffset) {
                 if(typeof(options.grid.borderWidth) == "object") {
-                    plotOffset[a] += showGrid  options.grid.borderWidth[a] : 0;
+                    plotOffset[a] += showGrid ? options.grid.borderWidth[a] : 0;
                 }
                 else {
-                    plotOffset[a] += showGrid  options.grid.borderWidth : 0;
+                    plotOffset[a] += showGrid ? options.grid.borderWidth : 0;
                 }
             }
 
             $.each(axes, function (_, axis) {
                 var axisOpts = axis.options;
-                axis.show = axisOpts.show == null  axis.used : axisOpts.show;
-                axis.reserveSpace = axisOpts.reserveSpace == null  axis.show : axisOpts.reserveSpace;
+                axis.show = axisOpts.show == null ? axis.used : axisOpts.show;
+                axis.reserveSpace = axisOpts.reserveSpace == null ? axis.show : axisOpts.reserveSpace;
                 setRange(axis);
             });
 
@@ -1643,13 +1643,13 @@ Licensed under the MIT license.
 
         function setRange(axis) {
             var opts = axis.options,
-                min = +(opts.min != null  opts.min : axis.datamin),
-                max = +(opts.max != null  opts.max : axis.datamax),
+                min = +(opts.min != null ? opts.min : axis.datamin),
+                max = +(opts.max != null ? opts.max : axis.datamax),
                 delta = max - min;
 
             if (delta == 0.0) {
                 // degenerate case
-                var widen = max == 0  1 : 0.01;
+                var widen = max == 0 ? 1 : 0.01;
 
                 if (opts.min == null)
                     min -= widen;
@@ -1690,7 +1690,7 @@ Licensed under the MIT license.
             else
                 // heuristic based on the model a*sqrt(x) fitted to
                 // some data points that seemed reasonable
-                noTicks = 0.3 * Math.sqrt(axis.direction == "x"  surface.width : surface.height);
+                noTicks = 0.3 * Math.sqrt(axis.direction == "x" ? surface.width : surface.height);
 
             var delta = (axis.max - axis.min) / noTicks,
                 dec = -Math.floor(Math.log(delta) / Math.LN10),
@@ -1726,7 +1726,7 @@ Licensed under the MIT license.
             }
 
             axis.delta = delta;
-            axis.tickDecimals = Math.max(0, maxDec != null  maxDec : dec);
+            axis.tickDecimals = Math.max(0, maxDec != null ? maxDec : dec);
             axis.tickSize = opts.tickSize || size;
 
             // Time mode was moved to a plug-in in 0.8, and since so many people use it
@@ -1760,7 +1760,7 @@ Licensed under the MIT license.
 
 				axis.tickFormatter = function (value, axis) {
 
-					var factor = axis.tickDecimals  Math.pow(10, axis.tickDecimals) : 1;
+					var factor = axis.tickDecimals ? Math.pow(10, axis.tickDecimals) : 1;
 					var formatted = "" + Math.round(value * factor) / factor;
 
 					// If tickDecimals was specified, ensure that we have exactly that
@@ -1768,9 +1768,9 @@ Licensed under the MIT license.
 
 					if (axis.tickDecimals != null) {
 						var decimal = formatted.indexOf(".");
-						var precision = decimal == -1  0 : formatted.length - decimal - 1;
+						var precision = decimal == -1 ? 0 : formatted.length - decimal - 1;
 						if (precision < axis.tickDecimals) {
-							return (precision  formatted : formatted + ".") + ("" + factor).substr(1, axis.tickDecimals - precision);
+							return (precision ? formatted : formatted + ".") + ("" + factor).substr(1, axis.tickDecimals - precision);
 						}
 					}
 
@@ -1782,7 +1782,7 @@ Licensed under the MIT license.
                 axis.tickFormatter = function (v, axis) { return "" + opts.tickFormatter(v, axis); };
 
             if (opts.alignTicksWithAxis != null) {
-                var otherAxis = (axis.direction == "x"  xaxes : yaxes)[opts.alignTicksWithAxis - 1];
+                var otherAxis = (axis.direction == "x" ? xaxes : yaxes)[opts.alignTicksWithAxis - 1];
                 if (otherAxis && otherAxis.used && otherAxis != axis) {
                     // consider snapping min/max to outermost nice ticks
                     var niceTicks = axis.tickGenerator(axis);
@@ -1916,7 +1916,7 @@ Licensed under the MIT license.
 
             // backwards-compat stuff - to be removed in future
             if (!ranges[key]) {
-                axis = coord == "x"  xaxes[0] : yaxes[0];
+                axis = coord == "x" ? xaxes[0] : yaxes[0];
                 from = ranges[coord + "1"];
                 to = ranges[coord + "2"];
             }
@@ -2001,7 +2001,7 @@ Licensed under the MIT license.
 
                     if (xequal || yequal) {
                         var lineWidth = m.lineWidth || options.grid.markingsLineWidth,
-                            subPixel = lineWidth % 2  0.5 : 0;
+                            subPixel = lineWidth % 2 ? 0.5 : 0;
                         ctx.beginPath();
                         ctx.strokeStyle = m.color || options.grid.markingsColor;
                         ctx.lineWidth = lineWidth;
@@ -2038,16 +2038,16 @@ Licensed under the MIT license.
                 if (axis.direction == "x") {
                     x = 0;
                     if (t == "full")
-                        y = (axis.position == "top"  0 : plotHeight);
+                        y = (axis.position == "top" ? 0 : plotHeight);
                     else
-                        y = box.top - plotOffset.top + (axis.position == "top"  box.height : 0);
+                        y = box.top - plotOffset.top + (axis.position == "top" ? box.height : 0);
                 }
                 else {
                     y = 0;
                     if (t == "full")
-                        x = (axis.position == "left"  0 : plotWidth);
+                        x = (axis.position == "left" ? 0 : plotWidth);
                     else
-                        x = box.left - plotOffset.left + (axis.position == "left"  box.width : 0);
+                        x = box.left - plotOffset.left + (axis.position == "left" ? box.width : 0);
                 }
 
                 // draw tick bar
@@ -2092,14 +2092,14 @@ Licensed under the MIT license.
 
                     if (axis.direction == "x") {
                         x = axis.p2c(v);
-                        yoff = t == "full"  -plotHeight : t;
+                        yoff = t == "full" ? -plotHeight : t;
 
                         if (axis.position == "top")
                             yoff = -yoff;
                     }
                     else {
                         y = axis.p2c(v);
-                        xoff = t == "full"  -plotWidth : t;
+                        xoff = t == "full" ? -plotWidth : t;
 
                         if (axis.position == "left")
                             xoff = -xoff;
@@ -2504,7 +2504,7 @@ Licensed under the MIT license.
                     x = axisx.p2c(x);
                     y = axisy.p2c(y) + offset;
                     if (symbol == "circle")
-                        ctx.arc(x, y, radius, 0, shadow  Math.PI : Math.PI * 2, false);
+                        ctx.arc(x, y, radius, 0, shadow ? Math.PI : Math.PI * 2, false);
                     else
                         symbol(ctx, x, y, radius, shadow);
                     ctx.closePath();
@@ -2690,7 +2690,7 @@ Licensed under the MIT license.
                     barLeft = -series.bars.barWidth / 2;
             }
 
-            var fillStyleCallback = series.bars.fill  function (bottom, top) { return getFillStyle(series.bars, series.color, bottom, top); } : null;
+            var fillStyleCallback = series.bars.fill ? function (bottom, top) { return getFillStyle(series.bars, series.color, bottom, top); } : null;
             plotBars(series.datapoints, barLeft, barLeft + series.bars.barWidth, fillStyleCallback, series.xaxis, series.yaxis);
             ctx.restore();
         }
@@ -2704,7 +2704,7 @@ Licensed under the MIT license.
                 return getColorOrGradient(filloptions.fillColor, bottom, top, seriesColor);
 
             var c = $.color.parse(seriesColor);
-            c.a = typeof fill == "number"  fill : 0.4;
+            c.a = typeof fill == "number" ? fill : 0.4;
             c.normalize();
             return c.toString();
         }
@@ -2729,7 +2729,7 @@ Licensed under the MIT license.
             for (var i = 0; i < series.length; ++i) {
                 s = series[i];
                 if (s.label) {
-                    label = lf  lf(s.label, s) : s.label;
+                    label = lf ? lf(s.label, s) : s.label;
                     if (label) {
                         entries.push({
                             label: label,
@@ -2749,8 +2749,8 @@ Licensed under the MIT license.
                 } else {
                     var ascending = options.legend.sorted != "descending";
                     entries.sort(function(a, b) {
-                        return a.label == b.label  0 : (
-                            (a.label < b.label) != ascending  1 : -1   // Logical XOR
+                        return a.label == b.label ? 0 : (
+                            (a.label < b.label) != ascending ? 1 : -1   // Logical XOR
                         );
                     });
                 }
@@ -2902,7 +2902,7 @@ Licensed under the MIT license.
                             continue;
 
                         // for a bar graph, the cursor must be inside the bar
-                        if (series[i].bars.horizontal 
+                        if (series[i].bars.horizontal ?
                             (mx <= Math.max(b, x) && mx >= Math.min(b, x) &&
                              my >= y + barLeft && my <= y + barRight) :
                             (mx >= x + barLeft && mx <= x + barRight &&
@@ -3068,7 +3068,7 @@ Licensed under the MIT license.
         function drawPointHighlight(series, point) {
             var x = point[0], y = point[1],
                 axisx = series.xaxis, axisy = series.yaxis,
-                highlightColor = (typeof series.highlightColor === "string")  series.highlightColor : $.color.parse(series.color).scale('a', 0.5).toString();
+                highlightColor = (typeof series.highlightColor === "string") ? series.highlightColor : $.color.parse(series.color).scale('a', 0.5).toString();
 
             if (x < axisx.min || x > axisx.max || y < axisy.min || y > axisy.max)
                 return;
@@ -3090,7 +3090,7 @@ Licensed under the MIT license.
         }
 
         function drawBarHighlight(series, point) {
-            var highlightColor = (typeof series.highlightColor === "string")  series.highlightColor : $.color.parse(series.color).scale('a', 0.5).toString(),
+            var highlightColor = (typeof series.highlightColor === "string") ? series.highlightColor : $.color.parse(series.color).scale('a', 0.5).toString(),
                 fillStyle = highlightColor,
                 barLeft;
 
@@ -3144,7 +3144,7 @@ Licensed under the MIT license.
     $.plot = function(placeholder, data, options) {
         //var t0 = new Date();
         var plot = new Plot($(placeholder), data, options, $.plot.plugins);
-        //(window.console  console.log : alert)("time used (msecs): " + ((new Date()).getTime() - t0.getTime()));
+        //(window.console ? console.log : alert)("time used (msecs): " + ((new Date()).getTime() - t0.getTime()));
         return plot;
     };
 

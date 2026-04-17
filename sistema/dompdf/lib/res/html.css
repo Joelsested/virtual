@@ -152,7 +152,7 @@ table[border] {
   border-color: gray;
 }
 
-/* This won't work () */
+/* This won't work (???) */
 /*
 table[border] td,
 table[border] th {

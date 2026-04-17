@@ -1,8 +1,8 @@
 <?php
 /**
  * @package php-svg-lib
- * @link ? http ://github.com/PhenX/php-svg-lib
- * @author ?? Fabien MÃ©nager <fabien.menager@gmail.com>
+ * @link    http://github.com/PhenX/php-svg-lib
+ * @author  Fabien Ménager <fabien.menager@gmail.com>
  * @license GNU LGPLv3+ http://www.gnu.org/copyleft/lesser.html
  */
 
@@ -135,7 +135,8 @@ abstract class AbstractTag
             $transform = $attributes["transform"];
 
             $match = array();
-            preg_match_all( ?? '/(matrix|translate|scale|rotate|skewX|skewY)\((.*)\)/is',
+            preg_match_all(
+                '/(matrix|translate|scale|rotate|skewX|skewY)\((.*?)\)/is',
                 $transform,
                 $match,
                 PREG_SET_ORDER
@@ -157,16 +158,16 @@ abstract class AbstractTag
                         break;
 
                     case "translate":
-                        $surface->translate($t[1], isset($t[2]) ?? $t[2] ?: 0);
+                        $surface->translate($t[1], isset($t[2]) ? $t[2] : 0);
                         break;
 
                     case "scale":
-                        $surface->scale($t[1], isset($t[2]) ?? $t[2] ?: $t[1]);
+                        $surface->scale($t[1], isset($t[2]) ? $t[2] : $t[1]);
                         break;
 
                     case "rotate":
                         if (isset($t[2])) {
-                            $t[3] = isset($t[3]) ?? $t[3] ?: 0;
+                            $t[3] = isset($t[3]) ? $t[3] : 0;
                             $surface->translate($t[2], $t[3]);
                             $surface->rotate($t[1]);
                             $surface->translate(-$t[2], -$t[3]);

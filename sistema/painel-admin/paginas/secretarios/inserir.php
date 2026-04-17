@@ -3,10 +3,10 @@ require_once(__DIR__ . "/../../../conexao.php");
 require_once(__DIR__ . "/../../../../helpers.php");
 $tabela = 'secretarios';
 
-$nome = $_POST['nome'];
-$email = $_POST['email'];
+$nome = trim($_POST['nome'] ?? '');
+$email = trim($_POST['email'] ?? '');
 $telefone = $_POST['telefone'];
-$cpf = $_POST['cpf'];
+$cpf = trim($_POST['cpf'] ?? '');
 $endereco = $_POST['endereco'];
 $cidade = $_POST['cidade'];
 $estado = $_POST['estado'];
@@ -14,7 +14,46 @@ $sexo = $_POST['sexo'];
 $nascimento = trim($_POST['nascimento'] ?? '');
 $id = $_POST['id'];
 
-$wallet_id = $_POST['wallet_id'];
+$wallet_id = trim($_POST['wallet_id'] ?? '');
+
+if ($nome === '') {
+    echo 'Informe o nome.';
+    exit();
+}
+if ($cpf === '') {
+    echo 'Informe o CPF.';
+    exit();
+}
+if ($email === '') {
+    echo 'Informe o email.';
+    exit();
+}
+if ($nascimento === '') {
+    echo 'Informe a data de nascimento.';
+    exit();
+}
+if ($wallet_id === '') {
+    echo 'Informe o wallet_id.';
+    exit();
+}
+
+$hasWalletColumn = false;
+try {
+    $stmtCol = $pdo->prepare("SELECT 1 FROM information_schema.COLUMNS WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = 'usuarios' AND COLUMN_NAME = 'wallet_id' LIMIT 1");
+    $stmtCol->execute();
+    $hasWalletColumn = (bool) $stmtCol->fetchColumn();
+} catch (Exception $e) {
+    $hasWalletColumn = false;
+}
+
+$hasNascimentoColumn = false;
+try {
+    $stmtCol = $pdo->prepare("SELECT 1 FROM information_schema.COLUMNS WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = 'secretarios' AND COLUMN_NAME = 'nascimento' LIMIT 1");
+    $stmtCol->execute();
+    $hasNascimentoColumn = (bool) $stmtCol->fetchColumn();
+} catch (Exception $e) {
+    $hasNascimentoColumn = false;
+}
 
 $senha = birthDigits($nascimento);
 if ($senha === '') {
@@ -83,11 +122,15 @@ if (@$_FILES['foto']['name'] != "") {
 
 if ($id == "") {
 
-    $query = $pdo->prepare("INSERT INTO $tabela SET nome = :nome, email = :email, cpf = :cpf, telefone = :telefone, nascimento = :nascimento, endereco = :endereco,  cidade = :cidade, estado = :estado, sexo = :sexo, foto = '$foto', ativo = 'Sim', data = curDate()");
+    if ($hasNascimentoColumn) {
+        $query = $pdo->prepare("INSERT INTO $tabela SET nome = :nome, email = :email, cpf = :cpf, telefone = :telefone, nascimento = :nascimento, endereco = :endereco,  cidade = :cidade, estado = :estado, sexo = :sexo, foto = '$foto', ativo = 'Sim', data = curDate()");
+        $query->bindValue(":nascimento", "$nascimentoBr");
+    } else {
+        $query = $pdo->prepare("INSERT INTO $tabela SET nome = :nome, email = :email, cpf = :cpf, telefone = :telefone, endereco = :endereco,  cidade = :cidade, estado = :estado, sexo = :sexo, foto = '$foto', ativo = 'Sim', data = curDate()");
+    }
     $query->bindValue(":nome", "$nome");
     $query->bindValue(":email", "$email");
     $query->bindValue(":telefone", "$telefone");
-    $query->bindValue(":nascimento", "$nascimentoBr");
     $query->bindValue(":cpf", "$cpf");
     $query->bindValue(":endereco", "$endereco");
     $query->bindValue(":cidade", "$cidade");
@@ -96,21 +139,29 @@ if ($id == "") {
     $query->execute();
     $ult_id = $pdo->lastInsertId();
 
-    $query = $pdo->prepare("INSERT INTO usuarios SET wallet_id = :wallet_id, nome = :nome, usuario = :email, senha = '', cpf = :cpf, senha_crip = :senha_crip, nivel = 'Secretario',  foto = '$foto', id_pessoa = '$ult_id', ativo = 'Sim', data = curDate()");
+    if ($hasWalletColumn) {
+        $query = $pdo->prepare("INSERT INTO usuarios SET wallet_id = :wallet_id, nome = :nome, usuario = :email, senha = '', cpf = :cpf, senha_crip = :senha_crip, nivel = 'Secretario',  foto = '$foto', id_pessoa = '$ult_id', ativo = 'Sim', data = curDate()");
+        $query->bindValue(":wallet_id", "$wallet_id");
+    } else {
+        $query = $pdo->prepare("INSERT INTO usuarios SET nome = :nome, usuario = :email, senha = '', cpf = :cpf, senha_crip = :senha_crip, nivel = 'Secretario',  foto = '$foto', id_pessoa = '$ult_id', ativo = 'Sim', data = curDate()");
+    }
 
     $query->bindValue(":nome", "$nome");
     $query->bindValue(":email", "$email");
     $query->bindValue(":cpf", "$cpf");
-    $query->bindValue(":wallet_id", "$wallet_id");
     $query->bindValue(":senha_crip", "$senha_crip");
     $query->execute();
 
 } else {
-    $query = $pdo->prepare("UPDATE $tabela SET nome = :nome, email = :email, cpf = :cpf, telefone = :telefone, nascimento = :nascimento, endereco = :endereco,  cidade = :cidade, estado = :estado, sexo = :sexo, foto = '$foto' WHERE id = '$id'");
+    if ($hasNascimentoColumn) {
+        $query = $pdo->prepare("UPDATE $tabela SET nome = :nome, email = :email, cpf = :cpf, telefone = :telefone, nascimento = :nascimento, endereco = :endereco,  cidade = :cidade, estado = :estado, sexo = :sexo, foto = '$foto' WHERE id = '$id'");
+        $query->bindValue(":nascimento", "$nascimentoBr");
+    } else {
+        $query = $pdo->prepare("UPDATE $tabela SET nome = :nome, email = :email, cpf = :cpf, telefone = :telefone, endereco = :endereco,  cidade = :cidade, estado = :estado, sexo = :sexo, foto = '$foto' WHERE id = '$id'");
+    }
     $query->bindValue(":nome", "$nome");
     $query->bindValue(":email", "$email");
     $query->bindValue(":telefone", "$telefone");
-    $query->bindValue(":nascimento", "$nascimentoBr");
     $query->bindValue(":cpf", "$cpf");
     $query->bindValue(":endereco", "$endereco");
     $query->bindValue(":cidade", "$cidade");
@@ -119,12 +170,16 @@ if ($id == "") {
     $query->execute();
     $ult_id = $pdo->lastInsertId();
 
-    $query = $pdo->prepare("UPDATE usuarios SET wallet_id = :wallet_id, nome = :nome, usuario = :email, cpf = :cpf, senha = '', senha_crip = :senha_crip, foto = '$foto' WHERE id_pessoa = '$id' and nivel = 'Secretario'");
+    if ($hasWalletColumn) {
+        $query = $pdo->prepare("UPDATE usuarios SET wallet_id = :wallet_id, nome = :nome, usuario = :email, cpf = :cpf, senha = '', senha_crip = :senha_crip, foto = '$foto' WHERE id_pessoa = '$id' and nivel = 'Secretario'");
+        $query->bindValue(":wallet_id", "$wallet_id");
+    } else {
+        $query = $pdo->prepare("UPDATE usuarios SET nome = :nome, usuario = :email, cpf = :cpf, senha = '', senha_crip = :senha_crip, foto = '$foto' WHERE id_pessoa = '$id' and nivel = 'Secretario'");
+    }
 
     $query->bindValue(":nome", "$nome");
     $query->bindValue(":email", "$email");
     $query->bindValue(":cpf", "$cpf");
-    $query->bindValue(":wallet_id", "$wallet_id");
     $query->bindValue(":senha_crip", "$senha_crip");
     $query->execute();
 }

@@ -149,8 +149,8 @@ $data_hoje = utf8_encode(strftime('%A, %d de %B de %Y', strtotime('today')));
 </head>
 <body>    
     <div class="titulo_cab titulo_img"><u>Relatório de Avaliações <?php echo $nome ?></u></div>    
-    <div class="data_img"<?php echo mb_strtoupper($data_hoje) ></div>
-    <img class="imagem" src="<?php echo $url_sistema >/sistema/img/logo_rel.jpg?>" width=?>"200px" height="47"?>
+    <div class="data_img"><?php echo mb_strtoupper($data_hoje) ?></div>
+    <img class="imagem" src="<?php echo $url_sistema ?>/sistema/img/logo_rel.jpg" width="200px" height="47">
     
     <br><br><br>
     <div class="cabecalho" style="border-bottom: solid 1px #0340a3"></div>
@@ -168,7 +168,7 @@ $data_hoje = utf8_encode(strftime('%A, %d de %B de %Y', strtotime('today')));
         $total_reg = count($res);
         
         if($total_reg > 0) {
-?>
+        ?>
             <table>
                 <thead>
                     <tr>
@@ -180,10 +180,10 @@ $data_hoje = utf8_encode(strftime('%A, %d de %B de %Y', strtotime('today')));
                 <tbody>
                     <?php 
                     foreach($res as $matricula) {
-                        $nota = $matricula['nota'] !== ''  $matricula['nota'] ?: 'sem Nota';
+                        $nota = $matricula['nota'] !== '' ? $matricula['nota'] : 'sem Nota';
                         $curso = $matricula['id_curso'];
                         $nome_curso = $matricula['nome_curso'];
-?>
+                    ?>
                     <tr>
                         <td><?php echo $nota; ?></td>
                         <td><?php echo $nome_curso; ?></td>
@@ -217,7 +217,7 @@ $data_hoje = utf8_encode(strftime('%A, %d de %B de %Y', strtotime('today')));
                             } else {
                                 echo "<span>-</span>";
                             }
-?>
+                            ?>
                         </td>
                     </tr>
                     <?php } ?>
@@ -225,7 +225,7 @@ $data_hoje = utf8_encode(strftime('%A, %d de %B de %Y', strtotime('today')));
             </table>
         <?php } else {
             echo '<div style="margin:8px"><small><small>Sem Registros no banco de dados!</small></small></div>';
-        } >
+        } ?>
 
         <div class="cabecalho mt-3" style="border-bottom: solid 1px #0340a3"></div>
 
@@ -235,7 +235,7 @@ $data_hoje = utf8_encode(strftime('%A, %d de %B de %Y', strtotime('today')));
         <div class="cabecalho" style="border-bottom: solid 1px #0340a3"></div>
 
         <div class="footer" align="center">
-            <span style="font-size:10px"<?php echo $nome_sistema > Whatsapp: <?php echo $tel_sistema ?></span> 
+            <span style="font-size:10px"><?php echo $nome_sistema ?> Whatsapp: <?php echo $tel_sistema ?></span> 
         </div>
     </div>
 </body>

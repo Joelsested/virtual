@@ -41,7 +41,7 @@ echo <<<HTML
 		<ul class="dropdown-menu" style="margin-left:-230px;">
 		<li>
 		<div class="notification_desc2">
-		<p>Confirmar Exclusão <a href="#" onclick="excluirQuest('{$id}', '{$id_curso}')"><span class="text-danger">Sim</span></a></p>
+		<p>Confirmar Exclusão? <a href="#" onclick="excluirQuest('{$id}', '{$id_curso}')"><span class="text-danger">Sim</span></a></p>
 		</div>
 		</li>										
 		</ul>
@@ -90,7 +90,8 @@ function excluirQuest(id, curso){
             if (mensagem.trim() == "Excluído com Sucesso") {                
                 listarPerguntasQuest(curso);             
             } else {
-                    $('#mensagem-excluir-quest').addClass('text-danger') $('#mensagem-excluir-quest').text(mensagem)
+                    $('#mensagem-excluir-quest').addClass('text-danger')
+                    $('#mensagem-excluir-quest').text(mensagem)
                 }
 
         },      
@@ -112,3 +113,4 @@ function alternativas(id, curso, pergunta){
 
 
 </script>
+

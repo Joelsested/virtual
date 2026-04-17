@@ -1,8 +1,8 @@
 <?php
 /**
  * @package dompdf
- * @link ? http ://dompdf.github.com/
- * @author ?? Benj Carson <benjcarson@digitaljunkies.ca>
+ * @link    http://dompdf.github.com/
+ * @author  Benj Carson <benjcarson@digitaljunkies.ca>
  * @license http://www.gnu.org/copyleft/lesser.html GNU Lesser General Public License
  */
 
@@ -13,7 +13,7 @@ use Dompdf\FrameDecorator\AbstractFrameDecorator;
 /**
  * Positions block frames
  *
- * @access ?? private
+ * @access  private
  * @package dompdf
  */
 class Block extends AbstractPositioner {
@@ -41,7 +41,7 @@ class Block extends AbstractPositioner {
         // Relative positionning
         if ($style->position === "relative") {
             $top = (float)$style->length_in_pt($style->top, $cb["h"]);
-            //$right = ?? (float)$style->length_in_pt($style->right, ?? $cb["w"]);
+            //$right =  (float)$style->length_in_pt($style->right,  $cb["w"]);
             //$bottom = (float)$style->length_in_pt($style->bottom, $cb["h"]);
             $left = (float)$style->length_in_pt($style->left, $cb["w"]);
 

@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 @session_start();
 require_once('pgtos/cartao/ApiConfig.php');
 // include('active_gateway.php');
@@ -351,7 +351,7 @@ require_once("cabecalho.php");
 					class="valor"><i class="fa fa-shopping-cart mr-1 valor" title="Comprar o Pacote - Pagamento Único"
 						style="margin-right:3px"></i>Comprar R$ <?php echo $valor_real_cursoF; ?> <small><small><span
 								class="inicie"><i class="fa fa-arrow-left mr-1 inicie"
-									style="margin-right:3px"></i>Inicie Imediatamente</span></small></small> </span></a>
+									style="margin-right:3px"></i>Inicie imediatamente</span></small></small> </span></a>
 
 
 
@@ -429,7 +429,7 @@ require_once("cabecalho.php");
 						<div class="col-md-7 esquerda-mobile">
 
 							<span class="text-muted itens texto-menor-mobile"><i class="fa fa-user mr-1 itens"
-									style="margin-right: 2px"></i>Professor : <?php echo $nome_professor; ?></span>
+									style="margin-right: 2px"></i>Professor: <?php echo $nome_professor; ?></span>
 
 						</div>
 
@@ -438,7 +438,7 @@ require_once("cabecalho.php");
 						<div class="col-md-5 direita-mobile">
 
 							<span class="text-muted itens texto-menor-mobile"><i style="margin-right: 2px"
-									class="fa fa-video-camera mr-1 itens"></i>Cursos : <?php echo $total_cursos; ?>
+									class="fa fa-video-camera mr-1 itens"></i>Cursos: <?php echo $total_cursos; ?>
 								Cursos</span>
 
 						</div>
@@ -458,7 +458,7 @@ require_once("cabecalho.php");
 						<div class="col-md-7 esquerda-mobile">
 
 							<span class="text-muted itens texto-menor-mobile"><i style="margin-right: 2px"
-									class="fa fa-list-alt mr-1 itens"></i>Linguagem :
+									class="fa fa-list-alt mr-1 itens"></i>Linguagem:
 								<?php echo $nome_linguagem; ?></span>
 
 						</div>
@@ -468,7 +468,7 @@ require_once("cabecalho.php");
 						<div class="col-md-5 direita-mobile">
 
 							<span class="text-muted itens texto-menor-mobile"><i style="margin-right: 2px"
-									class="fa fa-certificate mr-1 itens"></i>Certificado : <?php echo $carga; ?>
+									class="fa fa-certificate mr-1 itens"></i>Certificado: <?php echo $carga; ?>
 								Horas</span>
 
 						</div>
@@ -1128,7 +1128,7 @@ require_once("cabecalho.php");
 
 								<div class="form-group">
 
-									<label>Data de nascimento *</label>
+									<label>Senha (data de nascimento) *</label>
 
 									<div class="input-group">
 
@@ -1148,7 +1148,7 @@ require_once("cabecalho.php");
 
 									</div>
 
-									<small class="form-text text-muted">Use sua data de nascimento no formato DDMMAAAA.</small>
+									<small class="form-text text-muted">Use sua data de nascimento no formato DDMMYYYY.</small>
 
 								</div>
 
@@ -2931,10 +2931,17 @@ if (@$_POST['painel_aluno'] == 'sim') {
 	const valorCurso = <?php echo str_replace(',', '.', $valor_real_curso); ?>; // PHP para JS, ponto decimal
 
 	function updateFormAction() {
-		const formaPagamento = document.querySelector('input[name="formaDePagamento"]:checked').value;
+		const formaPagamentoSelecionada = document.querySelector('input[name="formaDePagamento"]:checked');
+		if (!formaPagamentoSelecionada) {
+			return;
+		}
+		const formaPagamento = formaPagamentoSelecionada.value;
 		const pixDesconto = document.getElementById('pixDesconto');
 		const valorParceladoDiv = document.getElementById('quantidadeDeParcelas');
 		const quantidadeDeParcelasD = document.getElementById("valorParcelado");
+		if (!pixDesconto || !valorParceladoDiv || !quantidadeDeParcelasD) {
+			return;
+		}
 
 		if (formaPagamento === 'pix') {
 			pixDesconto.style.display = 'block';
@@ -2956,6 +2963,9 @@ if (@$_POST['painel_aluno'] == 'sim') {
 		const formaPagamento = document.querySelector('input[name="formaDePagamento"]:checked');
 		const parcelasSelect = document.getElementById('quantidadeDeParcelas');
 		const valorParceladoDiv = document.getElementById('valorParcelado');
+		if (!parcelasSelect || !valorParceladoDiv) {
+			return;
+		}
 
 		if (formaPagamento && formaPagamento.value === 'boleto') {
 			const quantidade = parseInt(parcelasSelect.value);
@@ -2973,7 +2983,10 @@ if (@$_POST['painel_aluno'] == 'sim') {
 	}
 
 	// Eventos
-	document.getElementById('quantidadeDeParcelas').addEventListener('change', atualizarValorParcelado);
+	const parcelasEl = document.getElementById('quantidadeDeParcelas');
+	if (parcelasEl) {
+		parcelasEl.addEventListener('change', atualizarValorParcelado);
+	}
 </script>
 
 

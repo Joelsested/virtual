@@ -60,7 +60,7 @@ $total_emails = @count($res);
 </div>
 
 <script type="text/javascript">var pag = "<?=$pag?>"</script>
-<script src="js/ajax.js"></script>
+<script src="js/ajax.js?v=<?= @filemtime(__DIR__ . '/../js/ajax.js') ?>"></script>
 
 <script src="//js.nicedit.com/nicEdit-latest.js" type="text/javascript"></script>
 <script type="text/javascript">bkLib.onDomLoaded(nicEditors.allTextAreas);</script>

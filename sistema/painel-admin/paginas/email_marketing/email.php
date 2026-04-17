@@ -62,11 +62,14 @@ for ($i=0; $i < count($res); $i++) {
 
                        <i>Nosso Site - <a href='$url_sistema' target='_blank'>$url_sistema</a></i>
                       <br>
-                      WhatsApp -> <a href='http://api.whatsapp.com/send1=pt_BR&phone=55$tel_sistema' alt='$tel_sistema' target='_blank'><i class='fab fa-whatsapp'></i>$tel_sistema</a>
+                      WhatsApp -> <a href='http://api.whatsapp.com/send?1=pt_BR&phone=55$tel_sistema' alt='$tel_sistema' target='_blank'><i class='fab fa-whatsapp'></i>$tel_sistema</a>
 
                     
 				<br><br><br>
-       <i> Caso não queira mais receber nossos emails <a href='$url_descadastrar' target='_blank'> clique aqui </a> para se descadastrar!</i> <br><br> ?? ";
+       <i> Caso não queira mais receber nossos emails <a href='$url_descadastrar' target='_blank'> clique aqui </a> para se descadastrar!</i> <br><br>
+
+
+				";
 
 
 				$remetente = $email_sistema;

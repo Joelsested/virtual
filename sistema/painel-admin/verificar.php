@@ -11,4 +11,4 @@ if(@$_SESSION['nivel'] != 'Administrador'
 	echo "<script>window.location='../index.php'</script>";
 	exit();
 }	
-?>
+ ?>

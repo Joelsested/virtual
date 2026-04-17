@@ -62,7 +62,7 @@ class Helpers
             return $protocol . $host . $base_path;
         }
 
-        // Is the url already fully qualified, a Data URI, or a reference to a named anchor
+        // Is the url already fully qualified, a Data URI, or a reference to a named anchor?
         // File-protocol URLs may require additional processing (e.g. for URLs with a relative path)
         if ((mb_strpos($url, "://") !== false && substr($url, 0, 7) !== "file://") || mb_substr($url, 0, 1) === "#" || mb_strpos($url, "data:") === 0 || mb_strpos($url, "mailto:") === 0 || mb_strpos($url, "tel:") === 0) {
             return $url;
@@ -84,10 +84,11 @@ class Helpers
             //not known in php app code, treat as abs path
             //($url[1] !== ':' || ($url[2]!=='\\' && $url[2]!=='/'))
             if ($url[0] !== '/' && (strtoupper(substr(PHP_OS, 0, 3)) !== 'WIN' || (mb_strlen($url) > 1 && $url[0] !== '\\' && $url[1] !== ':'))) {
-                // For rel path and local access we ignore the host, and run the path through realpath() ?? $ret .= realpath($base_path) . '/';
+                // For rel path and local access we ignore the host, and run the path through realpath()
+                $ret .= realpath($base_path) . '/';
             }
             $ret .= $url;
-            $ret = preg_replace('/\(.*)$/', "", $ret);
+            $ret = preg_replace('/\?(.*)$/', "", $ret);
             return $ret;
         }
 
@@ -108,19 +109,19 @@ class Helpers
         $parsed_url = parse_url($ret);
 
         // reproduced from https://www.php.net/manual/en/function.parse-url.php#106731
-        $scheme   = isset($parsed_url['scheme']) ?? $parsed_url['scheme'] . '://' : '';
-        $host     = isset($parsed_url['host']) ?? $parsed_url['host'] ?: '';
-        $port     = isset($parsed_url['port']) ?? ':' . $parsed_url['port'] ?: '';
-        $user     = isset($parsed_url['user']) ?? $parsed_url['user'] ?: '';
-        $pass     = isset($parsed_url['pass']) ?? ':' . $parsed_url['pass'] ?: '';
+        $scheme   = isset($parsed_url['scheme']) ? $parsed_url['scheme'] . '://' : '';
+        $host     = isset($parsed_url['host']) ? $parsed_url['host'] : '';
+        $port     = isset($parsed_url['port']) ? ':' . $parsed_url['port'] : '';
+        $user     = isset($parsed_url['user']) ? $parsed_url['user'] : '';
+        $pass     = isset($parsed_url['pass']) ? ':' . $parsed_url['pass']  : '';
         $pass     = ($user || $pass) ? "$pass@" : '';
-        $path     = isset($parsed_url['path']) ?? $parsed_url['path'] ?: '';
-        $query    = isset($parsed_url['query']) ?? '' . $parsed_url['query'] ?: '';
-        $fragment = isset($parsed_url['fragment']) ?? '#' . $parsed_url['fragment'] ?: '';
+        $path     = isset($parsed_url['path']) ? $parsed_url['path'] : '';
+        $query    = isset($parsed_url['query']) ? '?' . $parsed_url['query'] : '';
+        $fragment = isset($parsed_url['fragment']) ? '#' . $parsed_url['fragment'] : '';
         
         // partially reproduced from https://stackoverflow.com/a/1243431/264628
         /* replace '//' or '/./' or '/foo/../' with '/' */
-        $re = array('#(/\./)#', '#/(!\.\.)[^/]+/\.\./#');
+        $re = array('#(/\.?/)#', '#/(?!\.\.)[^/]+/\.\./#');
         for($n=1; $n>0; $path=preg_replace($re, '/', $path, -1, $n)) {}
 
         $ret = "$scheme$user$pass$host$port$path$query$fragment";
@@ -224,12 +225,15 @@ class Helpers
      */
     public static function parse_data_uri($data_uri)
     {
-        if (!preg_match('/^data:(P<mime>[a-z0-9\/+-.]+)(;charset=(P<charset>[a-z0-9-])+)(P<base64>;base64)\,(P<data>.*)/is', $data_uri, $match)) {
+        if (!preg_match('/^data:(?P<mime>[a-z0-9\/+-.]+)(;charset=(?P<charset>[a-z0-9-])+)?(?P<base64>;base64)?\,(?P<data>.*)?/is', $data_uri, $match)) {
             return false;
         }
 
         $match['data'] = rawurldecode($match['data']);
-        $result = ['charset' => $match['charset'] ?? $match['charset'] ?: 'US-ASCII', 'mime' => $match['mime'] ?? $match['mime'] ?: 'text/plain', 'data' => $match['base64'] ? base64_decode($match['data']) : $match['data'],
+        $result = [
+            'charset' => $match['charset'] ? $match['charset'] : 'US-ASCII',
+            'mime' => $match['mime'] ? $match['mime'] : 'text/plain',
+            'data' => $match['base64'] ? base64_decode($match['data']) : $match['data'],
         ];
 
         return $result;
@@ -252,18 +256,23 @@ class Helpers
      * @return string The original URL with special characters encoded
      */
     public static function encodeURI($uri) {
-        $unescaped = ['%2D'=>'-','%5F'=>'_','%2E'=>'.','%21'=>'!', '%7E'=>'~', '%2A'=>'*', '%27'=>"'", '%28'=>'(', '%29'=>')'
+        $unescaped = [
+            '%2D'=>'-','%5F'=>'_','%2E'=>'.','%21'=>'!', '%7E'=>'~',
+            '%2A'=>'*', '%27'=>"'", '%28'=>'(', '%29'=>')'
         ];
-        $reserved = ['%3B'=>';','%2C'=>',','%2F'=>'/','%3F'=>'','%3A'=>':', '%40'=>'@','%26'=>'&','%3D'=>'=','%2B'=>'+','%24'=>'$'
+        $reserved = [
+            '%3B'=>';','%2C'=>',','%2F'=>'/','%3F'=>'?','%3A'=>':',
+            '%40'=>'@','%26'=>'&','%3D'=>'=','%2B'=>'+','%24'=>'$'
         ];
-        $score = ['%23'=>'#'
+        $score = [
+            '%23'=>'#'
         ];
         return strtr(rawurlencode(rawurldecode($uri)), array_merge($reserved, $unescaped, $score));
     }
 
     /**
      * Decoder for RLE8 compression in windows bitmaps
-     * http://msdn.microsoft.com/library/default.aspurl=/library/en-us/gdi/bitmaps_6x0u.asp
+     * http://msdn.microsoft.com/library/default.asp?url=/library/en-us/gdi/bitmaps_6x0u.asp
      *
      * @param string $str Data to decode
      * @param integer $width Image width
@@ -316,7 +325,7 @@ class Helpers
 
     /**
      * Decoder for RLE4 compression in windows bitmaps
-     * see http://msdn.microsoft.com/library/default.aspurl=/library/en-us/gdi/bitmaps_6x0u.asp
+     * see http://msdn.microsoft.com/library/default.asp?url=/library/en-us/gdi/bitmaps_6x0u.asp
      *
      * @param string $str Data to decode
      * @param integer $width Image width
@@ -369,7 +378,7 @@ class Helpers
                 default:
                     $c = ord($str[++$i]);
                     for ($j = 0; $j < $o; $j++) {
-                        $pixels[] = ($j % 2 == 0  ($c & 240) >> 4 : $c & 15);
+                        $pixels[] = ($j % 2 == 0 ? ($c & 240) >> 4 : $c & 15);
                     }
             }
         }
@@ -430,7 +439,7 @@ class Helpers
             }
 
             if (isset($arr["path"]) && $arr["path"] !== "") {
-                // Do we have a trailing slash
+                // Do we have a trailing slash?
                 if ($arr["path"][mb_strlen($arr["path"]) - 1] === "/") {
                     $path = $arr["path"];
                     $file = "";
@@ -441,7 +450,7 @@ class Helpers
             }
 
             if (isset($arr["query"])) {
-                $file .= "" . $arr["query"];
+                $file .= "?" . $arr["query"];
             }
 
             if (isset($arr["fragment"])) {
@@ -455,7 +464,7 @@ class Helpers
                 $url = mb_substr($url, $i + 7);
             }
 
-            $protocol = ""; // "file://";  why doesn't this work... It's because of
+            $protocol = ""; // "file://"; ? why doesn't this work... It's because of
             // network filenames like //COMPU/SHARENAME
 
             $host = ""; // localhost, really
@@ -471,7 +480,7 @@ class Helpers
                 // generate a url to access the file if no real path found.
                 $protocol = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https://' : 'http://';
 
-                $host = isset($_SERVER["HTTP_HOST"]) ?? $_SERVER["HTTP_HOST"] ?: php_uname("n");
+                $host = isset($_SERVER["HTTP_HOST"]) ? $_SERVER["HTTP_HOST"] : php_uname("n");
 
                 if (substr($arr["path"], 0, 1) === '/') {
                     $path = dirname($arr["path"]);
@@ -481,7 +490,11 @@ class Helpers
             }
         }
 
-        $ret = [$protocol, $host, $path, $file, "protocol" => $protocol, "host" => $host, "path" => $path, "file" => $file];
+        $ret = [$protocol, $host, $path, $file,
+            "protocol" => $protocol,
+            "host" => $host,
+            "path" => $path,
+            "file" => $file];
         return $ret;
     }
 
@@ -497,7 +510,7 @@ class Helpers
         if (isset($_DOMPDF_DEBUG_TYPES[$type]) && ($_dompdf_show_warnings || $_dompdf_debug)) {
             $arr = debug_backtrace();
 
-            echo basename($arr[0]["file"]) . " (" . $arr[0]["line"] . ") : " . $arr[1]["function"] . ": ";
+            echo basename($arr[0]["file"]) . " (" . $arr[0]["line"] . "): " . $arr[1]["function"] . ": ";
             Helpers::pre_r($msg);
         }
     }
@@ -506,7 +519,7 @@ class Helpers
      * Stores warnings in an array for display later
      * This function allows warnings generated by the DomDocument parser
      * and CSS loader ({@link Stylesheet}) to be captured and displayed
-     * later. ?? Without this function, errors are displayed immediately and
+     * later.  Without this function, errors are displayed immediately and
      * PDF streaming is impossible.
      * @see http://www.php.net/manual/en/function.set-error_handler.php
      *
@@ -591,7 +604,8 @@ class Helpers
         }
 
         return [
-            $r, $g, $b, "r" => $r, "g" => $g, "b" => $b
+            $r, $g, $b,
+            "r" => $r, "g" => $g, "b" => $b
         ];
     }
 
@@ -620,7 +634,7 @@ class Helpers
             IMAGETYPE_PNG  => "png",
         ];
 
-        $type = isset($types[$type]) ?? $types[$type] ?: null;
+        $type = isset($types[$type]) ? $types[$type] : null;
 
         if ($width == null || $height == null) {
             [$data, $headers] = Helpers::getFileContent($filename, $context);
@@ -659,7 +673,8 @@ class Helpers
         }
 
         // version 1.00
-        if (!($fh = fopen($filename, 'rb'))) { ? trigger_error('imagecreatefrombmp: Can not open ' . $filename, E_USER_WARNING);
+        if (!($fh = fopen($filename, 'rb'))) {
+            trigger_error('imagecreatefrombmp: Can not open ' . $filename, E_USER_WARNING);
             return false;
         }
 
@@ -669,7 +684,8 @@ class Helpers
         $meta = unpack('vtype/Vfilesize/Vreserved/Voffset', fread($fh, 14));
 
         // check for bitmap
-        if ($meta['type'] != 19778) { ? trigger_error('imagecreatefrombmp: ' . $filename . ' is not a bitmap!', E_USER_WARNING);
+        if ($meta['type'] != 19778) {
+            trigger_error('imagecreatefrombmp: ' . $filename . ' is not a bitmap!', E_USER_WARNING);
             return false;
         }
 
@@ -696,7 +712,8 @@ class Helpers
             // in rare cases filesize is equal to offset so we need to read physical size
             if ($meta['imagesize'] < 1) {
                 $meta['imagesize'] = @filesize($filename) - $meta['offset'];
-                if ($meta['imagesize'] < 1) { ? trigger_error('imagecreatefrombmp: Can not obtain filesize of ' . $filename . '!', E_USER_WARNING);
+                if ($meta['imagesize'] < 1) {
+                    trigger_error('imagecreatefrombmp: Can not obtain filesize of ' . $filename . '!', E_USER_WARNING);
                     return false;
                 }
             }
@@ -773,7 +790,7 @@ class Helpers
                         break;
                     case 4:
                         $color = unpack('n', $vide . substr($data, floor($p), 1));
-                        $color[1] = ($p * 2) % 2 == 0  $color[1] >> 4 : $color[1] & 0x0F;
+                        $color[1] = ($p * 2) % 2 == 0 ? $color[1] >> 4 : $color[1] & 0x0F;
                         $color[1] = $palette[$color[1] + 1];
                         break;
                     case 1:
@@ -806,7 +823,8 @@ class Helpers
                         }
                         $color[1] = $palette[$color[1] + 1];
                         break;
-                    default: ? trigger_error('imagecreatefrombmp: ' . $filename . ' has ' . $meta['bits'] . ' bits and this is not supported!', E_USER_WARNING);
+                    default:
+                        trigger_error('imagecreatefrombmp: ' . $filename . ' has ' . $meta['bits'] . ' bits and this is not supported!', E_USER_WARNING);
                         return false;
                 }
                 imagesetpixel($im, $x, $y, $color[1]);
@@ -837,7 +855,9 @@ class Helpers
         $content = null;
         $headers = null;
         [$proto, $host, $path, $file] = Helpers::explode_url($uri);
-        $is_local_path = ($proto == '' || $proto === 'file://'); ? set_error_handler([self::class, 'record_warnings']);
+        $is_local_path = ($proto == '' || $proto === 'file://');
+
+        set_error_handler([self::class, 'record_warnings']);
 
         try {
             if ($is_local_path || ini_get('allow_url_fopen')) {
@@ -896,7 +916,7 @@ class Helpers
 
         $str = mb_strtoupper(mb_substr($str, 0, 1)) . mb_substr($str, 1);
 
-        foreach ([' ', '.', ',', '!', '', '-', '+'] as $s) {
+        foreach ([' ', '.', ',', '!', '?', '-', '+'] as $s) {
             $pos = 0;
             while (($pos = mb_strpos($str, $s, $pos)) !== false) {
                 $pos++;

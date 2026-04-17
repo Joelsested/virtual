@@ -1,9 +1,9 @@
 <?php
 /**
  * @package dompdf
- * @link ? http ://dompdf.github.com/
- * @author ?? Benj Carson <benjcarson@digitaljunkies.ca>
- * @author ?? Fabien Ménager <fabien.menager@gmail.com>
+ * @link    http://dompdf.github.com/
+ * @author  Benj Carson <benjcarson@digitaljunkies.ca>
+ * @author  Fabien Ménager <fabien.menager@gmail.com>
  * @license http://www.gnu.org/copyleft/lesser.html GNU Lesser General Public License
  */
 namespace Dompdf;
@@ -24,15 +24,15 @@ use Dompdf\Helpers;
 /**
  * Dompdf - PHP5 HTML to PDF renderer
  *
- * Dompdf loads HTML and does its best to render it as a PDF. ?? It gets its
- * name from the new DomDocument PHP5 extension. ?? Source HTML is first
- * parsed by a DomDocument object. ?? Dompdf takes the resulting DOM tree and
+ * Dompdf loads HTML and does its best to render it as a PDF.  It gets its
+ * name from the new DomDocument PHP5 extension.  Source HTML is first
+ * parsed by a DomDocument object.  Dompdf takes the resulting DOM tree and
  * attaches a {@link Frame} object to each node.  {@link Frame} objects store
  * positioning and layout information and each has a reference to a {@link
  * Style} object.
  *
  * Style information is loaded and parsed (see {@link Stylesheet}) and is
- * applied to the frames in the tree by using XPath. ?? CSS selectors are
+ * applied to the frames in the tree by using XPath.  CSS selectors are
  * converted into XPath queries, and the computed {@link Style} objects are
  * applied to the {@link Frame}s.
  *
@@ -41,20 +41,20 @@ use Dompdf\Helpers;
  * http://www.w3.org/TR/CSS21/visuren.html#propdef-display}).
  * Frame_Decorators augment the basic {@link Frame} class by adding
  * additional properties and methods specific to the particular type of
- * {@link Frame}. ?? For example, in the CSS layout model, block frames
+ * {@link Frame}.  For example, in the CSS layout model, block frames
  * (display: block;) contain line boxes that are usually filled with text or
- * other inline frames. ?? The Block therefore adds a $lines
+ * other inline frames.  The Block therefore adds a $lines
  * property as well as methods to add {@link Frame}s to lines and to add
  * additional lines.  {@link Frame}s also are attached to specific
  * AbstractPositioner and {@link AbstractFrameReflower} objects that contain the
  * positioining and layout algorithm for a specific type of frame,
- * respectively. ?? This is an application of the Strategy pattern.
+ * respectively.  This is an application of the Strategy pattern.
  *
  * Layout, or reflow, proceeds recursively (post-order) starting at the root
- * of the document. ?? Space constraints (containing block width & height) are
- * pushed down, and resolved positions and sizes bubble up. ?? Thus, every
+ * of the document.  Space constraints (containing block width & height) are
+ * pushed down, and resolved positions and sizes bubble up.  Thus, every
  * {@link Frame} in the document tree is traversed once (except for tables
- * which use a two-pass layout algorithm). ?? If you are interested in the
+ * which use a two-pass layout algorithm).  If you are interested in the
  * details, see the reflow() method of the Reflower classes.
  *
  * Rendering is relatively straightforward once layout is complete. {@link
@@ -62,7 +62,7 @@ use Dompdf\Helpers;
  * written by Wayne Munro, http://www.ros.co.nz/pdf/.  (Some performance
  * related changes have been made to the original {@link Cpdf} class, and
  * the {@link Dompdf\Adapter\CPDF} class provides a simple, stateless interface to
- * PDF generation.) ?? PDFLib support has now also been added, via the {@link
+ * PDF generation.)  PDFLib support has now also been added, via the {@link
  * Dompdf\Adapter\PDFLib}.
  *
  *
@@ -253,7 +253,11 @@ class Dompdf
      * @var array
      * @deprecated
      */
-    public static $native_fonts = ["courier", "courier-bold", "courier-oblique", "courier-boldoblique", "helvetica", "helvetica-bold", "helvetica-oblique", "helvetica-boldoblique", "times-roman", "times-bold", "times-italic", "times-bolditalic", "symbol", "zapfdinbats"
+    public static $native_fonts = [
+        "courier", "courier-bold", "courier-oblique", "courier-boldoblique",
+        "helvetica", "helvetica-bold", "helvetica-oblique", "helvetica-boldoblique",
+        "times-roman", "times-bold", "times-italic", "times-bolditalic",
+        "symbol", "zapfdinbats"
     ];
 
     /**
@@ -261,7 +265,11 @@ class Dompdf
      *
      * @var array
      */
-    public static $nativeFonts = ["courier", "courier-bold", "courier-oblique", "courier-boldoblique", "helvetica", "helvetica-bold", "helvetica-oblique", "helvetica-boldoblique", "times-roman", "times-bold", "times-italic", "times-bolditalic", "symbol", "zapfdinbats"
+    public static $nativeFonts = [
+        "courier", "courier-bold", "courier-oblique", "courier-boldoblique",
+        "helvetica", "helvetica-bold", "helvetica-oblique", "helvetica-boldoblique",
+        "times-roman", "times-bold", "times-italic", "times-bolditalic",
+        "symbol", "zapfdinbats"
     ];
 
     /**
@@ -410,7 +418,7 @@ class Dompdf
         // See http://the-stickman.com/web-development/php/getting-http-response-headers-when-using-file_get_contents/
         if (isset($http_response_header)) {
             foreach ($http_response_header as $_header) {
-                if (preg_match("@Content-Type:\s*[\w/]+;\s*charset=([^\s]+)@i", $_header, $matches)) {
+                if (preg_match("@Content-Type:\s*[\w/]+;\s*?charset=([^\s]+)@i", $_header, $matches)) {
                     $encoding = strtoupper($matches[1]);
                     break;
                 }
@@ -476,7 +484,10 @@ class Dompdf
             $encoding = 'UTF-8';
         }
 
-        $metatags = ['@<meta\s+http-equiv="Content-Type"\s+content="(:[\w/]+)(:;\s*charset=([^\s"]+))@i', '@<meta\s+content="(:[\w/]+)(:;\s*charset=([^\s"]+))"\s+http-equiv="Content-Type"@i', '@<meta [^>]*charset\s*=\s*["\']\s*([^"\' ]+)@i',
+        $metatags = [
+            '@<meta\s+http-equiv="Content-Type"\s+content="(?:[\w/]+)(?:;\s*?charset=([^\s"]+))?@i',
+            '@<meta\s+content="(?:[\w/]+)(?:;\s*?charset=([^\s"]+))"?\s+http-equiv="Content-Type"@i',
+            '@<meta [^>]*charset\s*=\s*["\']?\s*([^"\' ]+)@i',
         ];
         foreach ($metatags as $metatag) {
             if (preg_match($metatag, $str, $matches)) {
@@ -495,12 +506,13 @@ class Dompdf
         }
 
         // remove BOM mark from UTF-8, it's treated as document text by DOMDocument
-        // FIXME: roll this into the encoding detection using UTF-8/16/32 BOM (http://us2.php.net/manual/en/function.mb-detect-encoding.php#91051)
+        // FIXME: roll this into the encoding detection using UTF-8/16/32 BOM (http://us2.php.net/manual/en/function.mb-detect-encoding.php#91051)?
         if (substr($str, 0, 3) == chr(0xEF) . chr(0xBB) . chr(0xBF)) {
             $str = substr($str, 3);
         }
 
-        // Store parsing warnings as messages ? set_error_handler([Helpers::class, 'record_warnings']);
+        // Store parsing warnings as messages
+        set_error_handler([Helpers::class, 'record_warnings']);
 
         try {
             // @todo Take the quirksmode into account
@@ -799,7 +811,10 @@ class Dompdf
         }
 
         $metas = $this->dom->getElementsByTagName("meta");
-        $labels = ["author" => "Author", "keywords" => "Keywords", "description" => "Subject",
+        $labels = [
+            "author" => "Author",
+            "keywords" => "Keywords",
+            "description" => "Subject",
         ];
         /** @var \DOMElement $meta */
         foreach ($metas as $meta) {
@@ -874,8 +889,13 @@ class Dompdf
         $memory = memory_get_peak_usage(true) / 1024;
         $time = (microtime(true) - $this->startTime) * 1000;
 
-        $out = sprintf( ?? "<span style='color: #000' title='Frames'>%6d</span>" . ?? "<span style='color: #009' title='Memory'>%10.2f KB</span>" . ?? "<span style='color: #900' title='Time'>%10.2f ms</span>" . ?? "<span  title='Quirksmode'> ?? " .
-            ($this->quirksmode  "<span style='color: #d00'> ON</span>" : "<span style='color: #0d0'>OFF</span>") . ?? "</span><br />", $frames, $memory, $time);
+        $out = sprintf(
+            "<span style='color: #000' title='Frames'>%6d</span>" .
+            "<span style='color: #009' title='Memory'>%10.2f KB</span>" .
+            "<span style='color: #900' title='Time'>%10.2f ms</span>" .
+            "<span  title='Quirksmode'>  " .
+            ($this->quirksmode ? "<span style='color: #d00'> ON</span>" : "<span style='color: #0d0'>OFF</span>") .
+            "</span><br />", $frames, $memory, $time);
 
         $out .= ob_get_contents();
         ob_clean();
@@ -890,11 +910,11 @@ class Dompdf
      * parameter controls the output. Accepted options (array keys) are:
      *
      * 'compress' = > 1 (=default) or 0:
-     * ?? Apply content stream compression
+     *   Apply content stream compression
      *
      * 'Attachment' => 1 (=default) or 0:
      *   Set the 'Content-Disposition:' HTTP header to 'attachment'
-     * ?? (thereby causing the browser to open a download dialog)
+     *   (thereby causing the browser to open a download dialog)
      *
      * @param string $filename the name of the streamed file
      * @param array $options header options (see above)
@@ -917,7 +937,7 @@ class Dompdf
      * The options parameter controls the output. Accepted options are:
      *
      * 'compress' = > 1 or 0 - apply content stream compression, this is
-     * ?? on (1) by default
+     *    on (1) by default
      *
      * @param array $options options (see above)
      *
@@ -1466,7 +1486,7 @@ class Dompdf
     /**
      * PHP5 overloaded getter
      * Along with {@link Dompdf::__set()} __get() provides access to all
-     * properties directly. ?? Typically __get() is not called directly outside
+     * properties directly.  Typically __get() is not called directly outside
      * of this class.
      *
      * @param string $prop

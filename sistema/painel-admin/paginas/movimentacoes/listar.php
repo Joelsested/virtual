@@ -22,7 +22,7 @@ echo <<<HTML
 	<table class="table table-hover" id="tabela">
 	<thead> 
 	<tr> 
-	<th>DescriÃ§Ã£o</th>	
+	<th>Descrição</th>	
 	<th class="esc">Tipo</th>
 	<th class="esc">Valor</th>
 	<th class="esc">Data</th>	
@@ -193,7 +193,9 @@ HTML;
 <script type="text/javascript">
 
 	$(document).ready( function () {
-		$('#tabela').DataTable({ ? "ordering" : false, ? "stateSave" : true,
+		$('#tabela').DataTable({
+			"ordering": false,
+			"stateSave": true,
 		});
 		$('#tabela_filter label input').focus();
 	} );
@@ -201,3 +203,4 @@ HTML;
 	
 
 </script>
+

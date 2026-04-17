@@ -3,12 +3,6 @@
 if (!function_exists('env')) {
     function env($key, $default = null)
     {
-        if (isset($_SERVER[$key]) && $_SERVER[$key] !== '') {
-            return $_SERVER[$key];
-        }
-        if (isset($_ENV[$key]) && $_ENV[$key] !== '') {
-            return $_ENV[$key];
-        }
         $value = getenv($key);
         if ($value === false || $value === '') {
             return $default;
@@ -64,3 +58,4 @@ if (!function_exists('loadEnv')) {
 }
 
 loadEnv(dirname(__DIR__));
+

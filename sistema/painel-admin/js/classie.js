@@ -50,7 +50,7 @@ else {
 }
 
 function toggleClass( elem, c ) {
-  var fn = hasClass( elem, c )  removeClass : addClass;
+  var fn = hasClass( elem, c ) ? removeClass : addClass;
   fn( elem, c );
 }
 

@@ -1,10 +1,10 @@
 <?php
 /**
  * @package dompdf
- * @link ? http ://dompdf.github.com/
- * @author ?? Benj Carson <benjcarson@digitaljunkies.ca>
- * @author ?? Helmut Tischer <htischer@weihenstephan.org>
- * @author ?? Fabien Ménager <fabien.menager@gmail.com>
+ * @link    http://dompdf.github.com/
+ * @author  Benj Carson <benjcarson@digitaljunkies.ca>
+ * @author  Helmut Tischer <htischer@weihenstephan.org>
+ * @author  Fabien Ménager <fabien.menager@gmail.com>
  * @license http://www.gnu.org/copyleft/lesser.html GNU Lesser General Public License
  */
 namespace Dompdf\Renderer;
@@ -26,7 +26,7 @@ class Text extends AbstractRenderer
     //Check method_exists( $this->_canvas, "get_cpdf" )
     //- For cpdf these can and must stay 0, because font metrics are used directly.
     //- For other renderers, if different values are wanted, separate the parameter sets.
-    // ?? But $size and $size-$height seem to be accurate enough
+    //  But $size and $size-$height seem to be accurate enough
 
     /** Relative to bottom of text, as fraction of height */
     const UNDERLINE_OFFSET = 0.0;
@@ -119,7 +119,7 @@ class Text extends AbstractRenderer
         // Handle text decoration:
         // http://www.w3.org/TR/CSS21/text.html#propdef-text-decoration
 
-        // Draw all applicable text-decorations. ?? Start with the root and work our way down.
+        // Draw all applicable text-decorations.  Start with the root and work our way down.
         $p = $frame;
         $stack = [];
         while ($p = $p->get_parent()) {

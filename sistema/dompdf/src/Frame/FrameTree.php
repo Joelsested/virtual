@@ -12,8 +12,8 @@ use Dompdf\Frame;
 
 /**
  * @package dompdf
- * @link ? http ://dompdf.github.com/
- * @author ?? Benj Carson <benjcarson@digitaljunkies.ca>
+ * @link    http://dompdf.github.com/
+ * @author  Benj Carson <benjcarson@digitaljunkies.ca>
  * @license http://www.gnu.org/copyleft/lesser.html GNU Lesser General Public License
  */
 
@@ -21,7 +21,7 @@ use Dompdf\Frame;
  * Represents an entire document as a tree of frames
  *
  * The FrameTree consists of {@link Frame} objects each tied to specific
- * DOMNode objects in a specific DomDocument. ?? The FrameTree has the same
+ * DOMNode objects in a specific DomDocument.  The FrameTree has the same
  * structure as the DomDocument, but adds additional capabilities for
  * styling and layout.
  *
@@ -34,7 +34,18 @@ class FrameTree
      *
      * @var array
      */
-    protected static $HIDDEN_TAGS = ["area", "base", "basefont", "head", "style", "meta", "title", "colgroup", "noembed", "param", "#comment"
+    protected static $HIDDEN_TAGS = [
+        "area",
+        "base",
+        "basefont",
+        "head",
+        "style",
+        "meta",
+        "title",
+        "colgroup",
+        "noembed",
+        "param",
+        "#comment"
     ];
 
     /**
@@ -107,7 +118,7 @@ class FrameTree
      */
     public function get_frame($id)
     {
-        return isset($this->_registry[$id]) ?? $this->_registry[$id] ?: null;
+        return isset($this->_registry[$id]) ? $this->_registry[$id] : null;
     }
 
     /**

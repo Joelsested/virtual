@@ -13,7 +13,7 @@ if($dataInicial == $dataFinal){
 }else if($dataInicial == '1980-01-01'){
 	$texto_apuracao = 'APURADO EM TODO O PERÍODO';
 }else{
-	$texto_apuracao = 'APURAÇÍO DE '.$dataInicialF. ' ATÉ '.$dataFinalF;
+	$texto_apuracao = 'APURAÇÃO DE '.$dataInicialF. ' ATÉ '.$dataFinalF;
 }
 
 
@@ -160,9 +160,9 @@ $data_hoje = utf8_encode(strftime('%A, %d de %B de %Y', strtotime('today')));
 
 
 <div class="titulo_cab titulo_img"><u>Detalhamento de Lucro </u></div>	
-	<div class="data_img"<?php echo mb_strtoupper($data_hoje) ></div>
+	<div class="data_img"><?php echo mb_strtoupper($data_hoje) ?></div>
 
-	<img class="imagem" src="<?php echo $url_sistema >/sistema/img/logo_rel.jpg?>" width=?>"200px" height="47"?>
+	<img class="imagem" src="<?php echo $url_sistema ?>/sistema/img/logo_rel.jpg" width="200px" height="47">
 
 	
 	<br><br><br>
@@ -193,13 +193,13 @@ $total_pagoF = 0;
 $total_recebidoF = 0;
 $saldo_totalF = 0;
 		
-?>
+			?>
 
 			<small><small>
 				<section class="area-tab" style="background-color: #f5f5f5;">
 					
 					<div class="linha-cab" style="padding-top: 5px;">
-						<div class="coluna" style="width:50%">DESCRIÇÍO</div>
+						<div class="coluna" style="width:50%">DESCRIÇÃO</div>
 						<div class="coluna" style="width:20%">TIPO</div>
 						<div class="coluna" style="width:15%">VALOR</div>
 						<div class="coluna" style="width:15%">DATA</div>									
@@ -230,14 +230,14 @@ for($i=0; $i < $total_reg; $i++){
 	$total_pagoF = number_format($total_pago, 2, ',', '.');
 	$data_pgtoF = implode('/', array_reverse(explode('-', $data_pgto)));
 
-?>
+				 ?>
 		
 		<section class="area-tab" style="padding-top:5px">					
 						<div class="linha-cab">				
-							<div class="coluna" style="width:50%"<?php echo $descricao ></div>
+							<div class="coluna" style="width:50%"><?php echo $descricao ?></div>
 							<div class="coluna" style="width:20%">Conta Paga</div>
 							<div class="coluna text-danger" style="width:15%">R$ <?php echo $valorF ?></div>
-							<div class="coluna" style="width:15%"<?php echo $data_pgtoF ></div>	
+							<div class="coluna" style="width:15%"> <?php echo $data_pgtoF ?></div>	
 						</div>
 					</section>
 					<div class="cabecalho" style="border-bottom: solid 1px #e3e3e3;">
@@ -269,15 +269,15 @@ for($i=0; $i < $total_reg; $i++){
 
 
 
-?>
+				 ?>
 
 
 			<section class="area-tab" style="padding-top:5px">					
 						<div class="linha-cab">				
-							<div class="coluna" style="width:50%"<?php echo $descricao ></div>
+							<div class="coluna" style="width:50%"><?php echo $descricao ?></div>
 							<div class="coluna" style="width:20%">Conta Recebida</div>
 							<div class="coluna text-primary" style="width:15%">R$ <?php echo $valorF ?></div>
-							<div class="coluna" style="width:15%"<?php echo $data_pgtoF ></div>	
+							<div class="coluna" style="width:15%"> <?php echo $data_pgtoF ?></div>	
 						</div>
 					</section>
 					<div class="cabecalho" style="border-bottom: solid 1px #e3e3e3;">
@@ -321,15 +321,15 @@ for($i=0; $i < $total_reg; $i++){
 
 
 
-?>
+				 ?>
 
 
 				 <section class="area-tab" style="padding-top:5px">					
 						<div class="linha-cab">				
-							<div class="coluna" style="width:50%"<?php echo $nome_curso ></div>
+							<div class="coluna" style="width:50%"><?php echo $nome_curso ?></div>
 							<div class="coluna" style="width:20%">Venda de Curso</div>
 							<div class="coluna text-success" style="width:15%">R$ <?php echo $total_recebF ?></div>
-							<div class="coluna" style="width:15%"<?php echo $dataF ></div>	
+							<div class="coluna" style="width:15%"> <?php echo $dataF ?></div>	
 						</div>
 					</section>
 					<div class="cabecalho" style="border-bottom: solid 1px #e3e3e3;">
@@ -346,7 +346,7 @@ if($saldo_total >= 0){
 	$classe_saldo = 'text-danger';
 }
 
-?>
+				 ?>
 
 
 
@@ -379,7 +379,7 @@ if($saldo_total >= 0){
 
 		<span > <small><small><small><small>TOTAL DE VENDAS</small> : <span class="text-success">R$ <?php echo $total_vendasF ?></span></small></small></small>  </span>
 
-		<span > <small><small><small><small><b><i>SALDO TOTAL</small> :<span class="<?php echo $classe_saldo >?>"> R$ <?php echo $saldo_totalF ?></span></i></b></small></small></small>  </span>			
+		<span > <small><small><small><small><b><i>SALDO TOTAL</small> :<span class="<?php echo $classe_saldo ?>"> R$ <?php echo $saldo_totalF ?></span></i></b></small></small></small>  </span>			
 
 		
 		</div>
@@ -390,8 +390,8 @@ if($saldo_total >= 0){
 
 
 
-	<div class="footer" ?? align="center">
-		<span style="font-size:10px"<?php echo $nome_sistema > Whatsapp: <?php echo $tel_sistema ?></span> 
+	<div class="footer"  align="center">
+		<span style="font-size:10px"><?php echo $nome_sistema ?> Whatsapp: <?php echo $tel_sistema ?></span> 
 	</div>
 
 

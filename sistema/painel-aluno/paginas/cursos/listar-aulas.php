@@ -177,7 +177,7 @@ HTML;
 				<!-- <a class="{$esconder}" href="$url_sistema/sistema/painel-admin/img/arquivos/$apostila" target="_blank" ><i class="fa  fa-file-pdf-o" style="display: inline-block;" title="apostila"></i></a> -->
 				<!-- <a class="{$esconder}" href="https://google.com" target="_blank" ><i class="fa  fa-file-pdf-o" style="display: inline-block;" title="apostila"></i></a> -->
         
-        <button class="{$esconder}" onclick='verApostila("<?php echo $apostila >");' style="margin-left: 10px;"?>
+        <button class="{$esconder}" onclick='verApostila("<?php echo $apostila ?>");' style="margin-left: 10px;">
         <i class="fa  fa-file-pdf-o" style="display: inline-block;" title="apostila"></i>
         </button>
 				<span class="{$ocultar_span}">
@@ -206,7 +206,7 @@ HTML;
 <script>
 
   function verApostila(apostila) {
-    const path = apostila.replace(/<\php echo\s*|\s*\>/g, '');
+    const path = apostila.replace(/<\?php echo\s*|\s*\?>/g, '');
 
     const file = `/sistema/painel-admin/img/arquivos/${path}`
 

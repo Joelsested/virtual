@@ -1,8 +1,8 @@
 <?php
 /**
  * @package php-svg-lib
- * @link ? http ://github.com/PhenX/php-svg-lib
- * @author ?? Fabien Ménager <fabien.menager@gmail.com>
+ * @link    http://github.com/PhenX/php-svg-lib
+ * @author  Fabien Ménager <fabien.menager@gmail.com>
  * @license GNU LGPLv3+ http://www.gnu.org/copyleft/lesser.html
  */
 
@@ -40,11 +40,11 @@ class Shape extends AbstractTag
                 if ($stroke) {
                     $surface->fillStroke();
                 } else {
-// ?? if (is_string($style->fill)) {
+//                    if (is_string($style->fill)) {
 //                        /** @var LinearGradient|RadialGradient $gradient */
-// ?? $gradient = $this->getDocument()->getDef($style->fill);
+//                        $gradient = $this->getDocument()->getDef($style->fill);
 //
-// ?? var_dump($gradient->getStops());
+//                        var_dump($gradient->getStops());
 //                    }
 
                     $surface->fill();

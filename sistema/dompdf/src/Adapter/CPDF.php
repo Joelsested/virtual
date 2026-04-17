@@ -1,11 +1,11 @@
 <?php
 /**
  * @package dompdf
- * @link ? http ://dompdf.github.com/
- * @author ?? Benj Carson <benjcarson@digitaljunkies.ca>
- * @author ?? Orion Richardson <orionr@yahoo.com>
- * @author ?? Helmut Tischer <htischer@weihenstephan.org>
- * @author ?? Fabien MÃ©nager <fabien.menager@gmail.com>
+ * @link    http://dompdf.github.com/
+ * @author  Benj Carson <benjcarson@digitaljunkies.ca>
+ * @author  Orion Richardson <orionr@yahoo.com>
+ * @author  Helmut Tischer <htischer@weihenstephan.org>
+ * @author  Fabien Ménager <fabien.menager@gmail.com>
  * @license http://www.gnu.org/copyleft/lesser.html GNU Lesser General Public License
  */
 
@@ -26,7 +26,7 @@ use FontLib\Exception\FontNotFoundException;
  * Dompdf\Adapter\CPDF provides a simple stateless interface to the stateful one
  * provided by the Cpdf class.
  *
- * Unless otherwise mentioned, all dimensions are in points (1/72 in). ?? The
+ * Unless otherwise mentioned, all dimensions are in points (1/72 in).  The
  * coordinate origin is in the top left corner, and y values increase
  * downwards.
  *
@@ -43,7 +43,64 @@ class CPDF implements Canvas
      *
      * @var array;
      */
-    static $PAPER_SIZES = ["4a0" => [0, 0, 4767.87, 6740.79], "2a0" => [0, 0, 3370.39, 4767.87], "a0" => [0, 0, 2383.94, 3370.39], "a1" => [0, 0, 1683.78, 2383.94], "a2" => [0, 0, 1190.55, 1683.78], "a3" => [0, 0, 841.89, 1190.55], "a4" => [0, 0, 595.28, 841.89], "a5" => [0, 0, 419.53, 595.28], "a6" => [0, 0, 297.64, 419.53], "a7" => [0, 0, 209.76, 297.64], "a8" => [0, 0, 147.40, 209.76], "a9" => [0, 0, 104.88, 147.40], "a10" => [0, 0, 73.70, 104.88], "b0" => [0, 0, 2834.65, 4008.19], "b1" => [0, 0, 2004.09, 2834.65], "b2" => [0, 0, 1417.32, 2004.09], "b3" => [0, 0, 1000.63, 1417.32], "b4" => [0, 0, 708.66, 1000.63], "b5" => [0, 0, 498.90, 708.66], "b6" => [0, 0, 354.33, 498.90], "b7" => [0, 0, 249.45, 354.33], "b8" => [0, 0, 175.75, 249.45], "b9" => [0, 0, 124.72, 175.75], "b10" => [0, 0, 87.87, 124.72], "c0" => [0, 0, 2599.37, 3676.54], "c1" => [0, 0, 1836.85, 2599.37], "c2" => [0, 0, 1298.27, 1836.85], "c3" => [0, 0, 918.43, 1298.27], "c4" => [0, 0, 649.13, 918.43], "c5" => [0, 0, 459.21, 649.13], "c6" => [0, 0, 323.15, 459.21], "c7" => [0, 0, 229.61, 323.15], "c8" => [0, 0, 161.57, 229.61], "c9" => [0, 0, 113.39, 161.57], "c10" => [0, 0, 79.37, 113.39], "ra0" => [0, 0, 2437.80, 3458.27], "ra1" => [0, 0, 1729.13, 2437.80], "ra2" => [0, 0, 1218.90, 1729.13], "ra3" => [0, 0, 864.57, 1218.90], "ra4" => [0, 0, 609.45, 864.57], "sra0" => [0, 0, 2551.18, 3628.35], "sra1" => [0, 0, 1814.17, 2551.18], "sra2" => [0, 0, 1275.59, 1814.17], "sra3" => [0, 0, 907.09, 1275.59], "sra4" => [0, 0, 637.80, 907.09], "letter" => [0, 0, 612.00, 792.00], "half-letter" => [0, 0, 396.00, 612.00], "legal" => [0, 0, 612.00, 1008.00], "ledger" => [0, 0, 1224.00, 792.00], "tabloid" => [0, 0, 792.00, 1224.00], "executive" => [0, 0, 521.86, 756.00], "folio" => [0, 0, 612.00, 936.00], "commercial #10 envelope" => [0, 0, 684, 297], "catalog #10 1/2 envelope" => [0, 0, 648, 864], "8.5x11" => [0, 0, 612.00, 792.00], "8.5x14" => [0, 0, 612.00, 1008.0], "11x17" => [0, 0, 792.00, 1224.00],
+    static $PAPER_SIZES = [
+        "4a0" => [0, 0, 4767.87, 6740.79],
+        "2a0" => [0, 0, 3370.39, 4767.87],
+        "a0" => [0, 0, 2383.94, 3370.39],
+        "a1" => [0, 0, 1683.78, 2383.94],
+        "a2" => [0, 0, 1190.55, 1683.78],
+        "a3" => [0, 0, 841.89, 1190.55],
+        "a4" => [0, 0, 595.28, 841.89],
+        "a5" => [0, 0, 419.53, 595.28],
+        "a6" => [0, 0, 297.64, 419.53],
+        "a7" => [0, 0, 209.76, 297.64],
+        "a8" => [0, 0, 147.40, 209.76],
+        "a9" => [0, 0, 104.88, 147.40],
+        "a10" => [0, 0, 73.70, 104.88],
+        "b0" => [0, 0, 2834.65, 4008.19],
+        "b1" => [0, 0, 2004.09, 2834.65],
+        "b2" => [0, 0, 1417.32, 2004.09],
+        "b3" => [0, 0, 1000.63, 1417.32],
+        "b4" => [0, 0, 708.66, 1000.63],
+        "b5" => [0, 0, 498.90, 708.66],
+        "b6" => [0, 0, 354.33, 498.90],
+        "b7" => [0, 0, 249.45, 354.33],
+        "b8" => [0, 0, 175.75, 249.45],
+        "b9" => [0, 0, 124.72, 175.75],
+        "b10" => [0, 0, 87.87, 124.72],
+        "c0" => [0, 0, 2599.37, 3676.54],
+        "c1" => [0, 0, 1836.85, 2599.37],
+        "c2" => [0, 0, 1298.27, 1836.85],
+        "c3" => [0, 0, 918.43, 1298.27],
+        "c4" => [0, 0, 649.13, 918.43],
+        "c5" => [0, 0, 459.21, 649.13],
+        "c6" => [0, 0, 323.15, 459.21],
+        "c7" => [0, 0, 229.61, 323.15],
+        "c8" => [0, 0, 161.57, 229.61],
+        "c9" => [0, 0, 113.39, 161.57],
+        "c10" => [0, 0, 79.37, 113.39],
+        "ra0" => [0, 0, 2437.80, 3458.27],
+        "ra1" => [0, 0, 1729.13, 2437.80],
+        "ra2" => [0, 0, 1218.90, 1729.13],
+        "ra3" => [0, 0, 864.57, 1218.90],
+        "ra4" => [0, 0, 609.45, 864.57],
+        "sra0" => [0, 0, 2551.18, 3628.35],
+        "sra1" => [0, 0, 1814.17, 2551.18],
+        "sra2" => [0, 0, 1275.59, 1814.17],
+        "sra3" => [0, 0, 907.09, 1275.59],
+        "sra4" => [0, 0, 637.80, 907.09],
+        "letter" => [0, 0, 612.00, 792.00],
+        "half-letter" => [0, 0, 396.00, 612.00],
+        "legal" => [0, 0, 612.00, 1008.00],
+        "ledger" => [0, 0, 1224.00, 792.00],
+        "tabloid" => [0, 0, 792.00, 1224.00],
+        "executive" => [0, 0, 521.86, 756.00],
+        "folio" => [0, 0, 612.00, 936.00],
+        "commercial #10 envelope" => [0, 0, 684, 297],
+        "catalog #10 1/2 envelope" => [0, 0, 648, 864],
+        "8.5x11" => [0, 0, 612.00, 792.00],
+        "8.5x14" => [0, 0, 612.00, 1008.0],
+        "11x17" => [0, 0, 792.00, 1224.00],
     ];
 
     /**
@@ -224,7 +281,7 @@ class CPDF implements Canvas
      * Opens a new 'object'
      *
      * While an object is open, all drawing actions are recorded in the object,
-     * as opposed to being drawn on the current page. ?? Objects can be added
+     * as opposed to being drawn on the current page.  Objects can be added
      * later to a specific page or to several pages.
      *
      * The return value is an integer ID for the new object.
@@ -384,7 +441,7 @@ class CPDF implements Canvas
     protected function _set_stroke_color($color)
     {
         $this->_pdf->setStrokeColor($color);
-        $alpha = isset($color["alpha"]) ?? $color["alpha"] ?: 1;
+        $alpha = isset($color["alpha"]) ? $color["alpha"] : 1;
         if ($this->_current_opacity != 1) {
             $alpha *= $this->_current_opacity;
         }
@@ -400,7 +457,7 @@ class CPDF implements Canvas
     protected function _set_fill_color($color)
     {
         $this->_pdf->setColor($color);
-        $alpha = isset($color["alpha"]) ?? $color["alpha"] ?: 1;
+        $alpha = isset($color["alpha"]) ? $color["alpha"] : 1;
         if ($this->_current_opacity) {
             $alpha *= $this->_current_opacity;
         }
@@ -411,7 +468,8 @@ class CPDF implements Canvas
      * Sets line transparency
      * @see Cpdf::setLineTransparency()
      *
-     * Valid blend modes are (case-sensitive) : *
+     * Valid blend modes are (case-sensitive):
+     *
      * Normal, Multiply, Screen, Overlay, Darken, Lighten,
      * ColorDodge, ColorBurn, HardLight, SoftLight, Difference,
      * Exclusion
@@ -428,7 +486,8 @@ class CPDF implements Canvas
      * Sets fill transparency
      * @see Cpdf::setFillTransparency()
      *
-     * Valid blend modes are (case-sensitive) : *
+     * Valid blend modes are (case-sensitive):
+     *
      * Normal, Multiply, Screen, Overlay, Darken, Lighten,
      * ColorDogde, ColorBurn, HardLight, SoftLight, Difference,
      * Exclusion
@@ -564,7 +623,9 @@ class CPDF implements Canvas
                 throw new Exception("Function $func_name() not found.  Cannot convert $type image: $image_url.  Please install the image PHP extension.");
             }
             $func_name = "\\Dompdf\\Helpers::" . $func_name;
-        } ? set_error_handler([Helpers::class, 'record_warnings']);
+        }
+
+        set_error_handler([Helpers::class, 'record_warnings']);
 
         try {
             $im = call_user_func($func_name, $image_url);
@@ -1115,7 +1176,8 @@ class CPDF implements Canvas
      */
     public function stream($filename = "document.pdf", $options = [])
     {
-        if (headers_sent()) { ? die("Unable to stream pdf: headers already sent");
+        if (headers_sent()) {
+            die("Unable to stream pdf: headers already sent");
         }
 
         if (!isset($options["compress"])) $options["compress"] = true;
@@ -1124,10 +1186,15 @@ class CPDF implements Canvas
         $this->_add_page_text();
 
         $debug = !$options['compress'];
-        $tmp = ltrim($this->_pdf->output($debug)); ? header("Cache-Control: private"); ? header("Content-Type: application/pdf"); ? header("Content-Length: " . mb_strlen($tmp, "8bit"));
+        $tmp = ltrim($this->_pdf->output($debug));
+
+        header("Cache-Control: private");
+        header("Content-Type: application/pdf");
+        header("Content-Length: " . mb_strlen($tmp, "8bit"));
 
         $filename = str_replace(["\n", "'"], "", basename($filename, ".pdf")) . ".pdf";
-        $attachment = $options["Attachment"] ? "attachment" : "inline"; ? header(Helpers::buildContentDispositionHeader($attachment, $filename));
+        $attachment = $options["Attachment"] ? "attachment" : "inline";
+        header(Helpers::buildContentDispositionHeader($attachment, $filename));
 
         echo $tmp;
         flush();

@@ -1,8 +1,8 @@
 <?php
 /**
  * @package dompdf
- * @link ? http ://dompdf.github.com/
- * @author ?? Benj Carson <benjcarson@digitaljunkies.ca>
+ * @link    http://dompdf.github.com/
+ * @author  Benj Carson <benjcarson@digitaljunkies.ca>
  * @license http://www.gnu.org/copyleft/lesser.html GNU Lesser General Public License
  */
 namespace Dompdf\Renderer;
@@ -13,7 +13,7 @@ use Dompdf\Helpers;
 /**
  * Renders inline frames
  *
- * @access ?? private
+ * @access  private
  * @package dompdf
  */
 class Inline extends AbstractRenderer
@@ -36,7 +36,7 @@ class Inline extends AbstractRenderer
             (float)$style->length_in_pt($bp["left"]["width"])
         ];
 
-        // Draw the background & border behind each child. ?? To do this we need
+        // Draw the background & border behind each child.  To do this we need
         // to figure out just how much space each child takes:
         list($x, $y) = $frame->get_first_child()->get_position();
 
@@ -63,7 +63,7 @@ class Inline extends AbstractRenderer
         //Need to handle it elsewhere, e.g. on certain ...clone()... usages.
         // Repeat not given: default is Style::__construct
         // ... && (!($repeat = $style->background_repeat) || $repeat === "repeat" ...
-        //different position $this->_background_image($url, $x, $y, $w, $h, $style);
+        //different position? $this->_background_image($url, $x, $y, $w, $h, $style);
         if (($url = $style->background_image) && $url !== "none") {
             $this->_background_image($url, $x + $widths[3], $y + $widths[0], $w, $h, $style);
         }
@@ -124,7 +124,7 @@ class Inline extends AbstractRenderer
         }
     }
 
-    protected function get_child_size(Frame $frame, bool $do_debug_layout_line) : array {
+    protected function get_child_size(Frame $frame, bool $do_debug_layout_line): array {
         $w = 0.0;
         $h = 0.0;
 

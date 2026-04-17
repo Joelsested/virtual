@@ -2,6 +2,7 @@
 
 require_once('../vendor/autoload.php');
 require_once("../sistema/conexao.php");
+require_once("../config/env.php");
 
 ini_set('display_errors', 0);
 ini_set('display_startup_errors', 0);
@@ -11,45 +12,67 @@ ini_set('display_startup_errors', 0);
 $id_aluno = $_GET['id_aluno'];
 $id = $_GET['id'];
 $nome_curso = $_GET['nome_curso'];
+$tipo = $_GET['tipo'] ?? 'cursos';
 
+$efiOptions = require __DIR__ . '/options.php';
+$efiCardSandbox = (bool) ($efiOptions['sandbox'] ?? false);
+$efiEnvironment = $efiCardSandbox ? 'sandbox' : 'production';
 
-//BUSCA VALOR ACRESCIMO CARTAO
-$queryAcrescimoCartao = $pdo->query("SELECT acrescimo_cartao_credito FROM config");
-$resAcrescimoCartao = $queryAcrescimoCartao->fetchColumn();
+$defaultAccount = '09c6ec939c0ad967bf568d6f145a733d';
+$efiCardAccount = (string) env(
+    $efiCardSandbox ? 'EFI_CARD_ACCOUNT_HOMOLOG' : 'EFI_CARD_ACCOUNT_PROD',
+    env('EFI_CARD_ACCOUNT', $defaultAccount)
+);
+$efiCardAccount = trim($efiCardAccount) !== '' ? trim($efiCardAccount) : $defaultAccount;
 
-
-
-//BUSCA DADOS DA MATRICULA
-$query = $pdo->prepare("SELECT * FROM matriculas where id = :id and aluno = :aluno");
-$query->execute([':id' => $id, ':aluno' => $id_aluno]);
-$res = $query->fetchAll(PDO::FETCH_ASSOC);
-
-$response = $res[0];
-
-
-// aplica desconto caso exista
-$valor = (float)$response['valor'];
-$desconto = !empty($response['valor_cupom']) ? (float)$response['valor_cupom'] : 0;
-$response['valor'] = $valor - $desconto;
-
-
-
-
-$valor = (int) $response['valor']; 
-$percentual = isset($resAcrescimoCartao) ? (float) $resAcrescimoCartao : 0; 
-
-
-
-if ($percentual > 0) {
-    
-    $valor += ceil($valor * ($percentual / 100));
-
+$tabelaMatricula = 'matriculas';
+if ($tipo === 'tecnicos') {
+    $tabelaMatricula = 'matriculas_tecnicos';
+} elseif ($tipo === 'profissionalizantes') {
+    $tabelaMatricula = 'matriculas_profissionalizantes';
 }
 
-$response['valor'] = $valor;
+// BUSCA DADOS DA MATRICULA
+$stmtMat = $pdo->prepare("SELECT * FROM {$tabelaMatricula} WHERE id = :id AND aluno = :aluno LIMIT 1");
+$stmtMat->execute([
+    ':id' => (int) $id,
+    ':aluno' => (int) $id_aluno,
+]);
+$response = $stmtMat->fetch(PDO::FETCH_ASSOC);
+
+if (!$response) {
+    // Fallback para base "cursos"
+    $stmtMat = $pdo->prepare("SELECT * FROM matriculas WHERE id = :id AND aluno = :aluno LIMIT 1");
+    $stmtMat->execute([
+        ':id' => (int) $id,
+        ':aluno' => (int) $id_aluno,
+    ]);
+    $response = $stmtMat->fetch(PDO::FETCH_ASSOC);
+    $tabelaMatricula = 'matriculas';
+    $tipo = 'cursos';
+}
+
+$valorBaseCurso = (float) ($response['subtotal'] ?? 0);
+if ($valorBaseCurso <= 0) {
+    $valorBaseCurso = (float) ($response['valor'] ?? 0);
+}
+
+$taxaFixaCartaoCredito = (float) env('EFI_CARTAO_CREDITO_TAXA_FIXA', env('EFI_CARD_CREDIT_FIXED_FEE', '0.29'));
+$taxaPercentualCartaoCredito = (float) env('EFI_CARTAO_CREDITO_TAXA_PERCENTUAL', env('EFI_CARD_CREDIT_PERCENT_FEE', '4.99'));
+$percentualFracaoCartaoCredito = max(0.0, min(0.99, $taxaPercentualCartaoCredito / 100));
+$valorTotalCartaoCredito = $valorBaseCurso;
+
+if ($valorBaseCurso > 0) {
+    $valorTotalCartaoCredito = ($valorBaseCurso + $taxaFixaCartaoCredito) / (1 - $percentualFracaoCartaoCredito);
+    $valorTotalCartaoCredito = round(max($valorBaseCurso, $valorTotalCartaoCredito), 2);
+}
 
 
 
+// echo '<pre>';
+// echo json_encode($res[0], JSON_PRETTY_PRINT);
+// echo '</pre>';
+// return;
 
 ?>
 
@@ -98,7 +121,6 @@ $response['valor'] = $valor;
 <body class="bg-gray-100 min-h-screen py-8">
     <div class="max-w-6xl mx-auto px-4">
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            
             <!-- Progress Bar -->
             <div class="lg:col-span-3 mb-4">
                 <div class="bg-white rounded-lg shadow-md p-6">
@@ -176,10 +198,13 @@ $response['valor'] = $valor;
             <div class="lg:col-span-2 bg-white rounded-lg shadow-md p-6">
                 <form id="wizardForm">
                     <input type="hidden" id="credit_card_token" name="credit_card_token">
+                    <input type="hidden" id="id_matricula" value="<?php echo (int) $id; ?>" name="id_matricula">
                     <input type="hidden" id="id_do_curso_pag" value="<?php echo $response['id_curso'] ?>"
                         name="id_do_curso_pag">
                     <input type="hidden" id="nome_curso_titulo" value="<?php echo $nome_curso ?>"
                         name="nome_curso_titulo">
+                    <input type="hidden" id="tipo_matricula" value="<?php echo htmlspecialchars($tipo, ENT_QUOTES); ?>"
+                        name="tipo_matricula">
                     <!-- Step 1: Método de Pagamento -->
                     <div id="step1" class="step-content">
                         <h2 class="text-xl font-semibold text-gray-800 mb-6">Escolha o método de pagamento</h2>
@@ -198,7 +223,7 @@ $response['valor'] = $valor;
                                     </div>
                                     <div class="flex-1">
                                         <div class="font-medium text-gray-900">Cartão de crédito</div>
-                                        <div class="text-sm text-gray-500">Em até 12x • Aprovação em segundos</div>
+                                        <div class="text-sm text-gray-500">Até 12x com juros do banco • Aprovação em segundos</div>
                                     </div>
                                     <div class="flex space-x-1">
                                         <div>
@@ -225,8 +250,8 @@ $response['valor'] = $valor;
                                         <i class="fas fa-credit-card text-white"></i>
                                     </div>
                                     <div class="flex-1">
-                                        <div class="font-medium text-gray-900">Pagamento Recorrente</div>
-                                        <div class="text-sm text-gray-500">Pagamento recorrente em ate 6x - Aprovacao imediata
+                                        <div class="font-medium text-gray-900">Cartão Recorrente</div>
+                                        <div class="text-sm text-gray-500">Parcelas fixas recorrentes • Aprovação imediata
                                         </div>
 
                                     </div>
@@ -718,14 +743,6 @@ $response['valor'] = $valor;
 
         let cardBrand = null;
 
-        function getMaxInstallments() {
-            const selected = document.querySelector('input[name="payment_method"]:checked');
-            if (selected && selected.value === 'debit_card') {
-                return 6;
-            }
-            return 12;
-        }
-
         // Função para identificar a bandeira
         async function identifyBrand(cardNumber) {
             const brandIcon = document.getElementById('cardIcon');
@@ -785,35 +802,97 @@ $response['valor'] = $valor;
             }
         });
 
+        const efiEnvironment = <?php echo json_encode($efiEnvironment); ?>;
+        const efiCardAccount = <?php echo json_encode($efiCardAccount); ?>;
+        console.log('[EFI Checkout] Ambiente:', efiEnvironment, '| Conta:', efiCardAccount);
+
         // Função para buscar parcelas
         async function getInstallments() {
-            const total = <?php echo json_encode($response['valor']); ?>;
+            const totalBase = <?php echo json_encode($valorBaseCurso); ?>;
+            const totalCreditoComAcrescimo = <?php echo json_encode($valorTotalCartaoCredito); ?>;
+            const efiEnvironment = <?php echo json_encode($efiEnvironment); ?>;
+            const efiCardAccount = <?php echo json_encode($efiCardAccount); ?>;
+            const select = document.getElementById('installments');
+            const isRecorrente = formData.payment_method === 'debit_card';
+            const total = isRecorrente ? totalBase : totalCreditoComAcrescimo;
             const valorCentavos = Math.round(total * 100);
 
-            if (!cardBrand) return; // só continua se tiver bandeira
+            if (isRecorrente) {
+                const maxParcelasRecorrente = 24; // Mesma regra aplicada no backend (2x até 24x)
+                const totalNumero = Number(total || 0);
+                select.innerHTML = '';
+
+                for (let i = 2; i <= maxParcelasRecorrente; i++) {
+                    const valorParcela = (totalNumero / i).toFixed(2).replace('.', ',');
+                    const option = document.createElement('option');
+                    option.value = String(i);
+                    option.text = `${i}x fixas de R$ ${valorParcela} (recorrente)`;
+                    select.appendChild(option);
+                }
+
+                if (select.options.length > 0) {
+                    select.value = '2';
+                    formData.installments = 2;
+                    formData.installments_value = select.options[select.selectedIndex].text;
+                }
+                return;
+            }
+
+            if (!cardBrand) {
+                select.innerHTML = '';
+                const option = document.createElement('option');
+                option.value = '';
+                option.text = 'Informe o cartão para carregar as parcelas';
+                select.appendChild(option);
+                return;
+            }
 
             try {
                 const installmentsResponse = await EfiPay.CreditCard
-                    .setAccount("09c6ec939c0ad967bf568d6f145a733d")
-                    .setEnvironment("production")
+                    .setAccount(efiCardAccount)
+                    .setEnvironment(efiEnvironment)
                     .setBrand(cardBrand)
                     .setTotal(valorCentavos)
                     .getInstallments();
 
-                const select = document.getElementById('installments');
                 select.innerHTML = '';
+                let encontrouParcelaComJuros = false;
 
-                const maxInstallments = getMaxInstallments();
                 installmentsResponse.installments.forEach(installment => {
-                    if (installment.installment > maxInstallments) {
+                    const quantidade = Number(installment.installment);
+                    if (!quantidade || quantidade < 1 || quantidade > 12) {
+                        return;
+                    }
+                    if (quantidade > 1 && !installment.has_interest) {
                         return;
                     }
                     const valorReais = (installment.value / 100).toFixed(2).replace('.', ',');
                     const option = document.createElement('option');
-                    option.value = installment.installment;
-                    option.text = `${installment.installment}x de R$ ${valorReais} ${installment.has_interest ? '(com juros)' : '(sem juros)'}`;
+                    option.value = String(quantidade);
+                    option.text = `${quantidade}x de R$ ${valorReais} ${installment.has_interest ? '(com juros)' : '(sem juros)'}`;
                     select.appendChild(option);
+                    if (quantidade > 1 && installment.has_interest) {
+                        encontrouParcelaComJuros = true;
+                    }
                 });
+
+                if (select.options.length > 0) {
+                    select.value = select.options[0].value || '1';
+                    formData.installments = Number(select.value || 1);
+                    formData.installments_value = select.options[select.selectedIndex].text;
+                } else {
+                    const option = document.createElement('option');
+                    option.value = '1';
+                    option.text = '1x (à vista)';
+                    select.appendChild(option);
+                    select.value = '1';
+                    formData.installments = 1;
+                    formData.installments_value = option.text;
+                }
+
+                if (!encontrouParcelaComJuros && select.options.length === 1 && select.options[0].value === '1') {
+                    console.warn('Parcelamento com juros não retornado pela EFI para este cartão/conta.');
+                }
 
             } catch (error) {
                 console.error("Erro ao obter parcelas:", error);
@@ -824,18 +903,23 @@ $response['valor'] = $valor;
             showStep('loading');
             const expirationMonth = expiry.split('/')[0];
             const expirationYear = expiry.split('/')[1];
+            const efiEnvironment = <?php echo json_encode($efiEnvironment); ?>;
+            const efiCardAccount = <?php echo json_encode($efiCardAccount); ?>;
+            const cardNumberDigits = (cardNumber || '').replace(/\D/g, '');
+            const securityCodeDigits = (securityCode || '').replace(/\D/g, '');
+            const cardholderNameNormalized = (cardholderName || '').replace(/\s+/g, ' ').trim();
 
             try {
                 const result = await EfiPay.CreditCard
-                    .setAccount("09c6ec939c0ad967bf568d6f145a733d")
-                    .setEnvironment("production") // 'production' or 'sandbox'
+                    .setAccount(efiCardAccount)
+                    .setEnvironment(efiEnvironment) // 'production' or 'sandbox'
                     .setCreditCardData({
                         brand: cardBrand,
-                        number: cardNumber,
-                        cvv: securityCode,
+                        number: cardNumberDigits,
+                        cvv: securityCodeDigits,
                         expirationMonth: expirationMonth,
                         expirationYear: expirationYear,
-                        holderName: cardholderName,
+                        holderName: cardholderNameNormalized,
                         holderDocument: cpf.replace(/\D/g, ''),
                         reuse: false,
                     })
@@ -843,6 +927,9 @@ $response['valor'] = $valor;
 
                 const payment_token = result.payment_token;
                 const card_mask = result.card_mask;
+                if (!payment_token) {
+                    throw new Error('Não foi possível gerar o token do cartão.');
+                }
                 formData.payment_token = payment_token;
                 formData.card_mask = card_mask;
 
@@ -850,6 +937,7 @@ $response['valor'] = $valor;
                 console.log("Código: ", error.code);
                 console.log("Nome: ", error.error);
                 console.log("Mensagem: ", error.error_description);
+                throw new Error(error?.error_description || 'Falha ao validar os dados do cartão.');
             }
         }
         // Estado global do wizard
@@ -1103,8 +1191,8 @@ $response['valor'] = $valor;
                 paymentMethodSummary.classList.remove('hidden');
 
                 const methods = {
-                    'credit_card': { text: 'Cartão de Crédito', detail: 'À vista ou parcelado em até 12x' },
-                    'debit_card': { text: 'Pagamento Recorrente', detail: 'Pagamento recorrente em ate 6x' },
+                    'credit_card': { text: 'Cartão de Crédito', detail: 'Até 12x com juros do banco' },
+                    'debit_card': { text: 'Cartão Recorrente', detail: 'Parcelamento recorrente no cartão' },
                 };
 
                 const method = methods[formData.payment_method];
@@ -1154,7 +1242,7 @@ $response['valor'] = $valor;
             const methods = {
                 'pix': 'PIX',
                 'credit_card': 'Cartão de Crédito',
-                'debit_card': 'Pagamento Recorrente',
+                'debit_card': 'Cartão Recorrente',
                 'boleto': 'Boleto Bancário'
             };
 
@@ -1215,7 +1303,7 @@ $response['valor'] = $valor;
                         <hr class="border-green-200">
                         <div class="flex justify-between font-semibold">
                             <span>Parcelas</span>
-                            <span>${formData.installments_value}</span>
+                            <span>${formData.installments_value || '1x'}</span>
                         </div>
                     </div>
                 </div>`;
@@ -1309,7 +1397,6 @@ $response['valor'] = $valor;
                     alert('Por favor, selecione um método de pagamento');
                     return;
                 }
-                // getInstallments();
                 currentStep = 2;
                 toggleCardData();
                 showStep(2);
@@ -1350,26 +1437,31 @@ $response['valor'] = $valor;
                     const cardNumber = document.querySelector('input[name="card_number"]').value;
                     const expiry = document.querySelector('input[name="expiry"]').value;
                     const securityCode = document.querySelector('input[name="security_code"]').value;
-                    const cardholderName = document.querySelector('input[name="cardholder_name"]').value;
+                    const cardholderInput = document.querySelector('input[name="cardholder_name"]');
+                    let cardholderName = (cardholderInput?.value || '').trim();
                     const id_do_curso_pag = document.querySelector('input[name="id_do_curso_pag"]').value;
                     const nome_curso_titulo = document.querySelector('input[name="nome_curso_titulo"]').value;
+                    const id_matricula = document.querySelector('input[name="id_matricula"]').value;
+                    const tipo_matricula = (document.querySelector('input[name="tipo_matricula"]')?.value || 'cursos').trim();
 
                     // Endereço do cartão
-                    const zipcode = document.querySelector('input[name="cep"]').value;
-                    const street = document.querySelector('input[name="address"]').value;
-                    const number = document.querySelector('input[name="number"]').value;
-                    const neighborhood = document.querySelector('input[name="neighborhood"]').value;
-                    const city = document.querySelector('input[name="city"]').value;
-                    const state = document.querySelector('input[name="state"]').value;
+                    const zipcode = (document.querySelector('input[name="cep"]').value || '').trim();
+                    const street = ((document.querySelector('input[name="address"]')?.value || document.querySelector('input[name="street"]')?.value || '') + '').trim();
+                    const number = (document.querySelector('input[name="number"]').value || '').trim();
+                    const neighborhood = (document.querySelector('input[name="neighborhood"]').value || '').trim();
+                    const city = (document.querySelector('input[name="city"]').value || '').trim();
+                    const state = (document.querySelector('input[name="state"]').value || '').trim().toUpperCase();
 
 
                     const select = document.querySelector('select[name="installments"]');
 
                     // Número de parcelas
-                    const installments = select.value;
+                    const installments = (select?.value && String(select.value).trim() !== '') ? select.value : (formData.payment_method === 'debit_card' ? '2' : '1');
 
                     // Texto completo da opção selecionada
-                    const installments_value = select.options[select.selectedIndex].text;
+                    const installments_value = (select && select.selectedIndex >= 0)
+                        ? select.options[select.selectedIndex].text
+                        : (formData.payment_method === 'debit_card' ? '2x fixas (recorrente)' : '1x (à vista)');
 
                     if (!cardNumber || cardNumber.replace(/\D/g, '').length < 13) {
                         alert('Por favor, insira um número de cartão válido');
@@ -1386,8 +1478,50 @@ $response['valor'] = $valor;
                         return;
                     }
 
+                    if (!zipcode || zipcode.replace(/\D/g, '').length !== 8) {
+                        alert('Por favor, informe um CEP válido com 8 dígitos');
+                        return;
+                    }
+
+                    if (!street) {
+                        alert('Por favor, informe o endereço');
+                        return;
+                    }
+
+                    if (!number) {
+                        alert('Por favor, informe o número do endereço');
+                        return;
+                    }
+
+                    if (!neighborhood) {
+                        alert('Por favor, informe o bairro');
+                        return;
+                    }
+
+                    if (!city) {
+                        alert('Por favor, informe a cidade');
+                        return;
+                    }
+
+                    if (!state || state.length !== 2) {
+                        alert('Por favor, informe a UF com 2 letras (ex.: RO)');
+                        return;
+                    }
+
                     if (!cardholderName) {
-                        alert('Por favor, insira o nome do portador do cartão');
+                        const fallbackNome = (customerName || '').trim();
+                        if (fallbackNome) {
+                            cardholderName = fallbackNome;
+                            if (cardholderInput) cardholderInput.value = fallbackNome;
+                        } else {
+                            alert('Por favor, insira o nome do portador do cartão');
+                            return;
+                        }
+                    }
+
+                    const cardholderParts = cardholderName.split(/\s+/).filter(Boolean);
+                    if (cardholderParts.length < 2) {
+                        alert('O nome do titular do cartão deve ter nome e sobrenome');
                         return;
                     }
 
@@ -1399,8 +1533,10 @@ $response['valor'] = $valor;
                     formData.installments = installments;
                     formData.installments_value = installments_value;
                     formData.id_do_curso = id_do_curso_pag;
+                    formData.id_matricula = id_matricula;
                     formData.nome_do_curso = nome_curso_titulo;
-                    formData.zipcode = zipcode;
+                    formData.tipo = tipo_matricula;
+                    formData.zipcode = zipcode.replace(/\D/g, '');
                     formData.street = street;
                     formData.number = number;
                     formData.neighborhood = neighborhood;
@@ -1413,6 +1549,7 @@ $response['valor'] = $valor;
                 formData.cpf = cpf;
                 formData.customer_name = customerName;
                 formData.phone = document.querySelector('input[name="phone"]').value;
+                formData.tipo = (document.querySelector('input[name="tipo_matricula"]')?.value || formData.tipo || 'cursos').trim();
 
                 currentStep = 3;
                 fillConfirmationScreen();
@@ -1430,10 +1567,25 @@ $response['valor'] = $valor;
                 const cardNumber = document.querySelector('input[name="card_number"]').value;
                 const expiry = document.querySelector('input[name="expiry"]').value;
                 const securityCode = document.querySelector('input[name="security_code"]').value;
-                const cardholderName = document.querySelector('input[name="cardholder_name"]').value;
+                const cardholderName = (document.querySelector('input[name="cardholder_name"]').value || '').trim() || (document.querySelector('input[name="customer_name"]').value || '').trim();
                 const cpf = document.querySelector('input[name="cpf"]').value;
 
-                await generatePaymentToken(cardNumber, expiry, securityCode, cardholderName, cpf);
+                const cardholderParts = cardholderName.split(/\s+/).filter(Boolean);
+                if (cardholderParts.length < 2) {
+                    document.getElementById('errorMessage').textContent = 'Informe nome e sobrenome no titular do cartão.';
+                    showStep('error');
+                    return;
+                }
+
+                try {
+                    await generatePaymentToken(cardNumber, expiry, securityCode, cardholderName, cpf);
+                } catch (tokenError) {
+                    document.getElementById('errorMessage').textContent = tokenError.message || 'Falha ao validar os dados do cartão.';
+                    showStep('error');
+                    return;
+                }
+
+                formData.tipo = (document.querySelector('input[name="tipo_matricula"]')?.value || formData.tipo || 'cursos').trim();
 
 
                 // $.ajax({
@@ -1453,7 +1605,7 @@ $response['valor'] = $valor;
                 // });
 
                 $.ajax({
-                    url: '<?php echo $url_sistema ?>efi/card_payment.php',
+                    url: '<?php echo $url_sistema; ?>efi/card_payment.php',
                     type: 'POST',
                     contentType: 'application/json; charset=utf-8',
                     data: JSON.stringify(formData),
@@ -1465,15 +1617,21 @@ $response['valor'] = $valor;
                     success: function (response) {
                         // Aqui você decide com base na resposta da API
                         if (response.success) {
-                            document.getElementById('transactionId').textContent = 'TRANSACTION ID';
+                            const chargeId = response?.data?.charge_id || response?.data?.subscription_id || 'TRANSACTION ID';
+                            document.getElementById('transactionId').textContent = chargeId;
                             showStep('success');
                         } else {
-                            document.getElementById('errorMessage').textContent = 'Erro ao processar pagamento.';
+                            const detalhe = (response.detail || '').toString();
+                            const mensagem = (response.error || 'Erro ao processar pagamento.').toString();
+                            document.getElementById('errorMessage').textContent = detalhe ? `${mensagem} ${detalhe}` : mensagem;
                             showStep('error');
                         }
                     },
                     error: function (xhr, status, error) {
-                        document.getElementById('errorMessage').textContent = "Erro na requisição AJAX: " + error;
+                        const backendMessage = xhr?.responseJSON?.error || xhr?.responseJSON?.detail || '';
+                        const rawMessage = (xhr?.responseText || '').toString().trim();
+                        const finalMessage = backendMessage || rawMessage || ("Erro na requisição AJAX: " + error);
+                        document.getElementById('errorMessage').textContent = finalMessage;
                         showStep('error');
                     }
                 });
@@ -1510,6 +1668,14 @@ $response['valor'] = $valor;
                     option.classList.remove('ring-2', 'ring-efi-blue', 'bg-blue-50');
                 });
                 document.querySelector('input[name="payment_method"][value="credit_card"]').checked = true;
+                formData.payment_method = 'credit_card';
+                formData.tipo = (document.querySelector('input[name="tipo_matricula"]')?.value || 'cursos').trim();
+                const defaultOption = document.querySelector('input[name="payment_method"][value="credit_card"]')?.closest('.payment-method-option');
+                if (defaultOption) {
+                    defaultOption.classList.add('ring-2', 'ring-efi-blue', 'bg-blue-50');
+                }
+                updatePaymentSummary();
+                getInstallments();
             });
 
             document.getElementById('changeMethod').addEventListener('click', function () {
@@ -1528,11 +1694,21 @@ $response['valor'] = $valor;
                     option.classList.remove('ring-2', 'ring-efi-blue', 'bg-blue-50');
                 });
                 document.querySelector('input[name="payment_method"][value="credit_card"]').checked = true;
+                formData.payment_method = 'credit_card';
+                formData.tipo = (document.querySelector('input[name="tipo_matricula"]')?.value || 'cursos').trim();
+                const defaultOption = document.querySelector('input[name="payment_method"][value="credit_card"]')?.closest('.payment-method-option');
+                if (defaultOption) {
+                    defaultOption.classList.add('ring-2', 'ring-efi-blue', 'bg-blue-50');
+                }
+                updatePaymentSummary();
+                getInstallments();
             });
 
             // Inicializar
             formData.payment_method = 'credit_card';
+            formData.tipo = (document.querySelector('input[name="tipo_matricula"]')?.value || 'cursos').trim();
             updatePaymentSummary();
+            getInstallments();
             showStep(1);
         });
     </script>

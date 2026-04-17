@@ -183,9 +183,9 @@ if ($responsavel_id && $responsavel_nome !== '') {
 <body>
     <div class="box">
         <h2>Relatorio de Alunos</h2>
-        <p class="sub"<?php echo htmlspecialchars($periodoText); ></p>
-        <p class="sub"<?php echo htmlspecialchars($statusText); ></p>
-        <?php if ($responsavelText !== '')  : ?>
+        <p class="sub"><?php echo htmlspecialchars($periodoText); ?></p>
+        <p class="sub"><?php echo htmlspecialchars($statusText); ?></p>
+        <?php if ($responsavelText !== '') : ?>
             <p class="sub">Responsavel: <?php echo htmlspecialchars($responsavelText); ?></p>
         <?php endif; ?>
     </div>
@@ -211,7 +211,7 @@ if ($responsavel_id && $responsavel_nome !== '') {
 
     <div class="box">
         <div style="margin-bottom: 8px;"><strong>Total de registros encontrados: <?php echo count($res); ?></strong></div>
-        <?php if (count($res) > 0)  : ?>
+        <?php if (count($res) > 0) : ?>
             <table>
                 <thead>
                     <tr>
@@ -226,12 +226,12 @@ if ($responsavel_id && $responsavel_nome !== '') {
                     </tr>
                 </thead>
                 <tbody>
-                    <?php foreach ($res as $dado)  : ?>
+                    <?php foreach ($res as $dado) : ?>
                         <?php
-                        $cursoNome = trim($dado['nome_curso'] ?? '') !== ''  $dado['nome_curso'] ?: 'Pacote';
-                        $formaPgto = trim($dado['forma_pgto'] ?? '') !== ''  $dado['forma_pgto'] ?: 'Ativacao Pacote';
+                        $cursoNome = trim($dado['nome_curso'] ?? '') !== '' ? $dado['nome_curso'] : 'Pacote';
+                        $formaPgto = trim($dado['forma_pgto'] ?? '') !== '' ? $dado['forma_pgto'] : 'Ativacao Pacote';
                         $dataMatricula = $dado['data_matricula'] ? date('d/m/Y', strtotime($dado['data_matricula'])) : '';
-?>
+                        ?>
                         <tr>
                             <td><?php echo htmlspecialchars($dado['nome_aluno'] ?? ''); ?></td>
                             <td><?php echo htmlspecialchars($dado['cpf_aluno'] ?? ''); ?></td>

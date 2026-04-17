@@ -168,7 +168,7 @@ HTML;
 <tr> 
 		<td>		
 		<form method="post" action="index.php?pagina=cursos" class="{$classe_nome} $ocultar_aulas">	
-		<button  type="submit" style="background-color: transparent; ? border :none!important;"><span class="{$classe_nome}" style="margin-left:2px">{$nome_curso}</span>
+		<button  type="submit" style="background-color: transparent;  border:none!important;"><span class="{$classe_nome}" style="margin-left:2px">{$nome_curso}</span>
 		</button>
 		<input type="hidden" name="id_pacote" value="{$curso}">	
 		</form>	
@@ -179,7 +179,7 @@ HTML;
 
 		<span class="text-muted">{$nome_curso}</span>
 							
-									<button  type="submit" style="background-color: transparent; ? border :none!important;"><i class="fa fa-money text-danger" ></i><span class="text-danger" style="margin-left:2px">Pagar</span>
+									<button  type="submit" style="background-color: transparent;  border:none!important;"><i class="fa fa-money text-danger" ></i><span class="text-danger" style="margin-left:2px">Pagar</span>
 									</button>
 									<input type="hidden" name="painel_aluno" value="sim">
 									
@@ -187,9 +187,9 @@ HTML;
 								
 		</form>
 		
-		  <div ?? class="{$ocultar_pagar}">
+		  <div  class="{$ocultar_pagar}">
          <span class="text-muted">{$nome_curso}</span>
-           <button onclick="pagarCurso('{$matriculas[$i]['forma_pgto']}', '{$id_do_curso}', '{$id}', '{$nome_curso}');"  type="submit" style="background-color: transparent; ? border :none!important;">
+           <button onclick="pagarCurso('{$matriculas[$i]['forma_pgto']}', '{$id_do_curso}', '{$id}', '{$nome_curso}');"  type="submit" style="background-color: transparent;  border:none!important;">
                 <i class="fa fa-money text-danger" ></i>
                 <span class="text-danger" style="margin-left:2px">Pagar</span>
             </button>
@@ -204,7 +204,7 @@ HTML;
 		<td class="esc">R$ {$valor} </td>
         <td class="esc">
             <span style="font-size:10px">{$matriculas[$i]['forma_pgto']}</span>
-        <button class="{$ocultar_pagar}" onclick="pagarCurso('AGUARDANDO', '{$id_do_curso}', '{$id}', '{$nome_curso}');"  type="submit" style="background-color: transparent; ? border :none!important;">
+        <button class="{$ocultar_pagar}" onclick="pagarCurso('AGUARDANDO', '{$id_do_curso}', '{$id}', '{$nome_curso}');"  type="submit" style="background-color: transparent;  border:none!important;">
                 <i class="fa fa-money text-danger" ></i>
                 <span class="text-danger" style="margin-left:2px">Alterar</span>
             </button>
@@ -212,7 +212,7 @@ HTML;
         </td>
         <td class="{$ocultar_pagar} ">
         
-            <button class="{$classe_cupom}" onclick="aplicarCupom('{$id_do_curso}');"  type="submit" style="background-color: transparent; ? border :none!important;">
+            <button class="{$classe_cupom}" onclick="aplicarCupom('{$id_do_curso}');"  type="submit" style="background-color: transparent;  border:none!important;">
                 <i class="fa fa-money text-primary" ></i>
                 <span class="text-primary" style="margin-left:2px">Aplicar Cupom</span>
             </button>
@@ -232,7 +232,7 @@ HTML;
 		<ul class="dropdown-menu" style="margin-left:-230px;">
 		<li>
 		<div class="notification_desc2">
-		<p>Confirmar Exclusão <a href="#" onclick="excluir('{$id}')"><span class="text-danger">Sim</span></a></p>
+		<p>Confirmar Exclusão? <a href="#" onclick="excluir('{$id}')"><span class="text-danger">Sim</span></a></p>
 		</div>
 		</li>										
 		</ul>
@@ -266,7 +266,9 @@ HTML;
 <script type="text/javascript">
 
     $(document).ready(function () {
-        $('#tabela').DataTable({ ? "ordering" : false, ? "stateSave" : true,
+        $('#tabela').DataTable({
+            "ordering": false,
+            "stateSave": true,
         });
         $('#tabela_filter label input').focus();
     });
@@ -583,7 +585,7 @@ HTML;
             var formData = new FormData(this);
 
             $.ajax({
-                url: "<?php echo $url_sistema >ajax/cursos/cupom.php",
+                url: "<?php echo $url_sistema ?>ajax/cursos/cupom.php",
                 type: 'POST',
                 data: formData,
                 dataType: "text",
@@ -683,7 +685,7 @@ HTML;
 
         const updatePaymentMethod = (method, parcelas = 1) => {
             $.ajax({
-                url: '<?php echo $url_sistema >sistema/painel-aluno/paginas/cursos/set_payment_method.php',
+                url: '<?php echo $url_sistema ?>sistema/painel-aluno/paginas/cursos/set_payment_method.php',
                 type: 'POST',
                 data: { 
                     id_curso: id_curso, 
@@ -728,10 +730,13 @@ HTML;
                 showPaymentModal();
                 break;
             case 'BOLETO':
-                window.location.href = '<?php echo $url_sistema >sistema/painel-aluno/index.php?pagina=parcelas';
+                window.location.href = '<?php echo $url_sistema ?>sistema/painel-aluno/index.php?pagina=parcelas';
                 break;
             case 'CARTAO_DE_CREDITO':
-                window.location.href = '<?php echo $url_sistema >sistema/painel-aluno/index.php?pagina=parcelas_cartao';
+                window.location.href = '<?php echo $url_sistema ?>sistema/painel-aluno/index.php?pagina=parcelas_cartao';
+                break;
+            case 'CARTAO_RECORRENTE':
+                window.location.href = '<?php echo $url_sistema ?>sistema/painel-aluno/index.php?pagina=parcelas_cartao';
                 break;
             case 'BOLETO_PARCELADO':
                 showInstallmentsModal();

@@ -16,12 +16,12 @@ if ($correta == '') {
 }
 
 // $form = [
-// ?? 'id_aluno' => $id_aluno,
-// ?? 'pergunta' => $pergunta,
-// ?? 'resposta' => $resposta,
-// ?? 'id_curso' => $id_curso,
-// ?? 'letras' => $letras,
-// ?? 'correta' => $correta
+// 	'id_aluno' => $id_aluno,
+// 	'pergunta' => $pergunta,
+// 	'resposta' => $resposta,
+// 	'id_curso' => $id_curso,
+// 	'letras' => $letras,
+// 	'correta' => $correta
 // ];
 
 // echo json_encode($form);

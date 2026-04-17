@@ -1,8 +1,8 @@
 <?php
 /**
  * @package php-font-lib
- * @link ? https ://github.com/PhenX/php-font-lib
- * @author ?? Fabien Ménager <fabien.menager@gmail.com>
+ * @link    https://github.com/PhenX/php-font-lib
+ * @author  Fabien Ménager <fabien.menager@gmail.com>
  * @license http://www.gnu.org/copyleft/lesser.html GNU Lesser General Public License
  */
 
@@ -97,19 +97,25 @@ class glyf extends Table {
 
       $glyph->parseData();
 
-      $shape      = array( ?? "SVGContours" => $glyph->getSVGContours(), "xMin"        => $glyph->xMin, "yMin"        => $glyph->yMin, "xMax"        => $glyph->xMax, "yMax"        => $glyph->yMax,
+      $shape      = array(
+        "SVGContours" => $glyph->getSVGContours(),
+        "xMin"        => $glyph->xMin,
+        "yMin"        => $glyph->yMin,
+        "xMax"        => $glyph->xMax,
+        "yMax"        => $glyph->yMax,
       );
       $shape_json = json_encode($shape);
 
       $type = ($glyph instanceof OutlineSimple ? "simple" : "composite");
-      $char = isset($glyphIndexArray[$g]) ?? $glyphIndexArray[$g] ?: 0;
-      $name = isset($names[$g]) ?? $names[$g] ?: sprintf("uni%04x", $char);
+      $char = isset($glyphIndexArray[$g]) ? $glyphIndexArray[$g] : 0;
+      $name = isset($names[$g]) ? $names[$g] : sprintf("uni%04x", $char);
       $char = $char ? "&#{$glyphIndexArray[$g]};" : "";
 
       $s .= "<div class='glyph-view $type' id='glyph-$g'>
               <span class='glyph-id'>$g</span>
               <span class='char'>$char</span>
-              <span class='char-name'>$name</span> ?? ";
+              <span class='char-name'>$name</span>
+              ";
 
       if ($type == "composite") {
         foreach ($glyph->getGlyphIDs() as $_id) {

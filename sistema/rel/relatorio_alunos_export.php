@@ -94,8 +94,10 @@ $res = $query->fetchAll(PDO::FETCH_ASSOC);
 $timestamp = date('Ymd_His');
 $filename = $format === 'excel' ? "relatorio_alunos_{$timestamp}.xls" : "relatorio_alunos_{$timestamp}.csv";
 
-if ($format === 'excel') { ? header('Content-Type: application/vnd.ms-excel; charset=utf-8');
-} else { ? header('Content-Type: text/csv; charset=utf-8');
+if ($format === 'excel') {
+    header('Content-Type: application/vnd.ms-excel; charset=utf-8');
+} else {
+    header('Content-Type: text/csv; charset=utf-8');
 }
 header("Content-Disposition: attachment; filename=\"{$filename}\"");
 header('Pragma: no-cache');
@@ -108,8 +110,8 @@ $header = ['Aluno', 'CPF', 'Curso', 'Valor', 'Forma Pgto', 'Status', 'Vendedor',
 fputcsv($output, $header, ';');
 
 foreach ($res as $dado) {
-    $cursoNome = trim($dado['nome_curso'] ?? '') !== ''  $dado['nome_curso'] ?: 'Pacote';
-    $formaPgto = trim($dado['forma_pgto'] ?? '') !== ''  $dado['forma_pgto'] ?: 'Ativacao Pacote';
+    $cursoNome = trim($dado['nome_curso'] ?? '') !== '' ? $dado['nome_curso'] : 'Pacote';
+    $formaPgto = trim($dado['forma_pgto'] ?? '') !== '' ? $dado['forma_pgto'] : 'Ativacao Pacote';
     $valor = number_format((float) ($dado['valor'] ?? 0), 2, ',', '.');
     $dataMatricula = $dado['data_matricula'] ? date('d/m/Y', strtotime($dado['data_matricula'])) : '';
 

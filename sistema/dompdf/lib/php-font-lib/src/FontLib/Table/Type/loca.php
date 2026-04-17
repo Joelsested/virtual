@@ -1,8 +1,8 @@
 <?php
 /**
  * @package php-font-lib
- * @link ? https ://github.com/PhenX/php-font-lib
- * @author ?? Fabien Ménager <fabien.menager@gmail.com>
+ * @link    https://github.com/PhenX/php-font-lib
+ * @author  Fabien Ménager <fabien.menager@gmail.com>
  * @license http://www.gnu.org/copyleft/lesser.html GNU Lesser General Public License
  */
 
@@ -32,7 +32,7 @@ class loca extends Table {
       $loc = unpack("n*", $d);
 
       for ($i = 0; $i <= $numGlyphs; $i++) {
-        $data[] = isset($loc[$i + 1]) ?? $loc[$i + 1] * 2 : 0;
+        $data[] = isset($loc[$i + 1]) ?  $loc[$i + 1] * 2 : 0;
       }
     }
 
@@ -43,7 +43,7 @@ class loca extends Table {
         $loc = unpack("N*", $d);
 
         for ($i = 0; $i <= $numGlyphs; $i++) {
-          $data[] = isset($loc[$i + 1]) ?? $loc[$i + 1] ?: 0;
+          $data[] = isset($loc[$i + 1]) ? $loc[$i + 1] : 0;
         }
       }
     }

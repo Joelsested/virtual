@@ -38,25 +38,25 @@ $comissao_responsavel = 0;
 if ($nivel == 'Vendedor' && $id_pessoa) {
 	$stmt = $pdo->prepare("SELECT comissao FROM vendedores WHERE id = :id LIMIT 1");
 	$stmt->execute([':id' => $id_pessoa]);
-	$comissao_responsavel = $stmt->fetchColumn() : 0;
+	$comissao_responsavel = $stmt->fetchColumn() ?: 0;
 } elseif ($nivel == 'Tutor' && $id_pessoa) {
 	$stmt = $pdo->prepare("SELECT comissao FROM tutores WHERE id = :id LIMIT 1");
 	$stmt->execute([':id' => $id_pessoa]);
-	$comissao_responsavel = $stmt->fetchColumn() : 0;
+	$comissao_responsavel = $stmt->fetchColumn() ?: 0;
 }
 
 $stmtConfig = $pdo->query("SELECT comissao_tutor FROM config LIMIT 1");
-$comissao_tutor_atendimento = $stmtConfig ? ($stmtConfig->fetchColumn() : 0) : 0;
+$comissao_tutor_atendimento = $stmtConfig ? ($stmtConfig->fetchColumn() ?: 0) : 0;
 
 $mostrarRecebidas = strtolower($pago) === 'sim';
 $mostrarPendentes = !$mostrarRecebidas;
 
-function listarMatriculasPorResponsaveis(PDO $pdo, array $responsavelIds, string $dataInicial, string $dataFinal) : array
+function listarMatriculasPorResponsaveis(PDO $pdo, array $responsavelIds, string $dataInicial, string $dataFinal): array
 {
 	if (empty($responsavelIds)) {
 		return [];
 	}
-	$placeholders = implode(',', array_fill(0, count($responsavelIds), ''));
+	$placeholders = implode(',', array_fill(0, count($responsavelIds), '?'));
 	$sql = "SELECT m.*, u.nome AS aluno_nome
 			FROM matriculas m
 			JOIN usuarios u ON u.id = m.aluno
@@ -65,7 +65,7 @@ function listarMatriculasPorResponsaveis(PDO $pdo, array $responsavelIds, string
 			AND (m.pacote = 'Sim' OR m.id_pacote IS NULL OR m.id_pacote = 0)";
 	$params = $responsavelIds;
 	if ($dataInicial !== '' && $dataFinal !== '') {
-		$sql .= " AND m.data >= ?? AND m.data <= ";
+		$sql .= " AND m.data >= ? AND m.data <= ?";
 		$params[] = $dataInicial;
 		$params[] = $dataFinal;
 	}
@@ -77,8 +77,8 @@ function listarMatriculasPorResponsaveis(PDO $pdo, array $responsavelIds, string
 
 $cacheCursos = [];
 $cachePacotes = [];
-$stmtCurso = $pdo->prepare("SELECT nome FROM cursos WHERE id = ?? LIMIT 1");
-$stmtPacote = $pdo->prepare("SELECT nome FROM pacotes WHERE id = ?? LIMIT 1");
+$stmtCurso = $pdo->prepare("SELECT nome FROM cursos WHERE id = ? LIMIT 1");
+$stmtPacote = $pdo->prepare("SELECT nome FROM pacotes WHERE id = ? LIMIT 1");
 $obterNomeCurso = function ($cursoId, $pacote, $pacoteId = null) use (&$cacheCursos, &$cachePacotes, $stmtCurso, $stmtPacote) {
 	$cursoId = (int) $cursoId;
 	$pacoteId = (int) ($pacoteId ?? 0);
@@ -89,7 +89,7 @@ $obterNomeCurso = function ($cursoId, $pacote, $pacoteId = null) use (&$cacheCur
 			return $cachePacotes[$pacoteLookup];
 		}
 		$stmtPacote->execute([$pacoteLookup]);
-		$nome = $stmtPacote->fetchColumn() : '';
+		$nome = $stmtPacote->fetchColumn() ?: '';
 		$cachePacotes[$pacoteLookup] = $nome;
 		return $nome;
 	}
@@ -97,7 +97,7 @@ $obterNomeCurso = function ($cursoId, $pacote, $pacoteId = null) use (&$cacheCur
 		return $cacheCursos[$cursoId];
 	}
 	$stmtCurso->execute([$cursoId]);
-	$nome = $stmtCurso->fetchColumn() : '';
+	$nome = $stmtCurso->fetchColumn() ?: '';
 	$cacheCursos[$cursoId] = $nome;
 	return $nome;
 };
@@ -122,7 +122,13 @@ foreach ($matriculasResponsavel as $row) {
 	$valor_base = $row['subtotal'] ?? $row['valor'] ?? 0;
 	$valor_base = (float) str_replace(',', '.', $valor_base);
 	$valor_comissao = ($valor_base * $comissao_responsavel) / 100;
-	$comissoes[] = ['aluno' => $row['aluno_nome'] ?? '', 'curso' => $obterNomeCurso($row['id_curso'] ?? 0, $row['pacote'] ?? '', $row['id_pacote']  null), 'valor' => $valor_comissao, 'status' => $recebido ? 'Recebido' : 'A receber', 'data' => $recebido  ($row['data'] ?? '') : '', 'data_matricula' => $row['data'] ?? ''
+	$comissoes[] = [
+		'aluno' => $row['aluno_nome'] ?? '',
+		'curso' => $obterNomeCurso($row['id_curso'] ?? 0, $row['pacote'] ?? '', $row['id_pacote'] ?? null),
+		'valor' => $valor_comissao,
+		'status' => $recebido ? 'Recebido' : 'A receber',
+		'data' => $recebido ? ($row['data'] ?? '') : '',
+		'data_matricula' => $row['data'] ?? ''
 	];
 	$total_comissao += $valor_comissao;
 }
@@ -149,7 +155,13 @@ if ($nivel == 'Tutor' && $id_pessoa) {
 		$valor_base = $row['subtotal'] ?? $row['valor'] ?? 0;
 		$valor_base = (float) str_replace(',', '.', $valor_base);
 		$valor_comissao = ($valor_base * $comissao_tutor_atendimento) / 100;
-		$comissoes[] = ['aluno' => $row['aluno_nome'] ?? '', 'curso' => $obterNomeCurso($row['id_curso'] ?? 0, $row['pacote'] ?? '', $row['id_pacote']  null), 'valor' => $valor_comissao, 'status' => $recebido ? 'Recebido' : 'A receber', 'data' => $recebido  ($row['data'] ?? '') : '', 'data_matricula' => $row['data'] ?? ''
+		$comissoes[] = [
+			'aluno' => $row['aluno_nome'] ?? '',
+			'curso' => $obterNomeCurso($row['id_curso'] ?? 0, $row['pacote'] ?? '', $row['id_pacote'] ?? null),
+			'valor' => $valor_comissao,
+			'status' => $recebido ? 'Recebido' : 'A receber',
+			'data' => $recebido ? ($row['data'] ?? '') : '',
+			'data_matricula' => $row['data'] ?? ''
 		];
 		$total_comissao += $valor_comissao;
 	}
@@ -157,7 +169,9 @@ if ($nivel == 'Tutor' && $id_pessoa) {
 
 $dataInicialF = $dataInicial ? implode('/', array_reverse(explode('-', $dataInicial))) : '';
 $dataFinalF = $dataFinal ? implode('/', array_reverse(explode('-', $dataFinal))) : '';
-$texto_apuracao = ($dataInicial && $dataFinal && $dataInicial != $dataFinal) ? "Apuracao de {$dataInicialF} ate {$dataFinalF}" : ($dataInicial ? "Apurado em {$dataInicialF}" : 'Apurado em todo o periodo');
+$texto_apuracao = ($dataInicial && $dataFinal && $dataInicial != $dataFinal)
+	? "Apuracao de {$dataInicialF} ate {$dataFinalF}"
+	: ($dataInicial ? "Apurado em {$dataInicialF}" : 'Apurado em todo o periodo');
 
 $acao_rel = $mostrarRecebidas ? 'Recebidas' : 'Pendentes';
 
@@ -185,9 +199,9 @@ $data_hoje = strftime('%A, %d de %B de %Y', strtotime('today'));
 </head>
 <body>
 
-<div class="titulo_img"><u>Relatorio de Comissoes <?php echo $acao_rel > - <?php echo $usuario['nome'] ?> (<?php echo $usuario['nivel'] ?>)</u></div>
-<div class="data_img"<?php echo mb_strtoupper($data_hoje) ></div>
-<img class="imagem" src="<?php echo $url_sistema >/sistema/img/logo_rel.jpg?>" width=?>"200px" height="47"?>
+<div class="titulo_img"><u>Relatorio de Comissoes <?php echo $acao_rel ?> - <?php echo $usuario['nome'] ?> (<?php echo $usuario['nivel'] ?>)</u></div>
+<div class="data_img"><?php echo mb_strtoupper($data_hoje) ?></div>
+<img class="imagem" src="<?php echo $url_sistema ?>/sistema/img/logo_rel.jpg" width="200px" height="47">
 
 <br><br><br>
 <div class="cabecalho"></div>
@@ -207,19 +221,19 @@ $data_hoje = strftime('%A, %d de %B de %Y', strtotime('today'));
 		</tr>
 		</thead>
 		<tbody>
-		<?php if (count($comissoes) > 0)  : ?>
-			<?php foreach ($comissoes as $item)  : ?>
+		<?php if (count($comissoes) > 0) : ?>
+			<?php foreach ($comissoes as $item) : ?>
 				<?php
 				$valorF = number_format($item['valor'], 2, ',', '.');
 				$data = $item['data'] ? implode('/', array_reverse(explode('-', $item['data']))) : '-';
 				$dataMatricula = $item['data_matricula'] ? implode('/', array_reverse(explode('-', $item['data_matricula']))) : '-';
 				$statusClass = ($item['status'] === 'Recebido') ? 'verde' : 'vermelho';
-?>
+				?>
 				<tr>
 					<td><?php echo $item['aluno'] ?><br><small>Matricula: <?php echo $dataMatricula ?></small></td>
 					<td><?php echo $item['curso'] ?></td>
 					<td>R$ <?php echo $valorF ?></td>
-					<td class="<?php echo $statusClass >?>"<?php echo $item['status'] ?></td>
+					<td class="<?php echo $statusClass ?>"><?php echo $item['status'] ?></td>
 					<td><?php echo $data ?></td>
 				</tr>
 			<?php endforeach; ?>
@@ -234,8 +248,8 @@ $data_hoje = strftime('%A, %d de %B de %Y', strtotime('today'));
 	<?php
 	$totalF = number_format($total_comissao, 2, ',', '.');
 	$totalLabel = $mostrarRecebidas ? 'Total Recebido' : 'Total a Receber';
-?>
-	<div style="text-align:right;"><strong><?php echo $totalLabel >:</strong> R$ <?php echo $totalF ?></div>
+	?>
+	<div style="text-align:right;"><strong><?php echo $totalLabel ?>:</strong> R$ <?php echo $totalF ?></div>
 </div>
 
 </body>

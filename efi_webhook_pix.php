@@ -1,9 +1,9 @@
 <?php
 header('Content-Type: application/json');
 
-require_once __DIR__ . '/sistema/conexao.php';
+require_once("sistema/conexao.php");
 
-require_once __DIR__ . '/efi/pix.php';
+require_once 'efi/pix.php';
 
 
 // Lê o conteúdo bruto enviado
@@ -20,7 +20,7 @@ if (json_last_error() !== JSON_ERROR_NONE) {
 function consultarTransacaoPix($txid)
 {
 
-    $options = require_once __DIR__ . '/efi/options.php';
+    $options = require_once 'efi/options.php';
 
     $config = [
         'client_id' => $options['clientId'],

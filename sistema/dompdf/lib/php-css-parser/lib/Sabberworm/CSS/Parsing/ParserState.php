@@ -117,7 +117,7 @@ class ParserState {
 				try {
 					$oComment = $this->consumeComment();
 				} catch(UnexpectedTokenException $e) {
-					// When we canâ€™t find the end of a comment, we assume the document is finished.
+					// When we can’t find the end of a comment, we assume the document is finished.
 					$this->iCurrentPosition = $this->iLength;
 					return;
 				}
@@ -134,7 +134,7 @@ class ParserState {
 	public function comes($sString, $bCaseInsensitive = false) {
 		$sPeek = $this->peek(strlen($sString));
 		return ($sPeek == '')
-			 false
+			? false
 			: $this->streql($sPeek, $sString, $bCaseInsensitive);
 	}
 
@@ -208,7 +208,7 @@ class ParserState {
 	}
 
 	public function consumeUntil($aEnd, $bIncludeEnd = false, $consumeEnd = false, array &$comments = array()) {
-		$aEnd = is_array($aEnd) ?? $aEnd : array($aEnd);
+		$aEnd = is_array($aEnd) ? $aEnd : array($aEnd);
 		$out = '';
 		$start = $this->iCurrentPosition;
 

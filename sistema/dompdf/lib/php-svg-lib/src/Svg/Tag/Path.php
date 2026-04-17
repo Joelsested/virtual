@@ -1,8 +1,8 @@
 <?php
 /**
  * @package php-svg-lib
- * @link ? http ://github.com/PhenX/php-svg-lib
- * @author ?? Fabien MÃ©nager <fabien.menager@gmail.com>
+ * @link    http://github.com/PhenX/php-svg-lib
+ * @author  Fabien Ménager <fabien.menager@gmail.com>
  * @license GNU LGPLv3+ http://www.gnu.org/copyleft/lesser.html
  */
 
@@ -12,10 +12,21 @@ use Svg\Surface\SurfaceInterface;
 
 class Path extends Shape
 {
-    static $commandLengths = array( ?? 'm' => 2, 'l' => 2, 'h' => 1, 'v' => 1, 'c' => 6, 's' => 4, 'q' => 4, 't' => 2, 'a' => 7,
+    static $commandLengths = array(
+        'm' => 2,
+        'l' => 2,
+        'h' => 1,
+        'v' => 1,
+        'c' => 6,
+        's' => 4,
+        'q' => 4,
+        't' => 2,
+        'a' => 7,
     );
 
-    static $repeatedCommands = array( ?? 'm' => 'l', 'M' => 'L',
+    static $repeatedCommands = array(
+        'm' => 'l',
+        'M' => 'L',
     );
 
     public function start($attributes)
@@ -32,15 +43,17 @@ class Path extends Shape
         $path = array();
         foreach ($commands as $c) {
             if (count($c) == 3) {
-                $arguments = array(); ? preg_match_all('/([-+]((\d+\.\d+)|((\d+)|(\.\d+)))(:e[-+]\d+))/i', $c[2], $arguments, PREG_PATTERN_ORDER);
+                $arguments = array();
+                preg_match_all('/([-+]?((\d+\.\d+)|((\d+)|(\.\d+)))(?:e[-+]?\d+)?)/i', $c[2], $arguments, PREG_PATTERN_ORDER);
                 $item = $arguments[0];
                 $commandLower = strtolower($c[1]);
 
-                if ( ? isset(self::$commandLengths[$commandLower]) &&
+                if (
+                    isset(self::$commandLengths[$commandLower]) &&
                     ($commandLength = self::$commandLengths[$commandLower]) &&
                     count($item) > $commandLength
                 ) {
-                    $repeatedCommand = isset(self::$repeatedCommands[$c[1]])  self::$repeatedCommands[$c[1]] ?: $c[1];
+                    $repeatedCommand = isset(self::$repeatedCommands[$c[1]]) ? self::$repeatedCommands[$c[1]] : $c[1];
                     $command = $c[1];
 
                     for ($k = 0, $klen = count($item); $k < $klen; $k += $commandLength) {

@@ -5,9 +5,6 @@
 require_once('../../vendor/autoload.php');
 
 require_once("../conexao.php");
-require_once("../../config/env.php");
-
-$mp_enabled = filter_var(env('MP_ENABLED', 'false'), FILTER_VALIDATE_BOOLEAN);
 
 
 
@@ -16,41 +13,26 @@ $mp_enabled = filter_var(env('MP_ENABLED', 'false'), FILTER_VALIDATE_BOOLEAN);
 @session_start();
 
 $id_do_aluno = @$_SESSION['id'];
-$telefone_aluno = '';
-try {
-    $stmtTelefone = $pdo->prepare("SELECT a.telefone FROM usuarios u JOIN alunos a ON a.id = u.id_pessoa WHERE u.id = :id LIMIT 1");
-    $stmtTelefone->execute([':id' => $id_do_aluno]);
-    $telefone_aluno = $stmtTelefone->fetchColumn() : '';
-} catch (Exception $e) {
-    $telefone_aluno = '';
-}
 
-if (is_string($telefone_aluno)) {
-    $telefone_aluno = preg_replace('/\\D/', '', $telefone_aluno);
-}
-
-if ($telefone_aluno !== '' && strlen($telefone_aluno) <= 11 && substr($telefone_aluno, 0, 2) !== '55') {
-    $telefone_aluno = '55' . $telefone_aluno;
-}
-
-// $consulta_parcelas_boleto_parcelado = $pdo->query("SELECT parcelas_geradas_por_boleto.*, cursos.nome as curso FROM parcelas_geradas_por_boleto JOIN boletos_parcelados ON boletos_parcelados.id = parcelas_geradas_por_boleto.id_boleto_parcelado JOIN matriculas ON matriculas.id = boletos_parcelados.id_matricula JOIN cursos ON cursos.id = matriculas.id_curso WHERE matriculas.aluno = '$id_do_aluno'");
-// $resposta_consulta_boleto_parcelado = $consulta_parcelas_boleto_parcelado->fetchAll(PDO::FETCH_ASSOC);
-
-$stmt = $pdo->prepare("
+// Projeto virtual usa apenas matriculas/cursos/pacotes.
+$sqlParcelasAluno = "
     SELECT 
-        parcelas_geradas_por_boleto.*,
-        JSON_UNQUOTE(JSON_EXTRACT(parcelas_geradas_por_boleto.payload, '$.item_nome')) AS curso
-    FROM parcelas_geradas_por_boleto
-    JOIN matriculas ON matriculas.id = parcelas_geradas_por_boleto.id_matricula
-    WHERE matriculas.aluno = :id_aluno ?? ");
-
-$stmt->execute(['id_aluno' => $id_do_aluno]);
+        pgb.*,
+        CASE WHEN m.pacote = 'sim' THEN pac.nome ELSE c.nome END AS curso
+    FROM parcelas_geradas_por_boleto pgb
+    LEFT JOIN boletos_parcelados bp ON bp.id = pgb.id_boleto_parcelado 
+    JOIN matriculas m ON m.id = pgb.id_matricula
+    LEFT JOIN cursos c ON c.id = m.id_curso 
+    LEFT JOIN pacotes pac ON pac.id = m.id_curso 
+    WHERE m.aluno = :id_aluno
+";
+$stmt = $pdo->prepare($sqlParcelasAluno);
+$stmt->execute([':id_aluno' => $id_do_aluno]);
 $resposta_consulta_boleto_parcelado = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 
 
-$consulta_matricula = $pdo->prepare("SELECT id, forma_pgto, pacote, id_curso FROM matriculas WHERE aluno = :aluno");
-$consulta_matricula->execute([':aluno' => $id_do_aluno]);
+$consulta_matricula = $pdo->query("SELECT id, forma_pgto, pacote, id_curso FROM matriculas WHERE aluno = '$id_do_aluno'");
 $resposta_consulta = $consulta_matricula->fetchAll(PDO::FETCH_ASSOC);
 
 
@@ -67,16 +49,14 @@ foreach ($resposta_consulta as $matricula) {
     $nome_curso_pacote = '';
     if ($pacote == 'Sim') {
         // Se for pacote, busca na tabela "pacotes"
-        $consulta_nome = $pdo->prepare("SELECT nome FROM pacotes WHERE id = :id");
-        $consulta_nome->execute([':id' => $id_curso]);
+        $consulta_nome = $pdo->query("SELECT nome FROM pacotes WHERE id = '$id_curso'");
         $resultado_nome = $consulta_nome->fetch(PDO::FETCH_ASSOC);
-        $nome_curso_pacote = $resultado_nome ? $resultado_nome['nome'] ?: '';
+        $nome_curso_pacote = $resultado_nome ? $resultado_nome['nome'] : '';
     } elseif ($pacote == 'Nao') {
         // Se nÃƒÆ’Ã‚Â£o for pacote, busca na tabela "cursos"
-        $consulta_nome = $pdo->prepare("SELECT nome FROM cursos WHERE id = :id");
-        $consulta_nome->execute([':id' => $id_curso]);
+        $consulta_nome = $pdo->query("SELECT nome FROM cursos WHERE id = '$id_curso'");
         $resultado_nome = $consulta_nome->fetch(PDO::FETCH_ASSOC);
-        $nome_curso_pacote = $resultado_nome ? $resultado_nome['nome'] ?: '';
+        $nome_curso_pacote = $resultado_nome ? $resultado_nome['nome'] : '';
     }
 
     // Decodifica caracteres Unicode para exibiÃƒÆ’Ã‚Â§ÃƒÆ’Ã‚Â£o correta em PT-BR
@@ -97,8 +77,7 @@ foreach ($resposta_consulta as $matricula) {
     }
 
     // Executa a consulta na tabela apropriada
-    $consulta_pagamentos = $pdo->prepare("SELECT * FROM {$tabela_pagamentos} WHERE id_matricula = :id_matricula");
-    $consulta_pagamentos->execute([':id_matricula' => $id]);
+    $consulta_pagamentos = $pdo->query("SELECT * FROM $tabela_pagamentos WHERE id_matricula = '$id'");
     $resposta_pagamentos = $consulta_pagamentos->fetchAll(PDO::FETCH_ASSOC);
 
     // Adiciona o resultado se houver dados
@@ -109,72 +88,36 @@ foreach ($resposta_consulta as $matricula) {
     }
 }
 
-$consulta_parcelas = $pdo->prepare("
-    SELECT 
-        parcelas_geradas_por_boleto.*, 
-        CASE 
-            WHEN matriculas.pacote = 'sim' THEN pacotes.nome 
-            ELSE cursos.nome 
-        END as curso 
-    FROM parcelas_geradas_por_boleto 
-    JOIN boletos_parcelados ON boletos_parcelados.id = parcelas_geradas_por_boleto.id_boleto_parcelado 
-    JOIN matriculas ON matriculas.id = boletos_parcelados.id_matricula 
-    LEFT JOIN cursos ON cursos.id = matriculas.id_curso 
-    LEFT JOIN pacotes ON pacotes.id = matriculas.id_curso 
-    WHERE matriculas.aluno = :aluno ? ");
-
-$consulta_parcelas->execute([' :aluno' => $id_do_aluno]);
-$resposta_consulta = $consulta_parcelas->fetchAll(PDO::FETCH_ASSOC);
+$stmtParcelas = $pdo->prepare($sqlParcelasAluno);
+$stmtParcelas->execute([':id_aluno' => $id_do_aluno]);
+$resposta_consulta = $stmtParcelas->fetchAll(PDO::FETCH_ASSOC);
 
 
 
-$consulta_matriculas = $pdo->prepare("
-
-    SELECT 
-
-        matriculas.*, 
-
-        cursos.nome AS nome_curso,
-
-        usuarios.nome AS nome_professor
-
-    FROM matriculas 
-
-    JOIN cursos ON cursos.id = matriculas.id_curso 
-
-    JOIN usuarios ON usuarios.id = matriculas.professor
-
-    WHERE matriculas.aluno = :aluno
-
-    AND matriculas.forma_pgto = 'MP' ? ");
-
-
-
-$consulta_matriculas->execute([' :aluno' => $id_do_aluno]);
-$resposta_consulta_matriculas = $consulta_matriculas->fetchAll(PDO::FETCH_ASSOC);
+$resposta_consulta_matriculas = [];
 
 
 
 
 // $consulta_matriculas_pix = $pdo->query("
 
-// ?? SELECT 
+//     SELECT 
 
-// ?? matriculas.*, 
+//         matriculas.*, 
 
-// ?? cursos.nome AS nome_curso,
+//         cursos.nome AS nome_curso,
 
-// ?? usuarios.nome AS nome_professor
+//         usuarios.nome AS nome_professor
 
-// ?? FROM matriculas 
+//     FROM matriculas 
 
-// ?? JOIN cursos ON cursos.id = matriculas.id_curso 
+//     JOIN cursos ON cursos.id = matriculas.id_curso 
 
-// ?? JOIN usuarios ON usuarios.id = matriculas.professor
+//     JOIN usuarios ON usuarios.id = matriculas.professor
 
-// ?? WHERE matriculas.aluno = '$id_do_aluno'
+//     WHERE matriculas.aluno = '$id_do_aluno'
 
-// ?? AND matriculas.forma_pgto = 'PIX'
+//     AND matriculas.forma_pgto = 'PIX'
 
 // ");
 
@@ -183,7 +126,7 @@ $resposta_consulta_matriculas = $consulta_matriculas->fetchAll(PDO::FETCH_ASSOC)
 // $resposta_consulta_matriculas_pix = $consulta_matriculas_pix->fetchAll(PDO::FETCH_ASSOC);
 
 
-$consulta_matriculas_pix = $pdo->prepare("
+$consulta_matriculas_pix = $pdo->query("
     SELECT 
         matriculas.*, 
         CASE 
@@ -195,14 +138,14 @@ $consulta_matriculas_pix = $pdo->prepare("
     LEFT JOIN cursos ON cursos.id = matriculas.id_curso 
     LEFT JOIN pacotes ON pacotes.id = matriculas.id_curso 
     JOIN usuarios ON usuarios.id = matriculas.professor
-    WHERE matriculas.aluno = :aluno
-    AND matriculas.forma_pgto = 'PIX' ? ");
+    WHERE matriculas.aluno = '$id_do_aluno'
+    AND matriculas.forma_pgto = 'PIX'
+");
 
-$consulta_matriculas_pix->execute([' :aluno' => $id_do_aluno]);
 $resposta_consulta_matriculas_pix = $consulta_matriculas_pix->fetchAll(PDO::FETCH_ASSOC);
 
 
-$consulta_matriculas_boleto = $pdo->prepare("
+$consulta_matriculas_boleto = $pdo->query("
 
     SELECT 
 
@@ -218,13 +161,14 @@ $consulta_matriculas_boleto = $pdo->prepare("
 
     JOIN usuarios ON usuarios.id = matriculas.professor
 
-    WHERE matriculas.aluno = :aluno
+    WHERE matriculas.aluno = '$id_do_aluno'
 
-    AND matriculas.forma_pgto = 'BOLETO' ? ");
+    AND matriculas.forma_pgto = 'BOLETO'
+
+");
 
 
 
-$consulta_matriculas_boleto->execute([' :aluno' => $id_do_aluno]);
 $resposta_consulta_matriculas_boleto = $consulta_matriculas_boleto->fetchAll(PDO::FETCH_ASSOC);
 
 
@@ -263,9 +207,6 @@ foreach ($transactions as $registro) {
 
 <head>
 
-    <?php if ($mp_enabled) { ?>
-        <script src="https://sdk.mercadopago.com/js/v2"></script>
-    <?php } ?>
 
 
 
@@ -341,80 +282,56 @@ foreach ($transactions as $registro) {
             <tr>
                 <th>#</th>
                 <th>Curso</th>
-                <th>NÃƒâ€šÃ‚Â° da parcela</th>
+                <th>N&ordm; da parcela</th>
                 <th>Valor</th>
-                <th>SituaÃƒÆ’Ã‚Â§ÃƒÆ’Ã‚Â£o</th>
-                <th>Pix Copia e Cola</th>
+                <th>Situa&ccedil;&atilde;o</th>
+                <th>PIX Copia e Cola</th>
                 <th>Gerar boleto</th>
-                <th>Enviar</th>
             </tr>
         </thead>
         <tbody>
 
-            <?php foreach ($resposta_consulta_boleto_parcelado as $registro)  : ?>
-                    <?php
-                    $cursoNome = json_decode('"' . preg_replace('/u([0-9a-fA-F]{4})/', '\\u$1', $registro['curso']) . '"');
-                    $cursoNomeSafe = htmlspecialchars($cursoNome ?? '', ENT_QUOTES, 'UTF-8');
-                    $valorParcelaFmt = number_format($registro['valor_parcela'], 2, ',', '.');
-?>
+                <?php foreach ($resposta_consulta_boleto_parcelado as $registro): ?>
 
                     <tr>
                         <td><?php echo $registro['id']; ?></td>
-                        <td><?php echo $cursoNomeSafe; ?></td>
+                        <td><?php echo json_decode('"' . preg_replace('/u([0-9a-fA-F]{4})/', '\\u$1', $registro['curso']) . '"'); ?>
+                        </td>
                         <td><?php echo htmlspecialchars($registro['ordem_parcela']); ?></td>
-                        <td><?php echo 'R$ ' . $valorParcelaFmt; ?></td>
+                        <td><?php echo 'R$ ' . number_format($registro['valor_parcela'], 2, ',', '.'); ?></td>
                         
                         
-                        <td><?php echo htmlspecialchars($registro['situacao'] ? 'Pago' : 'NÃƒÆ’Ã‚Â£o pago'); ?></td>
+                        <?php
+                            $statusPago = !empty($registro['situacao']) || (isset($registro['status']) && strtolower($registro['status']) === 'paid');
+                        ?>
+                        <td><?php echo $statusPago ? 'Pago' : 'N&atilde;o pago'; ?></td>
                         
-                        <td style="max-width: 100px; overflow: hidden;"<?php if($registro['transaction_receipt_url'])  : >
+                        <td style="max-width: 100px; overflow: hidden;">
+                               <?php if($registro['transaction_receipt_url']): ?>
                                <div class="btn btn-primary"
                                onclick="copiarPix('<?php echo htmlspecialchars($registro['transaction_receipt_url'], ENT_QUOTES); ?>')"
-?>
+                                >
                                 <i class="fa fa-file-pdf-o" aria-hidden="true"></i>
                                 Copiar Pix
                             </div>
                             <?php endif; ?>
                             </td>
                         <td>
-                            <?php if ($registro['id_asaas'] == NULL)  : ?>
-                                <form method="post" action="paginas/gerar_boleto.php" target="_blank">
-                                    <input type="hidden" name="valor_parcela" value="<?php echo $registro['valor_parcela']; >?>" /?>
-                                    <input type="hidden" name="id_parcela" value="<?php echo $registro['id']; >?>" /?>
-                                    <input type="hidden" name="id_boleto_parcelado" value="<?php echo $registro['id_boleto_parcelado']; >?>" /?>
-                                    <input type="hidden" name="ordem_parcela" value="<?php echo $registro['ordem_parcela']; >?>" /?>
-                                    <input type="hidden" name="id_aluno" value="<?php echo $id_do_aluno; >?>" /?>
-                                    <input type="hidden" name="id_matricula" value="<?php echo $registro['id_matricula']; >?>" /?>
-                                    <input type="hidden" name="payload"
-                                        value="<?php echo htmlspecialchars($registro['payload'], ENT_QUOTES, 'UTF-8'); ?>" /?>
-                                    <button type="submit" name="action" value="visualizar">
-                                        <i class="fa fa-file-pdf-o" aria-hidden="true"></i>
-                                        Gerar Boleto
-                                    </button>
-                                </form>
-                            <?php endif; ?>
-                            <?php if ($registro['id_asaas'])  : ?>
-                                <a href="<?php echo $registro['id_asaas']; >?>" target="_blank"?>
-                                    <button type="button">
-                                        <i class="fa fa-file-pdf-o" aria-hidden="true"></i>
-                                        Visualizar Boleto
-                                    </button>
-                                </a>
-                            <?php endif; ?>
-                        </td>
-                        <td>
-                            <?php if ($registro['id_asaas'])  : ?>
-                                <button type="button" class="btn btn-success"
-                                    onclick="enviarWhatsAppBoleto('<?php echo htmlspecialchars($registro['id_asaas'], ENT_QUOTES); ?>', '<?php echo $cursoNomeSafe; ?>', '<?php echo (int) $registro['ordem_parcela']; ?>', '<?php echo $valorParcelaFmt; ?>')"?>
-                                    <i class="fa fa-whatsapp" aria-hidden="true"></i>
-                                    Enviar
+                            <form method="post" action="paginas/gerar_boleto.php" target="_blank" style="display:inline;">
+                                <input type="hidden" name="valor_parcela" value="<?php echo $registro['valor_parcela']; ?>" />
+                                <input type="hidden" name="id_parcela" value="<?php echo $registro['id']; ?>" />
+                                <input type="hidden" name="id_aluno" value="<?php echo $id_do_aluno; ?>" />
+                                <input type="hidden" name="id_matricula" value="<?php echo $registro['id_matricula']; ?>" />
+                                <input type="hidden" name="payload"
+                                    value="<?php echo htmlspecialchars($registro['payload'], ENT_QUOTES, 'UTF-8'); ?>" />
+                                <button type="submit" name="action" value="visualizar">
+                                    <i class="fa fa-file-pdf-o" aria-hidden="true"></i>
+                                    <?php echo ($registro['id_asaas'] == NULL) ? 'Gerar Boleto' : 'Visualizar Boleto'; ?>
                                 </button>
-                            <?php else: ?>
-                                <span class="text-muted">-</span>
-                            <?php endif; ?>
+                            </form>
                         </td>
                     </tr>
-            <?php endforeach; ?>
+                <?php endforeach; ?>
 
         </tbody>
     </table>
@@ -434,12 +351,12 @@ foreach ($transactions as $registro) {
                 <th>Data</th>
                 <th>Identificador</th>
                 <th>Valor</th>
-                <th>SituaÃƒÆ’Ã‚Â§ÃƒÆ’Ã‚Â£o</th>
+                <th>Situa&ccedil;&atilde;o</th>
                 <th>AÃƒÆ’Ã‚Â§ÃƒÆ’Ã‚Â£o</th>
             </tr>
         </thead>
         <tbody>
-            <?php foreach ($transactions as $registro)  : ?>
+            <?php foreach ($transactions as $registro): ?>
                 <?php
                 // Determina o tipo de pagamento baseado nos campos disponÃƒÆ’Ã‚Â­veis
                 $eh_pix = isset($registro['txid']);
@@ -457,41 +374,42 @@ foreach ($transactions as $registro) {
                 } else {
                     continue; // Pula registros sem tipo identificÃƒÆ’Ã‚Â¡vel
                 }
-?>
+                ?>
                 <tr>
                     <td><?php echo $registro['id']; ?></td>
-                    <td style="width: 130px;"<?php echo $registro['id_matricula']; ></td>
+                    <td style="width: 130px;"><?php echo $registro['id_matricula']; ?></td>
                     <td><?php echo (new DateTime($data_campo))->format('d/m/Y'); ?></td>
                     <td>
-                        <small><?php echo $tipo_pagamento; >:</small>
+                        <small><?php echo $tipo_pagamento; ?>:</small>
                         <?php echo htmlspecialchars($identificador); ?>
                     </td>
                     <td><?php echo 'R$ ' . number_format($registro['valor'], 2, ',', '.'); ?></td>
-                    <td class="esc" style="text-transform: uppercase;"<?php echo $registro['status'] === '' ? 'pendente' : 'pago'; >
+                    <td class="esc" style="text-transform: uppercase;">
+                        <?php echo $registro['status'] === '' ? 'pendente' : 'pago'; ?>
                     </td>
                     <td>
-                        <?php if ($registro['status'] === '')  : ?>
-                            <?php if ($eh_pix)  : ?>
+                        <?php if ($registro['status'] === ''): ?>
+                            <?php if ($eh_pix): ?>
 
 
 
-                            <?php elseif ($eh_boleto) : ?>
+                            <?php elseif ($eh_boleto): ?>
                                 <button
-                                    onclick="openBoleto('<?php echo htmlspecialchars($registro['url_boleto'], ENT_QUOTES); ?>')"?>
+                                    onclick="openBoleto('<?php echo htmlspecialchars($registro['url_boleto'], ENT_QUOTES); ?>')">
                                     <i class="fa fa-file-pdf-o" aria-hidden="true"></i>
                                     Pagar Boleto
                                 </button>
                             <?php endif; ?>
-                        <?php elseif ($registro['status'] === 'paid') : ?>
+                        <?php elseif ($registro['status'] === 'paid'): ?>
                             <button
-                                onclick="window.open('<?php echo htmlspecialchars($registro['url_boleto'], ENT_QUOTES); ?>', '_blank')"?>
+                                onclick="window.open('<?php echo htmlspecialchars($registro['url_boleto'], ENT_QUOTES); ?>', '_blank')">
                                 <i class="fa fa-file-pdf-o" aria-hidden="true"></i>
                                 Ver Detalhes
                             </button>
 
-                        <?php elseif ($registro['status'] === 'vencido') : ?>
-                            <?php if ($eh_boleto)  : ?>
-                                <button type="button" onclick="gerarNovoBoleto(<?php echo $registro['id_matricula']; >)"?>
+                        <?php elseif ($registro['status'] === 'vencido'): ?>
+                            <?php if ($eh_boleto): ?>
+                                <button type="button" onclick="gerarNovoBoleto(<?php echo $registro['id_matricula']; ?>)">
                                     <i class="fa fa-refresh" aria-hidden="true"></i>
                                     Gerar Novo
                                 </button>
@@ -511,7 +429,7 @@ foreach ($transactions as $registro) {
 
     <div>
         <!-- TABELA PIX -->
-        <?php if (!empty($pix_transactions))  : ?>
+        <?php if (!empty($pix_transactions)): ?>
             <h3>PIX</h3>
             <table>
                 <thead>
@@ -521,16 +439,16 @@ foreach ($transactions as $registro) {
                         <th>Data</th>
                         <th>Identificador</th>
                         <th>Valor</th>
-                        <th>SituaÃƒÆ’Ã‚Â§ÃƒÆ’Ã‚Â£o</th>
+                <th>Situa&ccedil;&atilde;o</th>
                         <th>AÃƒÆ’Ã‚Â§ÃƒÆ’Ã‚Â£o</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <?php foreach ($pix_transactions as $registro)  : ?>
+                    <?php foreach ($pix_transactions as $registro): ?>
                         <tr>
                             <td><?php echo $registro['id']; ?></td>
-                            <td style="max-width: 130px; overflow: hidden;"<?php echo json_decode('"' . $registro['nome_curso_pacote'] . '"');
-                            ; >
+                            <td style="max-width: 130px; overflow: hidden;"><?php echo json_decode('"' . $registro['nome_curso_pacote'] . '"');
+                            ; ?>
                             </td>
                             <td><?php echo (new DateTime($registro['data_criacao']))->format('d/m/Y'); ?></td>
                             <td style="max-width: 130px; overflow: hidden;">
@@ -538,18 +456,24 @@ foreach ($transactions as $registro) {
                                 <?php echo htmlspecialchars($registro['txid']); ?>
                             </td>
                             <td><?php echo 'R$ ' . number_format($registro['valor'], 2, ',', '.'); ?></td>
-                            <td class="esc" style="text-transform: uppercase;  max-width: 50px;"<?php echo $registro['status'] === '' ? 'pendente' : $registro['status']; >
+                            <td class="esc" style="text-transform: uppercase;  max-width: 50px;">
+                                <?php echo $registro['status'] === '' ? 'pendente' : $registro['status']; ?>
                             </td>
                             <td>
-                                <?php if ($registro['status'] === '' || $registro['status'] === 'pendente')  : ?>
+                                <?php if ($registro['status'] === '' || $registro['status'] === 'pendente'): ?>
                                     <!-- qrcode, texto_copia_cola, valor, data_criacao, status -->
-                                    <button onclick="visualizarQR( ?? '<?php echo htmlspecialchars($registro['qrcode_url'], ENT_QUOTES); >', '<?php echo htmlspecialchars($registro['texto_copia_cola'], ENT_QUOTES); ?>', '<?php echo $registro['valor']; ?>', '<?php echo $registro['data_criacao']; ?>', 'pago'
+                                    <button onclick="visualizarQR(
+                                '<?php echo htmlspecialchars($registro['qrcode_url'], ENT_QUOTES); ?>', 
+                                '<?php echo htmlspecialchars($registro['texto_copia_cola'], ENT_QUOTES); ?>', 
+                                '<?php echo $registro['valor']; ?>', 
+                                '<?php echo $registro['data_criacao']; ?>', 
+                                'pago'
                             )">
                                         <i class="fa fa-qrcode" aria-hidden="true"></i>
                                         Ver QR Code
                                     </button>
-                                <?php elseif ($registro['status'] === 'paid' || $registro['status'] === 'pago') : ?>
-                                    <button onclick="verDetalhesPix(<?php echo $registro['id']; >)"?>
+                                <?php elseif ($registro['status'] === 'paid' || $registro['status'] === 'pago'): ?>
+                                    <button onclick="verDetalhesPix(<?php echo $registro['id']; ?>)">
                                         <i class="fa fa-check-circle" aria-hidden="true"></i>
                                         Ver Detalhes
                                     </button>
@@ -568,7 +492,7 @@ foreach ($transactions as $registro) {
         <?php endif; ?>
 
         <!-- TABELA BOLETOS -->
-        <?php if (!empty($boleto_transactions))  : ?>
+        <?php if (!empty($boleto_transactions)): ?>
             <h3>BOLETOS</h3>
             <table>
                 <thead>
@@ -578,17 +502,17 @@ foreach ($transactions as $registro) {
                         <th>Data</th>
                         <th>Identificador</th>
                         <th>Valor</th>
-                        <th>SituaÃƒÆ’Ã‚Â§ÃƒÆ’Ã‚Â£o</th>
-                        <th>Pix Copia e Cola</th>
+                <th>Situa&ccedil;&atilde;o</th>
+                <th>PIX Copia e Cola</th>
                         <th>AÃƒÆ’Ã‚Â§ÃƒÆ’Ã‚Â£o</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <?php foreach ($boleto_transactions as $registro)  : ?>
+                    <?php foreach ($boleto_transactions as $registro): ?>
                         <tr>
                             <td><?php echo $registro['id']; ?></td>
-                            <td style="max-width: 130px; overflow: hidden;"<?php echo json_decode('"' . $registro['nome_curso_pacote'] . '"');
-                            ; >
+                            <td style="max-width: 130px; overflow: hidden;"><?php echo json_decode('"' . $registro['nome_curso_pacote'] . '"');
+                            ; ?>
                             </td>
                             <td><?php echo (new DateTime($registro['criado_em']))->format('d/m/Y'); ?></td>
                             <td style="max-width: 130px;">
@@ -596,7 +520,8 @@ foreach ($transactions as $registro) {
                                 <?php echo htmlspecialchars($registro['nosso_numero']); ?>
                             </td>
                             <td><?php echo 'R$ ' . number_format($registro['valor'], 2, ',', '.'); ?></td>
-                           <td class="esc" style="text-transform: uppercase; max-width: 50px;"<?php 
+                           <td class="esc" style="text-transform: uppercase; max-width: 50px;">
+    <?php 
         if ($registro['status'] === '' || $registro['status'] === 'peding') {
             echo 'Pendente';
         } elseif ($registro['status'] === 'paid') {
@@ -604,30 +529,30 @@ foreach ($transactions as $registro) {
         } else {
             echo $registro['status'];
         }
-?>
+    ?>
 </td>
 <td style="max-width: 60px; overflow: hidden;">
     <button
-        onclick="copiarPix('<?php echo htmlspecialchars($registro['linha_digitavel'], ENT_QUOTES); ?>')"?>
+        onclick="copiarPix('<?php echo htmlspecialchars($registro['linha_digitavel'], ENT_QUOTES); ?>')">
         <i class="fa fa-file-pdf-o" aria-hidden="true"></i>
         Copiar Pix
     </button>
 </td>
                             <td>
-                                <?php if ($registro['status'] === '' || $registro['status'] === 'pendente')  : ?>
+                                <?php if ($registro['status'] === '' || $registro['status'] === 'pendente'): ?>
                                     <button
-                                        onclick="openBoleto('<?php echo htmlspecialchars($registro['url_boleto'], ENT_QUOTES); ?>')"?>
+                                        onclick="openBoleto('<?php echo htmlspecialchars($registro['url_boleto'], ENT_QUOTES); ?>')">
                                         <i class="fa fa-file-pdf-o" aria-hidden="true"></i>
                                         Pagar Boleto
                                     </button>
-                                <?php elseif ($registro['status'] === 'paid' || $registro['status'] === 'pago') : ?>
+                                <?php elseif ($registro['status'] === 'paid' || $registro['status'] === 'pago'): ?>
                                     <button
-                                        onclick="window.open('<?php echo htmlspecialchars($registro['url_boleto'], ENT_QUOTES); ?>', '_blank')"?>
+                                        onclick="window.open('<?php echo htmlspecialchars($registro['url_boleto'], ENT_QUOTES); ?>', '_blank')">
                                         <i class="fa fa-file-pdf-o" aria-hidden="true"></i>
                                         Ver Detalhes
                                     </button>
-                                <?php elseif ($registro['status'] === 'vencido') : ?>
-                                    <button type="button" onclick="gerarNovoBoleto(<?php echo $registro['id_matricula']; >)"?>
+                                <?php elseif ($registro['status'] === 'vencido'): ?>
+                                    <button type="button" onclick="gerarNovoBoleto(<?php echo $registro['id_matricula']; ?>)">
                                         <i class="fa fa-refresh" aria-hidden="true"></i>
                                         Gerar Novo
                                     </button>
@@ -645,7 +570,7 @@ foreach ($transactions as $registro) {
             <br>
         <?php endif; ?>
 
-        <?php if (empty($pix_transactions) && empty($boleto_transactions))  : ?>
+        <?php if (empty($pix_transactions) && empty($boleto_transactions)): ?>
             <center><span>Nenhum registro encontrado.</span></center>
         <?php endif; ?>
     </div>
@@ -656,7 +581,7 @@ foreach ($transactions as $registro) {
 
         echo "<center><span>Nenhum registro encontrado.</span></center>";
 
-    } >
+    } ?>
 
     <br>
 
@@ -966,29 +891,7 @@ foreach ($transactions as $registro) {
 </style>
 
 <script>
-    var telefoneAluno = "<?php echo htmlspecialchars($telefone_aluno, ENT_QUOTES, 'UTF-8'); ?>";
-
-    function enviarWhatsAppBoleto(url, curso, parcela, valor) {
-        if (!telefoneAluno) {
-            alert('Telefone do aluno nao encontrado.');
-            return;
-        }
-        var texto = 'Segue o boleto';
-        if (curso) {
-            texto += ' do curso/pacote ' + curso;
-        }
-        if (parcela) {
-            texto += ' - parcela ' + parcela;
-        }
-        if (valor) {
-            texto += ' - valor R$ ' + valor;
-        }
-        texto += ': ' + url;
-        var link = 'https://wa.me/' + telefoneAluno + 'text=' + encodeURIComponent(texto);
-        window.open(link, '_blank');
-    }
-
-    function copiarPix(valor) {
+function copiarPix(valor) {
     navigator.clipboard.writeText(valor).then(() => {
        Swal.fire({
   icon: "success",
@@ -1082,7 +985,7 @@ foreach ($transactions as $registro) {
         <i class="fas fa-money-bill-wave icon"></i>
         <div class="label">COPIA E COLA</div>
     <input type="text" id="pix-code" value="${texto_copia_cola}" readonly style="border: none; color: #000; font-size: 10pt;" />
-        <button onclick="copiarCodigo()" ?? class="status-badge ${badgeClass} mt-3">Copiar</button>
+        <button onclick="copiarCodigo()"  class="status-badge ${badgeClass} mt-3">Copiar</button>
 <br>
 
 <div class="info-card animate-fadeInUp delay-3">
@@ -1161,7 +1064,7 @@ foreach ($transactions as $registro) {
 
         // // Monta a URL com os parÃƒÆ’Ã‚Â¢metros
 
-        // const url = `http://sested.local/pagamentos_novo/index.phpformaDePagamento=${formaDePagamento}&quantidadeParcelas=${quantidadeParcelas}&id_do_curso=${id_do_curso_pag}&nome_do_curso=${nome_curso_titulo}`;
+        // const url = `http://sested.local/pagamentos_novo/index.php?formaDePagamento=${formaDePagamento}&quantidadeParcelas=${quantidadeParcelas}&id_do_curso=${id_do_curso_pag}&nome_do_curso=${nome_curso_titulo}`;
 
 
 
@@ -1181,118 +1084,12 @@ foreach ($transactions as $registro) {
 
 
 
-    let hasPayId = false;
-
-    let statusScreenBrickController = null; // Para armazenar a instÃƒÆ’Ã‚Â¢ncia do Brick
-
-
-
-    async function verDetalhes(registro) {
-
+    function verDetalhes() {
         Swal.fire({
             title: 'Detalhes do Pagamento',
-            text: 'Caregando...'
-        })
-        return;
-        const payId = registro['ref_api']; // ObtÃƒÆ’Ã‚Â©m o novo payId
-
-        if (!payId) return; // Se nÃƒÆ’Ã‚Â£o houver payId, nÃƒÆ’Ã‚Â£o faz nada
-
-
-
-        $('#textTitle').text(payId);
-
-        $('#detalhesPagamento').modal('show');
-
-        hasPayId = true;
-
-
-
-        // Remove o Brick anterior antes de renderizar o novo
-
-        if (statusScreenBrickController) {
-
-            await statusScreenBrickController.unmount();
-
-            statusScreenBrickController = null;
-
-        }
-
-
-
-        // Agora renderiza apenas se houver payId
-
-        renderStatusScreenBrick(bricksBuilder, payId);
-
+            text: 'Funcionalidade desativada para o gateway antigo. Utilize os detalhes do EFY na listagem.'
+        });
     }
 
-
-
-    // Inicializa o MercadoPago
-    const mpEnabled = <?php echo $mp_enabled ? 'true' : 'false'; >;
-    const mpPublicKey = '<?php echo $mp_enabled ? env('MP_PUBLIC_KEY', '') : ''; ?>';
-    const mp = (mpEnabled && mpPublicKey !== '')  new MercadoPago(mpPublicKey, { locale: 'pt' }) : null;
-    const bricksBuilder = mp ? mp.bricks() : null;
-
-
-
-    const renderStatusScreenBrick = async (bricksBuilder, payId) => {
-        if (!bricksBuilder) {
-            return;
-        }
-
-        const settings = {
-
-            initialization: {
-
-                paymentId: payId, // Payment identifier, from which the status will be checked
-
-            },
-
-            customization: {
-
-                visual: {
-
-                    hideStatusDetails: false,
-
-                    hideTransactionDate: false,
-
-                    style: {
-
-                        theme: 'dark', // 'default' | 'dark' | 'bootstrap' | 'flat'
-
-                    },
-
-                },
-
-                backUrls: {}
-
-            },
-
-            callbacks: {
-
-                onReady: () => {
-
-                    console.log('ready');
-
-                },
-
-                onError: (error) => {
-
-                    console.log('error', error);
-
-                },
-
-            },
-
-        };
-
-
-
-        // Cria e armazena a nova instÃƒÆ’Ã‚Â¢ncia do Brick
-
-        statusScreenBrickController = await bricksBuilder.create('statusScreen', 'statusScreenBrick_container', settings);
-
-    };
-
 </script>
+

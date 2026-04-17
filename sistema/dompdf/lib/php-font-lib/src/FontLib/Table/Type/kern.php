@@ -1,8 +1,8 @@
 <?php
 /**
  * @package php-font-lib
- * @link ? https ://github.com/PhenX/php-font-lib
- * @author ?? Fabien Ménager <fabien.menager@gmail.com>
+ * @link    https://github.com/PhenX/php-font-lib
+ * @author  Fabien Ménager <fabien.menager@gmail.com>
  * @license http://www.gnu.org/copyleft/lesser.html GNU Lesser General Public License
  */
 
@@ -18,9 +18,14 @@ class kern extends Table {
   protected function _parse() {
     $font = $this->getFont();
 
-    $data = $font->unpack(array( ?? "version"         => self::uint16, "nTables"         => self::uint16,
+    $data = $font->unpack(array(
+      "version"         => self::uint16,
+      "nTables"         => self::uint16,
 
-      // only the first subtable will be parsed ?? "subtableVersion" => self::uint16, "length"          => self::uint16, "coverage"        => self::uint16,
+      // only the first subtable will be parsed
+      "subtableVersion" => self::uint16,
+      "length"          => self::uint16,
+      "coverage"        => self::uint16,
     ));
 
     $data["format"] = ($data["coverage"] >> 8);
@@ -29,7 +34,11 @@ class kern extends Table {
 
     switch ($data["format"]) {
       case 0:
-        $subtable = $font->unpack(array( ?? "nPairs"        => self::uint16, "searchRange"   => self::uint16, "entrySelector" => self::uint16, "rangeShift"    => self::uint16,
+        $subtable = $font->unpack(array(
+          "nPairs"        => self::uint16,
+          "searchRange"   => self::uint16,
+          "entrySelector" => self::uint16,
+          "rangeShift"    => self::uint16,
         ));
 
         $pairs = array();
@@ -45,7 +54,10 @@ class kern extends Table {
             $value -= 0x10000;
           }
 
-          $pairs[] = array( ?? "left"  => $left, "right" => $right, "value" => $value,
+          $pairs[] = array(
+            "left"  => $left,
+            "right" => $right,
+            "value" => $value,
           );
 
           $tree[$left][$right] = $value;

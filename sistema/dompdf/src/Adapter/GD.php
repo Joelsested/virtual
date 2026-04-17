@@ -1,9 +1,9 @@
 <?php
 /**
  * @package dompdf
- * @link ? http ://dompdf.github.com/
- * @author ?? Benj Carson <benjcarson@digitaljunkies.ca>
- * @author ?? Fabien Ménager <fabien.menager@gmail.com>
+ * @link    http://dompdf.github.com/
+ * @author  Benj Carson <benjcarson@digitaljunkies.ca>
+ * @author  Fabien Ménager <fabien.menager@gmail.com>
  * @license http://www.gnu.org/copyleft/lesser.html GNU Lesser General Public License
  */
 namespace Dompdf\Adapter;
@@ -279,15 +279,15 @@ class GD implements Canvas
     }
 
     /**
-     * Allocate a new color. ?? Allocate with GD as needed and store
+     * Allocate a new color.  Allocate with GD as needed and store
      * previously allocated colors in $this->_colors.
      *
      * @param array $color The new current color
-     * @return int ?? The allocated color
+     * @return int           The allocated color
      */
     protected function _allocate_color($color)
     {
-        $a = isset($color["alpha"]) ?? $color["alpha"] ?: 1;
+        $a = isset($color["alpha"]) ? $color["alpha"] : 1;
 
         if (isset($color["c"])) {
             $color = Helpers::cmyk_to_rgb($color);
@@ -301,10 +301,10 @@ class GD implements Canvas
         $a = 127 - ($a * 127);
 
         // Clip values
-        $r = $r > 255 ?? 255 : $r;
-        $g = $g > 255 ?? 255 : $g;
-        $b = $b > 255 ?? 255 : $b;
-        $a = $a > 127 ?? 127 : $a;
+        $r = $r > 255 ? 255 : $r;
+        $g = $g > 255 ? 255 : $g;
+        $b = $b > 255 ? 255 : $b;
+        $a = $a > 127 ? 127 : $a;
 
         $r = $r < 0 ? 0 : $r;
         $g = $g < 0 ? 0 : $g;
@@ -608,11 +608,11 @@ class GD implements Canvas
      * array.  $points has the following structure:
      * <code>
      * array(0 => x1,
-     * ?? 1 => y1,
-     * ?? 2 => x2,
-     * ?? 3 => y2,
-     * ?? ...
-     * ?? );
+     *       1 => y1,
+     *       2 => x2,
+     *       3 => y2,
+     *       ...
+     *       );
      * </code>
      *
      * See {@link Style::munge_color()} for the format of the color array.
@@ -789,7 +789,7 @@ class GD implements Canvas
         // character. Preserve any originally double encoded entities to be
         // represented as is.
         // eg: &amp;#160; will render &#160; rather than its character.
-        $text = preg_replace('/&(#(:x[a-fA-F0-9]+|[0-9]+);)/', '&#38;\1', $text);
+        $text = preg_replace('/&(#(?:x[a-fA-F0-9]+|[0-9]+);)/', '&#38;\1', $text);
 
         $text = mb_encode_numericentity($text, [0x0080, 0xff, 0, 0xff], 'UTF-8');
 
@@ -868,7 +868,7 @@ class GD implements Canvas
         // character. Preserve any originally double encoded entities to be
         // represented as is.
         // eg: &amp;#160; will render &#160; rather than its character.
-        $text = preg_replace('/&(#(:x[a-fA-F0-9]+|[0-9]+);)/', '&#38;\1', $text);
+        $text = preg_replace('/&(#(?:x[a-fA-F0-9]+|[0-9]+);)/', '&#38;\1', $text);
 
         $text = mb_encode_numericentity($text, [0x0080, 0xffff, 0, 0xffff], 'UTF-8');
 
@@ -988,15 +988,15 @@ class GD implements Canvas
      *
      * See {@link Style::munge_color()} for the format of the color array.
      *
-     * @param float ?? $x
-     * @param float ?? $y
-     * @param string $text ?? the text to write
-     * @param string $font ?? the font file to use
-     * @param float ?? $size       the font size, in points
-     * @param array ?? $color
-     * @param float ?? $word_space word spacing adjustment
-     * @param float ?? $char_space char spacing adjustment
-     * @param float ?? $angle      angle to write the text at, measured CW starting from the x-axis
+     * @param float  $x
+     * @param float  $y
+     * @param string $text       the text to write
+     * @param string $font       the font file to use
+     * @param float  $size       the font size, in points
+     * @param array  $color
+     * @param float  $word_space word spacing adjustment
+     * @param float  $char_space char spacing adjustment
+     * @param float  $angle      angle to write the text at, measured CW starting from the x-axis
      */
     public function page_text($x, $y, $text, $font, $size, $color = [0, 0, 0], $word_space = 0.0, $char_space = 0.0, $angle = 0.0)
     {
@@ -1013,11 +1013,12 @@ class GD implements Canvas
      *
      * @param string $filename The filename to present to the client.
      * @param array $options Associative array: 'type' => jpeg|jpg|png; 'quality' => 0 - 100 (JPEG only);
-     * ?? 'page' => Number of the page to output (defaults to the first); 'Attachment': 1 or 0 (default 1).
+     *     'page' => Number of the page to output (defaults to the first); 'Attachment': 1 or 0 (default 1).
      */
     public function stream($filename, $options = [])
     {
-        if (headers_sent()) { ? die("Unable to stream image: headers already sent");
+        if (headers_sent()) {
+            die("Unable to stream image: headers already sent");
         }
 
         if (!isset($options["type"])) $options["type"] = "png";
@@ -1035,10 +1036,14 @@ class GD implements Canvas
                 $contentType = "image/png";
                 $extension = ".png";
                 break;
-        } ? header("Cache-Control: private"); ? header("Content-Type: $contentType");
+        }
+
+        header("Cache-Control: private");
+        header("Content-Type: $contentType");
 
         $filename = str_replace(["\n", "'"], "", basename($filename, ".$type")) . $extension;
-        $attachment = $options["Attachment"] ? "attachment" : "inline"; ? header(Helpers::buildContentDispositionHeader($attachment, $filename));
+        $attachment = $options["Attachment"] ? "attachment" : "inline";
+        header(Helpers::buildContentDispositionHeader($attachment, $filename));
 
         $this->_output($options);
         flush();
@@ -1048,7 +1053,7 @@ class GD implements Canvas
      * Returns the image as a string.
      *
      * @param array $options Associative array: 'type' => jpeg|jpg|png; 'quality' => 0 - 100 (JPEG only);
-     * ?? 'page' => Number of the page to output (defaults to the first).
+     *     'page' => Number of the page to output (defaults to the first).
      * @return string
      */
     public function output($options = [])
@@ -1064,7 +1069,7 @@ class GD implements Canvas
      * Outputs the image stream directly.
      *
      * @param array $options Associative array: 'type' => jpeg|jpg|png; 'quality' => 0 - 100 (JPEG only);
-     * ?? 'page' => Number of the page to output (defaults to the first).
+     *     'page' => Number of the page to output (defaults to the first).
      */
     protected function _output($options = [])
     {

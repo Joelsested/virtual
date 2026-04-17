@@ -46,7 +46,7 @@ echo <<<HTML
 		<ul class="dropdown-menu" style="margin-left:-230px;">
 		<li>
 		<div class="notification_desc2">
-		<p>Confirmar Exclusão <a href="#" onclick="excluirCurso('{$id}')"><span class="text-danger">Sim</span></a></p>
+		<p>Confirmar Exclusão? <a href="#" onclick="excluirCurso('{$id}')"><span class="text-danger">Sim</span></a></p>
 		</div>
 		</li>										
 		</ul>
@@ -79,7 +79,7 @@ HTML;
 <script type="text/javascript">
 
 	$(document).ready( function () {
-		$('#total_cursos').text('<=$total_reg>');
+		$('#total_cursos').text('<?=$total_reg?>');
 	} );
 	
 	
@@ -95,7 +95,8 @@ function excluirCurso(id){
             if (mensagem.trim() == "Excluído com Sucesso") {                
                 listarCursos();                
             } else {
-                    $('#mensagem-excluir-curso').addClass('text-danger') $('#mensagem-excluir-curso').text(mensagem)
+                    $('#mensagem-excluir-curso').addClass('text-danger')
+                    $('#mensagem-excluir-curso').text(mensagem)
                 }
 
         },      
@@ -108,3 +109,4 @@ function excluirCurso(id){
 
 
 </script>
+

@@ -22,10 +22,17 @@ class Color extends CSSFunction {
 			}
 
 			if ($oParserState->strlen($sValue) === 8) {
-				$aColor = array( ?? 'r' => new Size(intval($sValue[0] . $sValue[1], 16), null, true, $oParserState->currentLine()), 'g' => new Size(intval($sValue[2] . $sValue[3], 16), null, true, $oParserState->currentLine()), 'b' => new Size(intval($sValue[4] . $sValue[5], 16), null, true, $oParserState->currentLine()), 'a' => new Size(round(self::mapRange(intval($sValue[6] . $sValue[7], 16), 0, 255, 0, 1), 2), null, true, $oParserState->currentLine())
+				$aColor = array(
+					'r' => new Size(intval($sValue[0] . $sValue[1], 16), null, true, $oParserState->currentLine()),
+					'g' => new Size(intval($sValue[2] . $sValue[3], 16), null, true, $oParserState->currentLine()),
+					'b' => new Size(intval($sValue[4] . $sValue[5], 16), null, true, $oParserState->currentLine()),
+					'a' => new Size(round(self::mapRange(intval($sValue[6] . $sValue[7], 16), 0, 255, 0, 1), 2), null, true, $oParserState->currentLine())
 				);
 			} else {
-				$aColor = array( ?? 'r' => new Size(intval($sValue[0] . $sValue[1], 16), null, true, $oParserState->currentLine()), 'g' => new Size(intval($sValue[2] . $sValue[3], 16), null, true, $oParserState->currentLine()), 'b' => new Size(intval($sValue[4] . $sValue[5], 16), null, true, $oParserState->currentLine())
+				$aColor = array(
+					'r' => new Size(intval($sValue[0] . $sValue[1], 16), null, true, $oParserState->currentLine()),
+					'g' => new Size(intval($sValue[2] . $sValue[3], 16), null, true, $oParserState->currentLine()),
+					'b' => new Size(intval($sValue[4] . $sValue[5], 16), null, true, $oParserState->currentLine())
 				);
 			}
 		} else {
@@ -75,7 +82,8 @@ class Color extends CSSFunction {
 	public function render(\Sabberworm\CSS\OutputFormat $oOutputFormat) {
 		// Shorthand RGB color values
 		if($oOutputFormat->getRGBHashNotation() && implode('', array_keys($this->aComponents)) === 'rgb') {
-			$sResult = sprintf( ?? '%02x%02x%02x',
+			$sResult = sprintf(
+				'%02x%02x%02x',
 				$this->aComponents['r']->getSize(),
 				$this->aComponents['g']->getSize(),
 				$this->aComponents['b']->getSize()

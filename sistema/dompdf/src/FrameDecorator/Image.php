@@ -1,9 +1,9 @@
 <?php
 /**
  * @package dompdf
- * @link ? http ://dompdf.github.com/
- * @author ?? Benj Carson <benjcarson@digitaljunkies.ca>
- * @author ?? Fabien Ménager <fabien.menager@gmail.com>
+ * @link    http://dompdf.github.com/
+ * @author  Benj Carson <benjcarson@digitaljunkies.ca>
+ * @author  Fabien Ménager <fabien.menager@gmail.com>
  * @license http://www.gnu.org/copyleft/lesser.html GNU Lesser General Public License
  */
 namespace Dompdf\FrameDecorator;
@@ -49,7 +49,9 @@ class Image extends AbstractFrameDecorator
         $debug_png = $dompdf->getOptions()->getDebugPng();
         if ($debug_png) {
             print '[__construct ' . $url . ']';
-        } ? list($this->_image_url, /*$type*/, $this->_image_msg) = Cache::resolve_url(
+        }
+
+        list($this->_image_url, /*$type*/, $this->_image_msg) = Cache::resolve_url(
             $url,
             $dompdf->getProtocol(),
             $dompdf->getBaseHost(),

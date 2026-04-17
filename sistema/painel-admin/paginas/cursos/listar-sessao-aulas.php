@@ -5,7 +5,7 @@ $tabela = 'sessao';
 $id_curso = $_POST['curso'];
 
 
-echo '<select class="form-control sel2" name="sessao_aula" id="sessao_aula" ? style="width :100%;">';							
+echo '<select class="form-control sel2" name="sessao_aula" id="sessao_aula"  style="width:100%;">';							
 
 $query = $pdo->query("SELECT * FROM sessao where curso = '$id_curso' order by id asc");
 $res = $query->fetchAll(PDO::FETCH_ASSOC);

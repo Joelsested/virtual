@@ -41,7 +41,7 @@ var DataTable = $.fn.dataTable;
 
 // Detect Foundation 5 / 6 as they have different element and class requirements
 var meta = $('<meta class="foundation-mq"/>').appendTo('head');
-DataTable.ext.foundationVersion = meta.css('font-family').match(/small|medium|large/)  6 : 5;
+DataTable.ext.foundationVersion = meta.css('font-family').match(/small|medium|large/) ? 6 : 5;
 meta.remove();
 
 
@@ -100,37 +100,37 @@ DataTable.ext.renderer.pageButton.foundation = function ( settings, host, idx, b
 
 					case 'first':
 						btnDisplay = lang.sFirst;
-						btnClass = button + (page > 0 
+						btnClass = button + (page > 0 ?
 							'' : ' unavailable disabled');
-						tag = page > 0  'a' : null;
+						tag = page > 0 ? 'a' : null;
 						break;
 
 					case 'previous':
 						btnDisplay = lang.sPrevious;
-						btnClass = button + (page > 0 
+						btnClass = button + (page > 0 ?
 							'' : ' unavailable disabled');
-						tag = page > 0  'a' : null;
+						tag = page > 0 ? 'a' : null;
 						break;
 
 					case 'next':
 						btnDisplay = lang.sNext;
-						btnClass = button + (page < pages-1 
+						btnClass = button + (page < pages-1 ?
 							'' : ' unavailable disabled');
-						tag = page < pages-1  'a' : null;
+						tag = page < pages-1 ? 'a' : null;
 						break;
 
 					case 'last':
 						btnDisplay = lang.sLast;
-						btnClass = button + (page < pages-1 
+						btnClass = button + (page < pages-1 ?
 							'' : ' unavailable disabled');
-						tag = page < pages-1  'a' : null;
+						tag = page < pages-1 ? 'a' : null;
 						break;
 
 					default:
 						btnDisplay = button + 1;
-						btnClass = page === button 
+						btnClass = page === button ?
 							'current' : '';
-						tag = page === button 
+						tag = page === button ?
 							null : 'a';
 						break;
 				}
@@ -145,11 +145,11 @@ DataTable.ext.renderer.pageButton.foundation = function ( settings, host, idx, b
 							'aria-controls': settings.sTableId,
 							'aria-label': aria[ button ],
 							'tabindex': settings.iTabIndex,
-							'id': idx === 0 && typeof button === 'string' 
+							'id': idx === 0 && typeof button === 'string' ?
 								settings.sTableId +'_'+ button :
 								null
 						} )
-						.append( tag 
+						.append( tag ?
 							$('<'+tag+'/>', {'href': '#'} ).html( btnDisplay ) :
 							btnDisplay
 						)

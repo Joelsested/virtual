@@ -1,9 +1,9 @@
 <?php
 /**
  * @package dompdf
- * @link ? http ://dompdf.github.com/
- * @author ?? Benj Carson <benjcarson@digitaljunkies.ca>
- * @author ?? Fabien MÃ©nager <fabien.menager@gmail.com>
+ * @link    http://dompdf.github.com/
+ * @author  Benj Carson <benjcarson@digitaljunkies.ca>
+ * @author  Fabien Ménager <fabien.menager@gmail.com>
  * @license http://www.gnu.org/copyleft/lesser.html GNU Lesser General Public License
  */
 namespace Dompdf\FrameReflower;
@@ -101,15 +101,15 @@ class Text extends AbstractFrameReflower
         $frame_width = $text_width + $mbp_width;
 
 // Debugging:
-// ? Helpers ::pre_r("Text: '" . htmlspecialchars($text). "'");
-// ? Helpers ::pre_r("width: " .$frame_width);
-// ? Helpers ::pre_r("textwidth + delta: $text_width + $mbp_width");
-// ? Helpers ::pre_r("font-size: $size");
-//    Helpers::pre_r("cb[w] ?: " .$line_width);
-// ? Helpers ::pre_r("available width: " . $available_width);
-// ? Helpers ::pre_r("current line width: " . $current_line_width);
+//    Helpers::pre_r("Text: '" . htmlspecialchars($text). "'");
+//    Helpers::pre_r("width: " .$frame_width);
+//    Helpers::pre_r("textwidth + delta: $text_width + $mbp_width");
+//    Helpers::pre_r("font-size: $size");
+//    Helpers::pre_r("cb[w]: " .$line_width);
+//    Helpers::pre_r("available width: " . $available_width);
+//    Helpers::pre_r("current line width: " . $current_line_width);
 
-// ? Helpers ::pre_r($words);
+//     Helpers::pre_r($words);
 
         if ($frame_width <= $available_width) {
             return false;
@@ -128,7 +128,7 @@ class Text extends AbstractFrameReflower
 
         // @todo support <wbr>
         for ($i = 0; $i < $wc; $i += 2) {
-            $word = $words[$i] . (isset($words[$i + 1]) ?? $words[$i + 1] ?: "");
+            $word = $words[$i] . (isset($words[$i + 1]) ? $words[$i + 1] : "");
             $word_width = $this->getFontMetrics()->getTextWidth($word, $font, $size, $word_spacing, $char_spacing);
             if ($width + $word_width + $mbp_width > $available_width) {
                 // If the previous split happened by soft hyphen, we have to append its width again
@@ -152,7 +152,7 @@ class Text extends AbstractFrameReflower
 
         $break_word = ($style->word_wrap === "break-word");
 
-        // The first word has overflowed. ?? Force it onto the line
+        // The first word has overflowed.   Force it onto the line
         if ($current_line_width == 0 && $width == 0) {
             $s = "";
             $last_width = 0;
@@ -181,9 +181,9 @@ class Text extends AbstractFrameReflower
         $offset = mb_strlen($str);
 
         // More debugging:
-        // ?? var_dump($str);
-        // ? print_r("Width: ". $width);
-        // ? print_r("Offset: " . $offset);
+        //     var_dump($str);
+        //     print_r("Width: ". $width);
+        //     print_r("Offset: " . $offset);
 
         return $offset;
     }
@@ -203,7 +203,7 @@ class Text extends AbstractFrameReflower
         return $i + 1;
     }
 
-    protected function _layout_line() : bool
+    protected function _layout_line(): bool
     {
         $frame = $this->_frame;
         $style = $frame->get_style();
@@ -322,7 +322,7 @@ class Text extends AbstractFrameReflower
                     $frame->set_text($t);
                 }
 
-                // Do we need to trim spaces on wrapped lines This might be desired, however, we
+                // Do we need to trim spaces on wrapped lines? This might be desired, however, we
                 // can't trim the lines here or the layout will be affected if trimming the line
                 // leaves enough space to fit the next word in the text stream (because pdf layout
                 // is performed elsewhere).
@@ -342,7 +342,7 @@ class Text extends AbstractFrameReflower
         } else {
             // Remove empty space from start and end of line, but only where there isn't an inline sibling
             // and the parent node isn't an inline element with siblings
-            // FIXME: Include non-breaking spaces
+            // FIXME: Include non-breaking spaces?
             $t = $frame->get_text();
             $parent = $frame->get_parent();
             $is_inline_frame = ($parent instanceof \Dompdf\FrameDecorator\Inline);
@@ -355,7 +355,8 @@ class Text extends AbstractFrameReflower
 
             if ((!$is_inline_frame && !$frame->get_prev_sibling()) /* ||
             ( $is_inline_frame && !$parent->get_prev_sibling())*/
-            ) { //  <span><span>A<span>B</span> C</span></span> fails (the whitespace is removed) ?? $t = ltrim($t);
+            ) { //  <span><span>A<span>B</span> C</span></span> fails (the whitespace is removed)
+                $t = ltrim($t);
             }
 
             // Remove soft hyphens
@@ -383,15 +384,15 @@ class Text extends AbstractFrameReflower
             return;
         }
 
-        $this->_block_parent = /*isset($block) ?? $block : */
+        $this->_block_parent = /*isset($block) ? $block : */
         $frame->find_block_parent();
 
         // Left trim the text if this is the first text on the line and we're
         // collapsing white space
-// ?? if ( $this->_block_parent->get_current_line()->w == 0 &&
-// ?? ($frame->get_style()->white_space !== "pre" ||
-// ?? $frame->get_style()->white_space !== "pre-wrap") ) {
-// ?? $frame->set_text( ltrim( $frame->get_text() ) );
+//     if ( $this->_block_parent->get_current_line()->w == 0 &&
+//          ($frame->get_style()->white_space !== "pre" ||
+//           $frame->get_style()->white_space !== "pre-wrap") ) {
+//       $frame->set_text( ltrim( $frame->get_text() ) );
 //     }
 
         $frame->position();
@@ -413,7 +414,7 @@ class Text extends AbstractFrameReflower
     // minimum and maximum widths of this frame
     function get_min_max_width()
     {
-        /*if ( !is_null($this->_min_max_cache) ?? )
+        /*if ( !is_null($this->_min_max_cache)  )
           return $this->_min_max_cache;*/
         $frame = $this->_frame;
         $style = $frame->get_style();
@@ -478,7 +479,8 @@ class Text extends AbstractFrameReflower
                 break;
 
             case "pre-wrap":
-                // Find the longest word (i.e. minimum length) ?? $lines = array_flip(preg_split("/\R/u", $text));
+                // Find the longest word (i.e. minimum length)
+                $lines = array_flip(preg_split("/\R/u", $text));
                 $root = $this;
                 array_walk($lines, function(&$chunked_text_width, $chunked_text) use ($font, $size, $word_spacing, $char_spacing, $root) {
                     $chunked_text_width = $root->getFontMetrics()->getTextWidth($chunked_text, $font, $size, $word_spacing, $char_spacing);

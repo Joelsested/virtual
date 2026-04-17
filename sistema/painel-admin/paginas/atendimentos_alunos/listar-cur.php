@@ -11,7 +11,7 @@ $id_aluno = $res_m[0]['id_pessoa'];
 
 echo <<<HTML
 HTML;
-$query_m = $pdo->query("SELECT * FROM $tabela where aluno = '$id_aluno' ?? ORDER BY id asc");
+$query_m = $pdo->query("SELECT * FROM $tabela where aluno = '$id_aluno'  ORDER BY id asc");
 $res_m = $query_m->fetchAll(PDO::FETCH_ASSOC);
 $total_reg_m = @count($res_m);
 $ultima_aula = 1;
@@ -55,7 +55,7 @@ echo <<<HTML
 		<td>
 		
 
-		<big><a class="" href="$url_sistema/sistema/painel-aluno/img/arquivos/$arquivo" target="_blank" ?? title="Arquivos do Aluno">
+		<big><a class="" href="$url_sistema/sistema/painel-aluno/img/arquivos/$arquivo" target="_blank"  title="Arquivos do Aluno">
 	    	<small><span class="fa fa-file-pdf-o text-danger" ></span></small></i></a></big>
 
 
@@ -90,3 +90,4 @@ echo '<br>';
 
 
 ?>
+

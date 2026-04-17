@@ -107,43 +107,43 @@ DataTable.ext.renderer.pageButton.semanticUI = function ( settings, host, idx, b
 
 					case 'first':
 						btnDisplay = lang.sFirst;
-						btnClass = button + (page > 0 
+						btnClass = button + (page > 0 ?
 							'' : ' disabled');
 						break;
 
 					case 'previous':
 						btnDisplay = lang.sPrevious;
-						btnClass = button + (page > 0 
+						btnClass = button + (page > 0 ?
 							'' : ' disabled');
 						break;
 
 					case 'next':
 						btnDisplay = lang.sNext;
-						btnClass = button + (page < pages-1 
+						btnClass = button + (page < pages-1 ?
 							'' : ' disabled');
 						break;
 
 					case 'last':
 						btnDisplay = lang.sLast;
-						btnClass = button + (page < pages-1 
+						btnClass = button + (page < pages-1 ?
 							'' : ' disabled');
 						break;
 
 					default:
 						btnDisplay = button + 1;
-						btnClass = page === button 
+						btnClass = page === button ?
 							'active' : '';
 						break;
 				}
 
-				var tag = btnClass.indexOf( 'disabled' ) === -1 
+				var tag = btnClass.indexOf( 'disabled' ) === -1 ?
 					'a' :
 					'div';
 
 				if ( btnDisplay ) {
 					node = $('<'+tag+'>', {
 							'class': classes.sPageButton+' '+btnClass,
-							'id': idx === 0 && typeof button === 'string' 
+							'id': idx === 0 && typeof button === 'string' ?
 								settings.sTableId +'_'+ button :
 								null,
 							'href': '#',

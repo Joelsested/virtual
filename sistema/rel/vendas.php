@@ -15,7 +15,7 @@ if($dataInicial == $dataFinal){
 }else if($dataInicial == '1980-01-01'){
 	$texto_apuracao = 'APURADO EM TODO O PERÍODO';
 }else{
-	$texto_apuracao = 'APURAÇÍO DE '.$dataInicialF. ' ATÉ '.$dataFinalF;
+	$texto_apuracao = 'APURAÇÃO DE '.$dataInicialF. ' ATÉ '.$dataFinalF;
 }
 
 
@@ -170,9 +170,9 @@ $data_hoje = utf8_encode(strftime('%A, %d de %B de %Y', strtotime('today')));
 
 
 <div class="titulo_cab titulo_img"><u>Relatório de Vendas  <?php echo $acao_rel ?> </u></div>	
-	<div class="data_img"<?php echo mb_strtoupper($data_hoje) ></div>
+	<div class="data_img"><?php echo mb_strtoupper($data_hoje) ?></div>
 
-	<img class="imagem" src="<?php echo $url_sistema >/sistema/img/logo_rel.jpg?>" width=?>"200px" height="47"?>
+	<img class="imagem" src="<?php echo $url_sistema ?>/sistema/img/logo_rel.jpg" width="200px" height="47">
 
 	
 	<br><br><br>
@@ -199,7 +199,7 @@ $data_hoje = utf8_encode(strftime('%A, %d de %B de %Y', strtotime('today')));
 		$res = $query->fetchAll(PDO::FETCH_ASSOC);
 		$total_reg = count($res);
 		if($total_reg > 0){
-?>
+			?>
 
 			<small><small>
 				<section class="area-tab" style="background-color: #f5f5f5;">
@@ -280,21 +280,21 @@ $data_hoje = utf8_encode(strftime('%A, %d de %B de %Y', strtotime('today')));
 		$obs = 'Nenhuma!';
 	}
 
-?>
+				 ?>
 
 
 		
 		<section class="area-tab" style="padding-top:5px">					
 						<div class="linha-cab">				
-							<div class="coluna" style="width:18%"<?php echo $nome_curso ></div>
-							<div class="coluna" style="width:23%"<?php echo $email_aluno ></div>
+							<div class="coluna" style="width:18%"><?php echo $nome_curso ?></div>
+							<div class="coluna" style="width:23%"><?php echo $email_aluno ?></div>
 							<div class="coluna" style="width:11%">R$ <?php echo $valorF ?></div>
 
 							<div class="coluna" style="width:11%">R$ <?php echo $valor_cupomF ?></div>							
 
-							<div class="coluna" style="width:17%"<?php echo $forma_pgto > <small><span class="text-danger"<?php echo $desconto ></span></div>	
+							<div class="coluna" style="width:17%"><?php echo $forma_pgto ?> <small><span class="text-danger"><?php echo $desconto ?></span></div>	
 							<div class="coluna text-success" style="width:11%">R$<?php echo $total_recebidoF ?></div>	
-							<div class="coluna" style="width:10%"<?php echo $dataF ></div>
+							<div class="coluna" style="width:10%"><?php echo $dataF ?></div>
 							
 													
 
@@ -318,7 +318,7 @@ $data_hoje = utf8_encode(strftime('%A, %d de %B de %Y', strtotime('today')));
 
 	<?php }else{
 		echo '<div style="margin:8px"><small><small>Sem Registros no banco de dados!</small></small></div>';
-	} >
+	} ?>
 
 
 
@@ -338,8 +338,8 @@ $data_hoje = utf8_encode(strftime('%A, %d de %B de %Y', strtotime('today')));
 
 
 
-	<div class="footer" ?? align="center">
-		<span style="font-size:10px"<?php echo $nome_sistema > Whatsapp: <?php echo $tel_sistema ?></span> 
+	<div class="footer"  align="center">
+		<span style="font-size:10px"><?php echo $nome_sistema ?> Whatsapp: <?php echo $tel_sistema ?></span> 
 	</div>
 
 

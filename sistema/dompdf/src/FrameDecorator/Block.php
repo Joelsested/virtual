@@ -1,8 +1,8 @@
 <?php
 /**
  * @package dompdf
- * @link ? http ://dompdf.github.com/
- * @author ?? Benj Carson <benjcarson@digitaljunkies.ca>
+ * @link    http://dompdf.github.com/
+ * @author  Benj Carson <benjcarson@digitaljunkies.ca>
  * @license http://www.gnu.org/copyleft/lesser.html GNU Lesser General Public License
  */
 namespace Dompdf\FrameDecorator;
@@ -14,7 +14,7 @@ use Dompdf\LineBox;
 /**
  * Decorates frames for block layout
  *
- * @access ?? private
+ * @access  private
  * @package dompdf
  */
 class Block extends AbstractFrameDecorator
@@ -126,7 +126,8 @@ class Block extends AbstractFrameDecorator
                $this->add_line();
 
                // Add each child of the inline frame to the line individually
-               foreach ($frame->get_children() as $child) ?? $this->add_frame_to_line( $child );
+               foreach ($frame->get_children() as $child)
+                 $this->add_frame_to_line( $child );
         }
         else*/
 
@@ -141,7 +142,7 @@ class Block extends AbstractFrameDecorator
             return;
         }
 
-        // Trim leading text if this is an empty line. ?? Kinda a hack to put it here,
+        // Trim leading text if this is an empty line.  Kinda a hack to put it here,
         // but what can you do...
         if ($this->get_current_line_box()->w == 0 &&
             $frame->is_text_node() &&
@@ -153,8 +154,8 @@ class Block extends AbstractFrameDecorator
 
         $w = $frame->get_margin_width();
 
-        // FIXME: Why Doesn't quite seem to be the correct thing to do,
-        // but does appear to be necessary. Hack to handle wrapped white space
+        // FIXME: Why? Doesn't quite seem to be the correct thing to do,
+        // but does appear to be necessary. Hack to handle wrapped white space?
         if ($w == 0 && $frame->get_node()->nodeName !== "hr" && !$frame->is_pre()) {
             return;
         }
@@ -163,8 +164,8 @@ class Block extends AbstractFrameDecorator
         /*
         Helpers::pre_r("\n<h3>Adding frame to line:</h3>");
 
-        // ? Helpers ::pre_r("Me: " . $this->get_node()->nodeName . " (" . spl_object_hash($this->get_node()) . ")");
-        // ? Helpers ::pre_r("Node: " . $frame->get_node()->nodeName . " (" . spl_object_hash($frame->get_node()) . ")");
+        //    Helpers::pre_r("Me: " . $this->get_node()->nodeName . " (" . spl_object_hash($this->get_node()) . ")");
+        //    Helpers::pre_r("Node: " . $frame->get_node()->nodeName . " (" . spl_object_hash($frame->get_node()) . ")");
         if ( $frame->is_text_node() )
           Helpers::pre_r('"'.$frame->get_node()->nodeValue.'"');
 

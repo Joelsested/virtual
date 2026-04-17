@@ -154,18 +154,27 @@ class EFIBoletoPayment
             date('Y-m-d', strtotime($dados['vencimento'])) :
             date('Y-m-d', strtotime('+7 days'));
 
+        $telefone = preg_replace('/\D/', '', $dados['telefone'] ?? '');
+        if (strlen($telefone) > 11 && str_starts_with($telefone, '55')) {
+            $telefone = substr($telefone, 2);
+        }
+        $telefoneValido = $telefone !== '' && preg_match('/^[1-9]{2}9?[0-9]{8}$/', $telefone);
+
+        $customer = [
+            'name' => $dados['nome'],
+            'email' => $dados['email'],
+            'cpf' => preg_replace('/\D/', '', $dados['cpf']),
+            'birth' => $dados['nascimento'] ?? null,
+        ];
+        if ($telefoneValido) {
+            $customer['phone_number'] = $telefone;
+        }
+
         $body = [
             'payment' => [
                 'banking_billet' => [
                     'expire_at' => $vencimento,
-                    'customer' => [
-                        'name' => $dados['nome'],
-                        'email' => $dados['email'],
-                        'cpf' => preg_replace('/\D/', '', $dados['cpf']),
-                        'birth' => $dados['nascimento'] ?? null,
-                        // 'phone_number' => preg_replace('/\D/', '', $dados['phone_number'] ?? '')
-                        'phone_number' => $dados['telefone']
-                    ]
+                    'customer' => $customer
                 ]
             ]
         ];

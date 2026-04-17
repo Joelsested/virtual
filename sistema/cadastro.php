@@ -29,7 +29,7 @@ $senha_crip = md5($senha);
 $stmtUsuarioEmail = $pdo->prepare("SELECT id FROM usuarios WHERE usuario = :email LIMIT 1");
 $stmtUsuarioEmail->execute([':email' => $email]);
 if ($stmtUsuarioEmail->fetchColumn()) {
-	echo 'Este email ja esta cadastrado, escolha outro ou recupere seu acesso!';
+	echo 'Este email ja esta cadastrado, escolha outro ou recupere sua senha!';
 	exit();
 }
 $cpfColumn = cleanCpfColumn('cpf');
@@ -50,7 +50,7 @@ $query->bindValue(":email", "$email");
 $query->execute();
 $res = $query->fetchAll(PDO::FETCH_ASSOC);
 if(@count($res) > 0){
-	echo 'Este email ja esta cadastrado, escolha outro ou recupere seu acesso!';
+	echo 'Este email ja esta cadastrado, escolha outro ou recupere sua senha!';
 	exit();
 }
 
@@ -66,7 +66,7 @@ $query->bindValue(":email", "$email");
 $query->bindValue(":cpf", "$cpf");
 $query->bindValue(":nascimento", "$nascimento");
 $query->execute();
-$ult_id = $professor_id : $pdo->lastInsertId();
+$ult_id = $professor_id ?: $pdo->lastInsertId();
 
 $usuario_id = nextTableId($pdo, 'usuarios');
 if ($usuario_id) {
@@ -84,14 +84,14 @@ $query->bindValue(":id_pessoa", "$ult_id");
 $query->execute();
 
 }else{
-	$professor_tutor_id = $professor_tutor_id  (int) $professor_tutor_id : 0;
+	$professor_tutor_id = $professor_tutor_id ? (int) $professor_tutor_id : 0;
 	if (!$professor_tutor_id) {
 		echo 'Selecione o responsavel para atendimento!';
 		exit();
 	}
 
-	$placeholders = implode(',', array_fill(0, count($allowedLevels), ''));
-	$stmtResponsavel = $pdo->prepare("SELECT id, nivel, id_pessoa FROM usuarios WHERE id = ?? AND nivel IN ($placeholders) AND ativo = 'Sim' LIMIT 1");
+	$placeholders = implode(',', array_fill(0, count($allowedLevels), '?'));
+	$stmtResponsavel = $pdo->prepare("SELECT id, nivel, id_pessoa FROM usuarios WHERE id = ? AND nivel IN ($placeholders) AND ativo = 'Sim' LIMIT 1");
 	$stmtResponsavel->execute(array_merge([$professor_tutor_id], $allowedLevels));
 	$responsavel = $stmtResponsavel->fetch(PDO::FETCH_ASSOC);
 	if (!$responsavel) {
@@ -126,7 +126,7 @@ $query->bindValue(":email", "$email");
 $query->execute();
 $res = $query->fetchAll(PDO::FETCH_ASSOC);
 if(@count($res) > 0){
-	echo 'Este email ja esta cadastrado, escolha outro ou recupere seu acesso!';
+	echo 'Este email ja esta cadastrado, escolha outro ou recupere sua senha!';
 	exit();
 }
 
@@ -143,7 +143,7 @@ $query->bindValue(":cpf", "$cpf");
 $query->bindValue(":nascimento", "$nascimento");
 $query->bindValue(":usuario", "$professor_tutor_id");
 $query->execute();
-$ult_id = $aluno_id : $pdo->lastInsertId();
+$ult_id = $aluno_id ?: $pdo->lastInsertId();
 
 $usuario_id = nextTableId($pdo, 'usuarios');
 if ($usuario_id) {
@@ -164,4 +164,4 @@ $query->execute();
 
 echo 'Cadastrado com Sucesso';
 
-?>
+ ?>

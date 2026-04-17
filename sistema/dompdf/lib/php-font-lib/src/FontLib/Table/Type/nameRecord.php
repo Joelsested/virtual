@@ -1,8 +1,8 @@
 <?php
 /**
  * @package php-font-lib
- * @link ? https ://github.com/PhenX/php-font-lib
- * @author ?? Fabien Ménager <fabien.menager@gmail.com>
+ * @link    https://github.com/PhenX/php-font-lib
+ * @author  Fabien Ménager <fabien.menager@gmail.com>
  * @license http://www.gnu.org/copyleft/lesser.html GNU Lesser General Public License
  */
 namespace FontLib\Table\Type;
@@ -24,7 +24,13 @@ class nameRecord extends BinaryStream {
   public $offset;
   public $string;
 
-  public static $format = array( ?? "platformID"         => self::uint16, "platformSpecificID" => self::uint16, "languageID"         => self::uint16, "nameID"             => self::uint16, "length"             => self::uint16, "offset"             => self::uint16,
+  public static $format = array(
+    "platformID"         => self::uint16,
+    "platformSpecificID" => self::uint16,
+    "languageID"         => self::uint16,
+    "nameID"             => self::uint16,
+    "length"             => self::uint16,
+    "offset"             => self::uint16,
   );
 
   public function map($data) {

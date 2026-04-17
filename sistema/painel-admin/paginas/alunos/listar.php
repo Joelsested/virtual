@@ -5,6 +5,7 @@ $tabela = 'alunos';
 @session_start();
 
 $id_user = $_SESSION['id'];
+$somente_meus = isset($_POST['somente_meus']) && $_POST['somente_meus'] == '1';
 
 
 
@@ -27,13 +28,22 @@ if (@$_SESSION['nivel'] != 'Secretario' and @$_SESSION['nivel'] != 'Administrado
 	$ocultar2 = '';
 }
 
-if (@$_SESSION['nivel'] == 'Professor' || @$_SESSION['nivel'] == 'Tutor' || @$_SESSION['nivel'] == 'Parceiro' || @$_SESSION['nivel'] == 'Vendedor') {
+$nivelSessao = (string) (@$_SESSION['nivel'] ?? '');
+$niveisEntrarComoAluno = ['Administrador', 'Secretario', 'Tesoureiro', 'Vendedor', 'Tutor', 'Parceiro', 'Assessor', 'Professor'];
+$niveisAcessoGlobalAluno = ['Administrador', 'Secretario', 'Tesoureiro'];
+$podeEntrarComoAlunoTela = in_array($nivelSessao, $niveisEntrarComoAluno, true);
+
+if ($somente_meus) {
+	$query = $pdo->query("SELECT * FROM $tabela where usuario = '$id_user' ORDER BY id desc");
+	$res = $query->fetchAll(PDO::FETCH_ASSOC);
+	$total_reg = @count($res);
+} elseif (@$_SESSION['nivel'] == 'Professor' || @$_SESSION['nivel'] == 'Tutor' || @$_SESSION['nivel'] == 'Parceiro' || @$_SESSION['nivel'] == 'Vendedor') {
 
 	$query = $pdo->query("SELECT * FROM $tabela where usuario = '$id_user' ORDER BY id desc");
 	$res = $query->fetchAll(PDO::FETCH_ASSOC);
 	$total_reg = @count($res);
 } else {
-	$query = $pdo->query("SELECT * FROM $tabela ?? ORDER BY id desc");
+	$query = $pdo->query("SELECT * FROM $tabela  ORDER BY id desc");
 	$res = $query->fetchAll(PDO::FETCH_ASSOC);
 	$total_reg = @count($res);
 }
@@ -47,7 +57,8 @@ if ($total_reg > 0) {
 	<th class="esc">Telefone</th> 
 	<th class="esc">Email</th> 	
 	<th class="esc">Professor</th>	
-	<th>AÃ§Ãµes</th>
+	<th class="esc">Data de Matrícula</th>
+	<th>Ações</th>
 	</tr> 
 	</thead> 
 	<tbody>
@@ -91,6 +102,7 @@ HTML;
 
 		$query2 = $pdo->query("SELECT * FROM usuarios where id_pessoa = '$id' and nivel = 'Aluno'");
 		$res2 = $query2->fetchAll(PDO::FETCH_ASSOC);
+		$senha_usuario = $res2[0]['senha'];
 
 
 
@@ -119,6 +131,15 @@ HTML;
 			$esconder2 = '';
 		}
 
+		$ocultarEntrarComoAluno = 'ocultar';
+		if ($podeEntrarComoAlunoTela) {
+			$alunoResponsavelId = (int) ($res[$i]['usuario'] ?? 0);
+			$podeGlobal = in_array($nivelSessao, $niveisAcessoGlobalAluno, true);
+			if ($podeGlobal || $alunoResponsavelId === (int) $id_user) {
+				$ocultarEntrarComoAluno = '';
+			}
+		}
+
 
 
 
@@ -130,10 +151,11 @@ HTML;
 		</td> 
 		<td class="esc">
 		{$telefone}
-		<a target="_blank" href="https://api.whatsapp.com/send1=pt_BR&phone=55{$telefone}" title="Chamar no Whatsapp"><i class="fa {$icone_whatsapp} verde"></i></a>
+		<a target="_blank" href="https://api.whatsapp.com/send?1=pt_BR&phone=55{$telefone}" title="Chamar no Whatsapp"><i class="fa {$icone_whatsapp} verde"></i></a>
 		</td>
 		<td class="esc">{$email}</td>		
 		<td class="esc">{$nome_professor}</td>
+		<td class="esc">{$dataF}</td>
 		
 
 
@@ -163,6 +185,7 @@ HTML;
     </a>
   </big>
   <big>
+    <a href="#" onclick="mostrar( '{$nome}','{$cpf}','{$email}','{$rg}','{$expedicao}','{$telefone}','{$cep}','{$endereco}','{$cidade}','{$estado}','{$sexo}','{$nascimento}','{$mae}','{$pai}','{$naturalidade}', '{$foto}', '{$dataF}', '{$ativo}', '{$senha_usuario}','{$arquivo}')" title="Ver Dados">
       <i class="fa fa-info-circle text-secondary"></i>
     </a>
   </big>
@@ -175,7 +198,7 @@ HTML;
     <ul class="dropdown-menu" style="margin-left:-230px;">
       <li>
         <div class="notification_desc2">
-          <p>Confirmar ExclusÃ£o <a href="#" onclick="excluir('{$id}')">
+          <p>Confirmar ExclusÃ£o? <a href="#" onclick="excluir('{$id}')">
               <span class="text-danger">Sim</span>
             </a>
           </p>
@@ -189,7 +212,7 @@ HTML;
     </a>
   </big>
   <big>
-    <a class="{$ocultar}" href="$url_sistema/sistema/rel/avaliacoes_class.phpid={$id}" target="_blank" title="AvaliaÃ§oes do aluno">
+    <a class="{$ocultar}" href="$url_sistema/sistema/rel/avaliacoes_class.php?id={$id}" target="_blank" title="AvaliaÃ§oes do aluno">
       <small>
         <span class="fa fa-file-pdf-o text-danger"></span>
       </small>
@@ -221,7 +244,7 @@ HTML;
 <td class="text-center">
   <!-- Single button to open actions modal -->
   <button type="button" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#actionsModal{$id}">
-    <i class="fa fa-cog"></i> Ver AÃ§Ãµes
+    <i class="fa fa-cog"></i> Ver Ações
   </button>
   
   <!-- Modal with all actions -->
@@ -230,13 +253,14 @@ HTML;
       <div class="modal-content">
         <div class="modal-header">
           <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-          <h4 class="modal-title" id="actionsModalLabel{$id}">AÃ§Ãµes para {$nome}</h4>
+          <h4 class="modal-title" id="actionsModalLabel{$id}">Ações para {$nome}</h4>
         </div>
         <div class="modal-body">
           <div class="row">
 
 		   <!-- View Data -->
 		   <div class="col-md-4 text-center mb-3">
+              <a href="#" onclick="mostrar('{$nome}','{$cpf}','{$email}','{$rg}','{$expedicao}','{$telefone}','{$cep}','{$endereco}','{$cidade}','{$estado}','{$sexo}','{$nascimento}','{$mae}','{$pai}','{$naturalidade}', '{$foto}', '{$dataF}', '{$ativo}', '{$senha_usuario}','{$arquivo}')" class="btn btn-default btn-block" data-dismiss="modal">
                 <i class="fa fa-info-circle text-secondary"></i><br>
                 Visualizar
               </a>
@@ -259,12 +283,20 @@ HTML;
                 Pagamentos
               </a>
             </div>
+            <div class="col-md-4 text-center mb-3 {$ocultarEntrarComoAluno}">
+              <form action="entrar-como-aluno-admin.php" method="POST" style="margin:0;">
+                <input type="hidden" name="aluno_id" value="{$id}">
+                <button type="submit" class="btn btn-default btn-block" title="Entrar no painel do aluno">
+                  Entrar como Aluno
+                </button>
+              </form>
+            </div>
             
              <!-- Financy -->
 			 <div class="col-md-4 text-center mb-3">
               <a href="index.php?pagina=relatorio_aluno&aluno={$id}" class="btn btn-default btn-block">
                 <i class="fa fa-money text-primary"></i><br>
-                RelatÃ³rio Financeiro
+                Relatório Financeiro
               </a>
             </div>
             
@@ -280,7 +312,7 @@ HTML;
             
             <!-- Delete -->
             <div class="{$ocultar} col-md-4 text-center mb-3">
-              <a href="#" onclick="if(confirm('Confirm deletion')) { excluir('{$id}'); }" class="btn btn-default btn-block" data-dismiss="modal">
+              <a href="#" onclick="if(confirm('Confirm deletion?')) { excluir('{$id}'); }" class="btn btn-default btn-block" data-dismiss="modal">
                 <i class="fa fa-trash-o text-danger"></i><br>
                 Apagar
               </a>
@@ -296,16 +328,16 @@ HTML;
             
             <!-- Student Evaluations -->
             <!-- <div class="col-md-4 text-center mb-3 {$ocultar2}">
-              <a href="$url_sistema/sistema/rel/avaliacoes_class.phpid={$id}" target="_blank" class="btn btn-default btn-block">
+              <a href="$url_sistema/sistema/rel/avaliacoes_class.php?id={$id}" target="_blank" class="btn btn-default btn-block">
                 <i class="fa fa-file-pdf-o text-danger"></i><br>
                 AvaliaÃ§Ãµes
               </a>
             </div> -->
 
 			<div class="col-md-4 text-center mb-3 {$ocultar2}">
-				<a href="javascript:void(0);" onclick="modalAvaliacao('{$url_sistema}/sistema/rel/avaliacoes_class.phpid={$id}')" class="btn btn-default btn-block">
+				<a href="javascript:void(0);" onclick="modalAvaliacao('{$url_sistema}/sistema/rel/avaliacoes_class.php?id={$id}')" class="btn btn-default btn-block">
 					<i class="fa fa-file-pdf-o text-danger"></i><br>
-					AvaliaÃ§Ãµes
+					Avaliações
 				</a>
 				</div>
             
@@ -321,7 +353,7 @@ HTML;
             <div class="col-md-4 text-center mb-3 {$ocultar}">
               <a href="#" onclick="gerarDeclaracaoMedioAluno({$id});" class="btn btn-default btn-block" data-dismiss="modal">
                 <i class="fa fa-file-pdf-o text-danger"></i><br>
-                DeclaraÃ§Ã£o MÃ©dio
+                Declaração Médio
               </a>
             </div>
             
@@ -329,7 +361,7 @@ HTML;
             <div class="col-md-4 text-center mb-3 {$ocultar}">
               <a href="#" onclick="gerarDeclaracaoFundamentalAluno({$id});" class="btn btn-default btn-block" data-dismiss="modal">
                 <i class="fa fa-file-pdf-o text-primary"></i><br>
-                DeclaraÃ§Ã£o Fundamental
+                Declaraçãoo Fundamental
               </a>
             </div>
 
@@ -368,7 +400,7 @@ HTML;
 HTML;
 
 } else {
-	echo 'NÃ£o possui nenhum registro cadastrado!';
+	echo 'Não possui nenhum registro cadastrado!';
 }
 echo <<<HTML
 </small>
@@ -379,12 +411,6 @@ HTML;
 
 
 <script type="text/javascript">
-
-	$(document).ready(function () {
-		$('#tabela').DataTable({ ? "ordering" : false, ? "stateSave" : true,
-		});
-		$('#tabela_filter label input').focus();
-	});
 
 	function editar(id, nome, cpf, email, telefone, rg, expedicao, nascimento, cep, sexo, endereco, numero, bairro, cidade, estado, mae, pai, naturalidade, foto,) {
 
@@ -436,6 +462,7 @@ HTML;
 	// 		$('#data_mostrar').text(data);
 
 	// 		$('#ativo_mostrar').text(ativo);
+	// 		$('#senha_mostrar').text(senha);
 	// 		$('#target_mostrar').attr('src', '../painel-aluno/img/perfil/' + foto);
 
 	// 		$('#modalMostrar').modal('show');
@@ -450,7 +477,7 @@ HTML;
 
 		// Status com cor apropriada
 		const statusColor = ativo === 'Sim' ? '#42e695' : '#ff6b6b';
-		const statusIcon = ativo === 'Sim' ?? '<i class="fas fa-check-circle"></i>' : '<i class="fas fa-times-circle"></i>';
+		const statusIcon = ativo === 'Sim' ? '<i class="fas fa-check-circle"></i>' : '<i class="fas fa-times-circle"></i>';
 
 		// Formatando dados
 		const formatarData = (dataString) => {
@@ -471,7 +498,10 @@ HTML;
 				to { opacity: 1; transform: translateY(0); }
 			}
 			
-			@keyframes pulse { ?? 0% { transform: scale(1); } 50% { transform: scale(1.05); } 100% { transform: scale(1); }
+			@keyframes pulse {
+				0% { transform: scale(1); }
+				50% { transform: scale(1.05); }
+				100% { transform: scale(1); }
 			}
 			
 			.profile-card {
@@ -717,9 +747,11 @@ HTML;
 
 			success: function (mensagem) {
 				if (mensagem.trim() == "Alterado com Sucesso") {
-					$('#mensagem-excluir').addClass('verde') $('#mensagem-excluir').text(mensagem)
+					$('#mensagem-excluir').addClass('verde')
+					$('#mensagem-excluir').text(mensagem)
 				} else {
-					$('#mensagem-excluir').addClass('text-danger') $('#mensagem-excluir').text(mensagem)
+					$('#mensagem-excluir').addClass('text-danger')
+					$('#mensagem-excluir').text(mensagem)
 				}
 			},
 
@@ -778,7 +810,7 @@ HTML;
 		}).then((result) => {
 			if (result.isConfirmed) {
 				const { ano, data } = result.value;
-				const url = `/sistema/rel/rel_certificado.phpid=${id}&ano=${encodeURIComponent(ano)}&data=${encodeURIComponent(data)}`;
+				const url = `/sistema/rel/rel_certificado.php?id=${id}&ano=${encodeURIComponent(ano)}&data=${encodeURIComponent(data)}`;
 				window.open(url, "_blank"); // Abre em uma nova guia
 			}
 		});
@@ -818,7 +850,7 @@ HTML;
 		}).then((result) => {
 			if (result.isConfirmed) {
 				const { ano, data } = result.value;
-				const url = `/sistema/rel/declaracao_fundamental_class.phpid=${id}&ano=${encodeURIComponent(ano)}&data=${encodeURIComponent(data)}`;
+				const url = `/sistema/rel/declaracao_fundamental_class.php?id=${id}&ano=${encodeURIComponent(ano)}&data=${encodeURIComponent(data)}`;
 				window.open(url, "_blank"); // Abre em uma nova guia
 			}
 		});
@@ -859,7 +891,7 @@ HTML;
 		}).then((result) => {
 			if (result.isConfirmed) {
 				const { ano, data } = result.value;
-				const url = `/sistema/rel/declaracao_medio_class.phpid=${id}&ano=${encodeURIComponent(ano)}&data=${encodeURIComponent(data)}`;
+				const url = `/sistema/rel/declaracao_medio_class.php?id=${id}&ano=${encodeURIComponent(ano)}&data=${encodeURIComponent(data)}`;
 				window.open(url, "_blank"); // Abre em uma nova guia
 			}
 		});
@@ -885,7 +917,9 @@ HTML;
   margin: auto; /* Centraliza */
 }
 
-@keyframes spin { ?? 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); }
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 }
 			
 			</style>
@@ -921,7 +955,7 @@ HTML;
 			allowOutsideClick: false
 		});
 
-		fetch('/api/usuarios/buscar_aluno.phpid=' + id)
+		fetch('/api/usuarios/buscar_aluno.php?id=' + id)
 			.then(response => response.json())
 			.then(data => {
 				if (!data.success) {
@@ -944,7 +978,7 @@ HTML;
 			  class="swal2-confirm swal2-styled"
 			  onclick="apagarRespostas(${mat.id_curso}, '${mat.nome_curso}')"
 			  style="margin: 5px 0; background-color: #d33"
-?>
+			>
 			  Apagar Respostas de "${mat.nome_curso}"
 			</button>
 		  `;
@@ -980,7 +1014,7 @@ HTML;
 
 	function apagarRespostas(id_curso, nome_curso) {
 		Swal.fire({
-			title: `Deseja apagar todas as respostas de "${nome_curso}"`,
+			title: `Deseja apagar todas as respostas de "${nome_curso}"?`,
 			icon: 'warning',
 			showCancelButton: true,
 			confirmButtonText: 'Sim, apagar',
@@ -989,7 +1023,8 @@ HTML;
 			if (result.isConfirmed) {
 				fetch('/api/usuarios/apagar_perguntas.php', {
 					method: 'POST',
-					headers: { ? 'Content-Type' : 'application/x-www-form-urlencoded',
+					headers: {
+						'Content-Type': 'application/x-www-form-urlencoded',
 					},
 					body: 'id_curso=' + encodeURIComponent(id_curso)
 				})

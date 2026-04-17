@@ -11,4 +11,4 @@ $id = $_POST['id_arq'];
 $pdo->query("DELETE FROM $tabela where id = '$id'");
 
 echo 'Excluído com Sucesso';
-?>
+ ?>

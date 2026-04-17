@@ -62,7 +62,7 @@ $("#form").submit(function () {
 function excluir(id){
     var idMat = '';
     if (id && typeof id === 'object') {
-        idMat = (id.dataset && id.dataset.id)  id.dataset.id : '';
+        idMat = (id.dataset && id.dataset.id) ? id.dataset.id : '';
         if (!idMat && window.jQuery) {
             idMat = $(id).data('id') || '';
         }

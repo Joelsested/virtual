@@ -503,18 +503,7 @@ $bg_menu_hover = $coress['bg_menu_hover'];
 							</li>
 
 
-							<li class="treeview <?= $pagina === 'pacotes' ? 'active' : '' ?>">
-								<a href="index.php?pagina=pacotes">
-									<i class="fa fa-th-large"></i> <span>Meus Pacotes</span>
-								</a>
-							</li>
-
-							<li class="treeview <?= $pagina === 'andamento' ? 'active' : '' ?>">
-								<a href="index.php?pagina=andamento">
-									<i class="fa fa-check-square"></i> <span>Cursos em Andamento</span>
-								</a>
-							</li>
-
+							
 
 							<li class="treeview <?= $pagina === 'finalizados' ? 'active' : '' ?>">
 								<a href="index.php?pagina=finalizados">
@@ -531,7 +520,7 @@ $bg_menu_hover = $coress['bg_menu_hover'];
 							
 								<li class="treeview <?= $pagina === 'parcelas_cartao' ? 'active' : '' ?>">
 								<a href="index.php?pagina=parcelas_cartao">
-									<i class="fa fa-credit-card" aria-hidden="true"></i> <span>Parcelas CartÃ£o</span>
+									<i class="fa fa-credit-card" aria-hidden="true"></i> <span>Parcelas Cartão</span>
 								</a>
 							</li>
 
@@ -540,7 +529,26 @@ $bg_menu_hover = $coress['bg_menu_hover'];
 									<i class="fa fa-file" aria-hidden="true"></i> <span>Meus Documentos</span>
 								</a>
 							</li>
+                              
+							<li class="treeview">
+    <a href="https://unicorp.loja.srv.br/sga_alunos_login/" target="_blank" class="button-link">
+        <span>Ambiente de Estudo Unicorp</span>
+    </a>
+</li>
 
+<style>
+    .button-link {
+        display: inline-block;
+        padding: 10px 20px;
+        background-color: #00008B;
+        color: #00008B;
+        border: 2px solid #000; /* Borda preta */
+        text-align: center;
+        text-decoration: none; /* Remove o sublinhado */
+        font-size: 16px;
+        border-radius: 5px; /* Bordas arredondadas */
+        background-color: #68706e; }
+</style>
 
 							<li class="treeview">
 								<a href="../../" target="_blank">
@@ -973,9 +981,9 @@ $bg_menu_hover = $coress['bg_menu_hover'];
 
 							<div class="form-group">
 
-								<label>OrgÃ£o Expedidor:</label>
+								<label>Orgão Expedidor:</label>
 
-								<input type="text" class="form-control" id="expedidor_usu" name="expedidor_usu" value="<?php echo $expedidor_usu ?>" placeholder="OrgÃ£o Expedidor">
+								<input type="text" class="form-control" id="expedidor_usu" name="expedidor_usu" value="<?php echo $expedidor_usu ?>" placeholder="Orgão Expedidor">
 
 							</div>
 
@@ -987,9 +995,9 @@ $bg_menu_hover = $coress['bg_menu_hover'];
 
 							<div class="form-group">
 
-								<label>Data de Expedicao:</label>
+								<label>Data de Expedição:</label>
 
-								<input type="text" class="form-control" id="expedicao_usu" name="expedicao_usu" value="<?php echo $expedicao_usu ?>" placeholder="Data de ExpediÃ§Ã£o">
+								<input type="text" class="form-control" id="expedicao_usu" name="expedicao_usu" value="<?php echo $expedicao_usu ?>" placeholder="Data de Expedição">
 
 							</div>
 
@@ -1035,7 +1043,7 @@ $bg_menu_hover = $coress['bg_menu_hover'];
 
 							<div class="form-group">
 
-								<label>EndereÃ§o:<small><small>(Rua, NÃºmero e Bairro)</small></small></label>
+								<label>EndereÃ§o:<small><small>(Rua, Número e Bairro)</small></small></label>
 
 								<input type="text" class="form-control" id="endereco_usu" name="endereco_usu" name="endereco_usu" value="<?php echo $endereco_usu ?>" placeholder="Rua X NÃºmero 50 Bairro X">
 
@@ -1113,7 +1121,7 @@ $bg_menu_hover = $coress['bg_menu_hover'];
 
 							<div class="form-group">
 
-								<label>Nome da MÃ£e:</label>
+								<label>Nome da Mãe:</label>
 
 								<input type="text" class="form-control" id="mae_usu" name="mae_usu" value="<?php echo $mae_usu ?>" placeholder="Nome da Mae">
 
@@ -1747,6 +1755,7 @@ $bg_menu_hover = $coress['bg_menu_hover'];
 $query = $pdo->query("SELECT * FROM alertas where data > curDate() ORDER BY id desc");
 
 $res = $query->fetchAll(PDO::FETCH_ASSOC);
+$tituloF = '';
 
 
 
@@ -2012,6 +2021,7 @@ if (@count($res) > 0) {
 
 
 
+<?php $tituloF = $tituloF ?? ''; ?>
 <div class="alerta <?php echo $classe_link ?>">
 
 	<?php echo $tituloF ?>

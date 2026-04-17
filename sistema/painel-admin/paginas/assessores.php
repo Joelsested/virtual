@@ -7,7 +7,7 @@ if(@$_SESSION['nivel'] != 'Administrador' and @$_SESSION['nivel'] != 'Tesoureiro
 	echo "<script>window.location='../index.php'</script>";
 	exit();
 }
-?>
+ ?>
 
 
   <button onclick="inserir()" type="button" class="btn btn-primary btn-flat btn-pri"><i class="fa fa-plus" aria-hidden="true"></i> Novo Assessor</button>
@@ -92,7 +92,7 @@ if(@$_SESSION['nivel'] != 'Administrador' and @$_SESSION['nivel'] != 'Tesoureiro
 						</div>
 						<div class="col-md-4">
 							<div id="divImg">
-								<img src="img/perfil/sem-perfil.jpg" ?? width="100px" id="target">									
+								<img src="img/perfil/sem-perfil.jpg"  width="100px" id="target">									
 							</div>
 						</div>
 
@@ -174,7 +174,7 @@ if(@$_SESSION['nivel'] != 'Administrador' and @$_SESSION['nivel'] != 'Tesoureiro
 
 					<div class="row">
 						<div class="col-md-12" align="center">		
-							<img ?? width="200px" id="target_mostrar">	
+							<img  width="200px" id="target_mostrar">	
 						</div>
 					</div>
 					
@@ -190,8 +190,8 @@ if(@$_SESSION['nivel'] != 'Administrador' and @$_SESSION['nivel'] != 'Tesoureiro
 
 
 
-<script type="text/javascript">var pag = "<=$pag>"</script>
-<script src="js/ajax.js"></script>
+<script type="text/javascript">var pag = "<?=$pag?>"</script>
+<script src="js/ajax.js?v=<?= @filemtime(__DIR__ . '/../js/ajax.js') ?>"></script>
 
 
 <script type="text/javascript">

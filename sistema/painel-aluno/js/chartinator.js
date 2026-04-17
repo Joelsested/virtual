@@ -403,7 +403,7 @@
 
             // Set table element
             if (o.options.tableSel) {
-                $tableS = ($(o.options.tableSel + ' td').length)  $(o.options.tableSel) : $tableS;
+                $tableS = ($(o.options.tableSel + ' td').length) ? $(o.options.tableSel) : $tableS;
             }
 
             // Check table for data
@@ -469,7 +469,7 @@
 
             $.ajax({
                 type: 'GET',
-                url: 'https://spreadsheets.google.com/spreadsheet/pubkey=' + key + '&output=csv',
+                url: 'https://spreadsheets.google.com/spreadsheet/pub?key=' + key + '&output=csv',
                 dataType: 'text'
             })
                 .done(function (data) {
@@ -1123,7 +1123,7 @@
             for (var i = 1; i < data.length; i++) {
                 html += '<tr>';
                 for (var j = 0; j < data[i].length; j++) {
-                    var align = isNaN(data[i][j])  'left': 'right';
+                    var align = isNaN(data[i][j]) ? 'left': 'right';
                     html += '<td align="' + align + '">' + data[i][j] + '</td>';
                 }
                 html += '</tr>';
@@ -1184,8 +1184,8 @@
         // Show, hide or remove chart and table
         o.showTableChart = function ( table, chart ) {    //  Values: 'show', 'hide', or 'remove'
 
-            var tableLen = $tableS  $tableS.length : false;
-            var chartLen = $chartS  $chartS.length : false;
+            var tableLen = $tableS ? $tableS.length : false;
+            var chartLen = $chartS ? $chartS.length : false;
 
             // Table
             if ( table === 'show' && tableLen ) {
@@ -1254,9 +1254,9 @@
         // camelCase function - converts text to camelCase
         // Returns a camelCased string
         o.camelCase = function ( str ) {
-            return str.replace(/(:^\w|[A-Z]|\b\w|\s+)/g, function(match, index) {
+            return str.replace(/(?:^\w|[A-Z]|\b\w|\s+)/g, function(match, index) {
                 if (+match === 0) return ''; // or if (/\s+/.test(match)) for white spaces
-                return index === 0  match.toLowerCase() : match.toUpperCase();
+                return index === 0 ? match.toLowerCase() : match.toUpperCase();
             });
         };
 

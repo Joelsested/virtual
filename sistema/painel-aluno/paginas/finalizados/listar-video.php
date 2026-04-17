@@ -43,7 +43,7 @@ $total_aulas = @count($res_m);
 
 //mudo o status do curso para finalizado
 if($status_mat != 'Finalizado' and $total_aulas == $aulas_conc){
-	$query_m = $pdo->query("UPDATE ?? matriculas SET status = 'Finalizado' where id = '$id_mat'");
+	$query_m = $pdo->query("UPDATE  matriculas SET status = 'Finalizado' where id = '$id_mat'");
 }
 
 if($aula == 'proximo' and $sessao == 0){	
@@ -57,7 +57,7 @@ if($aula == 'proximo' and $sessao == 0){
 
 	if($aulas_conc < $proxima){
 		//atualizar aulas concluidas na matricula
-		$query_m = $pdo->query("UPDATE ?? matriculas SET aulas_concluidas = '$proxima' where id = '$id_mat'");
+		$query_m = $pdo->query("UPDATE  matriculas SET aulas_concluidas = '$proxima' where id = '$id_mat'");
 	}
 	
 
@@ -84,7 +84,7 @@ if($aula == 'proximo' and $sessao != 0){
 
 	if($aulas_conc < $proxima){
 	//atualizar aulas concluidas na matricula
-	$query_m = $pdo->query("UPDATE ?? matriculas SET aulas_concluidas = '$proxima' where id = '$id_mat'");
+	$query_m = $pdo->query("UPDATE  matriculas SET aulas_concluidas = '$proxima' where id = '$id_mat'");
 	}
 
 	$query = $pdo->query("SELECT * FROM aulas where curso = '$curso' and sequencia_aula = '$proxima'");
@@ -131,6 +131,8 @@ if($aula == 'anterior' and $seq_aula > 1 and $sessao != 0){
 }
 
 
-echo $num_aula . '***' . $nome_aula . ?? '***' . $link. ?? '***' .$id_aula. '***'.$nome_sessao;
+echo $num_aula . '***' . $nome_aula .  '***' . $link.  '***' .$id_aula. '***'.$nome_sessao;
 
 ?>
+
+

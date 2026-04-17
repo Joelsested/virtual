@@ -53,7 +53,7 @@ if (@$_SESSION['nivel'] == 'Administrador' || @$_SESSION['nivel'] == 'Tutor' || 
     $res = $query->fetchAll(PDO::FETCH_ASSOC);
     $total_reg = @count($res);
 } else {
-    $query = $pdo->query("SELECT * FROM $tabela ?? ORDER BY id desc");
+    $query = $pdo->query("SELECT * FROM $tabela  ORDER BY id desc");
     $res = $query->fetchAll(PDO::FETCH_ASSOC);
     $total_reg = @count($res);
 }
@@ -66,6 +66,7 @@ if ($total_reg > 0) {
 	<th class="esc">Telefone</th> 
 	<th class="esc">Email</th> 	
 	<th class="esc">Professor</th>	
+	<th class="esc">Data de Matrícula</th>
 	<th>Ações</th>
 	</tr> 
 	</thead> 
@@ -110,6 +111,7 @@ HTML;
 
         $query2 = $pdo->query("SELECT * FROM usuarios where id_pessoa = '$id' and nivel = 'Aluno'");
         $res2 = $query2->fetchAll(PDO::FETCH_ASSOC);
+        $senha_usuario = $res2[0]['senha'];
 
 
 
@@ -117,7 +119,7 @@ HTML;
         if ($ativo == 'Sim') {
             $icone = 'fa-check-square';
             $titulo_link = 'Desativar Item';
-            $acao = 'Não';
+            $acao = 'NÃ£o';
             $classe_linha = '';
         } else {
             $icone = 'fa-square-o';
@@ -155,10 +157,11 @@ HTML;
 		</td> 
 		<td class="esc">
 		{$telefone}
-		<a target="_blank" href="https://api.whatsapp.com/send1=pt_BR&phone=55{$telefone}" title="Chamar no Whatsapp"><i class="fa {$icone_whatsapp} verde"></i></a>
+		<a target="_blank" href="https://api.whatsapp.com/send?1=pt_BR&phone=55{$telefone}" title="Chamar no Whatsapp"><i class="fa {$icone_whatsapp} verde"></i></a>
 		</td>
 		<td class="esc">{$email}</td>		
 		<td class="esc">{$nome_professor}</td>
+		<td class="esc">{$dataF}</td>
 		
 
 
@@ -184,6 +187,7 @@ HTML;
 
 		   <!-- View Data -->
 		   <div class="col-md-4 text-center mb-3">
+              <a href="#" onclick="mostrar('{$nome}','{$cpf}','{$email}','{$rg}','{$expedicao}','{$telefone}','{$cep}','{$endereco}','{$cidade}','{$estado}','{$sexo}','{$nascimento}','{$mae}','{$pai}','{$naturalidade}', '{$foto}', '{$dataF}', '{$ativo}', '{$senha_usuario}','{$arquivo}')" class="btn btn-default btn-block" data-dismiss="modal">
                 <i class="fa fa-info-circle text-secondary"></i><br>
                 Visualizar
               </a>
@@ -227,7 +231,7 @@ HTML;
             
             <!-- Delete -->
             <div class="{$ocultar} col-md-4 text-center mb-3">
-              <a href="#" onclick="if(confirm('Confirm deletion')) { excluir('{$id}'); }" class="btn btn-default btn-block" data-dismiss="modal">
+              <a href="#" onclick="if(confirm('Confirm deletion?')) { excluir('{$id}'); }" class="btn btn-default btn-block" data-dismiss="modal">
                 <i class="fa fa-trash-o text-danger"></i><br>
                 Apagar
               </a>
@@ -243,7 +247,7 @@ HTML;
             
 
 			<div class="col-md-4 text-center mb-3 {$ocultar2}">
-				<a href="javascript:void(0);" onclick="modalAvaliacao('{$url_sistema}/sistema/rel/avaliacoes_class.phpid={$id}')" class="btn btn-default btn-block">
+				<a href="javascript:void(0);" onclick="modalAvaliacao('{$url_sistema}/sistema/rel/avaliacoes_class.php?id={$id}')" class="btn btn-default btn-block">
 					<i class="fa fa-file-pdf-o text-danger"></i><br>
 					Avaliações
 				</a>
@@ -298,7 +302,7 @@ HTML;
 HTML;
 
 } else {
-    echo 'Não possui nenhum registro cadastrado!';
+    echo 'NÃ£o possui nenhum registro cadastrado!';
 }
 echo <<<HTML
 </small>
@@ -311,7 +315,9 @@ HTML;
 <script type="text/javascript">
 
     $(document).ready(function () {
-        $('#tabela').DataTable({ ? "ordering" : false, ? "stateSave" : true,
+        $('#tabela').DataTable({
+            "ordering": false,
+            "stateSave": true,
         });
         $('#tabela_filter label input').focus();
     });
@@ -353,12 +359,12 @@ HTML;
 
         // Status com cor apropriada
         const statusColor = ativo === 'Sim' ? '#42e695' : '#ff6b6b';
-        const statusIcon = ativo === 'Sim' ?? '<i class="fas fa-check-circle"></i>' : '<i class="fas fa-times-circle"></i>';
+        const statusIcon = ativo === 'Sim' ? '<i class="fas fa-check-circle"></i>' : '<i class="fas fa-times-circle"></i>';
 
         // Formatando dados
         const formatarData = (dataString) => {
             try {
-                if (!dataString) return 'Não informado';
+                if (!dataString) return 'NÃ£o informado';
                 const data = new Date(dataString);
                 return data.toLocaleDateString('pt-BR');
             } catch (e) {
@@ -366,7 +372,7 @@ HTML;
             }
         };
 
-        // Adiciona animação CSS
+        // Adiciona animaÃ§Ã£o CSS
         const animationStyles = `
         <style>
             @keyframes fadeIn {
@@ -374,7 +380,10 @@ HTML;
                 to { opacity: 1; transform: translateY(0); }
             }
             
-            @keyframes pulse { ?? 0% { transform: scale(1); } 50% { transform: scale(1.05); } 100% { transform: scale(1); }
+            @keyframes pulse {
+                0% { transform: scale(1); }
+                50% { transform: scale(1.05); }
+                100% { transform: scale(1); }
             }
             
             .profile-card {
@@ -529,7 +538,7 @@ HTML;
                 
                 <div class="profile-body">
                     <div class="info-card">
-                        <h5>Informações Pessoais</h5>
+                        <h5>InformaÃ§Ãµes Pessoais</h5>
                         <div class="info-item">
                             <span class="info-label">CPF</span>
                             <span class="info-value">${cpf}</span>
@@ -622,9 +631,11 @@ HTML;
 
             success: function (mensagem) {
                 if (mensagem.trim() == "Alterado com Sucesso") {
-                    $('#mensagem-excluir').addClass('verde') $('#mensagem-excluir').text(mensagem)
+                    $('#mensagem-excluir').addClass('verde')
+                    $('#mensagem-excluir').text(mensagem)
                 } else {
-                    $('#mensagem-excluir').addClass('text-danger') $('#mensagem-excluir').text(mensagem)
+                    $('#mensagem-excluir').addClass('text-danger')
+                    $('#mensagem-excluir').text(mensagem)
                 }
             },
 
@@ -654,7 +665,7 @@ HTML;
         Swal.fire({
             title: "Gerar Certificado",
             html: `
-            <label for="ano_certificado">Insira o ano da conclusão:</label>
+            <label for="ano_certificado">Insira o ano da conclusÃ£o:</label>
             <br>
             <input type="number" id="ano_certificado" class="swal2-input" style="width: 50%;" min="1900" max="2100" step="1" placeholder="Ex: 2025">
             <br>
@@ -670,7 +681,7 @@ HTML;
                 const dataCertificado = document.getElementById("data_certificado").value;
 
                 if (!anoCertificado || anoCertificado.length !== 4) {
-                    Swal.showValidationMessage("Por favor, insira um ano válido (ex: 2025).");
+                    Swal.showValidationMessage("Por favor, insira um ano vÃ¡lido (ex: 2025).");
                     return false;
                 }
                 if (!dataCertificado) {
@@ -683,7 +694,7 @@ HTML;
         }).then((result) => {
             if (result.isConfirmed) {
                 const { ano, data } = result.value;
-                const url = `/sistema/rel/rel_certificado.phpid=${id}&ano=${encodeURIComponent(ano)}&data=${encodeURIComponent(data)}`;
+                const url = `/sistema/rel/rel_certificado.php?id=${id}&ano=${encodeURIComponent(ano)}&data=${encodeURIComponent(data)}`;
                 window.open(url, "_blank"); // Abre em uma nova guia
             }
         });
@@ -691,26 +702,26 @@ HTML;
 
     function gerarDeclaracaoFundamentalAluno(id) {
         Swal.fire({
-            title: "Declaração Ensino Fundamental",
+            title: "DeclaraÃ§Ã£o Ensino Fundamental",
             // icon: "info",
             html: `
-            <label for="ano_declaracao_fundamental">Insira o ano da conclusão:</label>
+            <label for="ano_declaracao_fundamental">Insira o ano da conclusÃ£o:</label>
             <br>
             <input type="number" id="ano_declaracao_fundamental" class="swal2-input" style="width: 50%;" min="1900" max="2100" step="1" placeholder="Ex: 2025">
             <br>
             <br>
-            <label for="data_declaracao_fundamental">Selecione a data da declaração:</label>
+            <label for="data_declaracao_fundamental">Selecione a data da declaraÃ§Ã£o:</label>
             <input type="date" id="data_declaracao_fundamental" class="swal2-input">
         `,
             showCancelButton: true,
-            confirmButtonText: "Gerar Declaração",
+            confirmButtonText: "Gerar DeclaraÃ§Ã£o",
             cancelButtonText: "Cancelar",
             preConfirm: () => {
                 const anoDeclaracaoFundamental = document.getElementById("ano_declaracao_fundamental").value;
                 const dataDeclaracaoFundamental = document.getElementById("data_declaracao_fundamental").value;
 
                 if (!anoDeclaracaoFundamental || anoDeclaracaoFundamental.length !== 4) {
-                    Swal.showValidationMessage("Por favor, insira um ano válido (ex: 2025).");
+                    Swal.showValidationMessage("Por favor, insira um ano vÃ¡lido (ex: 2025).");
                     return false;
                 }
                 if (!dataDeclaracaoFundamental) {
@@ -723,7 +734,7 @@ HTML;
         }).then((result) => {
             if (result.isConfirmed) {
                 const { ano, data } = result.value;
-                const url = `/sistema/rel/declaracao_fundamental_class.phpid=${id}&ano=${encodeURIComponent(ano)}&data=${encodeURIComponent(data)}`;
+                const url = `/sistema/rel/declaracao_fundamental_class.php?id=${id}&ano=${encodeURIComponent(ano)}&data=${encodeURIComponent(data)}`;
                 window.open(url, "_blank"); // Abre em uma nova guia
             }
         });
@@ -732,26 +743,26 @@ HTML;
 
     function gerarDeclaracaoMedioAluno(id) {
         Swal.fire({
-            title: "Declaração Ensino Médio",
+            title: "DeclaraÃ§Ã£o Ensino MÃ©dio",
             // icon: "info",
             html: `
-            <label for="ano_declaracao_medio">Insira o ano da conclusão:</label>
+            <label for="ano_declaracao_medio">Insira o ano da conclusÃ£o:</label>
             <br>
             <input type="number" id="ano_declaracao_medio" class="swal2-input" style="width: 50%;" min="1900" max="2100" step="1" placeholder="Ex: 2025">
             <br>
             <br>
-            <label for="data_declaracao_medio">Selecione a data da declaração:</label>
+            <label for="data_declaracao_medio">Selecione a data da declaraÃ§Ã£o:</label>
             <input type="date" id="data_declaracao_medio" class="swal2-input">
         `,
             showCancelButton: true,
-            confirmButtonText: "Gerar Declaração",
+            confirmButtonText: "Gerar DeclaraÃ§Ã£o",
             cancelButtonText: "Cancelar",
             preConfirm: () => {
                 const anoDeclaracaoMedio = document.getElementById("ano_declaracao_medio").value;
                 const dataDeclaracaoMedio = document.getElementById("data_declaracao_medio").value;
 
                 if (!anoDeclaracaoMedio || anoDeclaracaoMedio.length !== 4) {
-                    Swal.showValidationMessage("Por favor, insira um ano válido (ex: 2025).");
+                    Swal.showValidationMessage("Por favor, insira um ano vÃ¡lido (ex: 2025).");
                     return false;
                 }
                 if (!dataDeclaracaoMedio) {
@@ -764,7 +775,7 @@ HTML;
         }).then((result) => {
             if (result.isConfirmed) {
                 const { ano, data } = result.value;
-                const url = `/sistema/rel/declaracao_medio_class.phpid=${id}&ano=${encodeURIComponent(ano)}&data=${encodeURIComponent(data)}`;
+                const url = `/sistema/rel/declaracao_medio_class.php?id=${id}&ano=${encodeURIComponent(ano)}&data=${encodeURIComponent(data)}`;
                 window.open(url, "_blank"); // Abre em uma nova guia
             }
         });
@@ -791,7 +802,7 @@ HTML;
             showCloseButton: true,
             showConfirmButton: false,
             didOpen: () => {
-                // Função que será executada quando o modal abrir
+                // FunÃ§Ã£o que serÃ¡ executada quando o modal abrir
                 window.hideLoading = function () {
                     document.getElementById('loading-spinner').style.display = 'none';
                     document.getElementById('pdf-iframe').style.display = 'block';

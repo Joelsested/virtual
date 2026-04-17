@@ -5,7 +5,10 @@ include('../conexao.php');
 //CARREGAR DOMPDF
 require_once '../dompdf/autoload.inc.php';
 use Dompdf\Dompdf;
-use Dompdf\Options; ? header("Content-Transfer-Encoding: binary"); ? header("Content-Type: image/png");
+use Dompdf\Options;
+
+header("Content-Transfer-Encoding: binary");
+header("Content-Type: image/png");
 
 //INICIALIZAR A CLASSE DO DOMPDF
 $options = new Options();
@@ -19,7 +22,7 @@ $tabela = urlencode($_POST['tabela']);
 $busca = urlencode($_POST['busca']);
 
 //ALIMENTAR OS DADOS NO RELATÓRIO
-$html = utf8_encode(file_get_contents($url_sistema."sistema/rel/contas.phppago=$pago&dataInicial=$dataInicial&dataFinal=$dataFinal&tabela=$tabela&busca=$busca"));
+$html = utf8_encode(file_get_contents($url_sistema."sistema/rel/contas.php?pago=$pago&dataInicial=$dataInicial&dataFinal=$dataFinal&tabela=$tabela&busca=$busca"));
 
 
 //Definir o tamanho do papel e orientação da página
@@ -32,7 +35,8 @@ $pdf->load_html(utf8_decode($html));
 $pdf->render();
 
 //NOMEAR O PDF GERADO
-$pdf->stream( ?? 'contas.pdf',
+$pdf->stream(
+'contas.pdf',
 array("Attachment" => false)
 );
 

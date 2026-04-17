@@ -1,59 +1,21 @@
 <?php
-include_once('../../sistema/conexao.php');
+http_response_code(410);
 
-$redirectStr = '';
-if(!empty($_GET['paymentID']) && !empty($_GET['token']) && !empty($_GET['payerID']) && !empty($_GET['pid']) ){
+$mensagem = 'Gateway desativado. Este sistema utiliza exclusivamente pagamentos via EFY.';
 
-      // Include and initialize paypal class
-    include 'PaypalExpress.class.php';
-    $paypal = new PaypalExpress;
-    
-    // Get payment info from URL
-    $paymentID = $_GET['paymentID'];
-    $token = $_GET['token'];
-    $payerID = $_GET['payerID'];
-    $productID = $_GET['pid'];
-
-       
-    // Validate transaction via PayPal API
-    $paymentCheck = $paypal->validate($paymentID, $token, $payerID, $productID);
-    
-    // If the payment is valid and approved
-    if($paymentCheck && $paymentCheck->state == 'approved'){
-
-        // Get the transaction data
-        $id = $paymentCheck->id;
-        $state = $paymentCheck->state;
-        $payerFirstName = $paymentCheck->payer->payer_info->first_name;
-        $payerLastName = $paymentCheck->payer->payer_info->last_name;
-        $payerName = $payerFirstName.' '.$payerLastName;
-        $payerEmail = $paymentCheck->payer->payer_info->email;
-        $payerID = $paymentCheck->payer->payer_info->payer_id;
-        $payerCountryCode = $paymentCheck->payer->payer_info->country_code;
-        $paidAmount = $paymentCheck->transactions[0]->amount->details->subtotal;
-        $currency = $paymentCheck->transactions[0]->amount->currency;
-        
-        // Get product details
-        $conditions = array(
-            'where' => array('id' => $productID),
-            'return_type' => 'single'
-        );
-
-            
-       
+if (!headers_sent()) {
+    $aceitaJson = strpos(strtolower((string)($_SERVER['HTTP_ACCEPT'] ?? '')), 'application/json') !== false;
+    if ($aceitaJson) {
+        header('Content-Type: application/json; charset=utf-8');
+        echo json_encode([
+            'status' => 'error',
+            'message' => $mensagem,
+            'gateway' => 'EFY_ONLY'
+        ], JSON_UNESCAPED_UNICODE);
+        exit;
     }
-
-     $id_matricula = $productID;
-     $forma_pgto = 'Paypal';
-
-         //neste arquivo temos a aprovação da matricula, o envio por email e o lançamento na tabela de vendas
-        include_once('../aprovar_matricula.php');     
-    
-    // Redirect to payment status page
-
-    header("Location:payment-status.php".$redirectStr);
-}else{
-    // Redirect to the home page
-   header("Location:payment-status.php".$redirectStr);
+    header('Content-Type: text/plain; charset=utf-8');
 }
-?>
+
+echo $mensagem;
+exit;

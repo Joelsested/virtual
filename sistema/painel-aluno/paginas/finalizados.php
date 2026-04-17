@@ -7,7 +7,7 @@ if(@$_SESSION['nivel'] != 'Aluno'){
 	echo "<script>window.location='../index.php'</script>";
 	exit();
 }
-?>
+ ?>
 
 
 <div class="bs-example widget-shadow margem-mobile" style="padding:15px; margin-top:-10px" id="listar">
@@ -158,7 +158,7 @@ if(@$_SESSION['nivel'] != 'Aluno'){
 
 
 					<hr>
-				<div ?? class="modal-footer">
+				<div  class="modal-footer">
 					
 				</div>
 					
@@ -181,7 +181,7 @@ if(@$_SESSION['nivel'] != 'Aluno'){
 <input type="hidden" id="id_da_matricula">
 <input type="hidden" id="id_do_curso">
 
-<script type="text/javascript">var pag = "<=$pag>"</script>
+<script type="text/javascript">var pag = "<?=$pag?>"</script>
 <script src="js/ajax.js"></script>
 
 
@@ -331,11 +331,13 @@ $("#form-avaliar").submit(function () {
             if (mensagem.trim() == "Salvo com Sucesso") { 
             		 	                 
                      //$('#btn-fechar-resposta').click();
-                     $('#mensagem-avaliar').addClass('verde') ?? $('#mensagem-avaliar').text(mensagem)
+                     $('#mensagem-avaliar').addClass('verde')
+                     $('#mensagem-avaliar').text(mensagem)
                      listarCursos()
                     
                 } else {
-                	$('#mensagem-avaliar').addClass('text-danger') ?? $('#mensagem-avaliar').text(mensagem)
+                	$('#mensagem-avaliar').addClass('text-danger')
+                    $('#mensagem-avaliar').text(mensagem)
                 }
 
             },
@@ -348,3 +350,4 @@ $("#form-avaliar").submit(function () {
 
 });
 </script>
+

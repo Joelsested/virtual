@@ -92,7 +92,7 @@ $query->execute();
 
 
 if($cartao == 'Sim'){
-	//ADICIONAR MAIS UM CART√çO PARA O ALUNO
+	//ADICIONAR MAIS UM CART√ÉO PARA O ALUNO
 $cartoes += 1;
 $pdo->query("UPDATE alunos SET cartao = '$cartoes' where id = '$id_pessoa_aluno'");
 }
@@ -150,39 +150,94 @@ $nome_curso = $res2[0]['nome'];
 $pdo->query("UPDATE $tab SET matriculas = '$quantid_mat' where id = '$id_curso'");
 
 
-if($nivel_do_usu == 'Professor'){
-			$valor_comissao = $comissao_professor;
-		}
+if (!empty($nivel_do_usu)) {
+	$stmtNivel = $pdo->prepare("SELECT porcentagem FROM comissoes WHERE nivel = :nivel LIMIT 1");
+	$stmtNivel->bindValue(':nivel', $nivel_do_usu);
+	$stmtNivel->execute();
+	$registroNivel = $stmtNivel->fetch(PDO::FETCH_ASSOC);
+	if (!empty($registroNivel)) {
+		$valor_comissao = (float)$registroNivel['porcentagem'];
+	}
+}
 
-		if($nivel_do_usu == 'Tutor'){
-			$valor_comissao = $comissao_tutor;
-		}
+if ($valor_comissao <= 0) {
+	if ($nivel_do_usu == 'Professor') {
+		$valor_comissao = $comissao_professor;
+	} else if ($nivel_do_usu == 'Tutor') {
+		$valor_comissao = $comissao_tutor;
+	} else if ($nivel_do_usu == 'Parceiro') {
+		$valor_comissao = $comissao_parceiro;
+	} else if ($nivel_do_usu == 'Assessor') {
+		$valor_comissao = $comissao_assessor;
+	} else if ($nivel_do_usu == 'Vendedor') {
+		$valor_comissao = $comissao_vendedor;
+	} else if ($nivel_do_usu == 'Tesoureiro') {
+		$valor_comissao = $comissao_tesoureiro;
+	} else if ($nivel_do_usu == 'Secretario') {
+		$valor_comissao = $comissao_secretario;
+	}
+}
 
-		if($nivel_do_usu == 'Parceiro'){
-			$valor_comissao = $comissao_parceiro;
-		}
+if ((int)$dia_pgto_comissao <= 0) {
+	$dia_pgto_comissao = 20;
+}
+if ((int)$dia_pgto_comissao > 28) {
+	$dia_pgto_comissao = 28;
+}
+$data_pgto_comissao = $ano_atual . '-' . $mes_atual . '-' . str_pad($dia_pgto_comissao, 2, '0', STR_PAD_LEFT);
 
-
-
-
-
-//LAN√áAR COMISS√çO DO PROFESSOR
-$valor_comissao_pagar = ($valor_comissao * $subtotal) / 100;
+$valor_comissao_pagar = round(($valor_comissao * $subtotal) / 100, 2);
 if(strtotime($hoje) < strtotime($data_pgto_comissao)){
 	$data_venc = $data_pgto_comissao;
-
 }else{
 	$data_venc = date('Y-m-d', strtotime("+1 month",strtotime($data_pgto_comissao)));
 }
 
-if($valor_comissao_pagar > 0){
-	var_dump('teste');
-
-	$query = $pdo->query("INSERT INTO pagar SET descricao = 'Comiss√£o', ?? valor = '$valor_comissao_pagar', data = curDate(), vencimento = '$data_venc', pago = 'N√£o', arquivo = 'sem-foto.png', professor = '$usuario_comissao', curso = '$nome_curso'");
-}else{
-	echo "string";
+if ($valor_comissao_pagar > 0 && !empty($usuario_comissao)) {
+	$queryComissao = $pdo->prepare("INSERT INTO pagar SET descricao = 'Comiss„o', valor = :valor, data = curDate(), vencimento = :vencimento, pago = 'N„o', arquivo = 'sem-foto.png', professor = :professor, curso = :curso");
+	$queryComissao->bindValue(':valor', $valor_comissao_pagar);
+	$queryComissao->bindValue(':vencimento', $data_venc);
+	$queryComissao->bindValue(':professor', $usuario_comissao);
+	$queryComissao->bindValue(':curso', $nome_curso);
+	$queryComissao->execute();
 }
 
+$queryFixas = $pdo->query("SELECT nivel, porcentagem FROM comissoes WHERE recebeSempre = 1");
+$comissoesFixas = $queryFixas->fetchAll(PDO::FETCH_ASSOC);
+if (@count($comissoesFixas) > 0) {
+	$queryUsuariosFixos = $pdo->prepare("SELECT id FROM usuarios WHERE nivel = :nivel");
+	$queryInsertFixa = $pdo->prepare("INSERT INTO pagar SET descricao = 'Comiss„o', valor = :valor, data = curDate(), vencimento = :vencimento, pago = 'N„o', arquivo = 'sem-foto.png', professor = :professor, curso = :curso");
+
+	for ($cf = 0; $cf < @count($comissoesFixas); $cf++) {
+		$nivelFixo = $comissoesFixas[$cf]['nivel'];
+		$porcentagemFixa = (float)$comissoesFixas[$cf]['porcentagem'];
+		if ($porcentagemFixa <= 0) {
+			continue;
+		}
+
+		$valorComissaoFixa = round(($porcentagemFixa * $subtotal) / 100, 2);
+		if ($valorComissaoFixa <= 0) {
+			continue;
+		}
+
+		$queryUsuariosFixos->bindValue(':nivel', $nivelFixo);
+		$queryUsuariosFixos->execute();
+		$usuariosFixos = $queryUsuariosFixos->fetchAll(PDO::FETCH_ASSOC);
+
+		for ($uf = 0; $uf < @count($usuariosFixos); $uf++) {
+			$usuarioFixo = $usuariosFixos[$uf]['id'];
+			if (empty($usuarioFixo)) {
+				continue;
+			}
+
+			$queryInsertFixa->bindValue(':valor', $valorComissaoFixa);
+			$queryInsertFixa->bindValue(':vencimento', $data_venc);
+			$queryInsertFixa->bindValue(':professor', $usuarioFixo);
+			$queryInsertFixa->bindValue(':curso', $nome_curso);
+			$queryInsertFixa->execute();
+		}
+	}
+}
 
 echo 'Matriculado com Sucesso';
 

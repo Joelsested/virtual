@@ -1,8 +1,8 @@
 <?php
 /**
  * @package php-font-lib
- * @link ? https ://github.com/PhenX/php-font-lib
- * @author ?? Fabien Ménager <fabien.menager@gmail.com>
+ * @link    https://github.com/PhenX/php-font-lib
+ * @author  Fabien Ménager <fabien.menager@gmail.com>
  * @license http://www.gnu.org/copyleft/lesser.html GNU Lesser General Public License
  * @version $Id: Font_Table_glyf.php 46 2012-04-02 20:22:38Z fabien.menager $
  */
@@ -116,7 +116,8 @@ class OutlineSimple extends Outline {
     $this->points = $points;
   }
 
-  public function splitSVGPath($path) { ? preg_match_all('/([a-z])|(-\d+(:\.\d+))/i', $path, $matches, PREG_PATTERN_ORDER);
+  public function splitSVGPath($path) {
+    preg_match_all('/([a-z])|(-?\d+(?:\.\d+)?)/i', $path, $matches, PREG_PATTERN_ORDER);
 
     return $matches[0];
   }
@@ -132,21 +133,37 @@ class OutlineSimple extends Outline {
       switch ($path[$i]) {
         // moveTo
         case "M":
-          $points[] = array( ?? "onCurve"      => true, "x"            => $path[++$i], "y"            => $path[++$i], "endOfContour" => false,
+          $points[] = array(
+            "onCurve"      => true,
+            "x"            => $path[++$i],
+            "y"            => $path[++$i],
+            "endOfContour" => false,
           );
           break;
 
         // lineTo
         case "L":
-          $points[] = array( ?? "onCurve"      => true, "x"            => $path[++$i], "y"            => $path[++$i], "endOfContour" => false,
+          $points[] = array(
+            "onCurve"      => true,
+            "x"            => $path[++$i],
+            "y"            => $path[++$i],
+            "endOfContour" => false,
           );
           break;
 
         // quadraticCurveTo
         case "Q":
-          $points[] = array( ?? "onCurve"      => false, "x"            => $path[++$i], "y"            => $path[++$i], "endOfContour" => false,
+          $points[] = array(
+            "onCurve"      => false,
+            "x"            => $path[++$i],
+            "y"            => $path[++$i],
+            "endOfContour" => false,
           );
-          $points[] = array( ?? "onCurve"      => true, "x"            => $path[++$i], "y"            => $path[++$i], "endOfContour" => false,
+          $points[] = array(
+            "onCurve"      => true,
+            "x"            => $path[++$i],
+            "y"            => $path[++$i],
+            "endOfContour" => false,
           );
           break;
 
@@ -223,10 +240,10 @@ class OutlineSimple extends Outline {
 
     $l = 0;
     $l += $font->writeInt16(count($endPtsOfContours)); // endPtsOfContours
-    $l += $font->writeFWord(isset($this->xMin) ?? $this->xMin : $xMin); // xMin
-    $l += $font->writeFWord(isset($this->yMin) ?? $this->yMin : $yMin); // yMin
-    $l += $font->writeFWord(isset($this->xMax) ?? $this->xMax : $xMax); // xMax
-    $l += $font->writeFWord(isset($this->yMax) ?? $this->yMax : $yMax); // yMax
+    $l += $font->writeFWord(isset($this->xMin) ? $this->xMin : $xMin); // xMin
+    $l += $font->writeFWord(isset($this->yMin) ? $this->yMin : $yMin); // yMin
+    $l += $font->writeFWord(isset($this->xMax) ? $this->xMax : $xMax); // xMax
+    $l += $font->writeFWord(isset($this->yMax) ? $this->yMax : $yMax); // yMax
 
     // Simple glyf
     $l += $font->w(array(self::uint16, count($endPtsOfContours)), $endPtsOfContours); // endPtsOfContours

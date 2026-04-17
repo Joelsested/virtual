@@ -142,6 +142,69 @@ class EFIBoletoPayment
 }
 
 
+    private function setPaymentMethodPix($chargeId, $token)
+    {
+        $url = $this->baseUrl . '/v1/charge/' . $chargeId . '/pay';
+
+        $body = [
+            'payment' => [
+                'pix' => new stdClass() // pagamento instantâneo
+            ]
+        ];
+
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_POST, true);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($body));
+        curl_setopt($ch, CURLOPT_HTTPHEADER, [
+            'Content-Type: application/json',
+            'Authorization: Bearer ' . $token
+        ]);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);
+
+        $response = curl_exec($ch);
+        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+
+        if (curl_error($ch)) {
+            throw new Exception('Erro cURL: ' . curl_error($ch));
+        }
+
+        curl_close($ch);
+
+        if ($httpCode !== 200) {
+            throw new Exception('Erro ao definir pagamento PIX: ' . $response);
+        }
+
+        $data = json_decode($response, true);
+        $paymentPix = $data['data']['payment']['pix'] ?? [];
+
+        return [
+            'charge_id' => $chargeId,
+            'status' => $data['data']['status'] ?? 'waiting',
+            'total' => isset($data['data']['total']) ? ($data['data']['total'] / 100) : null,
+            'txid' => $paymentPix['txid'] ?? null,
+            'qrcode' => $paymentPix['qrcode'] ?? null,
+            'qrcode_image' => $paymentPix['qrcode_image'] ?? ($paymentPix['qr_code_image'] ?? null),
+            'link' => $paymentPix['link'] ?? null,
+            'payment_data' => $data
+        ];
+    }
+
+    public function createPixCharge($dados)
+    {
+        $token = $this->getAccessToken();
+
+        if (!$token) {
+            throw new Exception('Não foi possível obter o token de acesso');
+        }
+
+        $chargeId = $this->createCharge($dados, $token);
+
+        return $this->setPaymentMethodPix($chargeId, $token);
+    }
+
     private function setPaymentMethod($chargeId, $dados, $token)
     {
 

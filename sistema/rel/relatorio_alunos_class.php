@@ -4,7 +4,10 @@ include('../conexao.php');
 
 require_once '../dompdf/autoload.inc.php';
 use Dompdf\Dompdf;
-use Dompdf\Options; ? header("Content-Transfer-Encoding: binary"); ? header("Content-Type: image/png");
+use Dompdf\Options;
+
+header("Content-Transfer-Encoding: binary");
+header("Content-Type: image/png");
 
 $options = new Options();
 $options->set('isRemoteEnabled', true);
@@ -30,7 +33,8 @@ $pdf->set_paper('A4', 'landscape');
 $pdf->load_html(utf8_decode($html));
 $pdf->render();
 
-$pdf->stream( ?? 'relatorio_alunos.pdf',
+$pdf->stream(
+    'relatorio_alunos.pdf',
     array("Attachment" => false)
 );
 ?>

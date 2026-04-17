@@ -1,22 +1,21 @@
 <?php
-include('tokens.php');
-//$ref_pix = '60245360108';
-$curl = curl_init();
-    curl_setopt_array($curl, array(
-        CURLOPT_URL => 'https://api.mercadopago.com/v1/payments/'.$ref_pix,
-        CURLOPT_RETURNTRANSFER => true,
-        CURLOPT_CUSTOMREQUEST => 'GET',
-    CURLOPT_HTTPHEADER => array(
-        'accept: application/json',
-        'content-type: application/json',
-        'Authorization: Bearer '.$access_token
-    ),
-    ));
-    $response = curl_exec($curl);
-    $resultado = json_decode($response);
-curl_close($curl);
-//echo $resultado->status;
-$status_api = $resultado->status;
+http_response_code(410);
 
-//var_dump($resultado);
-?>
+$mensagem = 'Gateway desativado. Este sistema utiliza exclusivamente pagamentos via EFY.';
+
+if (!headers_sent()) {
+    $aceitaJson = strpos(strtolower((string)($_SERVER['HTTP_ACCEPT'] ?? '')), 'application/json') !== false;
+    if ($aceitaJson) {
+        header('Content-Type: application/json; charset=utf-8');
+        echo json_encode([
+            'status' => 'error',
+            'message' => $mensagem,
+            'gateway' => 'EFY_ONLY'
+        ], JSON_UNESCAPED_UNICODE);
+        exit;
+    }
+    header('Content-Type: text/plain; charset=utf-8');
+}
+
+echo $mensagem;
+exit;

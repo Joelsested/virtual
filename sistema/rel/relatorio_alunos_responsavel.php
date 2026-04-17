@@ -188,21 +188,21 @@ if ($status_filtro === 'matriculados') {
 <body>
     <div class="box">
         <h2>Relatorio de Alunos por Responsavel</h2>
-        <p class="sub"<?php echo htmlspecialchars($periodoText); ></p>
-        <p class="sub"<?php echo htmlspecialchars($statusText); ></p>
-        <?php if ($nivel !== '')  : ?>
+        <p class="sub"><?php echo htmlspecialchars($periodoText); ?></p>
+        <p class="sub"><?php echo htmlspecialchars($statusText); ?></p>
+        <?php if ($nivel !== '') : ?>
             <p class="sub">Nivel: <?php echo htmlspecialchars($nivel); ?></p>
         <?php endif; ?>
     </div>
 
-    <?php if ($nivel === '')  : ?>
+    <?php if ($nivel === '') : ?>
         <div class="box">
             <strong>Selecione o nivel do responsavel para gerar o relatorio.</strong>
         </div>
     <?php else : ?>
         <div class="box">
             <div style="margin-bottom: 8px;"><strong>Resumo por Responsavel</strong></div>
-            <?php if (count($resumo) > 0)  : ?>
+            <?php if (count($resumo) > 0) : ?>
                 <table>
                     <thead>
                         <tr>
@@ -215,7 +215,7 @@ if ($status_filtro === 'matriculados') {
                         </tr>
                     </thead>
                     <tbody>
-                        <?php foreach ($resumo as $row)  : ?>
+                        <?php foreach ($resumo as $row) : ?>
                             <tr>
                                 <td><?php echo htmlspecialchars($row['nome'] ?? ''); ?></td>
                                 <td><?php echo htmlspecialchars($row['nivel'] ?? ''); ?></td>
@@ -243,7 +243,7 @@ if ($status_filtro === 'matriculados') {
 
         <div class="box">
             <div style="margin-bottom: 8px;"><strong>Total de registros encontrados: <?php echo $total_registros; ?></strong></div>
-            <?php if (count($detalhes) > 0)  : ?>
+            <?php if (count($detalhes) > 0) : ?>
                 <table>
                     <thead>
                         <tr>
@@ -258,13 +258,13 @@ if ($status_filtro === 'matriculados') {
                         </tr>
                     </thead>
                     <tbody>
-                        <?php foreach ($detalhes as $row)  : ?>
+                        <?php foreach ($detalhes as $row) : ?>
                             <?php
                             $pacote = trim($row['pacote'] ?? '');
                             $isPacote = ($pacote === 'Sim');
-                            $nomeItem = $isPacote  ($row['nome_pacote'] ?? '') : ($row['nome_curso'] ?? '');
+                            $nomeItem = $isPacote ? ($row['nome_pacote'] ?? '') : ($row['nome_curso'] ?? '');
                             $dataMatricula = $row['data'] ? implode('/', array_reverse(explode('-', $row['data']))) : '';
-?>
+                            ?>
                             <tr>
                                 <td><?php echo htmlspecialchars($row['nome_responsavel'] ?? ''); ?></td>
                                 <td><?php echo htmlspecialchars($row['nivel_responsavel'] ?? ''); ?></td>

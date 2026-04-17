@@ -15,7 +15,7 @@ $query = $pdo->query("SELECT * FROM $tabela where codigo = '$codigo'");
 $res = $query->fetchAll(PDO::FETCH_ASSOC);
 $total_reg = @count($res);
 if($total_reg > 0 and $res[0]['id'] != $id){
-	echo 'Cupon jÂ¨Â¢ Cadastrado com este cÂ¨Â®digo, escolha Outro!';
+	echo 'Cupon j¨¢ Cadastrado com este c¨®digo, escolha Outro!';
 	exit();
 }
 
@@ -42,4 +42,4 @@ $query->execute();
 
 echo 'Salvo com Sucesso';
 
-?>
+ ?>

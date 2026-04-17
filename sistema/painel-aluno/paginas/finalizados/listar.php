@@ -310,7 +310,7 @@ echo <<<HTML
 
 							
 
-									<button  type="submit" style="background-color: transparent; ? border :none!important;"><i class="fa fa-money text-danger" ></i><span class="text-danger" style="margin-left:2px">Pagar</span>
+									<button  type="submit" style="background-color: transparent;  border:none!important;"><i class="fa fa-money text-danger" ></i><span class="text-danger" style="margin-left:2px">Pagar</span>
 
 									</button>
 
@@ -368,7 +368,7 @@ echo <<<HTML
 
 		<div class="notification_desc2">
 
-		<p>Confirmar Exclusão <a href="#" onclick="excluir('{$id}')"><span class="text-danger">Sim</span></a></p>
+		<p>Confirmar Exclusão? <a href="#" onclick="excluir('{$id}')"><span class="text-danger">Sim</span></a></p>
 
 		</div>
 
@@ -444,7 +444,11 @@ HTML;
 
 	$(document).ready( function () {
 
-		$('#tabela').DataTable({ ? "ordering" : false, ? "stateSave" : true,
+		$('#tabela').DataTable({
+
+			"ordering": false,
+
+			"stateSave": true,
 
 		});
 
@@ -461,4 +465,6 @@ HTML;
 
 
 </script>
+
+
 

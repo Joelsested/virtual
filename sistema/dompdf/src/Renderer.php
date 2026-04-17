@@ -1,8 +1,8 @@
 <?php
 /**
  * @package dompdf
- * @link ? http ://dompdf.github.com/
- * @author ?? Benj Carson <benjcarson@digitaljunkies.ca>
+ * @link    http://dompdf.github.com/
+ * @author  Benj Carson <benjcarson@digitaljunkies.ca>
  * @license http://www.gnu.org/copyleft/lesser.html GNU Lesser General Public License
  */
 namespace Dompdf;
@@ -213,7 +213,7 @@ class Renderer extends AbstractRenderer
      * gets triggered on a frame
      *
      * @param string $event the type of event
-     * @param Frame $frame ?? the frame that event is triggered on
+     * @param Frame $frame  the frame that event is triggered on
      */
     protected function _check_callbacks($event, $frame)
     {
@@ -222,7 +222,8 @@ class Renderer extends AbstractRenderer
         }
 
         if (is_array($this->_callbacks) && isset($this->_callbacks[$event])) {
-            $info = [0 => $this->_canvas, "canvas" => $this->_canvas, 1 => $frame, "frame" => $frame];
+            $info = [0 => $this->_canvas, "canvas" => $this->_canvas,
+                1 => $frame, "frame" => $frame];
             $fs = $this->_callbacks[$event];
             foreach ($fs as $f) {
                 if (is_callable($f)) {

@@ -3,10 +3,10 @@ require_once(__DIR__ . "/../../../conexao.php");
 require_once(__DIR__ . "/../../../../helpers.php");
 $tabela = 'tesoureiros';
 
-$nome = $_POST['nome'];
-$email = $_POST['email'];
+$nome = trim($_POST['nome'] ?? '');
+$email = trim($_POST['email'] ?? '');
 $telefone = $_POST['telefone'];
-$cpf = $_POST['cpf'];
+$cpf = trim($_POST['cpf'] ?? '');
 $endereco = $_POST['endereco'];
 $cidade = $_POST['cidade'];
 $estado = $_POST['estado'];
@@ -14,7 +14,28 @@ $sexo = $_POST['sexo'];
 $nascimento = trim($_POST['nascimento'] ?? '');
 $id = $_POST['id'];
 
-$wallet_id = $_POST['wallet_id'];
+$wallet_id = trim($_POST['wallet_id'] ?? '');
+
+if ($nome === '') {
+    echo 'Informe o nome.';
+    exit();
+}
+if ($cpf === '') {
+    echo 'Informe o CPF.';
+    exit();
+}
+if ($email === '') {
+    echo 'Informe o email.';
+    exit();
+}
+if ($nascimento === '') {
+    echo 'Informe a data de nascimento.';
+    exit();
+}
+if ($wallet_id === '') {
+    echo 'Informe o wallet_id.';
+    exit();
+}
 
  $senha = birthDigits($nascimento);
 if ($senha === '') {

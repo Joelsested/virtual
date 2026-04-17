@@ -2,16 +2,16 @@
 header('Content-Type: application/json');
 
 // Incluir arquivos necessários
-require_once __DIR__ . '/sistema/conexao.php';
-require_once __DIR__ . '/efi/boleto.php';
+require_once("sistema/conexao.php");
+require_once 'efi/boleto.php';
 
 // Configurações
-$options = require_once __DIR__ . '/efi/options.php';
+$options = require_once 'efi/options.php';
 $config = [
     'client_id' => $options['clientId'],
     'client_secret' => $options['clientSecret'],
     'certificate_path' => $options['certificate'], // Apenas para PIX
-    'chave_pix' => 'bda40203-4fc1-43b1-b058-b783d6921a37', // Sua chave PIX
+    'chave_pix' => env('EFI_PIX_KEY', $chave_pix ?? ''), // Sua chave PIX
     'sandbox' => $options['sandbox'] // true para teste, false para produção
 ];
 
@@ -57,8 +57,8 @@ function atualizarStatusPagamentoBoleto($pdo, $chargeId, $status)
 function buscarIdMatriculaBoleto($pdo, $chargeId)
 {
     try {
-        $stmt = $pdo->prepare("SELECT id_matricula FROM pagamentos_boleto WHERE charge_id = ?");
-        $stmt->execute([$chargeId]);
+        $stmt = $pdo->prepare("SELECT id_matricula FROM pagamentos_boleto WHERE charge_id = :id OR id_asaas = :id LIMIT 1");
+        $stmt->execute([':id' => $chargeId]);
         $result = $stmt->fetch(PDO::FETCH_ASSOC);
         return $result ? $result['id_matricula'] : null;
     } catch (PDOException $e) {
@@ -103,6 +103,53 @@ function verificarSeCursoEPacote($pdo, $idMatricula)
     } catch (PDOException $e) {
         error_log("Erro ao verificar se curso é pacote: " . $e->getMessage());
         return null;
+    }
+}
+
+// Auxiliares para localizar e atualizar matrículas em qualquer tabela
+function localizarMatriculaGeral($pdo, $idMatricula)
+{
+    $tabelas = ['matriculas', 'matriculas_tecnicos', 'matriculas_profissionalizantes'];
+    foreach ($tabelas as $tabela) {
+        try {
+            $stmt = $pdo->prepare("SELECT * FROM {$tabela} WHERE id = ?");
+            $stmt->execute([$idMatricula]);
+            $res = $stmt->fetch(PDO::FETCH_ASSOC);
+            if ($res) {
+                return ['tabela' => $tabela, 'dados' => $res];
+            }
+        } catch (PDOException $e) {
+            error_log("Erro ao consultar {$tabela}: " . $e->getMessage());
+        }
+    }
+    return null;
+}
+
+function atualizarStatusMatriculaGeral($pdo, $tabela, $idMatricula, $status, $forma_pgto = null)
+{
+    $tabelasPermitidas = ['matriculas', 'matriculas_tecnicos', 'matriculas_profissionalizantes'];
+    if (!in_array($tabela, $tabelasPermitidas, true)) {
+        error_log("Tabela de matricula não permitida: {$tabela}");
+        return false;
+    }
+
+    try {
+        $sql = "UPDATE {$tabela} SET status = :status";
+        if ($forma_pgto !== null) {
+            $sql .= ", forma_pgto = :forma_pgto";
+        }
+        $sql .= " WHERE id = :id";
+
+        $stmt = $pdo->prepare($sql);
+        $stmt->bindValue(':status', $status);
+        $stmt->bindValue(':id', $idMatricula, PDO::PARAM_INT);
+        if ($forma_pgto !== null) {
+            $stmt->bindValue(':forma_pgto', $forma_pgto);
+        }
+        return $stmt->execute();
+    } catch (PDOException $e) {
+        error_log("Erro ao atualizar matricula em {$tabela}: " . $e->getMessage());
+        return false;
     }
 }
 
@@ -195,6 +242,76 @@ function ativarCursosDoPacote($pdo, $idCurso, $alunoId)
     }
 }
 
+// Libera cursos vinculados a um profissionalizante (pacote) após pagamento
+function ativarCursosProfissionalizantes($pdo, $idProfissionalizante, $alunoId)
+{
+    try {
+        $stmtCursos = $pdo->prepare("
+            SELECT cp.id_curso, c.professor
+              FROM cursos_profissionalizantes cp
+              JOIN cursos c ON c.id = cp.id_curso
+             WHERE cp.id_profissionalizante = :id_prof
+        ");
+        $stmtCursos->execute([':id_prof' => $idProfissionalizante]);
+        $cursos = $stmtCursos->fetchAll(PDO::FETCH_ASSOC);
+
+        if (!$cursos) {
+            logMessage("Nenhum curso vinculado ao profissionalizante {$idProfissionalizante}");
+            return false;
+        }
+
+        foreach ($cursos as $curso) {
+            $idCurso = $curso['id_curso'];
+            $professorId = $curso['professor'];
+
+            // Verifica se o aluno já tem matrícula deste curso (fora do pacote)
+            $stmtExiste = $pdo->prepare("SELECT id FROM matriculas_profissionalizantes WHERE aluno = :aluno AND id_curso = :curso AND pacote = 'Não' LIMIT 1");
+            $stmtExiste->execute([
+                ':aluno' => $alunoId,
+                ':curso' => $idCurso
+            ]);
+            $matriculaExistente = $stmtExiste->fetch(PDO::FETCH_ASSOC);
+
+            if ($matriculaExistente) {
+                $stmtUpdate = $pdo->prepare("
+                    UPDATE matriculas_profissionalizantes
+                       SET status = 'Matriculado',
+                           forma_pgto = 'BOLETO',
+                           obs = 'Pacote',
+                           id_pacote = :id_pacote
+                     WHERE id = :id
+                ");
+                $stmtUpdate->execute([
+                    ':id_pacote' => $idProfissionalizante,
+                    ':id' => $matriculaExistente['id']
+                ]);
+            } else {
+                $stmtInsert = $pdo->prepare("
+                    INSERT INTO matriculas_profissionalizantes
+                        (id_curso, aluno, professor, aulas_concluidas, data, status, pacote, id_pacote, obs, forma_pgto)
+                    VALUES
+                        (:curso, :aluno, :professor, 1, CURDATE(), 'Matriculado', 'Não', :id_pacote, 'Pacote', 'BOLETO')
+                ");
+                $stmtInsert->execute([
+                    ':curso' => $idCurso,
+                    ':aluno' => $alunoId,
+                    ':professor' => $professorId,
+                    ':id_pacote' => $idProfissionalizante
+                ]);
+
+                $stmtContador = $pdo->prepare("UPDATE cursos SET matriculas = matriculas + 1 WHERE id = :curso");
+                $stmtContador->execute([':curso' => $idCurso]);
+            }
+        }
+
+        logMessage("Liberação de cursos vinculados ao profissionalizante {$idProfissionalizante} concluída");
+        return true;
+    } catch (PDOException $e) {
+        logMessage("Erro ao liberar cursos do profissionalizante {$idProfissionalizante}: " . $e->getMessage());
+        return false;
+    }
+}
+
 // Processar webhook
 try {
 
@@ -222,47 +339,57 @@ try {
     $payload = json_encode($data, JSON_UNESCAPED_UNICODE);
     $receivedAt = date('Y-m-d H:i:s');
 
-    // Extrai o notification hash
-    $notification = trim($input);
+    // Suporta dois formatos de notificação:
+    // 1) JSON da API de cobranças com status/charge_id
+    // 2) notification=hash (formato legado)
+    $currentStatus = null;
+    $chargeId = null;
+    $lastItem = null;
 
-    if (strpos($notification, '=') === false) {
-        http_response_code(400);
-        echo json_encode(['error' => 'Formato de notificação inválido']);
-        logWebhook($pdo, 'boleto_error', $payload, $receivedAt);
-        exit;
+    if (isset($data['charge_id']) && isset($data['status'])) {
+        // Formato JSON direto
+        $chargeId = $data['charge_id'];
+        $currentStatus = $data['status'];
+        $lastItem = $data;
+        logMessage("Webhook JSON direto recebido. Charge ID: $chargeId, Status: $currentStatus");
+    } else {
+        // Formato notification=hash
+        $notification = trim($input);
+
+        if (strpos($notification, '=') === false) {
+            http_response_code(400);
+            echo json_encode(['error' => 'Formato de notificação inválido']);
+            logWebhook($pdo, 'boleto_error', $payload, $receivedAt);
+            exit;
+        }
+
+        list($key, $value) = explode('=', $notification, 2);
+        $notification_hash = $value;
+        $notification_hash = rtrim($notification_hash, '"');
+
+        logMessage("Processando webhook de boleto. Notification hash: $notification_hash");
+
+        // Consultar webhook da EFI
+        $boletoWebhook = new EFIBoletoPayment(
+            $config['client_id'],
+            $config['client_secret'],
+            $config['sandbox']
+        );
+
+        $result = $boletoWebhook->consultarWebhook($notification_hash);
+
+        if (!$result || !isset($result['data']) || empty($result['data'])) {
+            http_response_code(400);
+            echo json_encode(['error' => 'Dados do webhook inválidos']);
+            logWebhook($pdo, 'boleto_error', json_encode(['error' => 'Dados inválidos', 'result' => $result]), $receivedAt);
+            exit;
+        }
+
+        // Pega o último item do array (status mais recente)
+        $lastItem = end($result['data']);
+        $currentStatus = $lastItem['status']['current'];
+        $chargeId = $lastItem['identifiers']['charge_id'];
     }
-
-
-
-    list($key, $value) = explode('=', $notification, 2);
-    $notification_hash = $value;
-    $notification_hash = rtrim($notification_hash, '"');
-
-
-    logMessage("Processando webhook de boleto. Notification hash: $notification_hash");
-
-    // Consultar webhook da EFI
-    $boletoWebhook = new EFIBoletoPayment(
-        $config['client_id'],
-        $config['client_secret'],
-        $config['sandbox']
-    );
-
-    $result = $boletoWebhook->consultarWebhook($notification_hash);
-
-
-
-    if (!$result || !isset($result['data']) || empty($result['data'])) {
-        http_response_code(400);
-        echo json_encode(['error' => 'Dados do webhook inválidos']);
-        logWebhook($pdo, 'boleto_error', json_encode(['error' => 'Dados inválidos', 'result' => $result]), $receivedAt);
-        exit;
-    }
-
-    // Pega o último item do array (status mais recente)
-    $lastItem = end($result['data']);
-    $currentStatus = $lastItem['status']['current'];
-    $chargeId = $lastItem['identifiers']['charge_id'];
 
     logMessage("Status atual do boleto: $currentStatus, Charge ID: $chargeId");
 
@@ -281,22 +408,22 @@ try {
             $idMatricula = buscarIdMatriculaBoleto($pdo, $chargeId);
 
             if ($idMatricula) {
-                // Atualizar status da matrícula
-                if (!atualizarStatusMatricula($pdo, $idMatricula, 'Matriculado')) {
-                    throw new Exception("Falha ao atualizar matrícula");
-                }
+                $matriculaInfo = localizarMatriculaGeral($pdo, $idMatricula);
+                if ($matriculaInfo) {
+                    $tabelaMatricula = $matriculaInfo['tabela'];
+                    $dadosMatricula = $matriculaInfo['dados'];
 
-                // Verificar se a matrícula é de um pacote e ativar cursos individuais
-                $dadosMatricula = verificarDadosMatricula($pdo, $idMatricula);
+                    if (!atualizarStatusMatriculaGeral($pdo, $tabelaMatricula, $idMatricula, 'Matriculado', 'BOLETO')) {
+                        throw new Exception('Falha ao atualizar matrícula');
+                    }
 
-                if ($dadosMatricula) {
-                    $idCurso = $dadosMatricula['id_curso'];
-                    $alunoId = $dadosMatricula['aluno'];
+                    $pacoteFlag = isset($dadosMatricula['pacote']) ? $dadosMatricula['pacote'] : null;
+                    $pacoteAtivo = $pacoteFlag !== null && strcasecmp($pacoteFlag, 'Sim') === 0;
 
-                    // Verificar se o curso é um pacote
-                    $pacote = verificarSeCursoEPacote($pdo, $idMatricula);
+                    if ($tabelaMatricula === 'matriculas' && $pacoteAtivo) {
+                        $idCurso = $dadosMatricula['id_curso'];
+                        $alunoId = $dadosMatricula['aluno'];
 
-                    if ($pacote === 'Sim') {
                         logMessage("Detectado pagamento de pacote via boleto. Charge ID: $chargeId, Curso: $idCurso, Aluno: $alunoId");
 
                         if (!ativarCursosDoPacote($pdo, $idCurso, $alunoId)) {
@@ -305,6 +432,21 @@ try {
                             logMessage("Cursos do pacote ativados com sucesso para Charge ID: $chargeId");
                         }
                     }
+
+                    if ($tabelaMatricula === 'matriculas_profissionalizantes' && $pacoteAtivo) {
+                        $idPacoteProf = $dadosMatricula['id_curso'];
+                        $alunoId = $dadosMatricula['aluno'];
+
+                        logMessage("Detectado pagamento de pacote profissionalizante via boleto. Charge ID: $chargeId, Profissionalizante: $idPacoteProf, Aluno: $alunoId");
+
+                        if (!ativarCursosProfissionalizantes($pdo, $idPacoteProf, $alunoId)) {
+                            logMessage("Falha ao ativar cursos do profissionalizante para Charge ID: $chargeId");
+                        } else {
+                            logMessage("Cursos do profissionalizante ativados com sucesso para Charge ID: $chargeId");
+                        }
+                    }
+                } else {
+                    error_log("Matrícula não localizada em nenhuma tabela para Charge ID: $chargeId");
                 }
             } else {
                 error_log("ID da matrícula não encontrado para Charge ID: $chargeId");

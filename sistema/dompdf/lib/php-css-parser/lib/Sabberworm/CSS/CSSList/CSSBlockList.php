@@ -56,7 +56,8 @@ abstract class CSSBlockList extends CSSList {
 				}
 			}
 		} else {
-			//Non-List Value or CSSString (CSS identifier) ?? $aResult[] = $oElement;
+			//Non-List Value or CSSString (CSS identifier)
+			$aResult[] = $oElement;
 		}
 	}
 

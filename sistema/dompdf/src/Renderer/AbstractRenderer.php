@@ -1,10 +1,10 @@
 <?php
 /**
  * @package dompdf
- * @link ? http ://dompdf.github.com/
- * @author ?? Benj Carson <benjcarson@digitaljunkies.ca>
- * @author ?? Helmut Tischer <htischer@weihenstephan.org>
- * @author ?? Fabien Ménager <fabien.menager@gmail.com>
+ * @link    http://dompdf.github.com/
+ * @author  Benj Carson <benjcarson@digitaljunkies.ca>
+ * @author  Helmut Tischer <htischer@weihenstephan.org>
+ * @author  Fabien Ménager <fabien.menager@gmail.com>
  * @license http://www.gnu.org/copyleft/lesser.html GNU Lesser General Public License
  */
 namespace Dompdf\Renderer;
@@ -62,12 +62,12 @@ abstract class AbstractRenderer
     /**
      * Render a background image over a rectangular area
      *
-     * @param string $url ?? The background image to load
-     * @param float $x ?? The left edge of the rectangular area
-     * @param float $y ?? The top edge of the rectangular area
-     * @param float $width ?? The width of the rectangular area
+     * @param string $url   The background image to load
+     * @param float $x      The left edge of the rectangular area
+     * @param float $y      The top edge of the rectangular area
+     * @param float $width  The width of the rectangular area
      * @param float $height The height of the rectangular area
-     * @param Style $style ?? The associated Style object
+     * @param Style $style  The associated Style object
      *
      * @throws \Exception
      */
@@ -90,7 +90,9 @@ abstract class AbstractRenderer
         //debugpng
         if ($this->_dompdf->getOptions()->getDebugPng()) {
             print '[_background_image ' . $url . ']';
-        } ? list($img, $type, /*$msg*/) = Cache::resolve_url(
+        }
+
+        list($img, $type, /*$msg*/) = Cache::resolve_url(
             $url,
             $sheet->get_protocol(),
             $sheet->get_host(),
@@ -104,10 +106,12 @@ abstract class AbstractRenderer
         }
 
         //Try to optimize away reading and composing of same background multiple times
-        //Postponing read with imagecreatefrom ?? ...()
+        //Postponing read with imagecreatefrom   ...()
         //final composition parameters and name not known yet
         //Therefore read dimension directly from file, instead of creating gd object first.
-        //$img_w = imagesx($src); $img_h = imagesy($src); ? list($img_w, $img_h) = Helpers::dompdf_getimagesize($img, $this->_dompdf->getHttpContext());
+        //$img_w = imagesx($src); $img_h = imagesy($src);
+
+        list($img_w, $img_h) = Helpers::dompdf_getimagesize($img, $this->_dompdf->getHttpContext());
         if (!isset($img_w) || $img_w == 0 || !isset($img_h) || $img_h == 0) {
             return;
         }
@@ -244,7 +248,7 @@ abstract class AbstractRenderer
 
         //Use filename as indicator only
         //different names for different variants to have different copies in the pdf
-        //This is not dependent of background color of box! .'_'.(is_array($bg_color) ?? $bg_color["hex"] ?: $bg_color)
+        //This is not dependent of background color of box! .'_'.(is_array($bg_color) ? $bg_color["hex"] : $bg_color)
         //Note: Here, bg_* are the start values, not end values after going through the tile loops!
 
         $filedummy = $img;

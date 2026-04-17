@@ -1,8 +1,8 @@
 <?php
 /**
  * @package dompdf
- * @link ? http ://dompdf.github.com/
- * @author ?? Benj Carson <benjcarson@digitaljunkies.ca>
+ * @link    http://dompdf.github.com/
+ * @author  Benj Carson <benjcarson@digitaljunkies.ca>
  * @license http://www.gnu.org/copyleft/lesser.html GNU Lesser General Public License
  */
 namespace Dompdf\FrameDecorator;
@@ -48,7 +48,7 @@ class TableRow extends AbstractFrameDecorator
             }
         }
 
-        // ?? dump the extra nodes after the table.
+        //  dump the extra nodes after the table.
         foreach ($erroneous_frames as $frame) {
             $p->move_after($frame);
         }

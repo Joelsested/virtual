@@ -8,16 +8,38 @@ csrf_token();
 
 $scriptName = $_SERVER['SCRIPT_NAME'] ?? '';
 $method = $_SERVER['REQUEST_METHOD'] ?? 'GET';
-$isPanel = strpos($scriptName, '/sistema/painel-') !== false;
+$nivelSessao = $_SESSION['nivel'] ?? '';
+$niveisAdminPermitidos = ['Administrador', 'Professor', 'Secretario', 'Tesoureiro', 'Tutor', 'Parceiro', 'Assessor', 'Vendedor'];
+$isAdminArea = strpos($scriptName, '/sistema/painel-admin/') !== false;
+$isAlunoArea = strpos($scriptName, '/sistema/painel-aluno/') !== false;
+$isRelArea = strpos($scriptName, '/sistema/rel/') !== false;
+$isPanel = $isAdminArea || $isAlunoArea;
 $isAjax = strpos($scriptName, '/ajax/') !== false;
+$isGerarBoleto = strpos($scriptName, '/sistema/painel-aluno/paginas/gerar_boleto.php') !== false;
+$isAtualizarVencimentoAluno = strpos($scriptName, '/sistema/painel-aluno/paginas/boletos/atualizar_vencimento.php') !== false;
 
-if ($isPanel && empty($_SESSION['nivel']) && $method !== 'GET' && $method !== 'HEAD' && $method !== 'OPTIONS') {
-	http_response_code(401);
-	echo 'Nao autorizado.';
-	exit();
+$boletoAutorizado = false;
+if ($isGerarBoleto && $method === 'POST') {
+	$secret = env('BOLETO_AUTH_SECRET', '');
+	$authToken = $_POST['auth_token'] ?? '';
+	$authTs = (int) ($_POST['auth_ts'] ?? 0);
+	$idParcela = (string) ($_POST['id_parcela'] ?? '');
+	$idMatricula = (string) ($_POST['id_matricula'] ?? '');
+	if ($secret !== '' && $authToken !== '' && $authTs > 0 && abs(time() - $authTs) <= 900) {
+		$payload = $authTs . '|' . $idParcela . '|' . $idMatricula;
+		$expected = hash_hmac('sha256', $payload, $secret);
+		if (hash_equals($expected, $authToken)) {
+			$boletoAutorizado = true;
+		}
+	}
 }
 
-if (($isPanel || $isAjax) && $method !== 'GET' && $method !== 'HEAD' && $method !== 'OPTIONS') {
+$precisaVerificarNivelAdmin = $isAdminArea && !in_array($nivelSessao, $niveisAdminPermitidos, true);
+$podeAtualizarVencimentoAluno = $isAtualizarVencimentoAluno && in_array($nivelSessao, ['Administrador', 'Secretario', 'Tesoureiro'], true);
+$precisaVerificarNivelAluno = $isAlunoArea && $nivelSessao !== 'Aluno' && !$boletoAutorizado && !$podeAtualizarVencimentoAluno;
+$precisaVerificarRel = $isRelArea && empty($nivelSessao);
+
+if (($isPanel || $isAjax) && !$isGerarBoleto && $method !== 'GET' && $method !== 'HEAD' && $method !== 'OPTIONS') {
 	csrf_require(false);
 }
 
@@ -29,57 +51,66 @@ $banco = env('DB_NAME', 'provao');
 $servidor = env('DB_HOST', 'localhost');
 
 
-$pdo = null;
-$errosConexao = [];
-$options = [
-	PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-	PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8mb4 COLLATE utf8mb4_unicode_ci",
-];
-$tentativas = [['host' => $servidor, 'db' => $banco, 'user' => $usuario, 'pass' => $senha,
-]];
 
-$isLocalhost = in_array(strtolower((string) $servidor), ['localhost', '127.0.0.1', '::1'], true);
-if ($isLocalhost) {
-	$bancosLocaisCandidatos = [$banco, 'virtual_base', 'virtual'];
-	$bancoSemPrefixo = preg_replace('/^[^_]+_/', '', $banco);
-	if ($bancoSemPrefixo !== $banco) {
-		$bancosLocaisCandidatos[] = $bancoSemPrefixo;
-	}
-	$bancosLocaisCandidatos = array_values(array_unique(array_filter($bancosLocaisCandidatos)));
-	foreach ($bancosLocaisCandidatos as $dbCandidato) {
-		$tentativas[] = ['host' => $servidor, 'db' => $dbCandidato, 'user' => 'root', 'pass' => ''];
-	}
+
+
+
+
+try {
+	$dsn = "mysql:host=$servidor;dbname=$banco;charset=utf8mb4";
+	$options = [
+		PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+		PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8mb4 COLLATE utf8mb4_unicode_ci",
+	];
+	$pdo = new PDO($dsn, "$usuario", "$senha", $options);
+} catch (Exception $e) {
+	echo 'Erro ao conectar ao banco de dados!<br><br>' . $e;
 }
 
-foreach ($tentativas as $dadosConexao) {
-	try {
-		$dsn = "mysql:host={$dadosConexao['host']};dbname={$dadosConexao['db']};charset=utf8mb4";
-		$pdo = new PDO($dsn, $dadosConexao['user'], $dadosConexao['pass'], $options);
-		$servidor = $dadosConexao['host'];
-		$banco = $dadosConexao['db'];
-		$usuario = $dadosConexao['user'];
-		$senha = $dadosConexao['pass'];
-		break;
-	} catch (Exception $e) {
-		$errosConexao[] = $e->getMessage();
+if ($precisaVerificarNivelAdmin || $precisaVerificarNivelAluno || $precisaVerificarRel) {
+	if (!empty($_SESSION['id'])) {
+		try {
+			$stmtNivel = $pdo->prepare("SELECT nivel FROM usuarios WHERE id = :id LIMIT 1");
+			$stmtNivel->execute([':id' => $_SESSION['id']]);
+			$nivelBanco = (string) ($stmtNivel->fetchColumn() ?: '');
+			if ($nivelBanco !== '') {
+				$_SESSION['nivel'] = $nivelBanco;
+				$nivelSessao = $nivelBanco;
+				$precisaVerificarNivelAdmin = $isAdminArea && !in_array($nivelSessao, $niveisAdminPermitidos, true);
+				$precisaVerificarNivelAluno = $isAlunoArea && $nivelSessao !== 'Aluno';
+				$precisaVerificarRel = $isRelArea && empty($nivelSessao);
+			}
+		} catch (Exception $e) {
+			// Mantem a validacao original se falhar ao consultar o banco
+		}
 	}
-}
 
-if (!$pdo instanceof PDO) {
-	$mensagem = 'Erro ao conectar ao banco de dados!';
-	if ($isLocalhost) {
-		$mensagem .= ' Verifique o arquivo virtual/.env ou crie o banco local com as credenciais corretas.';
+	if ($precisaVerificarNivelAdmin || $precisaVerificarNivelAluno || $precisaVerificarRel) {
+		// Em navegacao direta no painel, redireciona para a tela de login.
+		if ($isAdminArea && !$isAjax && ($method === 'GET' || $method === 'HEAD')) {
+			header('Location: ../index.php');
+			exit();
+		}
+		http_response_code(401);
+		echo 'Nao autorizado.';
+		exit();
 	}
-	$detalhe = !empty($errosConexao) ? end($errosConexao) : 'Falha desconhecida.';
-	echo $mensagem . '<br><br>' . htmlspecialchars((string) $detalhe, ENT_QUOTES, 'UTF-8');
-	exit();
 }
 
 $host = $_SERVER['HTTP_HOST'];
 $script_dir = dirname($_SERVER['SCRIPT_NAME']);
 $script_dir = rtrim($script_dir, '/');
 $url_path = $script_dir;
-$strip_segments = ['/sistema', '/efi', '/ajax', '/scripts', '/pagamentos', '/pagamentos_novo', '/pgtos', '/api', '/webhooks',
+$strip_segments = [
+	'/sistema',
+	'/efi',
+	'/ajax',
+	'/scripts',
+	'/pagamentos',
+	'/pagamentos_novo',
+	'/pgtos',
+	'/api',
+	'/webhooks',
 ];
 $pos = null;
 foreach ($strip_segments as $segment) {
@@ -90,7 +121,15 @@ foreach ($strip_segments as $segment) {
 }
 $url_path = $pos !== null ? substr($url_path, 0, $pos) : $url_path;
 $url_path = rtrim($url_path, '/');
-$scheme = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') || ($_SERVER['SERVER_PORT'] ?? 0) == 443 ? 'https' : 'http';
+$forwardedProto = strtolower((string) ($_SERVER['HTTP_X_FORWARDED_PROTO'] ?? ''));
+$forwardedSsl = strtolower((string) ($_SERVER['HTTP_X_FORWARDED_SSL'] ?? ''));
+$cfVisitor = (string) ($_SERVER['HTTP_CF_VISITOR'] ?? '');
+$isHttps = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off')
+	|| ($_SERVER['SERVER_PORT'] ?? 0) == 443
+	|| $forwardedProto === 'https'
+	|| $forwardedSsl === 'on'
+	|| stripos($cfVisitor, '"scheme":"https"') !== false;
+$scheme = $isHttps ? 'https' : 'http';
 $url_sistema = "{$scheme}://{$host}{$url_path}";
 $url_sistema = rtrim($url_sistema, '/') . '/';
 
@@ -114,7 +153,10 @@ if (@count($res) == 0) {
 
 
 	$stmtConfig = $pdo->prepare("INSERT INTO config SET nome_sistema = :nome_sistema, tel_sistema = :tel_sistema, email_sistema = :email_sistema, logo = 'logo.png', icone = 'favicon.ico', logo_rel = 'logo.jpg', itens_pag = '18', cartoes_fidelidade = '5', valor_max_cartao = '100', total_emails_por_envio = '480', intervalo_envio_email = '70', dias_email_matricula = '3', dias_excluir_matricula = '30', script_dia = curDate(), questionario = 'Sim', media = '60' ");
-	$stmtConfig->execute([':nome_sistema' => $nome_sistema, ':tel_sistema' => $tel_sistema, ':email_sistema' => $email_sistema,
+	$stmtConfig->execute([
+		':nome_sistema' => $nome_sistema,
+		':tel_sistema' => $tel_sistema,
+		':email_sistema' => $email_sistema,
 	]);
 
 } else {

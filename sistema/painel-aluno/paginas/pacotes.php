@@ -7,7 +7,7 @@ if(@$_SESSION['nivel'] != 'Aluno'){
 	echo "<script>window.location='../index.php'</script>";
 	exit();
 }
-?>
+ ?>
 
 
 <div class="bs-example widget-shadow margem-mobile" style="padding:15px; margin-top:-10px" id="listar">
@@ -16,7 +16,7 @@ if(@$_SESSION['nivel'] != 'Aluno'){
 
 
 
-<script type="text/javascript">var pag = "<=$pag>"</script>
+<script type="text/javascript">var pag = "<?=$pag?>"</script>
 <script src="js/ajax.js"></script>
 
 
@@ -27,3 +27,5 @@ if(@$_SESSION['nivel'] != 'Aluno'){
 		});
 });
 </script>
+
+

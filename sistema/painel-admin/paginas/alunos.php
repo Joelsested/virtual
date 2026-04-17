@@ -6,6 +6,7 @@ $pag = 'alunos';
 @session_start();
 
 $id_user = @$_SESSION['id'];
+$somente_meus = isset($_GET['somente_meus']) && $_GET['somente_meus'] == '1';
 
 if (@$_SESSION['nivel'] != 'Administrador' and @$_SESSION['nivel'] != 'Secretario' and @$_SESSION['nivel'] != 'Tesoureiro' and @$_SESSION['nivel'] != 'Tutor' and @$_SESSION['nivel'] != 'Parceiro' and @$_SESSION['nivel'] != 'Professor' and @$_SESSION['nivel'] != 'Vendedor') {
 	echo "<script>window.location='../index.php'</script>";
@@ -43,6 +44,9 @@ if (@$_SESSION['nivel'] != 'Administrador' and @$_SESSION['nivel'] != 'Secretari
 				</button>
 			</div>
 			<form method="post" id="form">
+				<?php if ($somente_meus) { ?>
+					<input type="hidden" name="somente_meus" id="somente_meus" value="1">
+				<?php } ?>
 				<div class="modal-body">
 
 					<div class="row">
@@ -94,7 +98,7 @@ if (@$_SESSION['nivel'] != 'Administrador' and @$_SESSION['nivel'] != 'Secretari
 
 						<div class="col-md-2">
 							<div class="form-group">
-								<label>Data de Expedicao:</label>
+								<label>Data de Expedição:</label>
 								<input type="text" class="form-control" name="expedicao" id="expedicao">
 
 							</div>
@@ -170,13 +174,33 @@ if (@$_SESSION['nivel'] != 'Administrador' and @$_SESSION['nivel'] != 'Secretari
 							<div class="form-group">
 								<label>Estado:</label>
 								<select class="form-control" id="estado" name="estado">
-									<option value="RO">RO</option>
 									<option value="AC">AC</option>
+									<option value="AL">AL</option>
+									<option value="AP">AP</option>
 									<option value="AM">AM</option>
-									<option value="RR">RR</option>
-									<option value="TO">TO</option>
-									<option value="PA">PA</option>
+									<option value="BA">BA</option>
+									<option value="CE">CE</option>
+									<option value="DF">DF</option>
+									<option value="ES">ES</option>
+									<option value="GO">GO</option>
+									<option value="MA">MA</option>
 									<option value="MT">MT</option>
+									<option value="MS">MS</option>
+									<option value="MG">MG</option>
+									<option value="PA">PA</option>
+									<option value="PB">PB</option>
+									<option value="PR">PR</option>
+									<option value="PE">PE</option>
+									<option value="PI">PI</option>
+									<option value="RJ">RJ</option>
+									<option value="RN">RN</option>
+									<option value="RS">RS</option>
+									<option value="RO">RO</option>
+									<option value="RR">RR</option>
+									<option value="SC">SC</option>
+									<option value="SP">SP</option>
+									<option value="SE">SE</option>
+									<option value="TO">TO</option>
 
 								</select>
 
@@ -257,7 +281,7 @@ if (@$_SESSION['nivel'] != 'Administrador' and @$_SESSION['nivel'] != 'Secretari
 	<div class="modal-dialog">
 		<div class="modal-content">
 			<div class="modal-header">
-				<h4 class="modal-title" id="tituloModal">Gestão de Arquivos - <span id="nome_arquivo"> </span></h4>
+				<h4 class="modal-title" id="tituloModal">GestÃ£o de Arquivos - <span id="nome_arquivo"> </span></h4>
 				<button id="btn-fechar-arquivos" type="button" class="close" data-dismiss="modal" aria-label="Close" style="margin-top: -20px">
 					<span aria-hidden="true">&times;</span>
 				</button>
@@ -368,7 +392,7 @@ if (@$_SESSION['nivel'] != 'Administrador' and @$_SESSION['nivel'] != 'Secretari
 
 				<div class="row" style="border-bottom: 1px solid #cac7c7;">
 					<div class="col-md-12">
-						<span><b>Endereço: </b></span>
+						<span><b>EndereÃ§o: </b></span>
 						<span id="endereco_mostrar"></span>
 					</div>
 
@@ -427,6 +451,11 @@ if (@$_SESSION['nivel'] != 'Administrador' and @$_SESSION['nivel'] != 'Secretari
 						<span><b>Ativo: </b></span>
 						<span id="ativo_mostrar"></span>
 					</div>
+
+					<div class="col-md-3">
+						<span><b>Senha: </b></span>
+						<span id="senha_mostrar"></span>
+					</div>
 				</div>
 
 
@@ -450,9 +479,9 @@ if (@$_SESSION['nivel'] != 'Administrador' and @$_SESSION['nivel'] != 'Secretari
 
 
 <script type="text/javascript">
-	var pag = "<= $pag >"
+	var pag = "<?= $pag ?>"
 </script>
-<script src="js/ajax.js"></script>
+<script src="js/ajax.js?v=<?= @filemtime(__DIR__ . '/../js/ajax.js') ?>"></script>
 
 
 <script type="text/javascript">
@@ -478,7 +507,7 @@ if (@$_SESSION['nivel'] != 'Administrador' and @$_SESSION['nivel'] != 'Secretari
 
 
 <script>
-// --- Função para validar CPF ---
+// --- FunÃ§Ã£o para validar CPF ---
 function validarCPF(cpf) {
     cpf = cpf.replace(/[^\d]/g, '');
     if (cpf.length !== 11 || /^(\d)\1{10}$/.test(cpf)) return false;
@@ -496,7 +525,7 @@ function validarCPF(cpf) {
     return resto === parseInt(cpf.charAt(10));
 }
 
-// --- Função para formatar CPF enquanto digita ---
+// --- FunÃ§Ã£o para formatar CPF enquanto digita ---
 function formatarCPF(input) {
     let valor = input.value.replace(/[^\d]/g, '');
     if (valor.length <= 11) {
@@ -507,12 +536,13 @@ function formatarCPF(input) {
     input.value = valor;
 }
 
-// --- Lista dos campos obrigatórios ---
-const camposObrigatorios = ['nome', 'cpf', 'email', 'telefone', 'nascimento'
+// --- Lista dos campos obrigatÃ³rios ---
+const camposObrigatorios = [
+    'nome', 'cpf', 'email', 'telefone', 'nascimento'
 ];
 
 
-// --- Função para verificar se todos os campos estão preenchidos e válidos ---
+// --- FunÃ§Ã£o para verificar se todos os campos estÃ£o preenchidos e vÃ¡lidos ---
 function verificarCampos() {
     const botao = document.getElementById('saveAluno');
     const mensagem = document.getElementById('mensagem');
@@ -528,13 +558,13 @@ function verificarCampos() {
         }
     }
 
-    // Verifica se CPF e Email são válidos
+    // Verifica se CPF e Email sÃ£o vÃ¡lidos
     const cpf = document.getElementById('cpf').value.trim();
     const email = document.getElementById('email').value.trim();
     const emailValido = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
     const cpfValido = validarCPF(cpf);
 
-    // Se tudo estiver preenchido e válido, habilita o botão
+    // Se tudo estiver preenchido e vÃ¡lido, habilita o botÃ£o
     if (todosPreenchidos && cpfValido && emailValido) {
         botao.removeAttribute('disabled');
         mensagem.innerHTML = '';
@@ -557,7 +587,7 @@ function verificarCampos() {
     }
 }
 
-// --- Adiciona eventos para atualizar o estado do botão em tempo real ---
+// --- Adiciona eventos para atualizar o estado do botÃ£o em tempo real ---
 camposObrigatorios.forEach(id => {
     const campo = document.getElementById(id);
     if (campo) {
@@ -567,7 +597,7 @@ camposObrigatorios.forEach(id => {
     }
 });
 
-// --- Máscara e validação de CPF em tempo real ---
+// --- MÃ¡scara e validaÃ§Ã£o de CPF em tempo real ---
 const inputCPF = document.getElementById('cpf');
 inputCPF.addEventListener('input', function() {
     formatarCPF(this);
@@ -581,7 +611,7 @@ inputCPF.addEventListener('blur', function() {
         if (!this.nextElementSibling || !this.nextElementSibling.classList.contains('invalid-feedback')) {
             const erro = document.createElement('div');
             erro.className = 'invalid-feedback';
-            erro.textContent = 'CPF inválido!';
+            erro.textContent = 'CPF invÃ¡lido!';
             this.parentNode.appendChild(erro);
         }
     } else {
@@ -592,7 +622,7 @@ inputCPF.addEventListener('blur', function() {
     verificarCampos();
 });
 
-// --- Também chama a verificação inicial ---
+// --- TambÃ©m chama a verificaÃ§Ã£o inicial ---
 verificarCampos();
 </script>
 
@@ -645,9 +675,10 @@ verificarCampos();
 
 <script>
 	document.getElementById('cep').addEventListener('input', function() {
-		let cep = this.value.replace(/\D/g, ''); // Remove caracteres não numéricos
+		let cep = this.value.replace(/\D/g, ''); // Remove caracteres nÃ£o numÃ©ricos
 
-	if (cep.length === 8) { // Verifica se o CEP tem 8 dígitos ? fetch(`https://viacep.com.br/ws/${cep}/json/`)
+	if (cep.length === 8) { // Verifica se o CEP tem 8 dÃ­gitos
+		fetch(`https://viacep.com.br/ws/${cep}/json/`)
 			.then(response => response.json())
 			.then(data => {
 				if (!data.erro) {
@@ -655,7 +686,7 @@ verificarCampos();
 					document.getElementById('cidade').value = data.localidade;
 					document.getElementById('estado').value = data.uf;
 				} else {
-					alert("CEP não encontrado!");
+					alert("CEP nÃ£o encontrado!");
 				}
 			})
 			.catch(error => console.error('Erro ao buscar o CEP:', error));

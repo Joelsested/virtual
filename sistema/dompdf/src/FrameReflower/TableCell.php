@@ -1,8 +1,8 @@
 <?php
 /**
  * @package dompdf
- * @link ? http ://dompdf.github.com/
- * @author ?? Benj Carson <benjcarson@digitaljunkies.ca>
+ * @link    http://dompdf.github.com/
+ * @author  Benj Carson <benjcarson@digitaljunkies.ca>
  * @license http://www.gnu.org/copyleft/lesser.html GNU Lesser General Public License
  */
 namespace Dompdf\FrameReflower;
@@ -47,7 +47,7 @@ class TableCell extends Block
             $w += $col["used-width"];
         }
 
-        //FIXME
+        //FIXME?
         $h = $this->_frame->get_containing_block("h");
 
         $left_space = (float)$style->length_in_pt([$style->margin_left,

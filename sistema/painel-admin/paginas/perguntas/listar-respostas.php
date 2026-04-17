@@ -50,7 +50,7 @@ echo <<<HTML
 		<ul class="dropdown-menu" style="margin-left:-230px;">
 		<li>
 		<div class="notification_desc2">
-		<p>Confirmar Exclusão <a href="#" onclick="excluirResposta('{$id}')"><span class="text-danger">Sim</span></a></p>
+		<p>Confirmar Exclusão? <a href="#" onclick="excluirResposta('{$id}')"><span class="text-danger">Sim</span></a></p>
 		</div>
 		</li>										
 		</ul>
@@ -64,4 +64,4 @@ HTML;
 
 
 }
-?>
+?>		

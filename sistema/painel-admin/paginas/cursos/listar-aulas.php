@@ -106,7 +106,7 @@ echo <<<HTML
 		<ul class="dropdown-menu" style="margin-left:-230px;">
 		<li>
 		<div class="notification_desc2">
-		<p>Confirmar Exclusão <a href="#" onclick="excluirAula('{$id}')"><span class="text-danger">Sim</span></a></p>
+		<p>Confirmar Exclusão? <a href="#" onclick="excluirAula('{$id}')"><span class="text-danger">Sim</span></a></p>
 		</div>
 		</li>										
 		</ul>
@@ -211,7 +211,7 @@ echo <<<HTML
 		<ul class="dropdown-menu" style="margin-left:-230px;">
 		<li>
 		<div class="notification_desc2">
-		<p>Confirmar Exclusão <a href="#" onclick="excluirAula('{$id}')"><span class="text-danger">Sim</span></a></p>
+		<p>Confirmar Exclusão? <a href="#" onclick="excluirAula('{$id}')"><span class="text-danger">Sim</span></a></p>
 		</div>
 		</li>										
 		</ul>
@@ -291,8 +291,8 @@ $total_aulas = @count($res);
 		$('#nome_aula').val('');
 		$('#arquivo_2').val('');
 		$('#target_2').val('');
-		$('#num_aula').val('<=$ultima_aula>');
-		$('#aulas_aula').text('<=$total_aulas>');
+		$('#num_aula').val('<?=$ultima_aula?>');
+		$('#aulas_aula').text('<?=$total_aulas?>');
 		$('#target-video').attr('src', '');
 		
 	}
@@ -311,7 +311,8 @@ function excluirAula(id){
             if (mensagem.trim() == "Excluído com Sucesso") {                
                 listarAulas();                
             } else {
-                    $('#mensagem-excluir-aulas').addClass('text-danger') $('#mensagem-excluir-aulas').text(mensagem)
+                    $('#mensagem-excluir-aulas').addClass('text-danger')
+                    $('#mensagem-excluir-aulas').text(mensagem)
                 }
 
         },      
@@ -324,3 +325,4 @@ function excluirAula(id){
 
 
 </script>
+

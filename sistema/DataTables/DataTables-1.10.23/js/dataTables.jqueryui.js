@@ -119,8 +119,8 @@ DataTable.ext.renderer.header.jqueryui = function ( settings, cell, column, clas
 
 		cell
 			.removeClass( classes.sSortAsc +" "+classes.sSortDesc )
-			.addClass( columns[ colIdx ] == 'asc' 
-				classes.sSortAsc : columns[ colIdx ] == 'desc' 
+			.addClass( columns[ colIdx ] == 'asc' ?
+				classes.sSortAsc : columns[ colIdx ] == 'desc' ?
 					classes.sSortDesc :
 					column.sSortingClass
 			);
@@ -134,8 +134,8 @@ DataTable.ext.renderer.header.jqueryui = function ( settings, cell, column, clas
 				sort_prefix+'caret-1-n' +" "+
 				sort_prefix+'caret-1-s'
 			)
-			.addClass( columns[ colIdx ] == 'asc' 
-				sort_prefix+'triangle-1-n' : columns[ colIdx ] == 'desc' 
+			.addClass( columns[ colIdx ] == 'asc' ?
+				sort_prefix+'triangle-1-n' : columns[ colIdx ] == 'desc' ?
 					sort_prefix+'triangle-1-s' :
 					noSortAppliedClass
 			);

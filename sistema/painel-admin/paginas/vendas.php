@@ -126,7 +126,7 @@ $data_mes = $ano_atual."-".$mes_atual."-01";
 
 
 <script type="text/javascript">var pag = "<?=$pag?>"</script>
-<script src="js/ajax.js"></script>
+<script src="js/ajax.js?v=<?= @filemtime(__DIR__ . '/../js/ajax.js') ?>"></script>
 
 <script type="text/javascript">
 	function valorData(dataInicio, dataFinal){

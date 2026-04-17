@@ -26,7 +26,7 @@ foreach ($res as $matricula) {
     } elseif ($forma_pgto == 'BOLETO') {
         $stmt = $pdo->prepare("SELECT * FROM pagamentos_boleto WHERE id_matricula = :id_matricula");
     } else {
-        // Se nÃ£o houver forma de pagamento definida, tenta PIX primeiro
+        // Se não houver forma de pagamento definida, tenta PIX primeiro
         $stmt = $pdo->prepare("SELECT * FROM pagamentos_pix WHERE id_matricula = :id_matricula");
     }
 
@@ -34,7 +34,7 @@ foreach ($res as $matricula) {
     $stmt->execute();
     $pagamentos = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-    // Se nÃ£o encontrou em PIX e nÃ£o era especificamente PIX, tenta BOLETO
+    // Se não encontrou em PIX e não era especificamente PIX, tenta BOLETO
     if (empty($pagamentos) && $forma_pgto != 'PIX') {
         $stmt = $pdo->prepare("SELECT * FROM pagamentos_boleto WHERE id_matricula = :id_matricula");
         $stmt->bindParam(':id_matricula', $id_matricula);
@@ -43,7 +43,7 @@ foreach ($res as $matricula) {
     }
 
     $matricula['pagamentos'] = $pagamentos;
-    $matricula['tipo_pagamento'] = !empty($pagamentos)  (isset($pagamentos[0]['txid']) ? 'PIX' : 'BOLETO') : 'NENHUM';
+    $matricula['tipo_pagamento'] = !empty($pagamentos) ? (isset($pagamentos[0]['txid']) ? 'PIX' : 'BOLETO') : 'NENHUM';
 
     array_push($matriculas, $matricula);
 }
@@ -63,7 +63,7 @@ if ($total_reg > 0) {
     <th class="esc">Cupom</th> 	
 	<th class="esc">Data</th>
 	<th class="esc">Status</th> 	
-	<th>AÃ§Ãµes</th>
+	<th>Ações</th>
 	</tr> 
 	</thead> 
 	<tbody>
@@ -84,7 +84,7 @@ HTML;
         $boleto = $res[$i]['boleto'];
         $nota = $res[$i]['nota'];
 
-        // Verificar se existem pagamentos e definir variÃ¡veis com valores padrÃ£o
+        // Verificar se existem pagamentos e definir variáveis com valores padrão
         $qrcode = '';
         $texto_copia_cola = '';
         $valorC = '';
@@ -154,7 +154,7 @@ HTML;
         $res2 = $query2->fetchAll(PDO::FETCH_ASSOC);
         $aulas = @count($res2);
 
-        //verificar se o curso jÃ¡ foi avaliado
+        //verificar se o curso já foi avaliado
         $query2 = $pdo->query("SELECT * FROM avaliacoes where curso = '$curso' and aluno = '$id_usuario' ");
         $res2 = $query2->fetchAll(PDO::FETCH_ASSOC);
         $avaliacoes = @count($res2);
@@ -247,7 +247,7 @@ HTML;
         if (trim($forma_do_botao) === '') {
             $forma_do_botao = 'AGUARDANDO';
         }
-        $botao_alterar = $mostrar_alterar ?? "<button onclick=\"pagarCurso('{$forma_do_botao}', '{$status_mat}', '{$id_do_curso}', '{$id}', '{$nome_curso}');\" type=\"submit\" style=\"background-color: transparent;  border:none!important;\"><i class=\"fa fa-money text-danger\"></i><span class=\"text-danger\" style=\"margin-left:2px\">Alterar</span></button>" : '';
+        $botao_alterar = $mostrar_alterar ? "<button onclick=\"pagarCurso('{$forma_do_botao}', '{$status_mat}', '{$id_do_curso}', '{$id}', '{$nome_curso}');\" type=\"submit\" style=\"background-color: transparent;  border:none!important;\"><i class=\"fa fa-money text-danger\"></i><span class=\"text-danger\" style=\"margin-left:2px\">Alterar</span></button>" : '';
 
         if($valor_cupom > 0){
             $classe_cupom = 'ocultar';
@@ -275,16 +275,16 @@ HTML;
 		
 		<form method="post" action="../../{$url_do_curso}" target="_blank" class="hidden {$ocultar_pagar}">
 		    <span class="text-muted">{$nome_curso}</span>
-            <button  type="submit" style="background-color: transparent; ? border :none!important;">
+            <button  type="submit" style="background-color: transparent;  border:none!important;">
                 <i class="fa fa-money text-danger" ></i>
                 <span class="text-danger" style="margin-left:2px">Pagar</span>
             </button>
             <input type="hidden" name="painel_aluno" value="sim">
         </form>
         
-        <div ?? class="{$ocultar_pagar}">
+        <div  class="{$ocultar_pagar}">
          <span class="text-muted">{$nome_curso}</span>
-         <button onclick="pagarCurso('{$matriculas[$i]['forma_pgto']}', '{$id_do_curso}', '{$id}', '{$nome_curso}');"  type="submit" style="background-color: transparent; ? border :none!important;">
+         <button onclick="pagarCurso('{$matriculas[$i]['forma_pgto']}', '{$id_do_curso}', '{$id}', '{$nome_curso}');"  type="submit" style="background-color: transparent;  border:none!important;">
                 <i class="fa fa-money text-danger" ></i>
                 <span class="text-danger" style="margin-left:2px">Pagar</span>
             </button>
@@ -308,7 +308,7 @@ HTML;
         </td>
         <td class="{$ocultar_pagar} ">
         
-            <button class="{$classe_cupom}" onclick="aplicarCupom('{$id_do_curso}');"  type="submit" style="background-color: transparent; ? border :none!important;">
+            <button class="{$classe_cupom}" onclick="aplicarCupom('{$id_do_curso}');"  type="submit" style="background-color: transparent;  border:none!important;">
                 <i class="fa fa-money text-primary" ></i>
                 <span class="text-primary" style="margin-left:2px">Aplicar Cupom</span>
             </button>
@@ -335,7 +335,7 @@ HTML;
 
 		<ul class="dropdown-menu" style="margin-left:-230px;">
 		<li>
-		<div ?? id="listar-docfin_{$curso}">
+		<div  id="listar-docfin_{$curso}">
 		
 		</div>
 		</li>										
@@ -350,15 +350,14 @@ HTML;
 
 
 		<form method="post" action="../rel/rel_certificado.php" target="_blank" class="{$icones_finalizados}" style="display: inline-block;">
-			<input type="hidden" name="id_mat" value="{$id}">
 
 	<big>
 	
-		<!-- <a class='{$ocul}' href="https://{$url_sistema}/sistema/rel/avaliacoes_class2.phpid={$id_usuario}&id_curso={$curso}" target="_blank" title="AvaliaÃ§Ãµes do aluno">
+		<!-- <a class='{$ocul}' href="https://{$url_sistema}/sistema/rel/avaliacoes_class2.php?id={$id_usuario}&id_curso={$curso}" target="_blank" title="Avaliações do aluno">
 		<small><span class="fa fa-file-pdf-o text-danger" ></span></small>
 		</a> -->
 
-		<a class='{$ocul}' href="javascript:void(0);" onclick="modalAvaliacao('{$url_sistema}/sistema/rel/avaliacoes_class2.phpid={$id_usuario}&id_curso={$curso}')" title="AvaliaÃ§Ãµes do aluno">
+		<a class='{$ocul}' href="javascript:void(0);" onclick="modalAvaliacao('{$url_sistema}/sistema/rel/avaliacoes_class2.php?id={$id_usuario}&id_curso={$curso}')" title="Avaliações do aluno">
     	<small><span class="fa fa-file-pdf-o text-danger"></span></small>
 		</a>
 	
@@ -372,7 +371,7 @@ HTML;
 		</form>
 
 		
-		<big><a class="{$classe_quest}" href="#" onclick="questionario('{$curso}', '{$nome_curso}', '{$id}')" title="Iniciar QuestionÃ¡rio"><i class="fa fa-question-circle-o verde"></i></a></big>
+		<big><a class="{$classe_quest}" href="#" onclick="questionario('{$curso}', '{$nome_curso}', '{$id}')" title="Iniciar Questionário"><i class="fa fa-question-circle-o verde"></i></a></big>
 
 		<small><span class="text-danger {$classe_nota}">Nota: {$nota}%</span></small>
 
@@ -383,7 +382,7 @@ HTML;
 		<ul class="dropdown-menu" style="margin-left:-230px;">
 		<li>
 		<div class="notification_desc2">
-		<p>Confirmar ExclusÃ£o <a href="#" onclick="excluir('{$id}')"><span class="text-danger">Sim</span></a></p>
+		<p>Confirmar Exclusão? <a href="#" onclick="excluir('{$id}')"><span class="text-danger">Sim</span></a></p>
 		</div>
 		</li>										
 		</ul>
@@ -403,7 +402,7 @@ HTML;
 HTML;
 
 } else {
-    echo 'NÃ£o possui nenhum curso matriculado!';
+    echo 'Não possui nenhum curso matriculado!';
 }
 echo <<<HTML
 </small>
@@ -412,7 +411,7 @@ HTML;
 
 ?>
 <style>
-    /* CustomizaÃ§Ã£o do SweetAlert2 */
+    /* Customização do SweetAlert2 */
     .financial-modal .swal2-popup {
         background: linear-gradient(135deg, #1a2035 0%, #121625 100%);
         border-radius: 16px;
@@ -461,7 +460,7 @@ HTML;
         margin: 1.5rem auto 0.5rem;
     }
 
-    /* ConteÃºdo do Modal */
+    /* Conteúdo do Modal */
     .matricula-card {
         background-color: transparent;
         color: #fff;
@@ -636,7 +635,7 @@ HTML;
         margin-bottom: 0.5rem;
     }
 
-    /* AnimaÃ§Ãµes */
+    /* Animações */
     @keyframes fadeInUp {
         from {
             opacity: 0;
@@ -681,7 +680,7 @@ HTML;
                     <div class="col-sm-9 esquerda-mobile-input-botao">
                         <div class="form-group">
                             <input type="text" name="cupom" id="cupom" class="form-control" required
-                                placeholder="CÃ³digo do Cupom">
+                                placeholder="Código do Cupom">
                         </div>
                     </div>
                     <div class="col-sm-3 direita-mobile-input-botao" style="margin-left:-20px">
@@ -697,14 +696,14 @@ HTML;
             width: '600px'
         });
 
-        // Capturar envio do formulÃ¡rio dentro do Swal
+        // Capturar envio do formulário dentro do Swal
         document.getElementById('cupom-desconto').addEventListener('submit', function (e) {
             e.preventDefault();
 
             var formData = new FormData(this);
 
             $.ajax({
-                url: "<?php echo $url_sistema >ajax/cursos/cupom.php",
+                url: "<?php echo $url_sistema ?>ajax/cursos/cupom.php",
                 type: 'POST',
                 data: formData,
                 dataType: "text",
@@ -717,7 +716,7 @@ HTML;
                             icon: 'success',
                             title: 'Cupom aplicado!',
                             text: mensagem[0] + ' - Desconto ativado!',
-                            confirmButtonText: 'Atualizar pÃ¡gina'
+                            confirmButtonText: 'Atualizar página'
                         }).then(() => {
                             location.reload();
                         });
@@ -756,11 +755,11 @@ HTML;
         const showPaymentModal = () => {
             Swal.fire({
                 title: 'Escolha a forma de pagamento',
-                showDenyButton: true, // terceiro botÃ£o
+                showDenyButton: true, // terceiro botão
                 showCancelButton: true,
                 confirmButtonText: 'Boleto',
                 denyButtonText: 'Boleto Parcelado',
-                cancelButtonText: 'CartÃ£o de CrÃ©dito',
+                cancelButtonText: 'Cartão de Crédito',
                 allowOutsideClick: true,
                 allowEscapeKey: true
             }).then((result) => {
@@ -807,7 +806,7 @@ HTML;
 
         const updatePaymentMethod = (method, parcelas = 1) => {
             $.ajax({
-                url: '<?php echo $url_sistema >sistema/painel-aluno/paginas/cursos/set_payment_method.php',
+                url: '<?php echo $url_sistema ?>sistema/painel-aluno/paginas/cursos/set_payment_method.php',
                 type: 'POST',
                 data: { 
                     id_curso: id_curso, 
@@ -842,7 +841,7 @@ HTML;
                 Swal.fire({
                     icon: 'error',
                     title: 'Erro!',
-                    text: 'Falha na comunicaÃ§Ã£o com o servidor.'
+                    text: 'Falha na comunicação com o servidor.'
                 });
         });
         };
@@ -857,10 +856,13 @@ HTML;
         switch (forma_pgto) {
             case 'BOLETO':
             case 'BOLETO_PARCELADO':
-                window.location.href = '<?php echo $url_sistema >sistema/painel-aluno/index.php?pagina=parcelas';
+                window.location.href = '<?php echo $url_sistema ?>sistema/painel-aluno/index.php?pagina=parcelas';
                 break;
             case 'CARTAO_DE_CREDITO':
-                window.location.href = '<?php echo $url_sistema >sistema/painel-aluno/index.php?pagina=parcelas_cartao';
+                window.location.href = '<?php echo $url_sistema ?>sistema/painel-aluno/index.php?pagina=parcelas_cartao';
+                break;
+            case 'CARTAO_RECORRENTE':
+                window.location.href = '<?php echo $url_sistema ?>sistema/painel-aluno/index.php?pagina=parcelas_cartao';
                 break;
             default:
                 showPaymentModal();
@@ -874,7 +876,9 @@ HTML;
 <script type="text/javascript">
 
     $(document).ready(function () {
-        $('#tabela').DataTable({ ? "ordering" : false, ? "stateSave" : true,
+        $('#tabela').DataTable({
+            "ordering": false,
+            "stateSave": true,
         });
         $('#tabela_filter label input').focus();
     });
@@ -884,7 +888,7 @@ HTML;
         codigoInput.select();
         codigoInput.setSelectionRange(0, 99999);
         document.execCommand("copy");
-        alert("CÃ³digo PIX copiado para a Ã¡rea de transferÃªncia!");
+        alert("Código PIX copiado para a área de transferência!");
     }
 
 </script>

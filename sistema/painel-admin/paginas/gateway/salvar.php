@@ -12,7 +12,6 @@ $nome = $_POST['nome'];
 $chave_api = $_POST['chave_api'];
 $chave_secreta = $_POST['chave_secreta'];
 $webhook_url = $_POST['webhook_url'];
-$webhook_path = trim((string) ($_POST['webhook_path'] ?? ''));
 $acao = $_POST['acao'];
 $ativar = isset($_POST['ativar_gateway']) ? 'Sim' : 'Não';
 
@@ -50,7 +49,7 @@ if ($acao == 'inserir') {
         exit();
     }
 
-    $query = $pdo->prepare("INSERT INTO gateways (nome, chave_api, chave_secreta, webhook_url, webhook_path, ativo, data_cadastro) VALUES (:nome, :chave_api, :chave_secreta, :webhook_url, :webhook_path, :ativo, NOW())");
+    $query = $pdo->prepare("INSERT INTO gateways (nome, chave_api, chave_secreta, webhook_url, ativo, data_cadastro) VALUES (:nome, :chave_api, :chave_secreta, :webhook_url, :ativo, NOW())");
 
 } else {
     $id = @$_POST['id-gateway'];
@@ -89,7 +88,7 @@ if ($acao == 'inserir') {
         }
     }
 
-    $query = $pdo->prepare("UPDATE gateways SET nome = :nome, chave_api = :chave_api, chave_secreta = :chave_secreta, webhook_url = :webhook_url, webhook_path = :webhook_path, ativo = :ativo WHERE id = :id");
+    $query = $pdo->prepare("UPDATE gateways SET nome = :nome, chave_api = :chave_api, chave_secreta = :chave_secreta, webhook_url = :webhook_url, ativo = :ativo WHERE id = :id");
     $query->bindValue(":id", $id);
 }
 
@@ -97,7 +96,6 @@ $query->bindValue(":nome", $nome);
 $query->bindValue(":chave_api", $chave_api);
 $query->bindValue(":chave_secreta", $chave_secreta);
 $query->bindValue(":webhook_url", $webhook_url);
-$query->bindValue(":webhook_path", $webhook_path);
 $query->bindValue(":ativo", $ativar);
 
 $query->execute();

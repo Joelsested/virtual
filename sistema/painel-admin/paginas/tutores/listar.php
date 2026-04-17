@@ -77,7 +77,7 @@ HTML;
 		</td> 
 		<td class="esc">
 		{$telefone}
-		<a target="_blank" href="https://api.whatsapp.com/send1=pt_BR&phone=55{$telefone}" title="Chamar no Whatsapp"><i class="fa fa-whatsapp verde"></i></a>
+		<a target="_blank" href="https://api.whatsapp.com/send?1=pt_BR&phone=55{$telefone}" title="Chamar no Whatsapp"><i class="fa fa-whatsapp verde"></i></a>
 		</td>
 		<td class="esc">{$email}</td>		
 		<td class="esc">{$dataF}</td>
@@ -95,7 +95,7 @@ HTML;
 		<ul class="dropdown-menu" style="margin-left:-230px;">
 		<li>
 		<div class="notification_desc2">
-		<p>Confirmar Exclusão <a href="#" onclick="excluir('{$id}')"><span class="text-danger">Sim</span></a></p>
+		<p>Confirmar Exclusão? <a href="#" onclick="excluir('{$id}')"><span class="text-danger">Sim</span></a></p>
 		</div>
 		</li>										
 		</ul>
@@ -132,7 +132,9 @@ HTML;
 
 <script type="text/javascript">
 	$(document).ready(function() {
-		$('#tabela').DataTable({ ? "ordering" : false, ? "stateSave" : true,
+		$('#tabela').DataTable({
+			"ordering": false,
+			"stateSave": true,
 		});
 		$('#tabela_filter label input').focus();
 	});

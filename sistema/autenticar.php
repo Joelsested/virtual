@@ -1,29 +1,13 @@
-<?php
-$host = $_SERVER['HTTP_HOST'] ?? '';
-$scheme = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') || ($_SERVER['SERVER_PORT'] ?? 0) == 443 ? 'https' : 'http';
-$scriptDir = dirname($_SERVER['SCRIPT_NAME'] ?? '');
-$basePath = preg_replace('#/(virtual|sestedcursos)/sistema$#', '', $scriptDir);
-$basePath = rtrim($basePath, '/');
-$loginUrl = "{$scheme}://{$host}{$basePath}/provao/sistema/index.php";
-if (!headers_sent()) { ? header('Location: ' . $loginUrl);
-}
-exit();
+﻿<?php
+require_once(__DIR__ . '/../config/env.php');
+require_once(__DIR__ . '/../config/csrf.php');
 
 session_cache_limiter('private');
-$cache_limiter = session_cache_limiter();
-
-/* define o prazo do cache em 120 minutos */
 session_cache_expire(120);
-$cache_expire = session_cache_expire();
-/* inicia a sessÃ£o */
-$cookieParams = session_get_cookie_params();
-$isSecure = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') || ($_SERVER['SERVER_PORT'] ?? 0) == 443;
-session_set_cookie_params(['lifetime' => 0, 'path' => $cookieParams['path'], 'domain' => $cookieParams['domain'], 'secure' => $isSecure, 'httponly' => true, 'samesite' => 'Lax',
-]);
-@session_start();
 
-require_once('conexao.php');
-require_once(__DIR__ . '/../helpers.php');
+csrf_start();
+
+require_once('conexao.php');require_once(__DIR__ . '/../helpers.php');
 
 $usuario = trim($_POST['usuario'] ?? '');
 $senha = trim($_POST['senha'] ?? '');
@@ -34,11 +18,18 @@ if ($usuario === '' || $senha === '') {
 	exit();
 }
 
-function fetchBirth(PDO $pdo, string $nivel, $idPessoa) : string {
+function fetchBirth(PDO $pdo, string $nivel, $idPessoa): string {
 	if (empty($idPessoa)) {
 		return '';
 	}
-	$map = ['Aluno' => 'alunos', 'Vendedor' => 'vendedores', 'Tutor' => 'tutores', 'Parceiro' => 'parceiros', 'Secretario' => 'secretarios', 'Tesoureiro' => 'tesoureiros', 'Professor' => 'professores',
+	$map = [
+		'Aluno' => 'alunos',
+		'Vendedor' => 'vendedores',
+		'Tutor' => 'tutores',
+		'Parceiro' => 'parceiros',
+		'Secretario' => 'secretarios',
+		'Tesoureiro' => 'tesoureiros',
+		'Professor' => 'professores',
 	];
 	if (!isset($map[$nivel])) {
 		return '';
@@ -171,4 +162,4 @@ if ($_SESSION['nivel'] == 'Assessor') {
 if ($_SESSION['nivel'] == 'Vendedor') {
 	echo "<script>window.location='painel-admin'</script>";
 }
-?>
+ ?>

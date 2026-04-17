@@ -1,8 +1,8 @@
 <?php
 /**
  * @package php-font-lib
- * @link ? https ://github.com/PhenX/php-font-lib
- * @author ?? Fabien MÃ©nager <fabien.menager@gmail.com>
+ * @link    https://github.com/PhenX/php-font-lib
+ * @author  Fabien Ménager <fabien.menager@gmail.com>
  * @license http://www.gnu.org/copyleft/lesser.html GNU Lesser General Public License
  */
 
@@ -114,7 +114,10 @@ class AdobeFontMetrics {
             $hmtx[$g] = $hmtx[0];
           }
 
-          $this->addMetric(array( ?? "C"  => ($code > 255  -1 : $code), "WX" => $font->normalizeFUnit($hmtx[$g][0]), "N"  => $name,
+          $this->addMetric(array(
+            "C"  => ($code > 255 ? -1 : $code),
+            "WX" => $font->normalizeFUnit($hmtx[$g][0]),
+            "N"  => $name,
           ));
         }
       }
@@ -124,7 +127,11 @@ class AdobeFontMetrics {
             $hmtx[$g] = $hmtx[0];
           }
 
-          $this->addMetric(array( ?? "U"  => $c, "WX" => $font->normalizeFUnit($hmtx[$g][0]), "N"  => (isset($names[$g]) ?? $names[$g] ?: sprintf("uni%04x", $c)), "G"  => $g,
+          $this->addMetric(array(
+            "U"  => $c,
+            "WX" => $font->normalizeFUnit($hmtx[$g][0]),
+            "N"  => (isset($names[$g]) ? $names[$g] : sprintf("uni%04x", $c)),
+            "G"  => $g,
           ));
         }
       }
@@ -132,7 +139,7 @@ class AdobeFontMetrics {
       $this->endSection("CharMetrics");
 
       $kern = $font->getData("kern", "subtable");
-      $tree = is_array($kern) ?? $kern["tree"] ?: null;
+      $tree = is_array($kern) ? $kern["tree"] : null;
 
       if (!$encoding && is_array($tree)) {
         $this->startSection("KernData");

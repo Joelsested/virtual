@@ -7,7 +7,7 @@ if(@$_SESSION['nivel'] != 'Administrador' and @$_SESSION['nivel'] != 'Tesoureiro
 	echo "<script>window.location='../index.php'</script>";
 	exit();
 }
-?>
+ ?>
 
 
   <button onclick="inserir()" type="button" class="btn btn-primary btn-flat btn-pri"><i class="fa fa-plus" aria-hidden="true"></i> Novo Tesoureiro</button>
@@ -83,7 +83,7 @@ if(@$_SESSION['nivel'] != 'Administrador' and @$_SESSION['nivel'] != 'Tesoureiro
 					<div class="col-md-8">
 						<div class="form-group"> 
 							<label>Endereço</label> 
-							<input type="text" class="form-control" name="endereco" id="endereco" placeholder="Rua X NÍºmero 20 Bairro X"> 
+							<input type="text" class="form-control" name="endereco" id="endereco" placeholder="Rua X Número 20 Bairro X"> 
 						</div>
 					</div>		
 						
@@ -141,7 +141,7 @@ if(@$_SESSION['nivel'] != 'Administrador' and @$_SESSION['nivel'] != 'Tesoureiro
 						</div>
 						<div class="col-md-2">
 							<div id="divImg">
-								<img src="img/perfil/sem-perfil.jpg" ?? width="100px" id="target">									
+								<img src="img/perfil/sem-perfil.jpg"  width="100px" id="target">									
 							</div>
 						</div>
 
@@ -191,7 +191,7 @@ if(@$_SESSION['nivel'] != 'Administrador' and @$_SESSION['nivel'] != 'Tesoureiro
 							</div>
 							<div class="col-md-4" style="margin-top:-10px">	
 								<div id="divImgArquivos">
-									<img src="images/arquivos/sem-foto.png" ?? width="60px" id="target-arquivos">									
+									<img src="images/arquivos/sem-foto.png"  width="60px" id="target-arquivos">									
 								</div>					
 							</div>
 
@@ -202,7 +202,7 @@ if(@$_SESSION['nivel'] != 'Administrador' and @$_SESSION['nivel'] != 'Tesoureiro
 
 						<div class="row" style="margin-top:-40px">
 							<div class="col-md-8">
-								<input type="text" class="form-control" name="nome_arq" ?? id="nome_arq" placeholder="Nome do Arquivo * " required>
+								<input type="text" class="form-control" name="nome_arq"  id="nome_arq" placeholder="Nome do Arquivo * " required>
 							</div>
 
 							<div class="col-md-4">										 
@@ -217,7 +217,7 @@ if(@$_SESSION['nivel'] != 'Administrador' and @$_SESSION['nivel'] != 'Tesoureiro
 						<br>
 						<small><div align="center" id="mensagem_arquivo"></div></small>
 
-						<input type="hidden" class="form-control" name="id_arquivo" ?? id="id_arquivo">
+						<input type="hidden" class="form-control" name="id_arquivo"  id="id_arquivo">
 
 
 					</div>
@@ -266,6 +266,11 @@ if(@$_SESSION['nivel'] != 'Administrador' and @$_SESSION['nivel'] != 'Tesoureiro
 						<div class="col-md-8">							
 							<span><b>Email: </b></span>
 							<span id="email_mostrar"></span>							
+						</div>
+
+						<div class="col-md-4">							
+							<span><b>Senha: </b></span>
+							<span id="senha_mostrar"></span>							
 						</div>
 						
 					</div>				
@@ -323,7 +328,7 @@ if(@$_SESSION['nivel'] != 'Administrador' and @$_SESSION['nivel'] != 'Tesoureiro
 
 					<div class="row">
 						<div class="col-md-12" align="center">		
-							<img ?? width="200px" id="target_mostrar">	
+							<img  width="200px" id="target_mostrar">	
 						</div>
 					</div>
 					
@@ -339,8 +344,8 @@ if(@$_SESSION['nivel'] != 'Administrador' and @$_SESSION['nivel'] != 'Tesoureiro
 
 
 
-<script type="text/javascript">var pag = "<=$pag>"</script>
-<script src="js/ajax.js"></script>
+<script type="text/javascript">var pag = "<?=$pag?>"</script>
+<script src="js/ajax.js?v=<?= @filemtime(__DIR__ . '/../js/ajax.js') ?>"></script>
 
 
 <script type="text/javascript">
@@ -382,3 +387,4 @@ if(@$_SESSION['nivel'] != 'Administrador' and @$_SESSION['nivel'] != 'Tesoureiro
 
 	}
 </script>
+

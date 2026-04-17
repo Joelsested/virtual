@@ -463,12 +463,12 @@ if ( typeof Object.create !== "function" ) {
 						"class" : "owl-page"
 						});
 					var paginationButtonInner = $("<span></span>",{
-						"text": base.options.paginationNumbers === true  counter : "",
-						"class": base.options.paginationNumbers === true  "owl-numbers" : ""
+						"text": base.options.paginationNumbers === true ? counter : "",
+						"class": base.options.paginationNumbers === true ? "owl-numbers" : ""
 					});
 					paginationButton.append(paginationButtonInner);
 
-					paginationButton.data("owl-page",lastPage === i  lastItem : i);
+					paginationButton.data("owl-page",lastPage === i ? lastItem : i);
 					paginationButton.data("owl-roundPages",counter);
 
 					base.paginationWrapper.append(paginationButton);
@@ -541,8 +541,8 @@ if ( typeof Object.create !== "function" ) {
 				return false;
 			}
 
-			base.currentItem += base.options.scrollPerPage === true  base.options.items : 1;
-			if(base.currentItem > base.maximumItem + (base.options.scrollPerPage == true  (base.options.items - 1) : 0)){
+			base.currentItem += base.options.scrollPerPage === true ? base.options.items : 1;
+			if(base.currentItem > base.maximumItem + (base.options.scrollPerPage == true ? (base.options.items - 1) : 0)){
 				if(base.options.rewindNav === true){
 					base.currentItem = 0;
 					speed = "rewind";
@@ -564,7 +564,7 @@ if ( typeof Object.create !== "function" ) {
 			if(base.options.scrollPerPage === true && base.currentItem > 0 && base.currentItem < base.options.items){
 				base.currentItem = 0
 			} else {
-				base.currentItem -= base.options.scrollPerPage === true  base.options.items : 1;
+				base.currentItem -= base.options.scrollPerPage === true ? base.options.items : 1;
 			}
 			if(base.currentItem < 0){
 				if(base.options.rewindNav === true){
@@ -948,7 +948,7 @@ if ( typeof Object.create !== "function" ) {
 				}
 
 				if(base.newRelativeX > 8 || base.newRelativeX < -8 && base.browser.isTouch === true){
-					event.preventDefault  event.preventDefault() : event.returnValue = false;
+					event.preventDefault ? event.preventDefault() : event.returnValue = false;
 					locals.sliding = true;
 				}
 
@@ -1024,7 +1024,7 @@ if ( typeof Object.create !== "function" ) {
 		},
 		closestItem : function(){
 			var base = this,
-				array = base.options.scrollPerPage === true  base.pagesInArray : base.positionsInArray,
+				array = base.options.scrollPerPage === true ? base.pagesInArray : base.positionsInArray,
 				goal = base.newPosX,
 				closest = null;
 
@@ -1162,7 +1162,7 @@ if ( typeof Object.create !== "function" ) {
 			function showImage(){
 				$item.data("owl-loaded", "loaded").removeClass("loading");
 				$lazyImg.removeAttr("data-src");
-				base.options.lazyEffect === "fade"  $lazyImg.fadeIn(400) : $lazyImg.show();
+				base.options.lazyEffect === "fade" ? $lazyImg.fadeIn(400) : $lazyImg.show();
 				if(typeof base.options.afterLazyLoad === "function") {
 					base.options.afterLazyLoad.apply(this,[base.$elem]);
 				}

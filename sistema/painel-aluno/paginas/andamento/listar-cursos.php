@@ -191,7 +191,7 @@ echo <<<HTML
 
 		<span class="text-muted">{$nome_curso}</span>
 							
-									<button  type="submit" style="background-color: transparent; ? border :none!important;"><i class="fa fa-money text-danger" ></i><span class="text-danger" style="margin-left:2px">Pagar</span>
+									<button  type="submit" style="background-color: transparent;  border:none!important;"><i class="fa fa-money text-danger" ></i><span class="text-danger" style="margin-left:2px">Pagar</span>
 									</button>
 									<input type="hidden" name="painel_aluno" value="sim">
 									
@@ -220,15 +220,14 @@ echo <<<HTML
 		<ul class="dropdown-menu" style="margin-left:-230px;">
 		<li>
 		<div class="notification_desc2">
-		<p>Confirmar Exclusão <a href="#" onclick="excluir('{$id}')"><span class="text-danger">Sim</span></a></p>
+		<p>Confirmar Exclusão? <a href="#" onclick="excluir('{$id}')"><span class="text-danger">Sim</span></a></p>
 		</div>
 		</li>										
 		</ul>
 		</li>
 
 		<form method="post" action="../rel/rel_certificado.php" target="_blank" class="{$icones_finalizados}">		
-			<input type="hidden" name="id_mat" value="{$id}">
-		<button  type="submit" style="background-color: transparent; ? border :none!important;"><img src="img/certificado.png" width="30">
+		<button  type="submit" style="background-color: transparent;  border:none!important;"><img src="img/certificado.png" width="30">
 		</button>
 		<input type="hidden" name="id_mat" value="{$id}">
 
@@ -270,7 +269,9 @@ HTML;
 <script type="text/javascript">
 
 	$(document).ready( function () {
-		$('#tabela').DataTable({ ? "ordering" : false, ? "stateSave" : true,
+		$('#tabela').DataTable({
+			"ordering": false,
+			"stateSave": true,
 		});
 		$('#tabela_filter label input').focus();
 	} );
@@ -279,3 +280,4 @@ HTML;
 
 
 </script>
+

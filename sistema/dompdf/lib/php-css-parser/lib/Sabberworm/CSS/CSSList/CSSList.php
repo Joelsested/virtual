@@ -140,7 +140,8 @@ abstract class CSSList implements Renderable, Commentable {
 			}
 			return new CSSNamespace($mUrl, $sPrefix, $iIdentifierLineNum);
 		} else {
-			//Unknown other at rule (font-face or such) ?? $sArgs = trim($oParserState->consumeUntil('{', false, true));
+			//Unknown other at rule (font-face or such)
+			$sArgs = trim($oParserState->consumeUntil('{', false, true));
 			if (substr_count($sArgs, "(") != substr_count($sArgs, ")")) {
 				if($oParserState->getSettings()->bLenientParsing) {
 					return NULL;
@@ -148,7 +149,9 @@ abstract class CSSList implements Renderable, Commentable {
 					throw new SourceException("Unmatched brace count in media query", $oParserState->currentLine());
 				}
 			}
-			$bUseRuleSet = true; ? foreach(explode('/', AtRule::BLOCK_RULES) as $sBlockRuleName) { ? if(self::identifierIs($sIdentifier, $sBlockRuleName)) {
+			$bUseRuleSet = true;
+			foreach(explode('/', AtRule::BLOCK_RULES) as $sBlockRuleName) {
+				if(self::identifierIs($sIdentifier, $sBlockRuleName)) {
 					$bUseRuleSet = false;
 					break;
 				}
@@ -168,7 +171,8 @@ abstract class CSSList implements Renderable, Commentable {
 	 * Tests an identifier for a given value. Since identifiers are all keywords, they can be vendor-prefixed. We need to check for these versions too.
 	 */
 	private static function identifierIs($sIdentifier, $sMatch) {
-		return (strcasecmp($sIdentifier, $sMatch) === 0) : preg_match("/^(-\\w+-)$sMatch$/i", $sIdentifier) === 1;
+		return (strcasecmp($sIdentifier, $sMatch) === 0)
+			?: preg_match("/^(-\\w+-)?$sMatch$/i", $sIdentifier) === 1;
 	}
 
 
@@ -200,8 +204,8 @@ abstract class CSSList implements Renderable, Commentable {
 	/**
 	 * Splice the list of contents.
 	 *
-	 * @param int ?? $iOffset      Offset.
-	 * @param int ?? $iLength      Length. Optional.
+	 * @param int       $iOffset      Offset.
+	 * @param int       $iLength      Length. Optional.
 	 * @param RuleSet[] $mReplacement Replacement. Optional.
 	 */
 	public function splice($iOffset, $iLength = null, $mReplacement = null) {

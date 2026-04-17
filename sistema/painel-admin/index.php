@@ -77,6 +77,7 @@ if (@$_SESSION['nivel'] == 'Administrador' or @$_SESSION['nivel'] == 'Secretario
   $ocultar = 'ocultar';
 }
 
+$ocultar2 = '';
 
 if (@$_SESSION['nivel'] == 'Secretario') {
   $ocultar2 = 'ocultar';
@@ -630,8 +631,6 @@ $_SESSION['last_activity'] = time();
 
                   <li><a href="index.php?pagina=Movimentações"><i class="fa fa-angle-right"></i>
                       Movimentações</a></li>
-                  <li><a href="index.php?pagina=asaas_comissoes"><i class="fa fa-angle-right"></i>
-                      Comissões Fixas</a></li>
 </ul>
               </li>
 
@@ -640,14 +639,14 @@ $_SESSION['last_activity'] = time();
                 <li class="treeview li-menu <?= in_array($pagina, ['relatorio_alunos_responsavel', 'relatorio_financeiro_aluno']) ? 'active' : '' ?>">
                   <a href="#">
                     <i class="fa fa-file-text-o"></i>
-                    <span class="text-menu">Relatorios</span>
+                    <span class="text-menu">Relatórios</span>
                     <i class="fa fa-angle-left pull-right"></i>
                   </a>
                   <ul class="treeview-menu">
                     <li><a href="index.php?pagina=relatorio_alunos_responsavel"><i class="fa fa-angle-right"></i>
-                        Relatorio de Alunos por Responsavel</a></li>
+                        Relatório de Alunos por Responsável</a></li>
                     <li><a href="index.php?pagina=relatorio_financeiro_aluno"><i class="fa fa-angle-right"></i>
-                        Relatorio Financeiro de Aluno</a></li>
+                        Relatório Financeiro de Aluno</a></li>
                   </ul>
                 </li>
               <?php } ?>
@@ -677,7 +676,7 @@ $_SESSION['last_activity'] = time();
                         Relatórios de Alunos</a></li>
 
                     <li><a href="index.php?pagina=relatorio_alunos_responsavel"><i class="fa fa-angle-right"></i>
-                        Relatório de Alunos por Responsavel</a></li>
+                        Relatório de Alunos por Responsável</a></li>
 
                     <?php if ($mostrar_relatorios_financeiros_completo) { ?>
                       <li><a href="index.php?pagina=relatorio_alunos_efi"><i class="fa fa-angle-right"></i>
@@ -730,7 +729,7 @@ $_SESSION['last_activity'] = time();
               </li>
 
               <li class="treeview li-menu <?php echo $ocultar ?> <?php echo $ocultar2 ?>">
-                <a href="index.php?pagina=gateway">
+                <a href="index.php?pagina=gateway_efy">
                   <i class="fa fa-money"></i> <span class="text-menu">Gateway</span>
                 </a>
               </li>
@@ -1579,7 +1578,7 @@ $_SESSION['last_activity'] = time();
                 <div class="row">
                   <div class="col-md-6">
                     <div class="form-group">
-                      <label><i class="fa fa-film mr-1"></i> Url Vídeo Página Sobre</label>
+                      <label><i class="fa fa-film mr-1"></i> URL Vídeo Página Sobre</label>
                       <input type="text" class="form-control" id="video_sobre" name="video_sobre"
                         value="<?php echo $video_sobre ?>">
                     </div>
@@ -1597,9 +1596,9 @@ $_SESSION['last_activity'] = time();
                   </div>
                   <div class="col-md-3">
                     <div class="form-group">
-                      <label><i class="fa fa-credit-card mr-1"></i> Api Cartão</label>
+                      <label><i class="fa fa-credit-card mr-1"></i> API Cartão</label>
                       <select class="form-control" name="api_cartao" id="api_cartao" value="<?php echo $api_cartao ?>">
-                        <option value="Api" <?php if ($api_cartao == 'Api') { ?> selected <?php } ?>>Api Site (Seguro)
+                        <option value="Api" <?php if ($api_cartao == 'Api') { ?> selected <?php } ?>>API Site (Seguro)
                         </option>
                         <option value="Direta" <?php if ($api_cartao == 'Direta') { ?> selected <?php } ?>>Api
                           Transparente</option>
@@ -1779,9 +1778,9 @@ $_SESSION['last_activity'] = time();
                 <select class="form-control sel13" name="pago" style="width:100%;">
                   <option value="">Todas</option>
                   <option value="Pix">Pix</option>
-                  <option value="MP">MP</option>
+                  <option value="Cartao de Credito">Cartao de Credito (EFY)</option>
                   <option value="Boleto">Boleto</option>
-                  <option value="Paypal">Paypal</option>
+                  <option value="Cartao Recorrente">Cartao Recorrente (EFY)</option>
                 </select>
               </div>
             </div>
@@ -2393,7 +2392,7 @@ function isActiveMenu($href)
   $currentPage = basename($currentPath); // ex: index.php
   $currentQuery = $_SERVER['QUERY_STRING']; // ex: pagina=Matrículas
 
-  // Checa se href é exatamente igual a URI
+  // Checa se href é exatamente igual à URI
   if ($href === $currentPage || strpos($currentUrl, $href) !== false) {
     return 'active';
   }
