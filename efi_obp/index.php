@@ -953,7 +953,7 @@ try {
             // 'nascimento' => $res2[0]['nascimento'] ?? '27/10/1995',
             'vencimento' => $res2[0]['vencimento'] ?? '+7 days',
             'repasses' => $fixos_wallet_ids,
-            'notification_url' => 'https://sested-eja.com/efi_webhook_boleto.php'
+            'notification_url' => 'https://sestedcursosvirtual.com/efi_webhook_boleto.php'
         ];
 
 

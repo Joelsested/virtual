@@ -5,7 +5,7 @@ require_once __DIR__ . '/../config/csrf.php';
 
 $method = $_SERVER['REQUEST_METHOD'] ?? 'GET';
 
-$allowedOrigins = ['https://www.sested-eja.com'];
+$allowedOrigins = ['https://sestedcursosvirtual.com', 'https://www.sestedcursosvirtual.com'];
 $origin = $_SERVER['HTTP_ORIGIN'] ?? '';
 if ($origin !== '' && in_array($origin, $allowedOrigins, true)) {
 	header('Access-Control-Allow-Origin: ' . $origin);

@@ -340,7 +340,7 @@ function montarDadosBoleto(PDO $pdo, int $idMatricula, string $vencimento): arra
         'telefone' => $telefone_aluno ?: '69999694538',
         'vencimento' => $vencimento,
         'repasses' => $repasses,
-        'notification_url' => montarUrlWebhook('https://www.sested-eja.com/efi_webhook_boleto.php')
+        'notification_url' => montarUrlWebhook('https://sestedcursosvirtual.com/efi_webhook_boleto.php')
     ];
 }
 
@@ -381,7 +381,7 @@ try {
                 $payloadArray = json_decode($payload, true);
                 if (is_array($payloadArray)) {
                     $payloadArray['vencimento'] = $vencimento;
-                    $payloadArray['notification_url'] = montarUrlWebhook('https://www.sested-eja.com/efi_webhook_boleto_parcelado.php');
+                    $payloadArray['notification_url'] = montarUrlWebhook('https://sestedcursosvirtual.com/efi_webhook_boleto_parcelado.php');
                     $payload = json_encode($payloadArray, JSON_UNESCAPED_UNICODE);
                 }
                 $stmtPayload = $pdo->prepare("UPDATE parcelas_geradas_por_boleto SET payload = :payload WHERE id = :id");
@@ -402,7 +402,7 @@ try {
                 exit();
             }
             $payloadArray['vencimento'] = $vencimento;
-            $payloadArray['notification_url'] = montarUrlWebhook('https://www.sested-eja.com/efi_webhook_boleto_parcelado.php');
+            $payloadArray['notification_url'] = montarUrlWebhook('https://sestedcursosvirtual.com/efi_webhook_boleto_parcelado.php');
             $payloadAtualizado = json_encode($payloadArray, JSON_UNESCAPED_UNICODE);
 
             $resultado = $boletoPayment->createBoletoCharge($payloadArray);
