@@ -110,6 +110,21 @@ function buscarParcelaDoAluno(PDO $pdo, int $idParcela, int $idMatricula, int $i
     return $row ?: null;
 }
 
+function calcularCentavosParcela(float $valorParcela, array $payload): int
+{
+    $valorCentavos = (int) round($valorParcela * 100);
+    if ($valorCentavos > 0) {
+        return $valorCentavos;
+    }
+
+    $valorPayload = $payload['valor'] ?? 0;
+    if (is_numeric($valorPayload)) {
+        return (int) round((float) $valorPayload);
+    }
+
+    return 0;
+}
+
 function atualizarMatriculaFormaPgto(PDO $pdo, int $idMatricula, int $idAluno, string $formaPgto, string $linkBoleto): void
 {
     $stmt = $pdo->prepare("UPDATE matriculas SET id_asaas = :id_asaas, forma_pgto = :forma_pgto WHERE id = :id AND aluno = :aluno");
@@ -164,6 +179,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['id_parcela'], $_POST[
     $payload['email'] = $aluno['email'] ?? ($payload['email'] ?? ($usuario['usuario'] ?? ''));
     $payload['cpf'] = str_replace(['.', '-'], '', (string) ($aluno['cpf'] ?? ($payload['cpf'] ?? '')));
     $payload['telefone'] = $telefone_normalizado;
+    $valorParcelaCentavos = calcularCentavosParcela($valor_parcela, $payload);
+    if ($valorParcelaCentavos > 0) {
+        $payload['valor'] = $valorParcelaCentavos;
+    }
 
     try {
         $boletoPayment = new EFIBoletoPayment(
@@ -178,22 +197,29 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['id_parcela'], $_POST[
                 $consulta = $boletoPayment->consultarCobranca($chargeExistente);
                 $dadosCobranca = $consulta['data'] ?? [];
                 $dadosBillet = $dadosCobranca['payment']['banking_billet'] ?? [];
+                $totalCobrancaCentavos = (int) ($dadosCobranca['total'] ?? 0);
 
                 $statusAtual = strtolower((string) ($dadosCobranca['status'] ?? ''));
                 $linkAtual = (string) ($dadosBillet['billet_link'] ?? ($dadosBillet['link'] ?? ($parcela['id_asaas'] ?? '')));
                 $codigoAtual = (string) ($dadosBillet['line'] ?? ($dadosBillet['barcode'] ?? ($parcela['transaction_receipt_url'] ?? '')));
                 $situacaoAtual = ($statusAtual === 'paid') ? 1 : (int) ($parcela['situacao'] ?? 0);
+                $valorDivergente = $valorParcelaCentavos > 0 && $totalCobrancaCentavos > 0 && abs($totalCobrancaCentavos - $valorParcelaCentavos) > 1;
 
-                $stmtUpParcela = $pdo->prepare('UPDATE parcelas_geradas_por_boleto SET id_asaas = :id_asaas, transaction_receipt_url = :transaction_receipt_url, situacao = :situacao WHERE id = :id');
-                $stmtUpParcela->execute([
-                    ':id_asaas' => $linkAtual,
-                    ':transaction_receipt_url' => $codigoAtual,
-                    ':situacao' => $situacaoAtual,
-                    ':id' => $id_parcela,
-                ]);
+                // Se o valor da cobranca existente estiver divergente da parcela, gera uma nova cobranca.
+                if ($valorDivergente && $statusAtual !== 'paid') {
+                    $chargeExistente = '';
+                } else {
+                    $stmtUpParcela = $pdo->prepare('UPDATE parcelas_geradas_por_boleto SET id_asaas = :id_asaas, transaction_receipt_url = :transaction_receipt_url, situacao = :situacao WHERE id = :id');
+                    $stmtUpParcela->execute([
+                        ':id_asaas' => $linkAtual,
+                        ':transaction_receipt_url' => $codigoAtual,
+                        ':situacao' => $situacaoAtual,
+                        ':id' => $id_parcela,
+                    ]);
 
-                renderBoletoHtml($valor_parcela, $codigoAtual, $linkAtual);
-                exit;
+                    renderBoletoHtml($valor_parcela, $codigoAtual, $linkAtual);
+                    exit;
+                }
             } catch (Throwable $e) {
             }
         }

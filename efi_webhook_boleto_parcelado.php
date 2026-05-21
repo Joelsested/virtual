@@ -1,21 +1,21 @@
 <?php
 header('Content-Type: application/json');
 
-// Incluir arquivos necessários
+// Incluir arquivos necessÃƒÆ’Ã‚Â¡rios
 require_once("sistema/conexao.php");
 require_once 'efi/boleto.php';
 
-// Configurações
+// ConfiguraÃƒÆ’Ã‚Â§ÃƒÆ’Ã‚Âµes
 $options = require_once 'efi/options.php';
 $config = [
     'client_id' => $options['clientId'],
     'client_secret' => $options['clientSecret'],
     'certificate_path' => $options['certificate'], // Apenas para PIX
     'chave_pix' => env('EFI_PIX_KEY', $chave_pix ?? ''), // Sua chave PIX
-    'sandbox' => $options['sandbox'] // true para teste, false para produção
+    'sandbox' => $options['sandbox'] // true para teste, false para produÃƒÆ’Ã‚Â§ÃƒÆ’Ã‚Â£o
 ];
 
-// Função para log de mensagens
+// FunÃƒÆ’Ã‚Â§ÃƒÆ’Ã‚Â£o para log de mensagens
 function logMessage($message, $errorLogFile = null)
 {
     $timestamp = date('Y-m-d H:i:s');
@@ -28,7 +28,7 @@ function logMessage($message, $errorLogFile = null)
     }
 }
 
-// Função para log de webhook
+// FunÃƒÆ’Ã‚Â§ÃƒÆ’Ã‚Â£o para log de webhook
 function logWebhook($pdo, $eventType, $payload, $receivedAt)
 {
     try {
@@ -41,23 +41,60 @@ function logWebhook($pdo, $eventType, $payload, $receivedAt)
     }
 }
 
-// Função para atualizar status do pagamento boleto
+function tabelaTemColuna(PDO $pdo, string $tabela, string $coluna): bool
+{
+    static $cache = [];
+    $chave = $tabela . '.' . $coluna;
+    if (array_key_exists($chave, $cache)) {
+        return $cache[$chave];
+    }
+
+    try {
+        $sql = "SELECT COUNT(*) FROM information_schema.COLUMNS
+                WHERE TABLE_SCHEMA = DATABASE()
+                  AND TABLE_NAME = :tabela
+                  AND COLUMN_NAME = :coluna";
+        $stmt = $pdo->prepare($sql);
+        $stmt->execute([
+            ':tabela' => $tabela,
+            ':coluna' => $coluna
+        ]);
+        $cache[$chave] = ((int) $stmt->fetchColumn()) > 0;
+        return $cache[$chave];
+    } catch (PDOException $e) {
+        error_log("Erro ao verificar coluna {$chave}: " . $e->getMessage());
+        $cache[$chave] = false;
+        return false;
+    }
+}
+
+// FunÃ§Ã£o para atualizar status do pagamento boleto
 function atualizarStatusPagamentoBoleto($pdo, $chargeId, $status)
 {
     try {
-        $stmt = $pdo->prepare("UPDATE parcelas_geradas_por_boleto SET situacao = :situacao, status = :status WHERE charge_id = :id OR id_asaas = :id");
-        return $stmt->execute([
+        $campos = ["situacao = :situacao"];
+        $params = [
             ':situacao' => ($status === 'paid') ? 1 : 0,
-            ':status' => $status,
             ':id' => $chargeId
-        ]);
+        ];
+
+        if (tabelaTemColuna($pdo, 'parcelas_geradas_por_boleto', 'status')) {
+            $campos[] = "status = :status";
+            $params[':status'] = $status;
+        }
+
+        if ($status === 'paid' && tabelaTemColuna($pdo, 'parcelas_geradas_por_boleto', 'data_pagamento')) {
+            $campos[] = "data_pagamento = COALESCE(data_pagamento, NOW())";
+        }
+
+        $sql = "UPDATE parcelas_geradas_por_boleto SET " . implode(', ', $campos) . " WHERE charge_id = :id OR id_asaas = :id";
+        $stmt = $pdo->prepare($sql);
+        return $stmt->execute($params);
     } catch (PDOException $e) {
         error_log("Erro ao atualizar pagamento boleto: " . $e->getMessage());
         return false;
     }
 }
-
-// Função para buscar id_matricula pelo charge_id
 function buscarIdMatriculaBoleto($pdo, $chargeId)
 {
     try {
@@ -71,19 +108,19 @@ function buscarIdMatriculaBoleto($pdo, $chargeId)
     }
 }
 
-// Função para atualizar status da matrícula
+// FunÃƒÆ’Ã‚Â§ÃƒÆ’Ã‚Â£o para atualizar status da matrÃƒÆ’Ã‚Â­cula
 function atualizarStatusMatricula($pdo, $idMatricula, $status)
 {
     try {
         $stmt = $pdo->prepare("UPDATE matriculas SET status = ? WHERE id = ?");
         return $stmt->execute([$status, $idMatricula]);
     } catch (PDOException $e) {
-        error_log("Erro ao atualizar matrícula: " . $e->getMessage());
+        error_log("Erro ao atualizar matrÃƒÆ’Ã‚Â­cula: " . $e->getMessage());
         return false;
     }
 }
 
-// Função para verificar se matrícula é um pacote e buscar dados necessários
+// FunÃƒÆ’Ã‚Â§ÃƒÆ’Ã‚Â£o para verificar se matrÃƒÆ’Ã‚Â­cula ÃƒÆ’Ã‚Â© um pacote e buscar dados necessÃƒÆ’Ã‚Â¡rios
 function verificarDadosMatricula($pdo, $idMatricula)
 {
     try {
@@ -91,12 +128,12 @@ function verificarDadosMatricula($pdo, $idMatricula)
         $stmt->execute([$idMatricula]);
         return $stmt->fetch(PDO::FETCH_ASSOC);
     } catch (PDOException $e) {
-        error_log("Erro ao verificar dados da matrícula: " . $e->getMessage());
+        error_log("Erro ao verificar dados da matrÃƒÆ’Ã‚Â­cula: " . $e->getMessage());
         return null;
     }
 }
 
-// Função para verificar se curso é um pacote
+// FunÃƒÆ’Ã‚Â§ÃƒÆ’Ã‚Â£o para verificar se curso ÃƒÆ’Ã‚Â© um pacote
 function verificarSeCursoEPacote($pdo, $idMatricula)
 {
     try {
@@ -105,12 +142,12 @@ function verificarSeCursoEPacote($pdo, $idMatricula)
         $result = $stmt->fetch(PDO::FETCH_ASSOC);
         return $result ? $result['pacote'] : null;
     } catch (PDOException $e) {
-        error_log("Erro ao verificar se curso é pacote: " . $e->getMessage());
+        error_log("Erro ao verificar se curso ÃƒÆ’Ã‚Â© pacote: " . $e->getMessage());
         return null;
     }
 }
 
-// Auxiliares para localizar e atualizar matrículas em qualquer tabela
+// Auxiliares para localizar e atualizar matrÃƒÆ’Ã‚Â­culas em qualquer tabela
 function localizarMatriculaGeral($pdo, $idMatricula)
 {
     $tabelas = ['matriculas', 'matriculas_tecnicos', 'matriculas_profissionalizantes'];
@@ -133,7 +170,7 @@ function atualizarStatusMatriculaGeral($pdo, $tabela, $idMatricula, $status, $fo
 {
     $tabelasPermitidas = ['matriculas', 'matriculas_tecnicos', 'matriculas_profissionalizantes'];
     if (!in_array($tabela, $tabelasPermitidas, true)) {
-        error_log("Tabela de matricula não permitida: {$tabela}");
+        error_log("Tabela de matricula nÃƒÆ’Ã‚Â£o permitida: {$tabela}");
         return false;
     }
 
@@ -157,16 +194,16 @@ function atualizarStatusMatriculaGeral($pdo, $tabela, $idMatricula, $status, $fo
     }
 }
 
-// Função para ativar cursos do pacote
+// FunÃƒÆ’Ã‚Â§ÃƒÆ’Ã‚Â£o para ativar cursos do pacote
 function ativarCursosDoPacote($pdo, $idCurso, $alunoId)
 {
     try {
-        logMessage("Matrícula é um pacote. Iniciando liberação automática dos cursos individuais.");
+        logMessage("MatrÃƒÆ’Ã‚Â­cula ÃƒÆ’Ã‚Â© um pacote. Iniciando liberaÃƒÆ’Ã‚Â§ÃƒÆ’Ã‚Â£o automÃƒÆ’Ã‚Â¡tica dos cursos individuais.");
 
         // Desativa temporariamente o modo safe update
         $pdo->query("SET SQL_SAFE_UPDATES = 0");
 
-        // Cria uma tabela temporária com os cursos do pacote
+        // Cria uma tabela temporÃƒÆ’Ã‚Â¡ria com os cursos do pacote
         $pdo->query("CREATE TEMPORARY TABLE temp_cursos_pacote AS
             SELECT 
                 cp.id AS id_cursos_pacotes,
@@ -180,7 +217,7 @@ function ativarCursosDoPacote($pdo, $idCurso, $alunoId)
             WHERE 
                 cp.id_pacote = {$idCurso}");
 
-        // Verifica se há registros na tabela temporária
+        // Verifica se hÃƒÆ’Ã‚Â¡ registros na tabela temporÃƒÆ’Ã‚Â¡ria
         $query_count = $pdo->query("SELECT COUNT(*) FROM temp_cursos_pacote");
         $total_registros = $query_count->fetchColumn();
 
@@ -192,7 +229,7 @@ function ativarCursosDoPacote($pdo, $idCurso, $alunoId)
                 FROM matriculas
                 WHERE aluno = {$alunoId} AND id_pacote = {$idCurso}");
 
-            // Insere novas matrículas apenas para os cursos que o aluno não está matriculado ainda
+            // Insere novas matrÃƒÆ’Ã‚Â­culas apenas para os cursos que o aluno nÃƒÆ’Ã‚Â£o estÃƒÆ’Ã‚Â¡ matriculado ainda
             $stmt_insert_matriculas = $pdo->prepare("INSERT INTO matriculas 
                 (id_curso, aluno, professor, aulas_concluidas, data, status, pacote, id_pacote, obs)
                 SELECT 
@@ -202,7 +239,7 @@ function ativarCursosDoPacote($pdo, $idCurso, $alunoId)
                     1,
                     CURDATE(),
                     'Matriculado',
-                    'Não',
+                    'NÃƒÆ’Ã‚Â£o',
                     :id_curso,
                     'Pacote'
                 FROM 
@@ -218,23 +255,23 @@ function ativarCursosDoPacote($pdo, $idCurso, $alunoId)
             ]);
 
             $novas_matriculas = $stmt_insert_matriculas->rowCount();
-            logMessage("Adicionadas {$novas_matriculas} novas matrículas para os cursos do pacote");
+            logMessage("Adicionadas {$novas_matriculas} novas matrÃƒÆ’Ã‚Â­culas para os cursos do pacote");
 
-            // Atualiza contador de matrículas apenas para os cursos onde novas matrículas foram adicionadas
+            // Atualiza contador de matrÃƒÆ’Ã‚Â­culas apenas para os cursos onde novas matrÃƒÆ’Ã‚Â­culas foram adicionadas
             $pdo->query("UPDATE cursos c
                 JOIN temp_cursos_pacote tcp ON c.id = tcp.id_do_curso
                 LEFT JOIN temp_matriculas_existentes tme ON tcp.id_do_curso = tme.id_curso
                 SET c.matriculas = c.matriculas + 1
                 WHERE tme.id_curso IS NULL");
 
-            // Limpa as tabelas temporárias
+            // Limpa as tabelas temporÃƒÆ’Ã‚Â¡rias
             $pdo->query("DROP TEMPORARY TABLE IF EXISTS temp_cursos_pacote");
             $pdo->query("DROP TEMPORARY TABLE IF EXISTS temp_matriculas_existentes");
 
             // Reativa o modo safe update
             $pdo->query("SET SQL_SAFE_UPDATES = 1");
 
-            logMessage("Liberação automática de cursos do pacote concluída com sucesso");
+            logMessage("LiberaÃƒÆ’Ã‚Â§ÃƒÆ’Ã‚Â£o automÃƒÆ’Ã‚Â¡tica de cursos do pacote concluÃƒÆ’Ã‚Â­da com sucesso");
             return true;
         } else {
             logMessage("Nenhum curso encontrado para este pacote");
@@ -268,8 +305,8 @@ function ativarCursosProfissionalizantes($pdo, $idProfissionalizante, $alunoId)
             $idCurso = $curso['id_curso'];
             $professorId = $curso['professor'];
 
-            // Se já existir matrícula do curso para o aluno, apenas garante status/liberação
-            $stmtExiste = $pdo->prepare("SELECT id FROM matriculas_profissionalizantes WHERE aluno = :aluno AND id_curso = :curso AND pacote = 'Não' LIMIT 1");
+            // Se jÃƒÆ’Ã‚Â¡ existir matrÃƒÆ’Ã‚Â­cula do curso para o aluno, apenas garante status/liberaÃƒÆ’Ã‚Â§ÃƒÆ’Ã‚Â£o
+            $stmtExiste = $pdo->prepare("SELECT id FROM matriculas_profissionalizantes WHERE aluno = :aluno AND id_curso = :curso AND pacote = 'NÃƒÆ’Ã‚Â£o' LIMIT 1");
             $stmtExiste->execute([
                 ':aluno' => $alunoId,
                 ':curso' => $idCurso
@@ -294,7 +331,7 @@ function ativarCursosProfissionalizantes($pdo, $idProfissionalizante, $alunoId)
                     INSERT INTO matriculas_profissionalizantes
                         (id_curso, aluno, professor, aulas_concluidas, data, status, pacote, id_pacote, obs, forma_pgto)
                     VALUES
-                        (:curso, :aluno, :professor, 1, CURDATE(), 'Matriculado', 'Não', :id_pacote, 'Pacote', 'BOLETO')
+                        (:curso, :aluno, :professor, 1, CURDATE(), 'Matriculado', 'NÃƒÆ’Ã‚Â£o', :id_pacote, 'Pacote', 'BOLETO')
                 ");
                 $stmtInsert->execute([
                     ':curso' => $idCurso,
@@ -303,13 +340,13 @@ function ativarCursosProfissionalizantes($pdo, $idProfissionalizante, $alunoId)
                     ':id_pacote' => $idProfissionalizante
                 ]);
 
-                // Atualiza contador de matrículas do curso original
+                // Atualiza contador de matrÃƒÆ’Ã‚Â­culas do curso original
                 $stmtContador = $pdo->prepare("UPDATE cursos SET matriculas = matriculas + 1 WHERE id = :curso");
                 $stmtContador->execute([':curso' => $idCurso]);
             }
         }
 
-        logMessage("Liberação de cursos vinculados ao profissionalizante {$idProfissionalizante} concluída");
+        logMessage("LiberaÃƒÆ’Ã‚Â§ÃƒÆ’Ã‚Â£o de cursos vinculados ao profissionalizante {$idProfissionalizante} concluÃƒÆ’Ã‚Â­da");
         return true;
     } catch (PDOException $e) {
         logMessage("Erro ao liberar cursos do profissionalizante {$idProfissionalizante}: " . $e->getMessage());
@@ -321,14 +358,14 @@ function ativarCursosProfissionalizantes($pdo, $idProfissionalizante, $alunoId)
 try {
 
 
-    // Verificar se é uma requisição POST
+    // Verificar se ÃƒÆ’Ã‚Â© uma requisiÃƒÆ’Ã‚Â§ÃƒÆ’Ã‚Â£o POST
     if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
         http_response_code(405);
-        echo json_encode(['error' => 'Método não permitido']);
+        echo json_encode(['error' => 'MÃƒÆ’Ã‚Â©todo nÃƒÆ’Ã‚Â£o permitido']);
         exit;
     }
 
-    // Lê o conteúdo bruto enviado
+    // LÃƒÆ’Ã‚Âª o conteÃƒÆ’Ã‚Âºdo bruto enviado
     $input = file_get_contents('php://input');
 
     // Tenta decodificar como JSON
@@ -360,7 +397,7 @@ try {
 
         if (strpos($notification, '=') === false) {
             http_response_code(400);
-            echo json_encode(['error' => 'Formato de notificação inválido']);
+            echo json_encode(['error' => 'Formato de notificaÃƒÆ’Ã‚Â§ÃƒÆ’Ã‚Â£o invÃƒÆ’Ã‚Â¡lido']);
             logWebhook($pdo, 'boleto_error', $payload, $receivedAt);
             exit;
         }
@@ -382,12 +419,12 @@ try {
 
         if (!$result || !isset($result['data']) || empty($result['data'])) {
             http_response_code(400);
-            echo json_encode(['error' => 'Dados do webhook inválidos']);
-            logWebhook($pdo, 'boleto_error', json_encode(['error' => 'Dados inválidos', 'result' => $result]), $receivedAt);
+            echo json_encode(['error' => 'Dados do webhook invÃƒÆ’Ã‚Â¡lidos']);
+            logWebhook($pdo, 'boleto_error', json_encode(['error' => 'Dados invÃƒÆ’Ã‚Â¡lidos', 'result' => $result]), $receivedAt);
             exit;
         }
 
-        // Pega o último item do array (status mais recente)
+        // Pega o ÃƒÆ’Ã‚Âºltimo item do array (status mais recente)
         $lastItem = end($result['data']);
         $currentStatus = $lastItem['status']['current'];
         $chargeId = $lastItem['identifiers']['charge_id'];
@@ -395,16 +432,32 @@ try {
 
     logMessage("Status atual do boleto: $currentStatus, Charge ID: $chargeId");
 
-    // Atualiza também status/linha e recibo no registro da parcela para exibir ao aluno
+    // Atualiza tambÃƒÆ’Ã‚Â©m status/linha e recibo no registro da parcela para exibir ao aluno
     if ($chargeId) {
-        $recibo = $lastItem['status']['details']['receipt'] ?? ($lastItem['transactionReceiptUrl'] ?? null);
-        $stmt = $pdo->prepare("UPDATE parcelas_geradas_por_boleto SET situacao = :sit, status = :status, transaction_receipt_url = :recibo WHERE charge_id = :id OR id_asaas = :id");
-        $stmt->execute([
+        $campos = ["situacao = :sit"];
+        $params = [
             ':sit' => ($currentStatus === 'paid') ? 1 : 0,
-            ':status' => $currentStatus,
-            ':recibo' => $recibo,
             ':id' => $chargeId
-        ]);
+        ];
+
+        if (tabelaTemColuna($pdo, 'parcelas_geradas_por_boleto', 'status')) {
+            $campos[] = "status = :status";
+            $params[':status'] = $currentStatus;
+        }
+
+        if ($currentStatus === 'paid' && tabelaTemColuna($pdo, 'parcelas_geradas_por_boleto', 'data_pagamento')) {
+            $campos[] = "data_pagamento = COALESCE(data_pagamento, NOW())";
+        }
+
+        $recibo = $lastItem['status']['details']['receipt'] ?? ($lastItem['transactionReceiptUrl'] ?? null);
+        if (is_string($recibo) && trim($recibo) !== '' && stripos($recibo, 'http') === 0) {
+            $campos[] = "transaction_receipt_url = :recibo";
+            $params[':recibo'] = $recibo;
+        }
+
+        $sql = "UPDATE parcelas_geradas_por_boleto SET " . implode(', ', $campos) . " WHERE charge_id = :id OR id_asaas = :id";
+        $stmt = $pdo->prepare($sql);
+        $stmt->execute($params);
     }
 
     if ($currentStatus === 'paid') {
@@ -428,7 +481,7 @@ try {
                     $dadosMatricula = $matriculaInfo['dados'];
 
                     if (!atualizarStatusMatriculaGeral($pdo, $tabelaMatricula, $idMatricula, 'Matriculado', 'BOLETO')) {
-                        throw new Exception('Falha ao atualizar matrícula');
+                        throw new Exception('Falha ao atualizar matrÃƒÆ’Ã‚Â­cula');
                     }
 
                     $pacoteFlag = isset($dadosMatricula['pacote']) ? $dadosMatricula['pacote'] : null;
@@ -460,10 +513,10 @@ try {
                         }
                     }
                 } else {
-                    error_log("Matrícula não localizada em nenhuma tabela para Charge ID: $chargeId");
+                    error_log("MatrÃƒÆ’Ã‚Â­cula nÃƒÆ’Ã‚Â£o localizada em nenhuma tabela para Charge ID: $chargeId");
                 }
             } else {
-                error_log("ID da matrícula não encontrado para Charge ID: $chargeId");
+                error_log("ID da matrÃƒÆ’Ã‚Â­cula nÃƒÆ’Ã‚Â£o encontrado para Charge ID: $chargeId");
             }
 
             $pdo->commit();
@@ -521,3 +574,6 @@ try {
     ]), date('Y-m-d H:i:s'));
 }
 ?>
+
+
+

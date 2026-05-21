@@ -7,7 +7,7 @@ $options = require_once dirname(__DIR__, 4) . '/efi/options.php';
 @session_start();
 
 if (empty($_SESSION['id'])) {
-    echo 'Nao autorizado';
+    echo 'Não autorizado';
     exit();
 }
 
@@ -15,7 +15,7 @@ $nivel = $_SESSION['nivel'] ?? '';
 $idUsuario = (int) $_SESSION['id'];
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-    echo 'Metodo invalido';
+    echo 'Método inválido';
     exit();
 }
 
@@ -25,7 +25,7 @@ $id = filter_input(INPUT_POST, 'id', FILTER_VALIDATE_INT);
 
 $data = DateTime::createFromFormat('Y-m-d', $vencimento);
 if (!$data || $data->format('Y-m-d') !== $vencimento) {
-    echo 'Data de vencimento invalida';
+    echo 'Data de vencimento inválida';
     exit();
 }
 $data->setTime(0, 0, 0);
@@ -36,7 +36,7 @@ if ($data < $minData) {
 }
 
 if (!$id || !in_array($tipo, ['parcela', 'boleto'], true)) {
-    echo 'Parametros invalidos';
+    echo 'Parâmetros inválidos';
     exit();
 }
 
@@ -116,6 +116,10 @@ function montarUrlWebhook($url)
 
 function usuarioPodeAtualizar(string $nivel, int $idUsuario, int $alunoId, int $responsavelId): bool
 {
+    if (in_array($nivel, ['Administrador', 'Secretario', 'Tesoureiro'], true)) {
+        return true;
+    }
+
     if ($idUsuario === $alunoId) {
         return true;
     }
@@ -284,7 +288,7 @@ function montarDadosBoleto(PDO $pdo, int $idMatricula, string $vencimento): arra
     $stmtMatricula->execute([':id' => $idMatricula]);
     $matricula = $stmtMatricula->fetch(PDO::FETCH_ASSOC);
     if (!$matricula) {
-        throw new Exception('Matricula nao encontrada.');
+        throw new Exception('Matrícula não encontrada.');
     }
 
     $idAlunoUser = (int) $matricula['aluno'];
@@ -344,6 +348,38 @@ function montarDadosBoleto(PDO $pdo, int $idMatricula, string $vencimento): arra
     ];
 }
 
+function normalizarPayloadParcela(array $payload, array $parcela): array
+{
+    $valorParcela = (float) ($parcela['valor_parcela'] ?? 0);
+    if ($valorParcela <= 0) {
+        return $payload;
+    }
+
+    // A API trabalha em centavos.
+    $valorCentavos = (int) round($valorParcela * 100);
+    if ($valorCentavos <= 0) {
+        return $payload;
+    }
+
+    $payload['valor'] = $valorCentavos;
+
+    if (isset($payload['items']) && is_array($payload['items']) && count($payload['items']) > 0) {
+        foreach ($payload['items'] as $idx => $item) {
+            if (!is_array($item)) {
+                continue;
+            }
+            $payload['items'][$idx]['value'] = $valorCentavos;
+            if (empty($payload['items'][$idx]['amount']) || (int) $payload['items'][$idx]['amount'] < 1) {
+                $payload['items'][$idx]['amount'] = 1;
+            }
+            // Mantém uma linha de item com o valor correto da parcela.
+            break;
+        }
+    }
+
+    return $payload;
+}
+
 try {
     $exprResponsavelAluno = tabelaTemColuna($pdo, 'alunos', 'responsavel_id')
         ? "COALESCE(NULLIF(a.responsavel_id, 0), a.usuario)"
@@ -364,13 +400,13 @@ try {
         $alunoId = (int) ($parcela['aluno'] ?? 0);
         $responsavelId = (int) ($parcela['responsavel_id'] ?? 0);
         if (!$parcela || !usuarioPodeAtualizar($nivel, $idUsuario, $alunoId, $responsavelId)) {
-            echo 'Nao autorizado';
+            echo 'Não autorizado';
             exit();
         }
 
         $chargeId = $parcela['charge_id'] ?? '';
         if ($chargeId === '') {
-            echo 'Charge ID nao encontrado';
+            echo 'Charge ID não encontrado';
             exit();
         }
 
@@ -380,6 +416,7 @@ try {
             if ($payload !== '' && tabelaTemColuna($pdo, 'parcelas_geradas_por_boleto', 'payload')) {
                 $payloadArray = json_decode($payload, true);
                 if (is_array($payloadArray)) {
+                    $payloadArray = normalizarPayloadParcela($payloadArray, $parcela);
                     $payloadArray['vencimento'] = $vencimento;
                     $payloadArray['notification_url'] = montarUrlWebhook('https://sestedcursosvirtual.com/efi_webhook_boleto_parcelado.php');
                     $payload = json_encode($payloadArray, JSON_UNESCAPED_UNICODE);
@@ -398,9 +435,10 @@ try {
             $payload = $parcela['payload'] ?? '';
             $payloadArray = json_decode($payload, true);
             if (!is_array($payloadArray)) {
-                echo 'Nao foi possivel reemitir o boleto desta parcela.';
+                echo 'Não foi possível reemitir o boleto desta parcela.';
                 exit();
             }
+            $payloadArray = normalizarPayloadParcela($payloadArray, $parcela);
             $payloadArray['vencimento'] = $vencimento;
             $payloadArray['notification_url'] = montarUrlWebhook('https://sestedcursosvirtual.com/efi_webhook_boleto_parcelado.php');
             $payloadAtualizado = json_encode($payloadArray, JSON_UNESCAPED_UNICODE);
@@ -457,13 +495,13 @@ try {
     $alunoId = (int) ($boleto['aluno'] ?? 0);
     $responsavelId = (int) ($boleto['responsavel_id'] ?? 0);
     if (!$boleto || !usuarioPodeAtualizar($nivel, $idUsuario, $alunoId, $responsavelId)) {
-        echo 'Nao autorizado';
+        echo 'Não autorizado';
         exit();
     }
 
     $chargeId = $boleto['charge_id'] ?? '';
     if ($chargeId === '') {
-        echo 'Charge ID nao encontrado';
+        echo 'Charge ID não encontrado';
         exit();
     }
 

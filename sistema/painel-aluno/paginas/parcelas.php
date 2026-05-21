@@ -5,6 +5,9 @@
 require_once('../../vendor/autoload.php');
 
 require_once("../conexao.php");
+require_once("../../config/env.php");
+require_once("../../efi/boleto.php");
+$options = require_once '../../efi/options.php';
 
 
 
@@ -13,6 +16,107 @@ require_once("../conexao.php");
 @session_start();
 
 $id_do_aluno = @$_SESSION['id'];
+$telefone_aluno = '';
+try {
+    $stmtTelefone = $pdo->prepare("SELECT a.telefone FROM usuarios u JOIN alunos a ON a.id = u.id_pessoa WHERE u.id = :id LIMIT 1");
+    $stmtTelefone->execute([':id' => $id_do_aluno]);
+    $telefone_aluno = $stmtTelefone->fetchColumn() ?: '';
+} catch (Exception $e) {
+    $telefone_aluno = '';
+}
+
+if (is_string($telefone_aluno)) {
+    $telefone_aluno = preg_replace('/\\D/', '', $telefone_aluno);
+}
+
+if ($telefone_aluno !== '' && strlen($telefone_aluno) <= 11 && substr($telefone_aluno, 0, 2) !== '55') {
+    $telefone_aluno = '55' . $telefone_aluno;
+}
+
+$config = [
+    'client_id' => $options['clientId'],
+    'client_secret' => $options['clientSecret'],
+    'certificate_path' => $options['certificate'] ?? '',
+    'chave_pix' => $options['pixKey'] ?? '',
+    'sandbox' => $options['sandbox']
+];
+
+$boletoPayment = new EFIBoletoPayment(
+    $config['client_id'],
+    $config['client_secret'],
+    $config['sandbox']
+);
+
+$status_cache = [];
+function buscarStatusBoleto($boletoPayment, $chargeId, &$status_cache)
+{
+    if (!$chargeId) {
+        return '';
+    }
+    if (isset($status_cache[$chargeId])) {
+        return $status_cache[$chargeId];
+    }
+    try {
+        $consultar = $boletoPayment->consultarCobranca($chargeId);
+        $status = $consultar['data']['status'] ?? '';
+    } catch (Exception $e) {
+        $status = '';
+    }
+    $status_cache[$chargeId] = $status;
+    return $status;
+}
+
+function resumirStatusBoleto($statusApi, $situacao = null)
+{
+    if (!empty($situacao) && (int) $situacao === 1) {
+        return 'Pago';
+    }
+    $statusApi = strtolower((string) $statusApi);
+    if ($statusApi === 'paid') {
+        return 'Pago';
+    }
+    if ($statusApi === 'expired') {
+        return 'Vencido';
+    }
+    if ($statusApi !== '') {
+        return 'Pendente';
+    }
+    return 'Não Gerado';
+}
+
+function formatarDataPagamento($data): string
+{
+    $valor = trim((string) $data);
+    if ($valor === '' || $valor === '0000-00-00' || $valor === '0000-00-00 00:00:00') {
+        return '-';
+    }
+
+    try {
+        $dt = new DateTime($valor);
+        return $dt->format('d/m/Y H:i');
+    } catch (Exception $e) {
+        return '-';
+    }
+}
+
+function resolverDataPagamentoRegistro(array $registro, string $statusResumo): string
+{
+    if ($statusResumo !== 'Pago') {
+        return '-';
+    }
+
+    foreach (['data_pagamento', 'paid_at', 'updated_at', 'update_at', 'received_by_bank_at', 'criado_em', 'created_at', 'data'] as $campo) {
+        if (empty($registro[$campo])) {
+            continue;
+        }
+        $dataFmt = formatarDataPagamento((string) $registro[$campo]);
+        if ($dataFmt !== '-') {
+            return $dataFmt;
+        }
+    }
+
+    return '-';
+}
 
 // Projeto virtual usa apenas matriculas/cursos/pacotes.
 $sqlParcelasAluno = "
@@ -29,6 +133,34 @@ $sqlParcelasAluno = "
 $stmt = $pdo->prepare($sqlParcelasAluno);
 $stmt->execute([':id_aluno' => $id_do_aluno]);
 $resposta_consulta_boleto_parcelado = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+// Reconcilia status usando webhook_logs quando a baixa da parcela nÃƒÂ£o foi persistida.
+$chargesPagosPorWebhook = [];
+if (!empty($resposta_consulta_boleto_parcelado)) {
+    $chargeIds = [];
+    foreach ($resposta_consulta_boleto_parcelado as $linhaParcela) {
+        $chargeIdAtual = trim((string) ($linhaParcela['charge_id'] ?? ''));
+        if ($chargeIdAtual !== '') {
+            $chargeIds[$chargeIdAtual] = true;
+        }
+    }
+
+    if (!empty($chargeIds)) {
+        $sqlWebhook = "SELECT payload FROM webhook_logs WHERE event_type = 'boleto_paid' AND payload LIKE '%\"charge_id\"%'";
+        $stmtWebhook = $pdo->query($sqlWebhook);
+        $logsBoletoPago = $stmtWebhook ? $stmtWebhook->fetchAll(PDO::FETCH_ASSOC) : [];
+
+        if (!empty($logsBoletoPago)) {
+            foreach ($logsBoletoPago as $log) {
+                $payloadLog = json_decode((string) ($log['payload'] ?? ''), true);
+                $chargeLog = trim((string) ($payloadLog['charge_id'] ?? ''));
+                if ($chargeLog !== '' && isset($chargeIds[$chargeLog])) {
+                    $chargesPagosPorWebhook[$chargeLog] = true;
+                }
+            }
+        }
+    }
+}
 
 
 
@@ -52,17 +184,17 @@ foreach ($resposta_consulta as $matricula) {
         $consulta_nome = $pdo->query("SELECT nome FROM pacotes WHERE id = '$id_curso'");
         $resultado_nome = $consulta_nome->fetch(PDO::FETCH_ASSOC);
         $nome_curso_pacote = $resultado_nome ? $resultado_nome['nome'] : '';
-    } elseif ($pacote == 'Nao') {
-        // Se nÃƒÆ’Ã‚Â£o for pacote, busca na tabela "cursos"
+    } elseif ($pacote == 'Nao' || $pacote == 'Não') {
+        // Se nÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â£o for pacote, busca na tabela "cursos"
         $consulta_nome = $pdo->query("SELECT nome FROM cursos WHERE id = '$id_curso'");
         $resultado_nome = $consulta_nome->fetch(PDO::FETCH_ASSOC);
         $nome_curso_pacote = $resultado_nome ? $resultado_nome['nome'] : '';
     }
 
-    // Decodifica caracteres Unicode para exibiÃƒÆ’Ã‚Â§ÃƒÆ’Ã‚Â£o correta em PT-BR
+    // Decodifica caracteres Unicode para exibiÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â§ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â£o correta em PT-BR
     if (!empty($nome_curso_pacote)) {
         $nome_curso_pacote = json_decode('"' . $nome_curso_pacote . '"');
-        // Alternativa usando html_entity_decode se necessÃƒÆ’Ã‚Â¡rio:
+        // Alternativa usando html_entity_decode se necessÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¡rio:
         // $nome_curso_pacote = html_entity_decode($nome_curso_pacote, ENT_QUOTES, 'UTF-8');
     }
 
@@ -73,7 +205,7 @@ foreach ($resposta_consulta as $matricula) {
         $tabela_pagamentos = 'pagamentos_boleto';
     } else {
         // Caso haja outras formas de pagamento ou valor nulo
-        continue; // Pula para a prÃƒÆ’Ã‚Â³xima iteraÃƒÆ’Ã‚Â§ÃƒÆ’Ã‚Â£o
+        continue; // Pula para a prÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â³xima iteraÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â§ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â£o
     }
 
     // Executa a consulta na tabela apropriada
@@ -285,26 +417,51 @@ foreach ($transactions as $registro) {
                 <th>N&ordm; da parcela</th>
                 <th>Valor</th>
                 <th>Situa&ccedil;&atilde;o</th>
+                <th>Data Pagamento</th>
                 <th>PIX Copia e Cola</th>
                 <th>Gerar boleto</th>
+                <th>Enviar</th>
             </tr>
         </thead>
         <tbody>
 
                 <?php foreach ($resposta_consulta_boleto_parcelado as $registro): ?>
+                    <?php
+                        $chargeId = $registro['charge_id'] ?? '';
+                        $statusApi = '';
+                        if (!empty($chargeId)) {
+                            $statusApi = buscarStatusBoleto($boletoPayment, $chargeId, $status_cache);
+                        }
+                        $statusResumo = resumirStatusBoleto($statusApi, $registro['situacao'] ?? null);
+                        $dataVencimentoRaw = trim((string) ($registro['data_vencimento'] ?? ($registro['vencimento'] ?? '')));
+                        $vencidoPorData = false;
+                        if ($dataVencimentoRaw !== '' && $statusResumo !== 'Pago') {
+                            try {
+                                $dtVenc = new DateTime(substr($dataVencimentoRaw, 0, 10));
+                                $dtHoje = new DateTime('today');
+                                $vencidoPorData = $dtVenc < $dtHoje;
+                            } catch (Exception $e) {
+                                $vencidoPorData = false;
+                            }
+                        }
+                        $vencido = ($statusResumo === 'Vencido') || $vencidoPorData;
+                        if ($vencido && $statusResumo !== 'Pago') {
+                            $statusResumo = 'Vencido';
+                        }
+                        $dataPagamentoExibicao = resolverDataPagamentoRegistro($registro, $statusResumo);
+                        $valorParcelaFmt = number_format($registro['valor_parcela'], 2, ',', '.');
+                        $cursoNome = json_decode('"' . preg_replace('/u([0-9a-fA-F]{4})/', '\\u$1', $registro['curso']) . '"');
+                        $cursoNomeSafe = htmlspecialchars($cursoNome ?? '', ENT_QUOTES, 'UTF-8');
+                        $podeVisualizarBoleto = (!$vencido && !empty($registro['id_asaas']));
+                    ?>
 
                     <tr>
                         <td><?php echo $registro['id']; ?></td>
-                        <td><?php echo json_decode('"' . preg_replace('/u([0-9a-fA-F]{4})/', '\\u$1', $registro['curso']) . '"'); ?>
-                        </td>
+                        <td><?php echo $cursoNomeSafe; ?></td>
                         <td><?php echo htmlspecialchars($registro['ordem_parcela']); ?></td>
-                        <td><?php echo 'R$ ' . number_format($registro['valor_parcela'], 2, ',', '.'); ?></td>
-                        
-                        
-                        <?php
-                            $statusPago = !empty($registro['situacao']) || (isset($registro['status']) && strtolower($registro['status']) === 'paid');
-                        ?>
-                        <td><?php echo $statusPago ? 'Pago' : 'N&atilde;o pago'; ?></td>
+                        <td><?php echo 'R$ ' . $valorParcelaFmt; ?></td>
+                        <td><?php echo htmlspecialchars($statusResumo); ?></td>
+                        <td><?php echo htmlspecialchars($dataPagamentoExibicao); ?></td>
                         
                         <td style="max-width: 100px; overflow: hidden;">
                                <?php if($registro['transaction_receipt_url']): ?>
@@ -317,18 +474,55 @@ foreach ($transactions as $registro) {
                             <?php endif; ?>
                             </td>
                         <td>
-                            <form method="post" action="paginas/gerar_boleto.php" target="_blank" style="display:inline;">
-                                <input type="hidden" name="valor_parcela" value="<?php echo $registro['valor_parcela']; ?>" />
-                                <input type="hidden" name="id_parcela" value="<?php echo $registro['id']; ?>" />
-                                <input type="hidden" name="id_aluno" value="<?php echo $id_do_aluno; ?>" />
-                                <input type="hidden" name="id_matricula" value="<?php echo $registro['id_matricula']; ?>" />
-                                <input type="hidden" name="payload"
-                                    value="<?php echo htmlspecialchars($registro['payload'], ENT_QUOTES, 'UTF-8'); ?>" />
-                                <button type="submit" name="action" value="visualizar">
-                                    <i class="fa fa-file-pdf-o" aria-hidden="true"></i>
-                                    <?php echo ($registro['id_asaas'] == NULL) ? 'Gerar Boleto' : 'Visualizar Boleto'; ?>
+                            <?php if ($registro['id_asaas'] == NULL): ?>
+                                <form method="post" action="paginas/gerar_boleto.php" target="_blank" style="display:inline;">
+                                    <input type="hidden" name="valor_parcela" value="<?php echo $registro['valor_parcela']; ?>" />
+                                    <input type="hidden" name="id_parcela" value="<?php echo $registro['id']; ?>" />
+                                    <input type="hidden" name="id_boleto_parcelado" value="<?php echo $registro['id_boleto_parcelado']; ?>" />
+                                    <input type="hidden" name="ordem_parcela" value="<?php echo $registro['ordem_parcela']; ?>" />
+                                    <input type="hidden" name="id_aluno" value="<?php echo $id_do_aluno; ?>" />
+                                    <input type="hidden" name="id_matricula" value="<?php echo $registro['id_matricula']; ?>" />
+                                    <input type="hidden" name="payload" value="<?php echo htmlspecialchars($registro['payload'], ENT_QUOTES, 'UTF-8'); ?>" />
+                                    <button type="submit" name="action" value="visualizar">
+                                        <i class="fa fa-file-pdf-o" aria-hidden="true"></i>
+                                        Gerar Boleto
+                                    </button>
+                                </form>
+                            <?php elseif ($podeVisualizarBoleto): ?>
+                                <a href="<?php echo $registro['id_asaas']; ?>" target="_blank">
+                                    <button type="button">
+                                        <i class="fa fa-file-pdf-o" aria-hidden="true"></i>
+                                        Visualizar Boleto
+                                    </button>
+                                </a>
+                            <?php else: ?>
+                                <span class="text-danger" style="font-size: 12px;">
+                                    Boleto vencido. Atualize a data para reemitir.
+                                </span>
+                            <?php endif; ?>
+
+                            <?php if ($statusResumo !== 'Pago' && !empty($registro['charge_id'])): ?>
+                                <input type="date" class="form-control" style="display:inline-block; width:auto;"
+                                    id="vencimento-parcela-<?php echo (int) $registro['id']; ?>"
+                                    min="<?php echo date('Y-m-d', strtotime('+1 day')); ?>"
+                                    title="Nova data de vencimento">
+                                <button type="button"
+                                    onclick="solicitarNovoVencimento('parcela', <?php echo (int) $registro['id']; ?>)"
+                                    title="Atualizar vencimento">
+                                    Atualizar
                                 </button>
-                            </form>
+                            <?php endif; ?>
+                        </td>
+                        <td>
+                            <?php if ($podeVisualizarBoleto): ?>
+                                <button type="button" class="btn btn-success"
+                                    onclick="enviarWhatsAppBoleto('<?php echo htmlspecialchars($registro['id_asaas'], ENT_QUOTES); ?>', '<?php echo $cursoNomeSafe; ?>', '<?php echo (int) $registro['ordem_parcela']; ?>', '<?php echo $valorParcelaFmt; ?>')">
+                                    <i class="fa fa-whatsapp" aria-hidden="true"></i>
+                                    Enviar
+                                </button>
+                            <?php else: ?>
+                                <span class="text-muted">-</span>
+                            <?php endif; ?>
                         </td>
                     </tr>
                 <?php endforeach; ?>
@@ -347,22 +541,22 @@ foreach ($transactions as $registro) {
         <thead>
             <tr>
                 <th>ID</th>
-                <th>ID MatrÃƒÆ’Ã‚Â­cula</th>
+                <th>ID MatrÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â­cula</th>
                 <th>Data</th>
                 <th>Identificador</th>
                 <th>Valor</th>
                 <th>Situa&ccedil;&atilde;o</th>
-                <th>AÃƒÆ’Ã‚Â§ÃƒÆ’Ã‚Â£o</th>
+                <th>AÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â§ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â£o</th>
             </tr>
         </thead>
         <tbody>
             <?php foreach ($transactions as $registro): ?>
                 <?php
-                // Determina o tipo de pagamento baseado nos campos disponÃƒÆ’Ã‚Â­veis
+                // Determina o tipo de pagamento baseado nos campos disponÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â­veis
                 $eh_pix = isset($registro['txid']);
                 $eh_boleto = isset($registro['nosso_numero']);
 
-                // Define campos especÃƒÆ’Ã‚Â­ficos baseado no tipo
+                // Define campos especÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â­ficos baseado no tipo
                 if ($eh_pix) {
                     $data_campo = $registro['data_criacao'];
                     $identificador = $registro['txid'];
@@ -372,7 +566,7 @@ foreach ($transactions as $registro) {
                     $identificador = $registro['nosso_numero'];
                     $tipo_pagamento = 'BOLETO';
                 } else {
-                    continue; // Pula registros sem tipo identificÃƒÆ’Ã‚Â¡vel
+                    continue; // Pula registros sem tipo identificÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¡vel
                 }
                 ?>
                 <tr>
@@ -440,7 +634,7 @@ foreach ($transactions as $registro) {
                         <th>Identificador</th>
                         <th>Valor</th>
                 <th>Situa&ccedil;&atilde;o</th>
-                        <th>AÃƒÆ’Ã‚Â§ÃƒÆ’Ã‚Â£o</th>
+                        <th>AÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â§ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â£o</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -504,7 +698,7 @@ foreach ($transactions as $registro) {
                         <th>Valor</th>
                 <th>Situa&ccedil;&atilde;o</th>
                 <th>PIX Copia e Cola</th>
-                        <th>AÃƒÆ’Ã‚Â§ÃƒÆ’Ã‚Â£o</th>
+                        <th>AÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â§ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â£o</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -632,7 +826,7 @@ foreach ($transactions as $registro) {
 </div>
 
 <style>
-    /* CustomizaÃƒÆ’Ã‚Â§ÃƒÆ’Ã‚Â£o do SweetAlert2 */
+    /* CustomizaÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â§ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â£o do SweetAlert2 */
     .financial-modal .swal2-popup {
         background: linear-gradient(135deg, #1a2035 0%, #121625 100%);
         border-radius: 16px;
@@ -681,7 +875,7 @@ foreach ($transactions as $registro) {
         margin: 1.5rem auto 0.5rem;
     }
 
-    /* ConteÃƒÆ’Ã‚Âºdo do Modal */
+    /* ConteÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Âºdo do Modal */
     .matricula-card {
         background-color: transparent;
         color: #fff;
@@ -856,7 +1050,7 @@ foreach ($transactions as $registro) {
         margin-bottom: 0.5rem;
     }
 
-    /* AnimaÃƒÆ’Ã‚Â§ÃƒÆ’Ã‚Âµes */
+    /* AnimaÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â§ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Âµes */
     @keyframes fadeInUp {
         from {
             opacity: 0;
@@ -891,12 +1085,80 @@ foreach ($transactions as $registro) {
 </style>
 
 <script>
+    var telefoneAluno = "<?php echo htmlspecialchars($telefone_aluno, ENT_QUOTES, 'UTF-8'); ?>";
+    function enviarWhatsAppBoleto(url, curso, parcela, valor) {
+        if (!telefoneAluno) {
+            alert('Telefone do aluno não encontrado.');
+            return;
+        }
+        var texto = 'Segue o boleto';
+        if (curso) {
+            texto += ' do curso/pacote ' + curso;
+        }
+        if (parcela) {
+            texto += ' - parcela ' + parcela;
+        }
+        if (valor) {
+            texto += ' - valor R$ ' + valor;
+        }
+        texto += ': ' + url;
+        var link = 'https://wa.me/' + telefoneAluno + '?text=' + encodeURIComponent(texto);
+        window.open(link, '_blank');
+    }
+
+    function solicitarNovoVencimento(tipo, id) {
+        const input = document.getElementById(`vencimento-${tipo}-${id}`);
+        const dataEscolhida = input ? (input.value || '').trim() : '';
+        if (!dataEscolhida) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Informe uma data válida'
+            });
+            return;
+        }
+
+        const formData = new FormData();
+        formData.append('tipo', tipo);
+        formData.append('id', id);
+        formData.append('vencimento', dataEscolhida);
+
+        fetch('paginas/boletos/atualizar_vencimento.php', {
+            method: 'POST',
+            body: formData
+        })
+            .then((response) => response.text())
+            .then((text) => {
+                const mensagem = (text || '').trim();
+                if (mensagem === 'sucesso') {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Vencimento atualizado',
+                        timer: 1500,
+                        showConfirmButton: false
+                    }).then(() => window.location.reload());
+                } else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Falha ao atualizar',
+                        text: mensagem || 'Não foi possível atualizar o vencimento.'
+                    });
+                }
+            })
+            .catch(() => {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Falha ao atualizar',
+                    text: 'Não foi possível atualizar o vencimento.'
+                });
+            });
+    }
+
 function copiarPix(valor) {
     navigator.clipboard.writeText(valor).then(() => {
        Swal.fire({
   icon: "success",
   title: "Copiado!",
-  text: "O cÃƒÆ’Ã‚Â³digo Pix foi copiado para sua ÃƒÆ’Ã‚Â¡rea de transferÃƒÆ’Ã‚Âªncia."
+  text: "O código Pix foi copiado para sua área de transferência."
 });
     }).catch(err => {
         console.error("Erro ao copiar: ", err);
@@ -930,7 +1192,7 @@ function copiarPix(valor) {
         Swal.fire({
             html: `
                 <div>
-                     <span>DescriÃƒÆ’Ã‚Â§ÃƒÆ’Ã‚Â£o</span>
+                     <span>Descrição</span>
                     <span>Valor do pagamento: ${valor}</span>
                    <img src="${qrcode}"  />
                         <br>
@@ -941,14 +1203,14 @@ function copiarPix(valor) {
     }
 
     function visualizarQR(qrcode, texto_copia_cola, valor, data_criacao, status) {
-        // Formatar data e valor para exibiÃƒÆ’Ã‚Â§ÃƒÆ’Ã‚Â£o
+        // Formatar data e valor para exibiÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â§ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â£o
         const dataFormatada = new Date(data_criacao).toLocaleDateString('pt-BR');
         const valorFormatado = parseFloat(valor).toLocaleString('pt-BR', {
             minimumFractionDigits: 2,
             maximumFractionDigits: 2
         });
 
-        // Definir classes e ÃƒÆ’Ã‚Â­cones de acordo com o status
+        // Definir classes e ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â­cones de acordo com o status
         let statusClass = '';
         let iconClass = '';
         let badgeClass = '';
@@ -975,7 +1237,7 @@ function copiarPix(valor) {
                 badgeClass = 'badge-secondary';
         }
 
-        // Montar o HTML para o conteÃƒÆ’Ã‚Âºdo do SweetAlert
+        // Montar o HTML para o conteÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Âºdo do SweetAlert
         const conteudoHtml = `
     <div class="matricula-card">
 
@@ -1044,7 +1306,7 @@ function copiarPix(valor) {
         codigoInput.select();
         codigoInput.setSelectionRange(0, 99999);
         document.execCommand("copy");
-        alert("CÃƒÆ’Ã‚Â³digo PIX copiado para a ÃƒÆ’Ã‚Â¡rea de transferÃƒÆ’Ã‚Âªncia!");
+        alert("Código PIX copiado para a área de transferência!");
     }
 </script>
 
@@ -1062,7 +1324,7 @@ function copiarPix(valor) {
 
 
 
-        // // Monta a URL com os parÃƒÆ’Ã‚Â¢metros
+        // // Monta a URL com os parÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢metros
 
         // const url = `http://sested.local/pagamentos_novo/index.php?formaDePagamento=${formaDePagamento}&quantidadeParcelas=${quantidadeParcelas}&id_do_curso=${id_do_curso_pag}&nome_do_curso=${nome_curso_titulo}`;
 
@@ -1092,4 +1354,5 @@ function copiarPix(valor) {
     }
 
 </script>
+
 
